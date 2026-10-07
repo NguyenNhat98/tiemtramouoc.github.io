@@ -1,0 +1,398 @@
+/**
+ * Mini game: Milk Tea Crush (ghép ≥3 biểu tượng, thẻ đặc biệt, mục tiêu theo màn) và Trân Châu Nổ (chạm nhóm trân châu).
+ */
+import { ITEMS } from './config.js';
+import { S, markDirty, requestSave, esc, fmt, fmtK, sfx, rand, randInt, pick, chance, clamp, wait, $, $$, h } from './core.js';
+import * as E from './econ.js';
+import { openModal, toast, bindActions, fxText, fxSpark } from './ui.js';
+
+/* ======================= MILK TEA CRUSH ======================= */
+const N = 7;
+const ICONS = ['🧋', '🍓', '🥭', '🍵', '🍇'];
+const SPECIAL = { stripeH: '⚡', stripeV: '⚡', bomb: '🍦', fish: '🐟', rainbow: '🌈' };
+const SP_NAME = { stripeH: 'Ly Sọc ngang', stripeV: 'Ly Sọc dọc', bomb: 'Kem Cheese', fish: 'Cá Bay', rainbow: 'Cầu Vồng' };
+let uid = 1;
+let Q = null;
+
+const levelCfg = (L) => ({ types: L < 3 ? 4 : 5, moves: Math.max(16, 25 - Math.floor(L / 4)), collect: 10 + 2 * L, score: 1000 + 200 * L });
+const rt = (q) => Math.floor(Math.random() * q.types);
+const mk = (q, t = rt(q)) => ({ id: uid++, t, sp: null });
+
+function newGrid(q) {
+  const g = Array.from({ length: N }, () => Array(N).fill(null));
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      let t, tries = 0;
+      do { t = rt(q); tries++; } while (tries < 20 && ((c >= 2 && g[r][c - 1]?.t === t && g[r][c - 2]?.t === t) || (r >= 2 && g[r - 1][c]?.t === t && g[r - 2][c]?.t === t)));
+      g[r][c] = mk(q, t);
+    }
+  }
+  return g;
+}
+/** Tìm các cụm match: trả về {cells:Set, specials:[{r,c,sp,t}]} */
+function findMatches(g, swapCells = []) {
+  const mark = new Set();
+  const runs = [];
+  const key = (r, c) => r * N + c;
+  for (let r = 0; r < N; r++) {
+    let c = 0;
+    while (c < N) {
+      const t = g[r][c]?.t;
+      let e = c + 1;
+      while (t !== undefined && e < N && g[r][e]?.t === t) e++;
+      if (t !== undefined && e - c >= 3) { runs.push({ dir: 'h', r, c, len: e - c, t }); for (let k = c; k < e; k++) mark.add(key(r, k)); }
+      c = e;
+    }
+  }
+  for (let c = 0; c < N; c++) {
+    let r = 0;
+    while (r < N) {
+      const t = g[r][c]?.t;
+      let e = r + 1;
+      while (t !== undefined && e < N && g[e][c]?.t === t) e++;
+      if (t !== undefined && e - r >= 3) { runs.push({ dir: 'v', r, c, len: e - r, t }); for (let k = r; k < e; k++) mark.add(key(k, c)); }
+      r = e;
+    }
+  }
+  const specials = [];
+  // 5 thẳng → cầu vồng; 4 thẳng → ly sọc; L/T (giao 2 run) → kem cheese
+  const hr = runs.filter((x) => x.dir === 'h'), vr = runs.filter((x) => x.dir === 'v');
+  const used = new Set();
+  for (const a of hr) for (const b of vr) {
+    if (a.t !== b.t) continue;
+    if (b.c >= a.c && b.c < a.c + a.len && a.r >= b.r && a.r < b.r + b.len) { specials.push({ r: a.r, c: b.c, sp: 'bomb', t: a.t }); used.add(a); used.add(b); }
+  }
+  for (const x of runs) {
+    if (used.has(x)) continue;
+    const anchor = swapCells.find((s) => (x.dir === 'h' ? s.r === x.r && s.c >= x.c && s.c < x.c + x.len : s.c === x.c && s.r >= x.r && s.r < x.r + x.len));
+    const pr = anchor || (x.dir === 'h' ? { r: x.r, c: x.c + Math.floor(x.len / 2) } : { r: x.r + Math.floor(x.len / 2), c: x.c });
+    if (x.len >= 5) specials.push({ r: pr.r, c: pr.c, sp: 'rainbow', t: x.t });
+    else if (x.len === 4) specials.push({ r: pr.r, c: pr.c, sp: x.dir === 'h' ? 'stripeV' : 'stripeH', t: x.t });
+  }
+  // 2x2 (chỉ khi dính ô vừa hoán đổi) → cá bay
+  for (const s of swapCells) {
+    for (const [dr, dc] of [[0, 0], [0, -1], [-1, 0], [-1, -1]]) {
+      const r0 = s.r + dr, c0 = s.c + dc;
+      if (r0 < 0 || c0 < 0 || r0 + 1 >= N || c0 + 1 >= N) continue;
+      const t = g[r0][c0]?.t;
+      if (t !== undefined && g[r0][c0 + 1]?.t === t && g[r0 + 1][c0]?.t === t && g[r0 + 1][c0 + 1]?.t === t && !specials.some((p) => p.sp === 'fish')) {
+        [[r0, c0], [r0, c0 + 1], [r0 + 1, c0], [r0 + 1, c0 + 1]].forEach(([r, c]) => mark.add(key(r, c)));
+        specials.push({ r: s.r, c: s.c, sp: 'fish', t });
+      }
+    }
+  }
+  return { mark, specials };
+}
+/** Kích hoạt các thẻ đặc biệt nằm trong tập ô sẽ nổ (lan truyền). */
+function expand(g, mark, q, hintType) {
+  const key = (r, c) => r * N + c;
+  const queue = [...mark];
+  const seen = new Set(queue);
+  const add = (r, c) => { if (r < 0 || c < 0 || r >= N || c >= N) return; const k = key(r, c); if (!seen.has(k)) { seen.add(k); mark.add(k); queue.push(k); } };
+  while (queue.length) {
+    const k = queue.shift(); const r = Math.floor(k / N), c = k % N, tile = g[r][c];
+    if (!tile?.sp) continue;
+    q.used[tile.sp] = (q.used[tile.sp] || 0) + 1;
+    if (tile.sp === 'stripeH') for (let i = 0; i < N; i++) add(r, i);
+    else if (tile.sp === 'stripeV') for (let i = 0; i < N; i++) add(i, c);
+    else if (tile.sp === 'bomb') for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) add(r + dr, c + dc);
+    else if (tile.sp === 'fish') { add(r, c); for (let i = 0; i < 3; i++) add(randInt(0, N - 1), randInt(0, N - 1)); }
+    else if (tile.sp === 'rainbow') { const t = hintType ?? g[randInt(0, N - 1)][randInt(0, N - 1)]?.t; for (let rr = 0; rr < N; rr++) for (let cc = 0; cc < N; cc++) if (g[rr][cc]?.t === t) add(rr, cc); }
+  }
+}
+function gravity(g, q) {
+  for (let c = 0; c < N; c++) {
+    let w = N - 1;
+    for (let r = N - 1; r >= 0; r--) if (g[r][c]) { g[w][c] = g[r][c]; if (w !== r) g[r][c] = null; w--; }
+    for (let r = w; r >= 0; r--) g[r][c] = mk(q);
+  }
+}
+function hasMove(g) {
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    for (const [dr, dc] of [[0, 1], [1, 0]]) {
+      const r2 = r + dr, c2 = c + dc;
+      if (r2 >= N || c2 >= N) continue;
+      if (g[r][c].sp || g[r2][c2].sp) return true;
+      [g[r][c], g[r2][c2]] = [g[r2][c2], g[r][c]];
+      const ok = findMatches(g).mark.size > 0;
+      [g[r][c], g[r2][c2]] = [g[r2][c2], g[r][c]];
+      if (ok) return true;
+    }
+  }
+  return false;
+}
+function tileHTML(t, r, c) {
+  return `<div class="mt ${t.sp ? 'sp ' + t.sp : ''}" data-id="${t.id}" data-r="${r}" data-c="${c}" style="left:${c * 100 / N}%;top:${r * 100 / N}%"><span>${ICONS[t.t]}</span>${t.sp ? `<i>${SPECIAL[t.sp]}</i>` : ''}</div>`;
+}
+function paint(q, fresh = false) {
+  const board = $('#crushBoard');
+  if (!board) return;
+  const present = new Map($$('.mt', board).map((e) => [e.dataset.id, e]));
+  const keep = new Set();
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    const t = q.g[r][c];
+    if (!t) continue;
+    keep.add(String(t.id));
+    let el = present.get(String(t.id));
+    if (!el) {
+      el = h(tileHTML(t, fresh ? r : -2, c));
+      board.appendChild(el);
+      void el.offsetWidth;
+    }
+    el.dataset.r = r; el.dataset.c = c;
+    el.style.left = `${c * 100 / N}%`; el.style.top = `${r * 100 / N}%`;
+    el.className = `mt ${t.sp ? 'sp ' + t.sp : ''} ${q.sel && q.sel.r === r && q.sel.c === c ? 'sel' : ''}`;
+    el.firstElementChild.textContent = ICONS[t.t];
+    const badge = el.querySelector('i');
+    if (t.sp && !badge) el.insertAdjacentHTML('beforeend', `<i>${SPECIAL[t.sp]}</i>`);
+  }
+  for (const [id, el] of present) if (!keep.has(id) && !el.classList.contains('pop')) el.remove();
+}
+function updateHud(q) {
+  if (!$('#cMoves')) return;
+  $('#cMoves').textContent = q.moves;
+  $('#cScore').textContent = q.score;
+  $('#cCollect').textContent = `${Math.min(q.got, q.cfg.collect)}/${q.cfg.collect}`;
+  $('#cScoreGoal').textContent = `${Math.min(q.score, q.cfg.score)}/${q.cfg.score}`;
+  const stars = q.score >= q.cfg.score * 1.5 ? 3 : q.score >= q.cfg.score * 1.2 ? 2 : q.score >= q.cfg.score ? 1 : 0;
+  $$('#cStars i').forEach((s, i) => s.classList.toggle('on', i < stars));
+  $('#cBar').style.width = `${clamp(q.score / q.cfg.score * 100, 0, 100)}%`;
+}
+async function resolve(q, swapCells) {
+  let cascade = 0, first = true;
+  while (true) {
+    const { mark, specials } = findMatches(q.g, first ? swapCells : []);
+    if (!mark.size && !q.forceMark?.size) break;
+    if (q.forceMark) { q.forceMark.forEach((k) => mark.add(k)); q.forceMark = null; }
+    cascade++;
+    // giữ lại ô để tạo thẻ đặc biệt (không phá)
+    const spKeys = new Set(specials.map((s) => s.r * N + s.c));
+    expand(q.g, mark, q, q.hintRainbow);
+    q.hintRainbow = undefined;
+    const cleared = [...mark].filter((k) => !spKeys.has(k) || q.g[Math.floor(k / N)][k % N].sp);
+    const pts = cleared.length * 20 * cascade;
+    q.score += pts;
+    for (const k of cleared) { const r = Math.floor(k / N), c = k % N, t = q.g[r][c]; if (t) { if (t.t === 0) q.got++; } }
+    // hiệu ứng
+    for (const k of cleared) {
+      const r = Math.floor(k / N), c = k % N, t = q.g[r][c];
+      const el = $(`.mt[data-id="${t.id}"]`);
+      if (el) { el.classList.add('pop'); setTimeout(() => el.remove(), 220); }
+      q.g[r][c] = null;
+    }
+    for (const s of specials) {
+      if (!q.g[s.r][s.c]) q.g[s.r][s.c] = { id: uid++, t: s.t, sp: s.sp };
+      else { q.g[s.r][s.c].sp = s.sp; q.g[s.r][s.c].t = s.t; }
+      q.made[s.sp] = (q.made[s.sp] || 0) + 1;
+    }
+    if (cascade > 1) fxText(`Combo x${cascade}!`, $('#crushBoard'), 'g');
+    else if (pts >= 200) fxText(`+${pts}`, $('#crushBoard'), '');
+    sfx(cascade > 1 ? 'boom' : 'match');
+    updateHud(q);
+    await wait(240);
+    if (Q !== q) return;
+    gravity(q.g, q);
+    paint(q);
+    await wait(260);
+    if (Q !== q) return;
+    first = false;
+  }
+  if (!hasMove(q.g)) { q.g = newGrid(q.cfg); paint(q, true); toast('Xáo bàn mới 🔄', ''); await wait(200); }
+}
+async function swap(q, a, b) {
+  if (q.busy || q.over) return;
+  q.busy = true;
+  const A = q.g[a.r][a.c], B = q.g[b.r][b.c];
+  q.g[a.r][a.c] = B; q.g[b.r][b.c] = A;
+  paint(q);
+  await wait(200);
+  const m = findMatches(q.g, [a, b]);
+  const spActive = A.sp || B.sp;
+  if (!m.mark.size && !spActive) { q.g[a.r][a.c] = A; q.g[b.r][b.c] = B; paint(q); sfx('error'); await wait(200); q.busy = false; return; }
+  q.moves--;
+  if (spActive) {
+    q.forceMark = new Set();
+    const ak = [a, b].map((p) => p.r * N + p.c);
+    ak.forEach((k) => q.forceMark.add(k));
+    // cầu vồng hoán đổi với ô thường → nổ màu của ô đó
+    if (A.sp === 'rainbow' && !B.sp) q.hintRainbow = B.t; else if (B.sp === 'rainbow' && !A.sp) q.hintRainbow = A.t;
+  }
+  await resolve(q, [a, b]);
+  if (Q !== q) return;
+  q.sel = null;
+  updateHud(q);
+  q.busy = false;
+  await checkEnd(q);
+}
+async function checkEnd(q) {
+  const win = q.got >= q.cfg.collect && q.score >= q.cfg.score;
+  if (win) return finish(q, true);
+  if (q.moves <= 0) return finish(q, false);
+}
+function finish(q, win) {
+  q.over = true;
+  if (Q !== q) return;
+  const L = S.crush.level;
+  let reward = '';
+  if (win) {
+    S.crush.level = L + 1;
+    S.crush.best = Math.max(S.crush.best || 0, L);
+    S.crush.perm = Math.min(0.5, S.crush.perm + 0.01);
+    const money = 8000 + L * 2000;
+    S.money += money;
+    reward = `+1% doanh thu vĩnh viễn · +${fmtK(money)}`;
+    if (L % 5 === 0) {
+      S.collection.packs++;
+      const ids = ['tcDen', 'traSua', 'ly'];
+      for (const id of ids) E.addStock(id, 3);
+      reward += ' · 🎁 +1 túi quà & 3 nguyên liệu';
+    }
+    sfx('level');
+  } else sfx('sad');
+  markDirty('hud', 'panel');
+  requestSave();
+  const ov = $('#crushOver');
+  ov.hidden = false;
+  ov.innerHTML = `<div class="ov-card"><div class="ov-ico">${win ? '🏆' : '😿'}</div><h3>${win ? 'Thắng màn ' + L + '!' : 'Hết lượt rồi!'}</h3><p>${win ? esc(reward) : 'Thử lại nhé, bạn sẽ làm được thôi!'}</p><button class="btn pri block" data-act="${win ? 'next' : 'retry'}">${win ? 'Màn tiếp theo ➜' : 'Chơi lại'}</button><button class="btn ghost block" data-act="x">Đóng</button></div>`;
+}
+function crushHTML() {
+  const q = Q;
+  return `<div class="crush"><div class="c-head"><div><h3>🍬 MILK TEA CRUSH</h3><small>Màn ${S.crush.level} · ${S.crush.level < 3 ? 'Nhập Môn Trà Sữa' : 'Thử Thách Trà Sữa'}</small></div><button class="btn soft sm" data-act="retry">🔄 Chơi lại</button></div>
+    <div class="c-stats"><div><small>ĐIỂM SỐ</small><b id="cScore">0</b></div><div class="c-moves"><b id="cMoves">${q.moves}</b><small>LƯỢT</small></div><div><small>MỤC TIÊU: ${q.cfg.score}</small><span class="stars" id="cStars"><i>★</i><i>★</i><i>★</i></span></div></div>
+    <div class="c-goals"><span>🎯 MỤC TIÊU:</span><span class="g">${ICONS[0]} <b id="cCollect">0/${q.cfg.collect}</b></span><span class="g">⭐ <b id="cScoreGoal">0/${q.cfg.score}</b></span></div>
+    <div class="bar"><i id="cBar" style="width:0%"></i></div>
+    <p class="c-tip">Làm quen xếp kẹo: thu thập ${q.cfg.collect} ${ICONS[0]} Trân Châu!</p>
+    <div class="crush-board" id="crushBoard"></div><div class="crush-over" id="crushOver" hidden></div>
+    <p class="c-tip">💡 Ghép 4: ⚡ Ly Sọc quét hàng/cột · Ghép 2x2: 🐟 Cá Bay · Ghép L/T: 🍦 Kem Cheese nổ 3x3 · Ghép 5: 🌈 Cầu Vồng xóa 1 loại. Hoàn thành đủ Mục tiêu trước khi hết lượt!</p></div>`;
+}
+export function openCrush() {
+  const cfg = levelCfg(S.crush.level);
+  Q = { cfg, g: null, moves: cfg.moves, score: 0, got: 0, busy: false, over: false, sel: null, types: cfg.types, used: {}, made: {} };
+  Q.g = newGrid(cfg);
+  const m = openModal({ id: 'crush', cls: 'crush-m', html: crushHTML(), onClose: () => { Q = null; } });
+  paint(Q, true);
+  updateHud(Q);
+  const restart = () => { m.close(); openCrush(); };
+  bindActions(m.body, { retry: restart, next: restart, x: () => m.close() });
+  const board = $('#crushBoard', m.body);
+  let down = null;
+  board.addEventListener('pointerdown', (e) => {
+    const el = e.target.closest('.mt');
+    if (!el || !Q || Q.busy || Q.over) return;
+    down = { r: +el.dataset.r, c: +el.dataset.c, x: e.clientX, y: e.clientY };
+  });
+  board.addEventListener('pointerup', (e) => {
+    if (!down || !Q) return;
+    const d = down; down = null;
+    const dx = e.clientX - d.x, dy = e.clientY - d.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) > 18) {
+      const b = Math.abs(dx) > Math.abs(dy) ? { r: d.r, c: d.c + Math.sign(dx) } : { r: d.r + Math.sign(dy), c: d.c };
+      if (b.r >= 0 && b.c >= 0 && b.r < N && b.c < N) swap(Q, { r: d.r, c: d.c }, b);
+      return;
+    }
+    const cur = { r: d.r, c: d.c };
+    if (Q.sel && Math.abs(Q.sel.r - cur.r) + Math.abs(Q.sel.c - cur.c) === 1) { const a = Q.sel; Q.sel = null; swap(Q, a, cur); }
+    else { Q.sel = cur; sfx('click'); paint(Q); }
+  });
+}
+/** API kiểm thử/debug: hoán đổi hai ô liền kề trên bàn hiện tại. */
+export function crushDebug() {
+  return { get Q() { return Q; }, swap, N };
+}
+
+/* ======================= TRÂN CHÂU NỔ ======================= */
+const PN = 6, PCOL = 5, PDUR = 30, PGOAL = 120;
+const PEARL = ['⚫', '🩷', '💚', '💛', '💙'];
+let P = null;
+const pRand = () => randInt(0, PCOL - 1);
+function pNew() { return Array.from({ length: PN }, () => Array.from({ length: PN }, pRand)); }
+function pGroup(b, r, c) {
+  const col = b[r][c];
+  if (col < 0) return [];
+  const seen = new Set(), st = [[r, c]], out = [];
+  while (st.length) {
+    const [y, x] = st.pop(), k = y * PN + x;
+    if (seen.has(k) || y < 0 || x < 0 || y >= PN || x >= PN || b[y][x] !== col) continue;
+    seen.add(k); out.push([y, x]); st.push([y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]);
+  }
+  return out;
+}
+function pCollapse(b) {
+  for (let c = 0; c < PN; c++) {
+    const col = [];
+    for (let r = PN - 1; r >= 0; r--) if (b[r][c] >= 0) col.push(b[r][c]);
+    for (let r = PN - 1; r >= 0; r--) { const i = PN - 1 - r; b[r][c] = i < col.length ? col[i] : pRand(); }
+  }
+}
+const pHas = (b) => b.some((row, r) => row.some((_, c) => pGroup(b, r, c).length >= 2));
+function pRender() {
+  const el = $('#pBoard');
+  if (!el || !P) return;
+  el.innerHTML = P.b.map((row, r) => row.map((v, c) => `<button class="pc p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="Trân châu">${PEARL[v]}</button>`).join('')).join('');
+  $('#pScore').textContent = P.score;
+  $('#pTime').textContent = Math.ceil(P.t) + 's';
+  $('#pBar').style.width = `${P.t / PDUR * 100}%`;
+}
+function pEnd() {
+  if (!P || P.over) return;
+  P.over = true; clearInterval(P.timer);
+  const win = P.score >= PGOAL;
+  const money = P.score * 60, pearls = Math.floor(P.score / 40);
+  S.money += money; E.addStock('tcDen', pearls);
+  S.pearl.best = Math.max(S.pearl.best, P.score);
+  let extra = '';
+  if (win && chance(0.3)) { S.collection.packs++; extra = '<p>🎁 +1 túi quà sưu tầm!</p>'; }
+  markDirty('hud', 'panel'); requestSave();
+  sfx(win ? 'level' : 'sad');
+  $('#pBody').innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? '🏆' : '🙂'}</div><h3>${win ? 'THÀNH CÔNG!' : 'Cố lên lần sau!'}</h3><p>Điểm: <b>${P.score}</b> (kỷ lục ${S.pearl.best})</p><p>Tiền thưởng: <b class="money">+${fmtK(money)}</b> · Trân châu đen: <b>+${pearls}</b></p>${extra}<button class="btn pri block" data-act="x">Nhận thưởng 🎁</button></div>`;
+}
+export function openPearl() {
+  if (S.pearl.playsDay >= 3) return toast('Hôm nay bạn đã chơi đủ 3 lượt Trân Châu Nổ', 'err');
+  const m = openModal({ id: 'pearl', cls: 'small', onClose: () => { if (P?.timer) clearInterval(P.timer); P = null; }, html: `<div id="pBody"><h3 class="m-title">⚫ Trân Châu Nổ</h3><p class="m-text center">Chạm nhóm ≥ 2 trân châu cùng màu kề nhau để làm nổ. Combo liên tiếp = nhân điểm! Mục tiêu <b>${PGOAL}</b> điểm trong ${PDUR} giây.</p><p class="m-text center muted">Lượt hôm nay: ${S.pearl.playsDay}/3 · Kỷ lục: ${S.pearl.best}</p><button class="btn pri block" data-act="start">▶ Bắt đầu</button></div>` });
+  bindActions(m.body, {
+    x: () => m.close(),
+    start: () => {
+      S.pearl.playsDay++;
+      P = { b: pNew(), score: 0, combo: 0, t: PDUR, over: false, timer: null };
+      $('#pBody').innerHTML = `<div class="pg"><div class="mg-head"><span>⭐ <b id="pScore">0</b></span><span id="pCombo" class="pcombo"></span><span>⏱ <b id="pTime">30s</b></span></div><div class="bar"><i id="pBar"></i></div><div class="pboard" id="pBoard"></div><p class="m-text center muted">Chạm nhóm ≥2 trân châu cùng màu kề nhau. Combo liên tiếp = nhân điểm! Mục tiêu ${PGOAL} điểm.</p></div>`;
+      pRender();
+      let last = performance.now();
+      P.timer = setInterval(() => {
+        const now = performance.now(); P.t -= (now - last) / 1000; last = now;
+        if (P.t <= 0) { P.t = 0; pEnd(); return; }
+        const tm = $('#pTime'); if (tm) { tm.textContent = Math.ceil(P.t) + 's'; $('#pBar').style.width = `${P.t / PDUR * 100}%`; }
+      }, 120);
+    },
+    pop: (t) => {
+      if (!P || P.over) return;
+      const r = +t.dataset.r, c = +t.dataset.c, g = pGroup(P.b, r, c);
+      if (g.length < 2) { P.combo = 0; $('#pCombo').textContent = ''; sfx('pop'); return; }
+      P.combo++;
+      const mul = P.combo >= 5 ? 5 : P.combo >= 3 ? 3 : P.combo >= 2 ? 2 : 1;
+      const gain = g.length * g.length * mul;
+      P.score += gain;
+      for (const [y, x] of g) P.b[y][x] = -1;
+      $('#pCombo').textContent = mul > 1 ? `Combo x${mul}!` : '';
+      fxText(`+${gain}`, t, 'g');
+      sfx(g.length >= 5 ? 'level' : 'match');
+      pCollapse(P.b);
+      if (!pHas(P.b)) P.b = pNew();
+      pRender();
+    },
+  });
+}
+
+/* ======================= PANEL "Milk Tea Crush" ======================= */
+export const crush = {
+  html() {
+    const L = S.crush.level;
+    return `<div class="mgcard crushc"><h4>🍬 MILK TEA CRUSH</h4><p>Ghép 3 icon giống nhau sẽ nổ! Mỗi màn vượt qua tăng <b>+1% doanh thu vĩnh viễn</b> cho quán (không bị reset khi thua hay qua ngày mới).</p>
+      <div class="mg-info"><div><small>MÀN HIỆN TẠI</small><b>Màn ${L}</b></div><div><small>THƯỞNG KHI THẮNG</small><b>+1% DT vĩnh viễn ⚡</b><small>(Cứ 5 màn: +1 Túi Quà 🎁)</small></div></div>
+      <div class="mg-info"><div><small>Buff hiện có</small><b>+${(S.crush.perm * 100).toFixed(0)}% doanh thu</b></div><div><small>Màn cao nhất</small><b>${S.crush.best || 0}</b></div></div>
+      <div class="rules"><b>📖 Luật chơi & Thử thách tăng dần:</b><p>• Màn càng cao độ khó càng tăng: mục tiêu điểm cao hơn, lượt đi ít hơn, nhiều loại topping trà sữa và thời gian đếm ngược suy nghĩ mỗi lượt nhanh dần.</p><p>• <b>Combo kẹo đặc biệt:</b></p><p>- Ghép 4: ⚡ Ly Sọc quét sạch 1 hàng/cột.</p><p>- Ghép 2x2: 🐟 Con Cá Bay tự bơi đến nổ ô ngẫu nhiên.</p><p>- Ghép L / T: 🍦 Kem Cheese nổ lan 3x3.</p><p>- Ghép 5: 🌈 Cầu Vồng quét sạch toàn bộ 1 loại kẹo.</p></div>
+      <button class="btn grad block" data-act="crush">🎮 VÀO CHƠI MILK TEA CRUSH NGAY</button></div>
+      <div class="mgcard"><h4>⚫ TRÂN CHÂU NỔ</h4><p>Chạm nhóm trân châu cùng màu kề nhau để làm nổ trong 30 giây. Nhận tiền & trân châu đen. Hôm nay còn <b>${3 - S.pearl.playsDay}</b> lượt.</p><button class="btn pri block" data-act="pearl">▶ Chơi Trân Châu Nổ</button></div>`;
+  },
+  acts: { crush: () => openCrush(), pearl: () => openPearl() },
+};
+void ITEMS; void rand; void pick; void fxSpark; void fmt;
