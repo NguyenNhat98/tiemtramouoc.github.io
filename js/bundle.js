@@ -2609,11 +2609,13 @@
     el.hidden = false;
     const hasSave = S.started;
     el.innerHTML = `
-    <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="spark" style="left:30%;top:10%">\u2726</span><span class="spark" style="right:30%;top:20%;animation-delay:-1s">\u2726</span></div>
-    <div class="intro-awning"></div>
-    <div class="lanterns" aria-hidden="true"><span>\u{1F3EE}</span><span>\u{1F3EE}</span><span>\u{1F3EE}</span></div>
-    <h1 class="intro-title">Ti\u1EC7m Tr\xE0<br/>M\u01A1 \u01AF\u1EDBc</h1>
-    <div class="intro-counter" aria-hidden="true"><div class="cups"><span>\u{1F9CB}</span><span>\u{1F964}</span><span>\u{1F9CB}</span><span>\u{1F375}</span></div><div class="cat">\u{1F431}<small>z z</small></div><div class="plants"><span>\u{1FAB4}</span><span>\u{1F33F}</span></div></div>
+    <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="spark" style="left:12%;top:36%">\u2726</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">\u2726</span></div>
+    <div class="in-aw" aria-hidden="true"></div>
+    <div class="in-lan" aria-hidden="true"><span>\u{1F3EE}</span><span>\u{1F390}</span><span>\u{1F3EE}</span></div>
+    <h1 class="intro-title">Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc</h1>
+    <div class="in-counter" aria-hidden="true"><span class="in-plant">\u{1F335}</span><div class="in-cups"><span>\u{1F9CB}</span><span>\u{1F964}</span><span>\u{1F9C3}</span><span>\u{1F375}</span></div><div class="in-cat">\u{1F431}<small>z z</small></div><span class="in-plant">\u{1FAB4}</span></div>
+    <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="in-corner l">\u{1F353}</span><span class="in-corner r">\u{1F343}</span>
     <p class="intro-tag">Pha tr\xE0, \u0111\xF3n kh\xE1ch, m\u1EDF ti\u1EC7m nh\u1ECF c\u1EE7a ri\xEAng b\u1EA1n</p>
     <div class="intro-info">${esc(S.shopName)} \xB7 Ng\xE0y ${S.day} \xB7 ${fmtK(S.money)}</div>
     <button class="btn pri big" data-act="play">${hasSave ? "Ch\u01A1i ti\u1EBFp" : "Ch\u01A1i m\u1EDBi"}</button>

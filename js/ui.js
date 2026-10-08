@@ -385,11 +385,13 @@ export function showIntro(onPlay) {
   el.hidden = false;
   const hasSave = S.started;
   el.innerHTML = `
-    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="spark" style="left:30%;top:10%">✦</span><span class="spark" style="right:30%;top:20%;animation-delay:-1s">✦</span></div>
-    <div class="intro-awning"></div>
-    <div class="lanterns" aria-hidden="true"><span>🏮</span><span>🏮</span><span>🏮</span></div>
-    <h1 class="intro-title">Tiệm Trà<br/>Mơ Ước</h1>
-    <div class="intro-counter" aria-hidden="true"><div class="cups"><span>🧋</span><span>🥤</span><span>🧋</span><span>🍵</span></div><div class="cat">🐱<small>z z</small></div><div class="plants"><span>🪴</span><span>🌿</span></div></div>
+    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="spark" style="left:12%;top:36%">✦</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">✦</span></div>
+    <div class="in-aw" aria-hidden="true"></div>
+    <div class="in-lan" aria-hidden="true"><span>🏮</span><span>🎐</span><span>🏮</span></div>
+    <h1 class="intro-title">Tiệm Trà Mơ Ước</h1>
+    <div class="in-counter" aria-hidden="true"><span class="in-plant">🌵</span><div class="in-cups"><span>🧋</span><span>🥤</span><span>🧃</span><span>🍵</span></div><div class="in-cat">🐱<small>z z</small></div><span class="in-plant">🪴</span></div>
+    <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="in-corner l">🍓</span><span class="in-corner r">🍃</span>
     <p class="intro-tag">Pha trà, đón khách, mở tiệm nhỏ của riêng bạn</p>
     <div class="intro-info">${esc(S.shopName)} · Ngày ${S.day} · ${fmtK(S.money)}</div>
     <button class="btn pri big" data-act="play">${hasSave ? 'Chơi tiếp' : 'Chơi mới'}</button>
