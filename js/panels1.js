@@ -28,7 +28,7 @@ function khoRow(id) {
     <div class="k-main"><div class="k-t"><b>${it.name}</b>${life ? `<span class="life">⏳ ${life} ngày</span>` : ''}</div>
       ${it.price && it.kind !== 'supply' ? `<span class="sale">💵 Bán ${pctMargin}% (+${fmtK(profit)})</span>` : ''}
       <small>📦 ${qty}${it.kind === 'flavor' ? ' ly' : ''} · ${fmtK(E.costOf(id) * (it.kind === 'flavor' ? FLAVOR_BOTTLE : 1))}${it.kind === 'flavor' ? '/chai' : '/ly'}${exp ? ` · <em class="warn">⚠️ ${exp} hết hạn hôm nay</em>` : ''}${S.lastUsed[id] ? ` · 🏭 dùng ${S.lastUsed[id]}` : ''}</small>
-      ${plan ? `<small class="plan">+${plan * unit}${it.kind === 'flavor' ? ` ly (${plan} chai)` : ''} · ${fmtK(E.unitCost(id) * plan)}</small>` : ''}</div>
+      <small class="plan">${plan ? `+${plan * unit}${it.kind === 'flavor' ? ` ly (${plan} chai)` : ''} · ${fmtK(E.unitCost(id) * plan)}` : '&nbsp;'}</small></div>
     <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Giảm">−</button><input class="num" type="number" inputmode="numeric" min="0" max="999" value="${plan}" data-plan="${id}" aria-label="Số lượng ${it.name}"><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="Tăng">+</button></div>
   </div>`;
 }

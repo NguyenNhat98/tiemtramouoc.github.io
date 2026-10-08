@@ -416,3 +416,9 @@ body { background: color-mix(in srgb, var(--bg) 85%, #7a5a3a); }
 .disp.pouring .jar { animation: jarShake .45s ease-in-out infinite; }
 @keyframes jarShake { 50% { transform: rotate(-3deg) translateY(1px); } }
 
+
+/* Dòng danh sách giữ chiều cao cố định: đổi số lượng không làm ô phóng to / thu nhỏ */
+.krow, .grow-row, .nrow, .erow { min-height: 72px; }
+.krow .plan { display: block; min-height: 16px; line-height: 16px; }
+.krow .k-main { justify-content: center; }
+.stepper { min-width: 138px; justify-content: flex-end; }

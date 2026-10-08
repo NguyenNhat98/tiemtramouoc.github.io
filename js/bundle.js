@@ -3328,7 +3328,7 @@
     <div class="k-main"><div class="k-t"><b>${it.name}</b>${life ? `<span class="life">\u23F3 ${life} ng\xE0y</span>` : ""}</div>
       ${it.price && it.kind !== "supply" ? `<span class="sale">\u{1F4B5} B\xE1n ${pctMargin}% (+${fmtK(profit)})</span>` : ""}
       <small>\u{1F4E6} ${qty}${it.kind === "flavor" ? " ly" : ""} \xB7 ${fmtK(costOf(id) * (it.kind === "flavor" ? FLAVOR_BOTTLE : 1))}${it.kind === "flavor" ? "/chai" : "/ly"}${exp ? ` \xB7 <em class="warn">\u26A0\uFE0F ${exp} h\u1EBFt h\u1EA1n h\xF4m nay</em>` : ""}${S.lastUsed[id] ? ` \xB7 \u{1F3ED} d\xF9ng ${S.lastUsed[id]}` : ""}</small>
-      ${plan ? `<small class="plan">+${plan * unit}${it.kind === "flavor" ? ` ly (${plan} chai)` : ""} \xB7 ${fmtK(unitCost(id) * plan)}</small>` : ""}</div>
+      <small class="plan">${plan ? `+${plan * unit}${it.kind === "flavor" ? ` ly (${plan} chai)` : ""} \xB7 ${fmtK(unitCost(id) * plan)}` : "&nbsp;"}</small></div>
     <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Gi\u1EA3m">\u2212</button><input class="num" type="number" inputmode="numeric" min="0" max="999" value="${plan}" data-plan="${id}" aria-label="S\u1ED1 l\u01B0\u1EE3ng ${it.name}"><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="T\u0103ng">+</button></div>
   </div>`;
   }
