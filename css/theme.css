@@ -429,3 +429,8 @@ body { background: color-mix(in srgb, var(--bg) 85%, #7a5a3a); }
 .modal .c-head, .modal .pg > .bar { margin-right: 0; }
 .modal .c-head { padding-right: 42px; }
 .modal-x { top: 10px; right: 10px; }
+
+/* Ly trượt dưới vòi bình đang rót */
+.work { position: relative; z-index: 3; }
+.cupslot { position: relative; transition: transform .38s cubic-bezier(.25, .9, .35, 1); will-change: transform; }
+.cupslot.under-tap { z-index: 6; pointer-events: none; }

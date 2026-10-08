@@ -2992,47 +2992,64 @@
     sfx("drop");
     const slot = $("#cupslot");
     if (!fromEl || !slot) return;
-    const cupEl = $(".cup", slot) || slot;
-    const a = fromEl.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
-    const liq = cupEl.querySelector?.(".c-liq");
-    const lr = liq ? liq.getBoundingClientRect() : null;
-    const surfaceY = lr && lr.height > 2 ? lr.top + 3 : b.bottom - 8;
-    const n = 5, STEPS2 = 22, SPLIT = 0.62;
+    const a = fromEl.getBoundingClientRect();
+    const n = 5, DUR = 820, GAP = 95, SPLIT = 0.62;
+    const balls = [];
     for (let k = 0; k < n; k++) {
       const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
-      const ball = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color}"></div>`);
-      document.body.appendChild(ball);
-      const rx = b.left + b.width / 2 + rand(-b.width * 0.18, b.width * 0.18) - sx, ry = b.top - 16 - sy;
-      const dy2 = surfaceY - (sy + ry);
-      const rise = Math.max(40, Math.min(90, Math.abs(ry) * 0.35 + 36));
-      const frames2 = [];
-      for (let i = 0; i <= STEPS2; i++) {
-        const t = i / STEPS2;
-        let x, y, sc = 1, op = 1;
-        if (t <= SPLIT) {
-          const u = t / SPLIT;
-          x = rx * (1 - Math.pow(1 - u, 2));
-          y = ry * u - rise * 4 * u * (1 - u);
-          sc = 1 + 0.15 * Math.sin(u * Math.PI);
-        } else {
-          const u = (t - SPLIT) / (1 - SPLIT);
-          x = rx;
-          y = ry + dy2 * u * u;
-          sc = 1 - 0.25 * u;
-          op = u > 0.85 ? 1 - (u - 0.85) / 0.15 : 1;
-        }
-        frames2.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(2)})`, opacity: op, offset: t });
-      }
-      ball.animate(frames2, { duration: 820, delay: k * 95, easing: "linear", fill: "backwards" }).onfinish = () => {
-        ball.remove();
-        if (k === 0) {
-          slot.classList.remove("plop");
-          void slot.offsetWidth;
-          slot.classList.add("plop");
-        }
-        if (k === n - 1) splash(slot, color, surfaceY);
-      };
+      const el = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color};opacity:0"></div>`);
+      document.body.appendChild(el);
+      balls.push({ el, k, sx, sy, jit: rand(-9, 9), rise: 34 + rand(0, 22), done: false });
     }
+    const t0 = performance.now();
+    let surfaceY = 0;
+    const frame2 = (now) => {
+      const cupEl = slot.querySelector(".cup") || slot;
+      const cr = cupEl.getBoundingClientRect();
+      const liq = cupEl.querySelector?.(".c-liq");
+      const lr = liq ? liq.getBoundingClientRect() : null;
+      surfaceY = lr && lr.height > 2 ? lr.top + 3 : cr.bottom - 8;
+      const cx = cr.left + cr.width / 2, rimY = cr.top - 16;
+      let alive = false;
+      for (const o of balls) {
+        if (o.done) continue;
+        const u = (now - t0 - o.k * GAP) / DUR;
+        if (u < 0) {
+          alive = true;
+          continue;
+        }
+        if (u >= 1) {
+          o.done = true;
+          o.el.remove();
+          if (o.k === 0) {
+            slot.classList.remove("plop");
+            void slot.offsetWidth;
+            slot.classList.add("plop");
+          }
+          if (o.k === n - 1) splash(slot, color, surfaceY);
+          continue;
+        }
+        alive = true;
+        const ex = cx + o.jit;
+        let x, y, sc = 1, op = 1;
+        if (u <= SPLIT) {
+          const w = u / SPLIT;
+          x = o.sx + (ex - o.sx) * (1 - (1 - w) * (1 - w));
+          y = o.sy + (rimY - o.sy) * w - o.rise * 4 * w * (1 - w);
+          sc = 1 + 0.15 * Math.sin(w * Math.PI);
+        } else {
+          const w = (u - SPLIT) / (1 - SPLIT);
+          x = ex;
+          y = rimY + (surfaceY - rimY) * w * w;
+          sc = 1 - 0.25 * w;
+          op = w > 0.85 ? 1 - (w - 0.85) / 0.15 : 1;
+        }
+        o.el.style.opacity = op;
+        o.el.style.transform = `translate(${(x - o.sx).toFixed(1)}px,${(y - o.sy).toFixed(1)}px) scale(${sc.toFixed(2)})`;
+      }
+      if (alive) requestAnimationFrame(frame2);
+    };
+    requestAnimationFrame(frame2);
   }
   function splash(cup, color, atY) {
     const r = cup.getBoundingClientRect();
@@ -3244,14 +3261,39 @@
     updateBoard(false);
     const st = $("#stream");
     const b = SH.board;
-    if (b?.pouring && b.tea) {
-      const d = $(`.disp[data-tea="${b.tea}"] .tap`), cup = $("#cupslot");
-      if (d && cup && st) {
-        const a = d.getBoundingClientRect(), c2 = cup.getBoundingClientRect(), r0 = root.getBoundingClientRect();
-        st.style.cssText = `display:block;left:${a.left + a.width / 2 - 3 - r0.left}px;top:${a.bottom - r0.top}px;height:${Math.max(0, c2.top + c2.height * 0.2 - a.bottom)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
-        if (Math.random() < 0.15) sfx("pour");
+    const slot = $("#cupslot");
+    if (b?.pouring && b.tea && slot) {
+      const d = $(`.disp[data-tea="${b.tea}"] .tap`);
+      if (d && st) {
+        const a = d.getBoundingClientRect(), r0 = root.getBoundingClientRect();
+        const tapX = a.left + a.width / 2;
+        if (slot._pour?.tea !== b.tea) {
+          const board = slot.offsetParent, br = board.getBoundingClientRect();
+          const baseL = br.left + board.clientLeft + slot.offsetLeft, baseT = br.top + board.clientTop + slot.offsetTop;
+          const cupEl = slot.querySelector(".cup");
+          const cupW = cupEl ? cupEl.offsetWidth : 60, cupH = cupEl ? cupEl.offsetHeight : 80;
+          const cupTop = baseT + slot.offsetHeight - 6 - cupH;
+          const vw = document.documentElement.clientWidth;
+          const cx = Math.max(cupW / 2 + 6, Math.min(vw - cupW / 2 - 6, tapX));
+          const nx = Math.round(cx - (baseL + slot.offsetWidth / 2)), ny = Math.round(a.bottom + 22 - cupTop);
+          slot.style.transform = `translate(${nx}px,${ny}px)`;
+          slot.classList.add("under-tap");
+          slot._pour = { tea: b.tea, t0: performance.now(), mouthY: cupTop + ny + 4 };
+        }
+        const P3 = slot._pour;
+        if (performance.now() - P3.t0 > 380) {
+          st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.max(0, P3.mouthY - a.bottom + 2)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+          if (Math.random() < 0.15) sfx("pour");
+        } else st.style.display = "none";
       }
-    } else if (st) st.style.display = "none";
+    } else {
+      if (st) st.style.display = "none";
+      if (slot?._pour) {
+        slot._pour = null;
+        slot.style.transform = "";
+        slot.classList.remove("under-tap");
+      }
+    }
     if (cntT <= 0 || force) {
       cntT = 0.25;
       for (const el of $$("[data-cnt]", root)) {
