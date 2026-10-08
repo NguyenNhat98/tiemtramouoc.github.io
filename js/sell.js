@@ -6,10 +6,28 @@ import {
   ITEMS, TEAS, FLAVORS, TOPS, ARCHETYPES, STAFF, APPS, APP_FEE, BRANCHES, FRANCHISE, BANK, PETS, PET_DECOR, SEEDS,
   SHIFT_START_H, SHIFT_END_H, LOCATIONS, DAY_EVENTS, ADS, FEED_POSTS, FEED_AUTHORS, SECRET_RECIPES,
 } from './config.js';
-import { S, emit, on, markDirty, requestSave, saveGame, saveBackup, freshToday, clamp, rand, randInt, pick, chance, wpick, sum } from './core.js';
+import { S, emit, on, markDirty, requestSave, saveGame, saveBackup, registerSaveHook, registerRestoreHook, freshToday, clamp, rand, randInt, pick, chance, wpick, sum } from './core.js';
 import * as E from './econ.js';
 
 export const SH = { on: false };
+registerSaveHook(() => {
+  S.shiftRuntime = S.phase === 'sell' && SH.on ? JSON.parse(JSON.stringify(SH)) : null;
+});
+export function restoreShiftRuntime() {
+  const saved = S.shiftRuntime;
+  SH.on = false; SH.fin = false;
+  if (S.phase !== 'sell') return false;
+  if (!saved || !saved.on || !Number.isFinite(saved.total) || saved.total <= 0 ||
+      !Number.isFinite(saved.t) || !Array.isArray(saved.queue) || !Array.isArray(saved.plan) ||
+      !Array.isArray(saved.jobs) || !Array.isArray(saved.tables) || !Array.isArray(saved.onlineQ)) {
+    S.phase = 'home'; S.shiftRuntime = null; return false;
+  }
+  Object.assign(SH, saved);
+  if (SH.board) SH.board.pouring = false;
+  cid = Math.max(cid, ...SH.queue.map((c) => c.id + 1), ...SH.onlineQ.map((c) => (c.id || 0) + 1));
+  return true;
+}
+registerRestoreHook(restoreShiftRuntime);
 
 /* ===== Sinh khách ===== */
 function spawnPlan(n, total) {
@@ -562,7 +580,7 @@ export function nextDay() {
   emit('day:next');
   saveGame();
 }
-export function resetShiftRuntime() { Object.assign(SH, { on: false, fin: false }); }
+export function resetShiftRuntime() { Object.assign(SH, { on: false, fin: false }); restoreShiftRuntime(); }
 
 /** Sinh bài đăng MXH hằng ngày (gọi khi sang ngày mở app MXH). */
 export function genPost() {

@@ -7,7 +7,8 @@ import { S, on, emit, markDirty, $, $$, h, esc, fmtK, sfx, clamp, wait, sum, ran
 import * as E from './econ.js';
 import * as G from './sell.js';
 import { SH } from './sell.js';
-import { toast, fxText, fxCoins, fxSpark, bindActions, logoHTML, openModal, updateClock } from './ui.js';
+import { toast, fxText, fxCoins, fxSpark, bindActions, logoHTML, openModal, isModalOpen, updateClock } from './ui.js';
+import { teaArt, toppingArt, stackArt, sealerArt, cupArt, pourArt, splashArt } from './sell-art.js';
 
 /* ===== Hình ly ===== */
 const sizePx = { M: [54, 76], L: [64, 90] };
@@ -23,8 +24,9 @@ export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const lid = c.phase === 'ready' ? '<i class="c-lid"></i>' : '';
   const straw = c.phase === 'ready' ? '<i class="c-straw"></i>' : '';
   const st = stamp && !mini && E.equipLevel('nhanDien') > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : '';
-  return `<div class="cup ${c.phase || ''}" style="width:${w * k}px;height:${hgt * k}px">
+  return `<div class="cup illustrated-cup ${c.phase || ''}" style="width:${w * k}px;height:${hgt * k}px">
     <div class="c-body"><div class="c-liq" style="height:${Math.min(100, fill * 86)}%;background:${liq}">${flav}</div><div class="c-tops">${tops}</div></div>
+    <div class="cup-art-overlay">${cupArt()}</div><div class="cup-pour-art">${c.tea ? pourArt(c.tea) : ''}</div><div class="cup-splash-art">${c.tea ? splashArt(c.tea) : ''}</div>
     ${lid}${straw}${st}</div>`;
 }
 function orderCup(o) {
@@ -33,7 +35,23 @@ function orderCup(o) {
 
 /* ===== Dựng màn hình ===== */
 let root = null;
+let brewFxGeneration = 0;
+function clearBrewFx() {
+  brewFxGeneration++;
+  const layer = $('#brewfx'); if (layer) layer.textContent = '';
+  $$('.fx-lid').forEach((el) => el.remove());
+  const fx = $('#fx'); if (fx) fx.textContent = '';
+}
+function brewFxLayer() {
+  let layer = $('#brewfx');
+  if (!layer) { layer = h('<div id="brewfx" aria-hidden="true"></div>'); $('#app').appendChild(layer); }
+  return layer;
+}
+const canShowBrewFx = () => S.phase === 'sell' && SH.view === 'counter' && !isModalOpen();
+on('modal:open', clearBrewFx);
+on('shift:end', clearBrewFx);
 export function renderSell() {
+  clearBrewFx();
   const view = $('#view');
   if (S.phase !== 'sell') return;
   if (SH.view === 'lobby') return renderLobby(view);
@@ -48,8 +66,8 @@ export function renderSell() {
       <div class="tag-w">QUẦY TRÀ</div>
       <div class="shelf-row">
         <div class="stacks">
-          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
-          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="lyL">0</span></button>
+          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack image-stack m">${stackArt('M')}</div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
+          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack image-stack l">${stackArt('L')}</div><b>L</b><span class="cnt" data-cnt="lyL">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join('')}</div>
       </div>
@@ -63,7 +81,7 @@ export function renderSell() {
             <div class="board-txt" id="boardTxt">Lấy ly<br/>M hoặc L</div>
             <div class="pourbar" id="pourbar"><div class="pb-zone"></div><i id="pbFill"></i></div></div>
         </div>
-        <button class="sealer" id="sealer" data-act="seal" aria-label="Máy đóng nắp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
+        <button class="sealer image-sealer" id="sealer" data-act="seal" aria-label="Máy đóng nắp">${sealerArt()}<span class="sl-led">READY</span></button>
         <div class="work-side">
           <button class="phone" data-act="phone" aria-label="Đơn online"><span>📱</span><b id="phoneBadge">0</b></button>
           <button class="trash" data-act="trash" aria-label="Thùng rác">🗑️</button>
@@ -87,7 +105,7 @@ function dispHTML(t) {
   const locked = !S.unlocked[t];
   const off = S.unlocked[t] && !S.onMenu[t];
   return `<button class="disp ${locked ? 'locked' : ''} ${off ? 'off' : ''}" data-act="disp" data-tea="${t}" aria-label="${it.name}" ${locked ? 'data-locked="1"' : ''}>
-    <i class="jlid"></i><div class="jar"><i class="jl" style="background:${it.color}"></i><span class="lab">${it.short}</span>${locked ? '<em class="lk">🔒</em>' : ''}</div><div class="tap"><i class="drip" style="background:${it.color}"></i></div>
+    <div class="jar image-jar">${teaArt(t)}${locked ? '<em class="lk">🔒</em>' : ''}<span class="tap image-tap"><i class="drip" style="background:${it.color}"></i></span></div>
     <span class="cnt" data-cnt="${t}">0</span></button>`;
 }
 function fillFlavors() {
@@ -100,8 +118,7 @@ function fillTrays() {
   $('#trays').innerHTML = order.slice(0, slots).map((t) => {
     const it = ITEMS[t];
     const locked = !S.unlocked[t], off = S.unlocked[t] && !S.onMenu[t];
-    const dots = `<i style="background-color:${it.color}"></i>`.repeat(14);
-    return `<button class="tray ${locked ? 'locked' : ''} ${off ? 'off' : ''}" data-act="top" data-t="${t}" aria-label="${it.name}"><div class="pile">${dots}</div>${locked ? '<em class="lk">🔒</em>' : ''}<small>${it.name.replace('Trân châu ', 'TC ').replace('Thạch ', 'Th. ')}</small><span class="cnt" data-cnt="${t}">0</span></button>`;
+    return `<button class="tray image-tray ${locked ? 'locked' : ''} ${off ? 'off' : ''}" data-act="top" data-t="${t}" aria-label="${it.name}"><div class="pile">${toppingArt(t)}</div>${locked ? '<em class="lk">🔒</em>' : ''}<small>${it.name.replace('Trân châu ', 'TC ').replace('Thạch ', 'Th. ')}</small><span class="cnt" data-cnt="${t}">0</span></button>`;
   }).join('');
 }
 
@@ -141,8 +158,8 @@ function doServe() {
   if (cupEl && target) {
     const a = cupEl.getBoundingClientRect(), b = target.getBoundingClientRect();
     const clone = cupEl.cloneNode(true);
-    clone.style.cssText = `position:fixed;left:${a.left}px;top:${a.top}px;z-index:80;pointer-events:none`;
-    document.body.appendChild(clone);
+    clone.style.cssText = `position:fixed;left:${a.left}px;top:${a.top}px;pointer-events:none`;
+    brewFxLayer().appendChild(clone);
     clone.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${b.left - a.left}px,${b.top - a.top + 20}px) scale(.5)`, opacity: 0.1 }], { duration: 480, easing: 'ease-in' }).onfinish = () => clone.remove();
   }
   const anchor = target || $('#hud');
@@ -162,20 +179,24 @@ function doServe() {
 function dropFx(fromEl, color) {
   sfx('drop');
   const slot = $('#cupslot');
-  if (!fromEl || !slot) return;
+  if (!fromEl || !slot || !canShowBrewFx()) return;
+  const generation = brewFxGeneration, board = SH.board;
   const a = fromEl.getBoundingClientRect();
   const n = 5, DUR = 820, GAP = 95, SPLIT = 0.62;
   const balls = [];
   for (let k = 0; k < n; k++) {
     const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
     const el = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color};opacity:0"></div>`);
-    document.body.appendChild(el);
+    brewFxLayer().appendChild(el);
     balls.push({ el, k, sx, sy, jit: rand(-9, 9), rise: 34 + rand(0, 22), done: false });
   }
   const t0 = performance.now();
   let surfaceY = 0;
   // vị trí ly đo lại MỖI khung hình: ly đang trượt về/ra thì trân châu bay theo đúng ly
   const frame = (now) => {
+    if (generation !== brewFxGeneration || !slot.isConnected || !canShowBrewFx() || SH.board !== board) {
+      balls.forEach((o) => o.el.remove()); return;
+    }
     const cupEl = slot.querySelector('.cup') || slot;
     const cr = cupEl.getBoundingClientRect();
     const liq = cupEl.querySelector?.('.c-liq');
@@ -215,32 +236,31 @@ function dropFx(fromEl, color) {
 }
 /** Vòng sóng + giọt bắn tại miệng ly. */
 function splash(cup, color, atY) {
+  if (!canShowBrewFx() || !cup.isConnected) return;
   const r = cup.getBoundingClientRect();
   const x = r.left + r.width / 2, y = atY ?? r.top + r.height * 0.5;
   fxSpark({ x, y }, 5);
   const ring = h(`<div class="fx-ripple" style="left:${x}px;top:${y}px;border-color:${color}"></div>`);
-  document.body.appendChild(ring);
+  brewFxLayer().appendChild(ring);
   setTimeout(() => ring.remove(), 520);
 }
 function flyCupIn(size) {
   const slot = $('#cupslot'), cupEl = slot?.firstElementChild;
-  const stack = $(`.stack[data-size="${size}"]`);
-  if (!cupEl || !stack) return;
-  const a = stack.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
+  if (!cupEl || !canShowBrewFx()) return;
   cupEl.animate([
-    { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px,${a.top - b.top - 10}px) scale(.6) rotate(-18deg)`, opacity: 0.2 },
-    { transform: 'translate(0,0) scale(1) rotate(0)', opacity: 1 },
-  ], { duration: 420, easing: 'cubic-bezier(.3,1.35,.55,1)' });
+    { transform: 'scale(.45)', opacity: 0.15 },
+    { transform: 'scale(.8)', opacity: 0.65, offset: .6 },
+    { transform: 'scale(1)', opacity: 1 },
+  ], { duration: 360, easing: 'ease-out' });
 }
 function sealAnim() {
   const cupEl = $('#cupslot .cup'), sealer = $('#sealer');
-  if (!cupEl || !sealer) return;
+  if (!cupEl || !sealer || !canShowBrewFx()) return;
   const dur = Math.max(600, (SH.board?.sealMax || 1.2) * 1000);
-  const r = cupEl.getBoundingClientRect();
   sealer.classList.add('press');
   // nắp rơi xuống miệng ly, rồi ép nhẹ
-  const lid = h(`<div class="fx-lid" style="left:${r.left - 3}px;top:${r.top - 6}px;width:${r.width + 6}px"></div>`);
-  document.body.appendChild(lid);
+  const lid = h('<div class="fx-lid cup-attached-lid"></div>');
+  cupEl.appendChild(lid);
   lid.animate([
     { transform: 'translateY(-64px) scaleX(.86)', opacity: 0, offset: 0 },
     { transform: 'translateY(-44px) scaleX(.92)', opacity: 1, offset: 0.2 },
@@ -256,7 +276,13 @@ function sealAnim() {
   setTimeout(() => sealer.classList.remove('press'), dur);
   sfx('seal');
 }
-on('cup:pick', (size) => { setTimeout(() => { updateBoard(true); flyCupIn(size); sfx('cup'); }, 0); });
+on('cup:pick', (size) => {
+  const board = SH.board;
+  setTimeout(() => {
+    if (SH.board !== board || !canShowBrewFx() || board.phase !== 'cup') return;
+    updateBoard(true); flyCupIn(size); sfx('cup');
+  }, 0);
+});
 on('seal:start', () => { updateBoard(true); sealAnim(); });
 on('seal:done', () => { sfx('ding'); updateBoard(true); const cs = $('#cupslot'); if (cs) { fxSpark({ x: cs.getBoundingClientRect().left + cs.offsetWidth / 2, y: cs.getBoundingClientRect().top + cs.offsetHeight * 0.35 }, 6); cs.classList.remove('plop'); void cs.offsetWidth; cs.classList.add('plop'); } const s = $('#sealer'); s?.classList.add('ding'); setTimeout(() => s?.classList.remove('ding'), 600); });
 on('top', () => updateBoard(true));
@@ -365,6 +391,7 @@ export function frameSell(dt, force) {
   const st = $('#stream');
   const b = SH.board;
   const slot = $('#cupslot');
+  slot?.classList.toggle('pouring-art', !!b?.pouring);
   if (b?.pouring && b.tea && slot) {
     const d = $(`.disp[data-tea="${b.tea}"] .tap`);
     if (d && st) {

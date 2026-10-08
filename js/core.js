@@ -98,9 +98,12 @@ export function freshToday() {
   return { rev: 0, tips: 0, online: 0, cogs: 0, rent: 0, util: 0, wage: 0, tax: 0, purchase: 0, cups: 0, left: 0, stars: [], waste: 0, branch: 0, fran: 0, interest: 0 };
 }
 export const S = newState();
+let restoreHook = null;
+export const registerRestoreHook = (fn) => { restoreHook = fn; };
 export function replaceState(next) {
   for (const k of Object.keys(S)) delete S[k];
   Object.assign(S, next);
+  if (restoreHook) restoreHook();
 }
 
 /* ===== Dirty flags ===== */
@@ -109,17 +112,25 @@ export const markDirty = (...k) => k.forEach((x) => dirty.add(x));
 export const consumeDirty = () => { const o = [...dirty]; dirty.clear(); return o; };
 
 /* ===== Save / Load ===== */
-let storageOk = true;
+let saveHook = null;
+export const registerSaveHook = (fn) => { saveHook = fn; };
+let storageWarned = false;
 function store() {
-  if (!storageOk) return null;
-  try { const s = window.localStorage; s.getItem(SAVE_KEY); return s; } catch (e) { storageOk = false; return null; }
+  try { const s = window.localStorage; s.getItem(SAVE_KEY); return s; } catch (e) { return null; }
+}
+function saveFailed() {
+  if (!storageWarned) { storageWarned = true; emit('save:error'); }
+  return false;
 }
 const BK = SAVE_KEY + '_bk';
 export function saveGame() {
-  S.savedAt = Date.now();
+  if (saveHook) saveHook();
   const st = store();
-  if (!st) return false;
-  try { st.setItem(SAVE_KEY, JSON.stringify({ v: SAVE_VERSION, t: Date.now(), s: S })); return true; } catch (e) { return false; }
+  if (!st) return saveFailed();
+  const previous = S.savedAt;
+  S.savedAt = Date.now();
+  try { st.setItem(SAVE_KEY, JSON.stringify({ v: SAVE_VERSION, t: Date.now(), s: S })); storageWarned = false; return true; }
+  catch (e) { S.savedAt = previous; return saveFailed(); }
 }
 let pend = null;
 export function requestSave() {
@@ -128,6 +139,7 @@ export function requestSave() {
 }
 /** Lưu bản tự lưu cuối ngày (giữ 3 bản gần nhất). */
 export function saveBackup() {
+  if (saveHook) saveHook();
   const st = store();
   if (!st) return;
   try {
@@ -157,7 +169,7 @@ function normalize(raw) {
   if (!Array.isArray(s.garden.plots) || s.garden.plots.length < PLOTS) s.garden.plots = d.garden.plots;
   s.money = Math.max(0, Number(s.money) || 0);
   s.rating = clamp(Number(s.rating) || 4, 1, 5);
-  if (s.phase === 'sell') s.phase = 'home';
+  if (s.phase === 'sell' && !s.shiftRuntime) s.phase = 'home';
   s.today = { ...freshToday(), ...(raw.today || {}) };
   return s;
 }
@@ -182,6 +194,7 @@ export function restoreBackup(i) {
   } catch (e) { return false; }
 }
 export function exportCode() {
+  if (saveHook) saveHook();
   const json = JSON.stringify({ v: SAVE_VERSION, s: S });
   return 'TTM3.' + btoa(unescape(encodeURIComponent(json)));
 }
@@ -306,10 +319,23 @@ export const sfx = (n) => { buzz(HAPTIC[n] ?? 8); if (unlocked && S.settings.sfx
 const STYLES = {
   lofi: { ms: 420, mel: [523, 0, 659, 0, 587, 0, 523, 0, 440, 0, 523, 659, 587, 0, 0, 0], bass: [131, 0, 0, 0, 175, 0, 0, 0, 147, 0, 0, 0, 196, 0, 0, 0], type: 'sine' },
   vui: { ms: 260, mel: [659, 784, 880, 784, 659, 523, 587, 659, 698, 880, 784, 698, 659, 587, 523, 0], bass: [262, 0, 262, 0, 349, 0, 349, 0, 294, 0, 294, 0, 392, 0, 392, 0], type: 'triangle' },
+  spring: { ms: 330, type: 'triangle',
+    mel: [523, 659, 784, 0, 880, 784, 659, 0, 587, 659, 698, 784, 659, 587, 523, 0, 659, 784, 1047, 0, 988, 880, 784, 659, 698, 784, 880, 698, 659, 587, 523, 0],
+    bass: [131, 0, 196, 0, 131, 0, 196, 0, 175, 0, 220, 0, 196, 0, 147, 0, 165, 0, 247, 0, 165, 0, 220, 0, 175, 0, 220, 0, 196, 0, 131, 0] },
+  summer: { ms: 245, type: 'triangle',
+    mel: [784, 0, 880, 988, 1175, 988, 880, 0, 784, 880, 988, 0, 880, 784, 659, 0, 659, 784, 880, 0, 988, 880, 784, 659, 740, 880, 988, 880, 784, 0, 784, 0],
+    bass: [196, 0, 294, 0, 196, 0, 294, 0, 165, 0, 247, 0, 165, 0, 247, 0, 131, 0, 196, 0, 131, 0, 196, 0, 147, 0, 220, 0, 196, 0, 294, 0] },
+  autumn: { ms: 470, type: 'sine',
+    mel: [440, 0, 523, 587, 659, 0, 587, 523, 392, 0, 440, 523, 494, 0, 440, 0, 349, 0, 440, 523, 587, 0, 523, 440, 330, 392, 494, 0, 440, 0, 0, 0],
+    bass: [110, 0, 0, 165, 110, 0, 0, 0, 131, 0, 0, 196, 131, 0, 0, 0, 87, 0, 0, 131, 87, 0, 0, 0, 82, 0, 0, 123, 110, 0, 0, 0] },
+  winter: { ms: 560, type: 'sine',
+    mel: [659, 0, 0, 784, 740, 0, 659, 0, 587, 0, 659, 0, 494, 0, 0, 0, 523, 0, 659, 0, 784, 0, 740, 659, 587, 0, 494, 0, 659, 0, 0, 0],
+    bass: [82, 0, 0, 0, 123, 0, 0, 0, 98, 0, 0, 0, 147, 0, 0, 0, 131, 0, 0, 0, 196, 0, 0, 0, 123, 0, 0, 0, 82, 0, 0, 0] },
 };
 export function restartMusic() {
   if (musicTimer) clearInterval(musicTimer);
   musicTimer = null;
+  mstep = 0;
   const st = STYLES[S.settings.style];
   if (!unlocked || !actx || !st || S.settings.music <= 0) return;
   musicTimer = setInterval(() => {
@@ -320,15 +346,21 @@ export function restartMusic() {
 }
 export function initAudio() {
   const once = () => {
-    if (unlocked) return;
     unlocked = true;
     const c = ctx();
     if (c?.state === 'suspended') c.resume().catch(() => {});
-    restartMusic();
-    window.removeEventListener('pointerdown', once);
-    window.removeEventListener('keydown', once);
+    if (c && !musicTimer) restartMusic();
   };
   window.addEventListener('pointerdown', once);
+  window.addEventListener('touchend', once, { passive: true });
+  window.addEventListener('click', once);
   window.addEventListener('keydown', once);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (musicTimer) clearInterval(musicTimer);
+      musicTimer = null;
+      if (actx && actx.state === 'running') actx.suspend().catch(() => {});
+    } else if (unlocked) once();
+  });
 }
 export const gameHour = (t, total, startH = SHIFT_START_H, endH = 22) => startH + (t / total) * (endH - startH);

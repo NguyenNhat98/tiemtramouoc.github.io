@@ -498,7 +498,10 @@
   function on(ev, cb) {
     if (!listeners.has(ev)) listeners.set(ev, /* @__PURE__ */ new Set());
     listeners.get(ev).add(cb);
-    return () => listeners.get(ev)?.delete(cb);
+    return () => {
+      var _a;
+      return (_a = listeners.get(ev)) == null ? void 0 : _a.delete(cb);
+    };
   }
   function emit(ev, data) {
     for (const cb of [...listeners.get(ev) || []]) {
@@ -536,7 +539,7 @@
     const v = Math.round(Number(n) || 0);
     return (v < 0 ? "-" : "") + Math.abs(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "\u0111";
   };
-  var esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var esc = (s) => String(s != null ? s : "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var $ = (sel, root2 = document) => root2.querySelector(sel);
   var $$ = (sel, root2 = document) => [...root2.querySelectorAll(sel)];
   function h(html) {
@@ -613,9 +616,14 @@
     return { rev: 0, tips: 0, online: 0, cogs: 0, rent: 0, util: 0, wage: 0, tax: 0, purchase: 0, cups: 0, left: 0, stars: [], waste: 0, branch: 0, fran: 0, interest: 0 };
   }
   var S = newState();
+  var restoreHook = null;
+  var registerRestoreHook = (fn) => {
+    restoreHook = fn;
+  };
   function replaceState(next) {
     for (const k of Object.keys(S)) delete S[k];
     Object.assign(S, next);
+    if (restoreHook) restoreHook();
   }
   var dirty = /* @__PURE__ */ new Set();
   var markDirty = (...k) => k.forEach((x) => dirty.add(x));
@@ -624,28 +632,41 @@
     dirty.clear();
     return o;
   };
-  var storageOk = true;
+  var saveHook = null;
+  var registerSaveHook = (fn) => {
+    saveHook = fn;
+  };
+  var storageWarned = false;
   function store() {
-    if (!storageOk) return null;
     try {
       const s = window.localStorage;
       s.getItem(SAVE_KEY);
       return s;
     } catch (e) {
-      storageOk = false;
       return null;
     }
   }
+  function saveFailed() {
+    if (!storageWarned) {
+      storageWarned = true;
+      emit("save:error");
+    }
+    return false;
+  }
   var BK = SAVE_KEY + "_bk";
   function saveGame() {
-    S.savedAt = Date.now();
+    if (saveHook) saveHook();
     const st = store();
-    if (!st) return false;
+    if (!st) return saveFailed();
+    const previous = S.savedAt;
+    S.savedAt = Date.now();
     try {
       st.setItem(SAVE_KEY, JSON.stringify({ v: SAVE_VERSION, t: Date.now(), s: S }));
+      storageWarned = false;
       return true;
     } catch (e) {
-      return false;
+      S.savedAt = previous;
+      return saveFailed();
     }
   }
   var pend = null;
@@ -657,6 +678,7 @@
     }, 700);
   }
   function saveBackup() {
+    if (saveHook) saveHook();
     const st = store();
     if (!st) return;
     try {
@@ -667,8 +689,9 @@
     }
   }
   function listBackups() {
+    var _a;
     try {
-      return JSON.parse(store()?.getItem(BK) || "[]").map((b, i) => ({ i, t: b.t, day: b.day, money: b.money }));
+      return JSON.parse(((_a = store()) == null ? void 0 : _a.getItem(BK)) || "[]").map((b, i) => ({ i, t: b.t, day: b.day, money: b.money }));
     } catch (e) {
       return [];
     }
@@ -690,7 +713,7 @@
     if (!Array.isArray(s.garden.plots) || s.garden.plots.length < PLOTS) s.garden.plots = d.garden.plots;
     s.money = Math.max(0, Number(s.money) || 0);
     s.rating = clamp(Number(s.rating) || 4, 1, 5);
-    if (s.phase === "sell") s.phase = "home";
+    if (s.phase === "sell" && !s.shiftRuntime) s.phase = "home";
     s.today = { ...freshToday(), ...raw.today || {} };
     return s;
   }
@@ -720,6 +743,7 @@
     }
   }
   function exportCode() {
+    if (saveHook) saveHook();
     const json = JSON.stringify({ v: SAVE_VERSION, s: S });
     return "TTM3." + btoa(unescape(encodeURIComponent(json)));
   }
@@ -736,9 +760,10 @@
     }
   }
   function wipeSave() {
+    var _a, _b;
     try {
-      store()?.removeItem(SAVE_KEY);
-      store()?.removeItem(BK);
+      (_a = store()) == null ? void 0 : _a.removeItem(SAVE_KEY);
+      (_b = store()) == null ? void 0 : _b.removeItem(BK);
     } catch (e) {
     }
     replaceState(newState());
@@ -754,6 +779,7 @@
   var registerRenderer = (k, f) => renderers.set(k, f);
   var registerFrame = (f) => frames.push(f);
   function loop(ts) {
+    var _a;
     if (!running) return;
     const dt = Math.min((ts - last) / 1e3, 0.25);
     last = ts;
@@ -766,7 +792,7 @@
     }
     for (const k of consumeDirty()) {
       try {
-        renderers.get(k)?.();
+        (_a = renderers.get(k)) == null ? void 0 : _a();
       } catch (e) {
         console.error("[loop] render " + k, e);
       }
@@ -793,9 +819,10 @@
     speed = v;
   };
   function flushRender() {
+    var _a;
     for (const k of consumeDirty()) {
       try {
-        renderers.get(k)?.();
+        (_a = renderers.get(k)) == null ? void 0 : _a();
       } catch (e) {
         console.error(e);
       }
@@ -968,7 +995,8 @@
     collect: [10, 20, 10]
   };
   function buzz(pattern = 10) {
-    const m = HAPTIC_MUL[S.settings.haptic ?? 2] || 0;
+    var _a;
+    const m = HAPTIC_MUL[(_a = S.settings.haptic) != null ? _a : 2] || 0;
     if (pattern === 0) return;
     if (!m || !navigator.vibrate) return;
     const arr = Array.isArray(pattern) ? pattern : [pattern];
@@ -978,16 +1006,42 @@
     }
   }
   var sfx = (n) => {
-    buzz(HAPTIC[n] ?? 8);
-    if (unlocked && S.settings.sfx > 0) SFX[n]?.();
+    var _a, _b;
+    buzz((_a = HAPTIC[n]) != null ? _a : 8);
+    if (unlocked && S.settings.sfx > 0) (_b = SFX[n]) == null ? void 0 : _b.call(SFX);
   };
   var STYLES = {
     lofi: { ms: 420, mel: [523, 0, 659, 0, 587, 0, 523, 0, 440, 0, 523, 659, 587, 0, 0, 0], bass: [131, 0, 0, 0, 175, 0, 0, 0, 147, 0, 0, 0, 196, 0, 0, 0], type: "sine" },
-    vui: { ms: 260, mel: [659, 784, 880, 784, 659, 523, 587, 659, 698, 880, 784, 698, 659, 587, 523, 0], bass: [262, 0, 262, 0, 349, 0, 349, 0, 294, 0, 294, 0, 392, 0, 392, 0], type: "triangle" }
+    vui: { ms: 260, mel: [659, 784, 880, 784, 659, 523, 587, 659, 698, 880, 784, 698, 659, 587, 523, 0], bass: [262, 0, 262, 0, 349, 0, 349, 0, 294, 0, 294, 0, 392, 0, 392, 0], type: "triangle" },
+    spring: {
+      ms: 330,
+      type: "triangle",
+      mel: [523, 659, 784, 0, 880, 784, 659, 0, 587, 659, 698, 784, 659, 587, 523, 0, 659, 784, 1047, 0, 988, 880, 784, 659, 698, 784, 880, 698, 659, 587, 523, 0],
+      bass: [131, 0, 196, 0, 131, 0, 196, 0, 175, 0, 220, 0, 196, 0, 147, 0, 165, 0, 247, 0, 165, 0, 220, 0, 175, 0, 220, 0, 196, 0, 131, 0]
+    },
+    summer: {
+      ms: 245,
+      type: "triangle",
+      mel: [784, 0, 880, 988, 1175, 988, 880, 0, 784, 880, 988, 0, 880, 784, 659, 0, 659, 784, 880, 0, 988, 880, 784, 659, 740, 880, 988, 880, 784, 0, 784, 0],
+      bass: [196, 0, 294, 0, 196, 0, 294, 0, 165, 0, 247, 0, 165, 0, 247, 0, 131, 0, 196, 0, 131, 0, 196, 0, 147, 0, 220, 0, 196, 0, 294, 0]
+    },
+    autumn: {
+      ms: 470,
+      type: "sine",
+      mel: [440, 0, 523, 587, 659, 0, 587, 523, 392, 0, 440, 523, 494, 0, 440, 0, 349, 0, 440, 523, 587, 0, 523, 440, 330, 392, 494, 0, 440, 0, 0, 0],
+      bass: [110, 0, 0, 165, 110, 0, 0, 0, 131, 0, 0, 196, 131, 0, 0, 0, 87, 0, 0, 131, 87, 0, 0, 0, 82, 0, 0, 123, 110, 0, 0, 0]
+    },
+    winter: {
+      ms: 560,
+      type: "sine",
+      mel: [659, 0, 0, 784, 740, 0, 659, 0, 587, 0, 659, 0, 494, 0, 0, 0, 523, 0, 659, 0, 784, 0, 740, 659, 587, 0, 494, 0, 659, 0, 0, 0],
+      bass: [82, 0, 0, 0, 123, 0, 0, 0, 98, 0, 0, 0, 147, 0, 0, 0, 131, 0, 0, 0, 196, 0, 0, 0, 123, 0, 0, 0, 82, 0, 0, 0]
+    }
   };
   function restartMusic() {
     if (musicTimer) clearInterval(musicTimer);
     musicTimer = null;
+    mstep = 0;
     const st = STYLES[S.settings.style];
     if (!unlocked || !actx || !st || S.settings.music <= 0) return;
     musicTimer = setInterval(() => {
@@ -998,17 +1052,24 @@
   }
   function initAudio() {
     const once = () => {
-      if (unlocked) return;
       unlocked = true;
       const c = ctx();
-      if (c?.state === "suspended") c.resume().catch(() => {
+      if ((c == null ? void 0 : c.state) === "suspended") c.resume().catch(() => {
       });
-      restartMusic();
-      window.removeEventListener("pointerdown", once);
-      window.removeEventListener("keydown", once);
+      if (c && !musicTimer) restartMusic();
     };
     window.addEventListener("pointerdown", once);
+    window.addEventListener("touchend", once, { passive: true });
+    window.addEventListener("click", once);
     window.addEventListener("keydown", once);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (musicTimer) clearInterval(musicTimer);
+        musicTimer = null;
+        if (actx && actx.state === "running") actx.suspend().catch(() => {
+        });
+      } else if (unlocked) once();
+    });
   }
 
   // js/econ.js
@@ -1073,7 +1134,7 @@
   function rollWeatherFor(day) {
     const se = SEASONS[seasonOf(day)];
     const loc = LOCATIONS[S.location];
-    const pool = loc?.pool || se.pool;
+    const pool = (loc == null ? void 0 : loc.pool) || se.pool;
     const id = wpick(pool) || "sunny";
     const [lo, hi] = se.temp;
     let t = randInt(lo, hi);
@@ -1121,6 +1182,7 @@
     return (p.hunger + p.joy + p.clean + p.energy) / 4 >= 60;
   }
   function bonus() {
+    var _a, _b, _c;
     const b = {
       traffic: 0,
       tip: 0,
@@ -1160,7 +1222,7 @@
         } else if (k in b && typeof v === "number") b[k] += v;
       }
     };
-    add(LOCATIONS[S.location]?.fx);
+    add((_a = LOCATIONS[S.location]) == null ? void 0 : _a.fx);
     const ev = eventOf();
     add({ traffic: ev.traffic || 0, tip: ev.tip || 0, patience: ev.patience || 0, bill: ev.bill || 0 });
     const w = weatherOf();
@@ -1203,9 +1265,9 @@
       b.theft += TAX.theft;
       b.lucky += TAX.lucky;
     }
-    if (S.social.ad && S.day <= S.social.ad.endsDay) b.traffic += ADS.find((a) => a.id === S.social.ad.id)?.traffic || 0;
+    if (S.social.ad && S.day <= S.social.ad.endsDay) b.traffic += ((_b = ADS.find((a) => a.id === S.social.ad.id)) == null ? void 0 : _b.traffic) || 0;
     if (petActive()) {
-      const fx = PETS[S.pet.kind]?.fx || {};
+      const fx = ((_c = PETS[S.pet.kind]) == null ? void 0 : _c.fx) || {};
       b.bill += fx.bill || 0;
       b.tip += fx.tip || 0;
       b.patience += fx.patience || 0;
@@ -1223,7 +1285,8 @@
     return b;
   }
   function priceOf(id) {
-    return S.prices[id] ?? ITEMS[id]?.price ?? 0;
+    var _a, _b, _c;
+    return (_c = (_b = S.prices[id]) != null ? _b : (_a = ITEMS[id]) == null ? void 0 : _a.price) != null ? _c : 0;
   }
   function setPrice(id, v) {
     v = Math.round(v);
@@ -1444,10 +1507,10 @@
     for (const ex of st.excl || []) if (S.staff[ex]) return `Kh\xF4ng th\u1EC3 thu\xEA c\xF9ng ${STAFF.find((s) => s.id === ex).role}`;
     for (const o of STAFF) if ((o.excl || []).includes(id) && S.staff[o.id]) return `Kh\xF4ng th\u1EC3 thu\xEA c\xF9ng ${o.role}`;
     const n = st.need;
-    if (n?.day && S.day < n.day) return `M\u1EDF \u1EDF ng\xE0y ${n.day}`;
-    if (n?.online && !onlineEnabled()) return "C\u1EA7n m\u1EDF \u0111\u01A1n online";
-    if (n?.full && Object.keys(S.staff).length < 2) return "C\u1EA7n c\xF3 \u2265 2 nh\xE2n vi\xEAn";
-    if (n?.secret && secretCount() < n.secret) return `C\u1EA7n m\u1EDF kho\xE1 ${n.secret} c\xF4ng th\u1EE9c \u0111\u1ED9c b\u1EA3n \u1EDF m\u1EE5c s\u01B0u t\u1EA7m`;
+    if ((n == null ? void 0 : n.day) && S.day < n.day) return `M\u1EDF \u1EDF ng\xE0y ${n.day}`;
+    if ((n == null ? void 0 : n.online) && !onlineEnabled()) return "C\u1EA7n m\u1EDF \u0111\u01A1n online";
+    if ((n == null ? void 0 : n.full) && Object.keys(S.staff).length < 2) return "C\u1EA7n c\xF3 \u2265 2 nh\xE2n vi\xEAn";
+    if ((n == null ? void 0 : n.secret) && secretCount() < n.secret) return `C\u1EA7n m\u1EDF kho\xE1 ${n.secret} c\xF4ng th\u1EE9c \u0111\u1ED9c b\u1EA3n \u1EDF m\u1EE5c s\u01B0u t\u1EA7m`;
     return null;
   }
   function hire(id) {
@@ -1504,6 +1567,7 @@
     orderPrice: () => orderPrice,
     pickCup: () => pickCup,
     resetShiftRuntime: () => resetShiftRuntime,
+    restoreShiftRuntime: () => restoreShiftRuntime,
     sealCup: () => sealCup,
     selectCustomer: () => selectCustomer,
     serve: () => serve,
@@ -1514,6 +1578,25 @@
     updateShift: () => updateShift
   });
   var SH = { on: false };
+  registerSaveHook(() => {
+    S.shiftRuntime = S.phase === "sell" && SH.on ? JSON.parse(JSON.stringify(SH)) : null;
+  });
+  function restoreShiftRuntime() {
+    const saved = S.shiftRuntime;
+    SH.on = false;
+    SH.fin = false;
+    if (S.phase !== "sell") return false;
+    if (!saved || !saved.on || !Number.isFinite(saved.total) || saved.total <= 0 || !Number.isFinite(saved.t) || !Array.isArray(saved.queue) || !Array.isArray(saved.plan) || !Array.isArray(saved.jobs) || !Array.isArray(saved.tables) || !Array.isArray(saved.onlineQ)) {
+      S.phase = "home";
+      S.shiftRuntime = null;
+      return false;
+    }
+    Object.assign(SH, saved);
+    if (SH.board) SH.board.pouring = false;
+    cid = Math.max(cid, ...SH.queue.map((c) => c.id + 1), ...SH.onlineQ.map((c) => (c.id || 0) + 1));
+    return true;
+  }
+  registerRestoreHook(restoreShiftRuntime);
   function spawnPlan(n, total) {
     const seg = [[10, 11, 1], [11, 13, 1.7], [13, 17, 1], [17, 19, 1.7], [19, 22, 1.1]];
     const tot = sum(seg, (s) => (s[1] - s[0]) * s[2]);
@@ -1813,9 +1896,9 @@
   var PAY = { 1: 0.3, 2: 0.55, 3: 0.8, 4: 1, 5: 1 };
   function serve(forced) {
     const b = SH.board;
-    const c = forced?.c || frontCustomer();
+    const c = (forced == null ? void 0 : forced.c) || frontCustomer();
     if (!c) return "Ch\u01B0a c\xF3 kh\xE1ch";
-    const board = forced?.board || b;
+    const board = (forced == null ? void 0 : forced.board) || b;
     if (!board || board.phase !== "ready" && !forced) return "Ly ch\u01B0a \u0111\xF3ng n\u1EAFp xong";
     const ev = evaluate(board, c);
     const res = settle(c, board, ev.stars, ev.issues, !!forced);
@@ -2189,6 +2272,7 @@
   }
   function resetShiftRuntime() {
     Object.assign(SH, { on: false, fin: false });
+    restoreShiftRuntime();
   }
   function genPost() {
     const t = pick(FEED_POSTS), a = pick(FEED_AUTHORS);
@@ -2214,6 +2298,35 @@
     return `<svg class="ic ${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name] || ""}</svg>`;
   }
 
+  // js/platform.js
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (e) {
+    }
+    const input = document.createElement("textarea");
+    input.value = text;
+    input.readOnly = true;
+    input.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0";
+    const active = document.activeElement;
+    document.body.appendChild(input);
+    let copied = false;
+    try {
+      input.focus();
+      input.select();
+      input.setSelectionRange(0, text.length);
+      copied = !!document.execCommand("copy");
+    } catch (e) {
+    } finally {
+      input.remove();
+      if (active && active.focus) active.focus();
+    }
+    return copied;
+  }
+
   // js/ui.js
   function bindActions(root2, map) {
     root2.addEventListener("click", (e) => {
@@ -2227,6 +2340,7 @@
     });
   }
   function toast(msg, type = "", dur = 2300) {
+    if (S.phase === "sell" && !isModalOpen() && type !== "err") return;
     const root2 = $("#toasts");
     if (!root2) return;
     const t = h(`<div class="toast ${type}">${esc(msg)}</div>`);
@@ -2244,12 +2358,14 @@
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   };
   function fxText(text, target, cls = "") {
+    if (S.phase === "sell") return;
     const { x, y } = centerOf(target);
     const f = h(`<div class="fx-float ${cls}" style="left:${x}px;top:${y}px">${esc(text)}</div>`);
     $("#fx").appendChild(f);
     setTimeout(() => f.remove(), 1e3);
   }
   function fxCoins(target, n = 5) {
+    if (S.phase === "sell") return;
     const from = centerOf(target);
     const to = centerOf($("[data-money]"));
     for (let i = 0; i < n; i++) {
@@ -2260,6 +2376,7 @@
     }
   }
   function fxSpark(target, n = 8) {
+    if (S.phase === "sell" && isModalOpen()) return;
     const { x, y } = centerOf(target);
     for (let i = 0; i < n; i++) {
       const a = i / n * Math.PI * 2, d = rand(24, 56);
@@ -2270,6 +2387,7 @@
   }
   var stack = [];
   function openModal({ html: body, cls = "", title = "", onClose = null, closable = true, id = "" }) {
+    var _a;
     if (id) {
       const ex = stack.find((m2) => m2.id === id);
       if (ex) {
@@ -2277,6 +2395,7 @@
         return ex;
       }
     }
+    emit("modal:open");
     const back = h(`<div class="modal-back"><div class="modal ${cls}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
     ${closable ? '<button class="modal-x" data-modal-x aria-label="\u0110\xF3ng">\u2715</button>' : ""}<div class="modal-body"></div></div></div>`);
     const bodyEl = $(".modal-body", back);
@@ -2288,8 +2407,11 @@
       if (i < 0) return;
       stack.splice(i, 1);
       back.remove();
-      if (!stack.length) $("#modal").classList.remove("on");
-      onClose?.();
+      if (!stack.length) {
+        $("#modal").classList.remove("on");
+        $("#app").classList.remove("modal-open");
+      }
+      onClose == null ? void 0 : onClose();
     }
     const sheet = $(".modal", back);
     let dragY = null;
@@ -2309,7 +2431,7 @@
       if (dy > 90 && closable) close();
       else sheet.style.transform = "";
     });
-    $("[data-modal-x]", back)?.addEventListener("click", () => {
+    (_a = $("[data-modal-x]", back)) == null ? void 0 : _a.addEventListener("click", () => {
       sfx("click");
       close();
     });
@@ -2318,6 +2440,7 @@
     });
     stack.push(m);
     $("#modal").classList.add("on");
+    $("#app").classList.add("modal-open");
     return m;
   }
   var closeAllModals = () => {
@@ -2346,6 +2469,7 @@
   var HAPTIC_NAMES = ["T\u1EAFt", "Nh\u1EB9", "V\u1EEBa", "M\u1EA1nh"];
   var THEME_DARK = { "--text": "#f1ebff", "--muted": "#b8aedc", "--brown": "#e8dfff", "--brown2": "#b8aedc", "--card2": "#453d66", "--line": "rgba(255,255,255,.14)" };
   function applyTheme() {
+    var _a;
     const k = THEMES[S.settings.theme] ? S.settings.theme : "cream";
     const t = THEMES[k], st = document.documentElement.style;
     document.documentElement.dataset.theme = k;
@@ -2360,7 +2484,7 @@
       if (t.dark) st.setProperty(n, v);
       else st.removeProperty(n);
     }
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", t.bg);
+    (_a = document.querySelector('meta[name="theme-color"]')) == null ? void 0 : _a.setAttribute("content", t.bg);
   }
   function openChoice(title, opts, cur2, onPick) {
     const m = openModal({ cls: "small", html: `<h3 class="m-title">${title}</h3><div class="choice-list">${opts.map(([v, label], i) => `<button class="choice ${v === cur2 ? "on" : ""}" data-act="pick" data-i="${i}"><span>${label}</span><i>${v === cur2 ? "\u2713" : ""}</i></button>`).join("")}</div><button class="btn block" data-act="x">\u0110\xF3ng</button>` });
@@ -2382,7 +2506,7 @@
       },
       done: () => {
         m.close();
-        onDone?.();
+        onDone == null ? void 0 : onDone();
       }
     });
   }
@@ -2501,15 +2625,22 @@
   function sliderRow(label, key, icon2) {
     const v = Math.round(S.settings[key] * 100);
     return `<div class="vol"><div class="vol-h"><b>${icon2} ${label}</b><span class="pct" data-pct="${key}">${v}%</span></div>
-    <div class="vol-r"><button class="rb" data-act="vol-" data-k="${key}">\u2212</button><input type="range" min="0" max="100" value="${v}" data-slider="${key}" aria-label="${label}"><button class="rb" data-act="vol+" data-k="${key}">\uFF0B</button><button class="rb" data-act="mute" data-k="${key}">${v ? "\u{1F50A}" : "\u{1F507}"}</button></div></div>`;
+    <div class="vol-r"><button class="rb" data-act="vol-" data-k="${key}">\u2212</button><input type="range" min="0" max="100" value="${v}" data-slider="${key}" aria-label="${label}"><button class="rb" data-act="vol+" data-k="${key}">\uFF0B</button><button class="rb" data-act="mute" data-k="${key}" aria-label="${v ? "T\u1EAFt" : "B\u1EADt"} ${label}" aria-pressed="${!v}">${v ? "\u{1F50A}" : "\u{1F507}"}</button></div></div>`;
   }
   function bindSliders(m) {
     const set = (k, v) => {
-      S.settings[k] = clamp(v, 0, 1);
+      S.settings[k] = Math.round(clamp(v, 0, 1) * 100) / 100;
       const sl = $(`[data-slider="${k}"]`, m.body);
       if (sl) sl.value = Math.round(S.settings[k] * 100);
       const p = $(`[data-pct="${k}"]`, m.body);
       if (p) p.textContent = Math.round(S.settings[k] * 100) + "%";
+      const button = $(`[data-act="mute"][data-k="${k}"]`, m.body);
+      if (button) {
+        const muted = S.settings[k] === 0;
+        button.textContent = muted ? "\u{1F507}" : "\u{1F50A}";
+        button.setAttribute("aria-pressed", String(muted));
+        button.setAttribute("aria-label", `${muted ? "B\u1EADt" : "T\u1EAFt"} ${(sl == null ? void 0 : sl.getAttribute("aria-label")) || "\xE2m thanh"}`);
+      }
       applyVolumes();
       if (k === "music") restartMusic();
       requestSave();
@@ -2543,7 +2674,21 @@
       }, "\u0110\xF3ng c\u1EEDa", true)
     });
   }
+  var MUSIC_OPTIONS = [
+    ["lofi", "Lofi Chill Qu\xE1n Cafe"],
+    ["vui", "Vui nh\u1ED9n"],
+    ["spring", "\u{1F338} M\xF9a Xu\xE2n"],
+    ["summer", "\u2600\uFE0F M\xF9a H\u1EA1"],
+    ["autumn", "\u{1F342} M\xF9a Thu"],
+    ["winter", "\u2744\uFE0F M\xF9a \u0110\xF4ng"],
+    ["off", "T\u1EAFt nh\u1EA1c"]
+  ];
+  var musicStyleName = () => {
+    var _a;
+    return ((_a = MUSIC_OPTIONS.find(([id]) => id === S.settings.style)) == null ? void 0 : _a[1]) || "T\u1EAFt nh\u1EA1c";
+  };
   function openSettings() {
+    var _a;
     const sell = S.phase === "sell";
     if (sell) setPaused(true);
     const row = (act, icon2, label, value = "") => `<button class="set-row" data-act="${act}"><span class="si">${icon2}</span><b>${label}</b><em>${value}</em></button>`;
@@ -2561,9 +2706,9 @@
     ${row("hints", "\u{1F9ED}", "Ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc", S.settings.hints ? "T\u1EF1 \u0111\u1ED9ng" : "T\u1EAFt")}
     ${row("shiftMin", "\u23F1\uFE0F", "Th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y", `${S.settings.shiftMinNext} ph\xFAt \xB7 \xE1p d\u1EE5ng t\u1EEB ng\xE0y sau`)}
     ${row("theme", "\u{1F3A8}", "M\xE0u giao di\u1EC7n", THEMES[S.settings.theme].name)}
-    ${row("haptic", "\u{1F4F3}", "Rung", HAPTIC_NAMES[S.settings.haptic ?? 2])}
+    ${row("haptic", "\u{1F4F3}", "Rung", HAPTIC_NAMES[(_a = S.settings.haptic) != null ? _a : 2])}
     <div class="box">${sliderRow("Nh\u1EA1c n\u1EC1n qu\xE1n", "music", "\u{1F3B5}")}${sliderRow("\xC2m thanh pha ch\u1EBF & SFX", "sfx", "\u{1F9CB}")}</div>
-    ${row("style", "\u{1F3BC}", "Nh\u1EA1c n\u1EC1n & M\xF9a", S.settings.style === "lofi" ? "Lofi Chill Qu\xE1n Cafe" : S.settings.style === "vui" ? "Vui nh\u1ED9n" : "T\u1EAFt nh\u1EA1c")}
+    ${row("style", "\u{1F3BC}", "Nh\u1EA1c n\u1EC1n & M\xF9a", musicStyleName())}
     ${row("export", "\u{1F4E6}", "Sao l\u01B0u ti\u1EBFn tr\xECnh", S.savedAt ? "\u0110\xE3 l\u01B0u" : "Ch\u01B0a sao l\u01B0u")}
     ${row("backups", "\u{1F5C2}\uFE0F", "Kh\xF4i ph\u1EE5c b\u1EA3n t\u1EF1 l\u01B0u", `Game t\u1EF1 l\u01B0u ${listBackups().length} cu\u1ED1i ng\xE0y g\u1EA7n nh\u1EA5t`)}
     ${row("import", "\u{1F511}", "Kh\xF4i ph\u1EE5c t\u1EEB m\xE3")}
@@ -2575,7 +2720,6 @@
       const e = $(`[data-act="${act}"] em`, m.body);
       if (e) e.textContent = text;
     };
-    const styleName = () => S.settings.style === "lofi" ? "Lofi Chill Qu\xE1n Cafe" : S.settings.style === "vui" ? "Vui nh\u1ED9n" : "T\u1EAFt nh\u1EA1c";
     bindActions(m.body, {
       ...sliders,
       close: () => m.close(),
@@ -2595,18 +2739,21 @@
         requestSave();
         setVal("shiftMin", `${v} ph\xFAt \xB7 \xE1p d\u1EE5ng t\u1EEB ng\xE0y sau`);
       }),
-      haptic: () => openChoice("\u{1F4F3} Rung khi thao t\xE1c & ch\u01A1i game", HAPTIC_NAMES.map((n, i) => [i, n]), S.settings.haptic ?? 2, (v) => {
-        S.settings.haptic = v;
-        requestSave();
-        setVal("haptic", HAPTIC_NAMES[v]);
-        buzz([30, 40, 30]);
-      }),
+      haptic: () => {
+        var _a2;
+        return openChoice("\u{1F4F3} Rung khi thao t\xE1c & ch\u01A1i game", HAPTIC_NAMES.map((n, i) => [i, n]), (_a2 = S.settings.haptic) != null ? _a2 : 2, (v) => {
+          S.settings.haptic = v;
+          requestSave();
+          setVal("haptic", HAPTIC_NAMES[v]);
+          buzz([30, 40, 30]);
+        });
+      },
       theme: () => openThemePicker(() => setVal("theme", THEMES[S.settings.theme].name)),
-      style: () => openChoice("\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a", [["lofi", "Lofi Chill Qu\xE1n Cafe"], ["vui", "Vui nh\u1ED9n"], ["off", "T\u1EAFt nh\u1EA1c"]], S.settings.style, (v) => {
+      style: () => openChoice("\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a", MUSIC_OPTIONS, S.settings.style, (v) => {
         S.settings.style = v;
         restartMusic();
         requestSave();
-        setVal("style", styleName());
+        setVal("style", musicStyleName());
       }),
       export: () => openExport(),
       import: () => openImport(),
@@ -2625,13 +2772,13 @@
     <textarea class="code" readonly data-code>${code}</textarea><button class="btn pri block" data-act="copy">\u{1F4CB} Sao ch\xE9p</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, {
       copy: async () => {
-        try {
-          await navigator.clipboard.writeText(code);
-          toast("\u0110\xE3 sao ch\xE9p m\xE3!", "ok");
-        } catch (e) {
-          $("[data-code]", m.body).select();
-          document.execCommand?.("copy");
-          toast("\u0110\xE3 ch\u1ECDn m\xE3, h\xE3y sao ch\xE9p", "ok");
+        if (await copyText(code)) toast("\u0110\xE3 sao ch\xE9p m\xE3!", "ok");
+        else {
+          const input = $("[data-code]", m.body);
+          input.focus();
+          input.select();
+          input.setSelectionRange(0, code.length);
+          toast("H\xE3y nh\u1EA5n gi\u1EEF m\xE3 \u0111\xE3 ch\u1ECDn \u0111\u1EC3 sao ch\xE9p", "");
         }
       },
       x: () => m.close()
@@ -2750,31 +2897,56 @@
     <button class="btn pri block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, { x: () => m.close() });
   }
-  function goFullscreen() {
+  var fsPending = false;
+  function lockPortrait() {
+    var _a, _b, _c;
     try {
-      const d = document.documentElement;
-      if (document.fullscreenElement || document.webkitFullscreenElement) return;
-      const f = d.requestFullscreen || d.webkitRequestFullscreen || d.msRequestFullscreen;
-      if (f) {
-        const r = f.call(d, { navigationUI: "hide" });
-        if (r && r.catch) r.catch(() => {
-        });
-      }
-      screen.orientation?.lock?.("portrait").catch(() => {
+      const result = (_b = (_a = screen.orientation) == null ? void 0 : _a.lock) == null ? void 0 : _b.call(_a, "portrait");
+      (_c = result == null ? void 0 : result.catch) == null ? void 0 : _c.call(result, () => {
       });
     } catch (e) {
     }
   }
+  function goFullscreen() {
+    try {
+      const d = document.documentElement;
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        lockPortrait();
+        return;
+      }
+      if (fsPending) return;
+      const f = d.requestFullscreen || d.webkitRequestFullscreen || d.msRequestFullscreen;
+      if (f) {
+        fsPending = true;
+        const r = f.call(d, { navigationUI: "hide" });
+        if (r && r.then) r.then(() => {
+          fsPending = false;
+          lockPortrait();
+        }, () => {
+          fsPending = false;
+        });
+        else fsPending = false;
+      }
+    } catch (e) {
+      fsPending = false;
+    }
+  }
   var fsDone = false;
-  document.addEventListener("fullscreenchange", () => {
-    if (document.fullscreenElement) fsDone = true;
-  });
+  var fullscreenChanged = () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      fsDone = true;
+      lockPortrait();
+    }
+  };
+  document.addEventListener("fullscreenchange", fullscreenChanged);
+  document.addEventListener("webkitfullscreenchange", fullscreenChanged);
   for (const ev of ["pointerup", "touchend", "click", "keydown"]) document.addEventListener(ev, () => {
     if (!fsDone) goFullscreen();
   }, { passive: true });
   function showIntro(onPlay) {
     const el = $("#intro");
     el.hidden = false;
+    goFullscreen();
     const hasSave = S.started;
     el.innerHTML = `
     <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="spark" style="left:12%;top:36%">\u2726</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">\u2726</span></div>
@@ -2799,29 +2971,109 @@
     } });
   }
 
+  // js/sell-art.js
+  var SOURCE = "assets/sell/cartoon-sheet.png";
+  var teaColumns = { traSua: 0, matcha: 1, hongTra: 2, lucTra: 3, olong: 4, traThai: 5 };
+  var topCells = {
+    tcDen: [0, 0],
+    tcTrang: [0, 1],
+    tcVang: [0, 2],
+    tcSoi: [2, 2],
+    tcNo: [0, 5],
+    cuNang: [2, 3],
+    thachTc: [1, 2],
+    suongSao: [0, 9],
+    thachCf: [0, 7],
+    fCheese: [1, 3],
+    fMatcha: [1, 5],
+    fMuoi: [0, 8],
+    fUbe: [2, 0],
+    pmVien: [1, 6],
+    pmTuoi: [1, 6],
+    thachPm: [2, 1]
+  };
+  var artId = 0;
+  var TEA_MASK = [[35, 0], [66, 0], [69, 8], [97, 12], [100, 24], [100, 43], [94, 44], [94, 86], [72, 92], [64, 100], [40, 100], [33, 92], [7, 86], [7, 44], [0, 43], [0, 24], [3, 12], [32, 8]];
+  var CUP_MASK = [[0, 7], [12, 0], [88, 0], [100, 7], [90, 24], [81, 92], [70, 100], [30, 100], [19, 92], [10, 24]];
+  function region(rect, cls = "", mask = null) {
+    const [x, y, width, height] = rect;
+    const id = `sale-art-${artId++}`;
+    const clip = mask ? `<defs><clipPath id="${id}"><polygon points="${mask.map(([px, py]) => `${px * width / 100},${py * height / 100}`).join(" ")}"/></clipPath></defs>` : "";
+    return `<svg class="sale-art ${cls}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns:xlink="http://www.w3.org/1999/xlink">${clip}<image href="${SOURCE}" xlink:href="${SOURCE}" x="${-x}" y="${-y}" width="1536" height="1024" ${mask ? `clip-path="url(#${id})"` : ""}/></svg>`;
+  }
+  function teaArt(id) {
+    return region([13 + teaColumns[id] * 129, 17, 123, 246], "", TEA_MASK);
+  }
+  function toppingArt(id) {
+    const [row, col] = topCells[id];
+    return region([16 + col * 133.5, 395 + row * 108, 120, 64], "", [[7, 0], [93, 0], [100, 10], [100, 100], [0, 100], [0, 10]]);
+  }
+  function stackArt(size) {
+    return region(size === "L" ? [912, 53, 115, 304] : [785, 100, 117, 255], "", [[16, 0], [84, 0], [89, 31], [94, 58], [100, 61], [100, 97], [94, 100], [6, 100], [0, 97], [0, 61], [6, 58], [11, 31]]);
+  }
+  function sealerArt() {
+    return region([1287, 18, 231, 366], "", [[23, 0], [43, 4], [79, 0], [96, 10], [100, 36], [95, 85], [88, 100], [11, 100], [6, 93], [6, 40], [0, 23], [11, 4]]);
+  }
+  function cupArt() {
+    return region([15, 781, 95, 122], "cup-sprite", CUP_MASK);
+  }
+  var pourColumn = (tea) => {
+    var _a;
+    return (_a = { traSua: 0, matcha: 1, lucTra: 3, hongTra: 2, olong: 3, traThai: 4 }[tea]) != null ? _a : 0;
+  };
+  function pourArt(tea) {
+    return region([321 + pourColumn(tea) * 126, 716, 73, 72], "pour-sprite", [[0, 100], [0, 62], [6, 34], [18, 12], [37, 0], [60, 0], [88, 20], [96, 46], [67, 38], [48, 35], [39, 44], [29, 63], [24, 100]]);
+  }
+  function splashArt(tea) {
+    return region([14 + pourColumn(tea) * 137, 920, 124, 90], "tea-splash-sprite", [[0, 70], [8, 47], [21, 32], [17, 15], [34, 5], [41, 36], [54, 21], [68, 9], [80, 3], [98, 17], [91, 39], [75, 52], [99, 56], [93, 78], [63, 91], [34, 98], [10, 91]]);
+  }
+
   // js/brewui.js
   var sizePx = { M: [54, 76], L: [64, 90] };
   function cupHTML(c, { mini = false, stamp = true } = {}) {
+    var _a;
     const [w, hgt] = sizePx[c.size || "M"];
     const k = mini ? 0.55 : 1;
     const tea = c.tea ? ITEMS[c.tea] : null;
     const fl = c.flavor ? ITEMS[c.flavor] : null;
-    const fill = clamp((c.fill ?? 0) / 1, 0, 1.15);
+    const fill = clamp(((_a = c.fill) != null ? _a : 0) / 1, 0, 1.15);
     const liq = tea ? `linear-gradient(${tea.color}, ${tea.color}${fl ? "" : ""})` : "transparent";
     const flav = fl ? `<i class="c-flav" style="background:${fl.color}"></i>` : "";
     const tops = (c.tops || []).map((t) => `<i class="c-top" style="background-color:${ITEMS[t].color}"></i>`.repeat(3)).join("");
     const lid = c.phase === "ready" ? '<i class="c-lid"></i>' : "";
     const straw = c.phase === "ready" ? '<i class="c-straw"></i>' : "";
     const st = stamp && !mini && equipLevel("nhanDien") > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : "";
-    return `<div class="cup ${c.phase || ""}" style="width:${w * k}px;height:${hgt * k}px">
+    return `<div class="cup illustrated-cup ${c.phase || ""}" style="width:${w * k}px;height:${hgt * k}px">
     <div class="c-body"><div class="c-liq" style="height:${Math.min(100, fill * 86)}%;background:${liq}">${flav}</div><div class="c-tops">${tops}</div></div>
+    <div class="cup-art-overlay">${cupArt()}</div><div class="cup-pour-art">${c.tea ? pourArt(c.tea) : ""}</div><div class="cup-splash-art">${c.tea ? splashArt(c.tea) : ""}</div>
     ${lid}${straw}${st}</div>`;
   }
   function orderCup(o) {
     return cupHTML({ size: o.size, tea: o.tea, flavor: o.flavor, tops: o.tops, fill: 0.95, phase: "ready" }, { mini: true, stamp: false });
   }
   var root = null;
+  var brewFxGeneration = 0;
+  function clearBrewFx() {
+    brewFxGeneration++;
+    const layer = $("#brewfx");
+    if (layer) layer.textContent = "";
+    $$(".fx-lid").forEach((el) => el.remove());
+    const fx = $("#fx");
+    if (fx) fx.textContent = "";
+  }
+  function brewFxLayer() {
+    let layer = $("#brewfx");
+    if (!layer) {
+      layer = h('<div id="brewfx" aria-hidden="true"></div>');
+      $("#app").appendChild(layer);
+    }
+    return layer;
+  }
+  var canShowBrewFx = () => S.phase === "sell" && SH.view === "counter" && !isModalOpen();
+  on("modal:open", clearBrewFx);
+  on("shift:end", clearBrewFx);
   function renderSell() {
+    clearBrewFx();
     const view = $("#view");
     if (S.phase !== "sell") return;
     if (SH.view === "lobby") return renderLobby(view);
@@ -2836,8 +3088,8 @@
       <div class="tag-w">QU\u1EA6Y TR\xC0</div>
       <div class="shelf-row">
         <div class="stacks">
-          <button class="stack" data-act="cup" data-size="M" aria-label="L\u1EA5y ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
-          <button class="stack big" data-act="cup" data-size="L" aria-label="L\u1EA5y ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="lyL">0</span></button>
+          <button class="stack" data-act="cup" data-size="M" aria-label="L\u1EA5y ly size M"><div class="cupstack image-stack m">${stackArt("M")}</div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
+          <button class="stack big" data-act="cup" data-size="L" aria-label="L\u1EA5y ly size L"><div class="cupstack image-stack l">${stackArt("L")}</div><b>L</b><span class="cnt" data-cnt="lyL">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join("")}</div>
       </div>
@@ -2851,7 +3103,7 @@
             <div class="board-txt" id="boardTxt">L\u1EA5y ly<br/>M ho\u1EB7c L</div>
             <div class="pourbar" id="pourbar"><div class="pb-zone"></div><i id="pbFill"></i></div></div>
         </div>
-        <button class="sealer" id="sealer" data-act="seal" aria-label="M\xE1y \u0111\xF3ng n\u1EAFp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
+        <button class="sealer image-sealer" id="sealer" data-act="seal" aria-label="M\xE1y \u0111\xF3ng n\u1EAFp">${sealerArt()}<span class="sl-led">READY</span></button>
         <div class="work-side">
           <button class="phone" data-act="phone" aria-label="\u0110\u01A1n online"><span>\u{1F4F1}</span><b id="phoneBadge">0</b></button>
           <button class="trash" data-act="trash" aria-label="Th\xF9ng r\xE1c">\u{1F5D1}\uFE0F</button>
@@ -2875,7 +3127,7 @@
     const locked = !S.unlocked[t];
     const off = S.unlocked[t] && !S.onMenu[t];
     return `<button class="disp ${locked ? "locked" : ""} ${off ? "off" : ""}" data-act="disp" data-tea="${t}" aria-label="${it.name}" ${locked ? 'data-locked="1"' : ""}>
-    <i class="jlid"></i><div class="jar"><i class="jl" style="background:${it.color}"></i><span class="lab">${it.short}</span>${locked ? '<em class="lk">\u{1F512}</em>' : ""}</div><div class="tap"><i class="drip" style="background:${it.color}"></i></div>
+    <div class="jar image-jar">${teaArt(t)}${locked ? '<em class="lk">\u{1F512}</em>' : ""}<span class="tap image-tap"><i class="drip" style="background:${it.color}"></i></span></div>
     <span class="cnt" data-cnt="${t}">0</span></button>`;
   }
   function fillFlavors() {
@@ -2888,8 +3140,7 @@
     $("#trays").innerHTML = order.slice(0, slots).map((t) => {
       const it = ITEMS[t];
       const locked = !S.unlocked[t], off = S.unlocked[t] && !S.onMenu[t];
-      const dots = `<i style="background-color:${it.color}"></i>`.repeat(14);
-      return `<button class="tray ${locked ? "locked" : ""} ${off ? "off" : ""}" data-act="top" data-t="${t}" aria-label="${it.name}"><div class="pile">${dots}</div>${locked ? '<em class="lk">\u{1F512}</em>' : ""}<small>${it.name.replace("Tr\xE2n ch\xE2u ", "TC ").replace("Th\u1EA1ch ", "Th. ")}</small><span class="cnt" data-cnt="${t}">0</span></button>`;
+      return `<button class="tray image-tray ${locked ? "locked" : ""} ${off ? "off" : ""}" data-act="top" data-t="${t}" aria-label="${it.name}"><div class="pile">${toppingArt(t)}</div>${locked ? '<em class="lk">\u{1F512}</em>' : ""}<small>${it.name.replace("Tr\xE2n ch\xE2u ", "TC ").replace("Th\u1EA1ch ", "Th. ")}</small><span class="cnt" data-cnt="${t}">0</span></button>`;
     }).join("");
   }
   var sellActs = {
@@ -2905,7 +3156,7 @@
       if (!S.unlocked[id]) return toast("M\u1EDF kh\xF3a trong N\xE2ng c\u1EA5p \u203A Tr\xE0", "err");
       if (!S.onMenu[id]) return toast("M\xF3n \u0111ang t\u1EAFt kh\u1ECFi menu", "err");
       const b = SH.board;
-      if (b?.pouring) {
+      if (b == null ? void 0 : b.pouring) {
         stopPour();
         return;
       }
@@ -2943,7 +3194,8 @@
       }
     },
     boardTap: () => {
-      if (SH.board?.phase === "ready") doServe();
+      var _a;
+      if (((_a = SH.board) == null ? void 0 : _a.phase) === "ready") doServe();
     },
     trash: () => {
       if (SH.board) {
@@ -2972,8 +3224,8 @@
     if (cupEl && target) {
       const a = cupEl.getBoundingClientRect(), b = target.getBoundingClientRect();
       const clone = cupEl.cloneNode(true);
-      clone.style.cssText = `position:fixed;left:${a.left}px;top:${a.top}px;z-index:80;pointer-events:none`;
-      document.body.appendChild(clone);
+      clone.style.cssText = `position:fixed;left:${a.left}px;top:${a.top}px;pointer-events:none`;
+      brewFxLayer().appendChild(clone);
       clone.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: `translate(${b.left - a.left}px,${b.top - a.top + 20}px) scale(.5)`, opacity: 0.1 }], { duration: 480, easing: "ease-in" }).onfinish = () => clone.remove();
     }
     const anchor = target || $("#hud");
@@ -2991,22 +3243,28 @@
   function dropFx(fromEl, color) {
     sfx("drop");
     const slot = $("#cupslot");
-    if (!fromEl || !slot) return;
+    if (!fromEl || !slot || !canShowBrewFx()) return;
+    const generation = brewFxGeneration, board = SH.board;
     const a = fromEl.getBoundingClientRect();
     const n = 5, DUR = 820, GAP = 95, SPLIT = 0.62;
     const balls = [];
     for (let k = 0; k < n; k++) {
       const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
       const el = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color};opacity:0"></div>`);
-      document.body.appendChild(el);
+      brewFxLayer().appendChild(el);
       balls.push({ el, k, sx, sy, jit: rand(-9, 9), rise: 34 + rand(0, 22), done: false });
     }
     const t0 = performance.now();
     let surfaceY = 0;
     const frame2 = (now) => {
+      var _a;
+      if (generation !== brewFxGeneration || !slot.isConnected || !canShowBrewFx() || SH.board !== board) {
+        balls.forEach((o) => o.el.remove());
+        return;
+      }
       const cupEl = slot.querySelector(".cup") || slot;
       const cr = cupEl.getBoundingClientRect();
-      const liq = cupEl.querySelector?.(".c-liq");
+      const liq = (_a = cupEl.querySelector) == null ? void 0 : _a.call(cupEl, ".c-liq");
       const lr = liq ? liq.getBoundingClientRect() : null;
       surfaceY = lr && lr.height > 2 ? lr.top + 3 : cr.bottom - 8;
       const cx = cr.left + cr.width / 2, rimY = cr.top - 16;
@@ -3052,31 +3310,31 @@
     requestAnimationFrame(frame2);
   }
   function splash(cup, color, atY) {
+    if (!canShowBrewFx() || !cup.isConnected) return;
     const r = cup.getBoundingClientRect();
-    const x = r.left + r.width / 2, y = atY ?? r.top + r.height * 0.5;
+    const x = r.left + r.width / 2, y = atY != null ? atY : r.top + r.height * 0.5;
     fxSpark({ x, y }, 5);
     const ring = h(`<div class="fx-ripple" style="left:${x}px;top:${y}px;border-color:${color}"></div>`);
-    document.body.appendChild(ring);
+    brewFxLayer().appendChild(ring);
     setTimeout(() => ring.remove(), 520);
   }
   function flyCupIn(size) {
-    const slot = $("#cupslot"), cupEl = slot?.firstElementChild;
-    const stack2 = $(`.stack[data-size="${size}"]`);
-    if (!cupEl || !stack2) return;
-    const a = stack2.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
+    const slot = $("#cupslot"), cupEl = slot == null ? void 0 : slot.firstElementChild;
+    if (!cupEl || !canShowBrewFx()) return;
     cupEl.animate([
-      { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px,${a.top - b.top - 10}px) scale(.6) rotate(-18deg)`, opacity: 0.2 },
-      { transform: "translate(0,0) scale(1) rotate(0)", opacity: 1 }
-    ], { duration: 420, easing: "cubic-bezier(.3,1.35,.55,1)" });
+      { transform: "scale(.45)", opacity: 0.15 },
+      { transform: "scale(.8)", opacity: 0.65, offset: 0.6 },
+      { transform: "scale(1)", opacity: 1 }
+    ], { duration: 360, easing: "ease-out" });
   }
   function sealAnim() {
+    var _a;
     const cupEl = $("#cupslot .cup"), sealer = $("#sealer");
-    if (!cupEl || !sealer) return;
-    const dur = Math.max(600, (SH.board?.sealMax || 1.2) * 1e3);
-    const r = cupEl.getBoundingClientRect();
+    if (!cupEl || !sealer || !canShowBrewFx()) return;
+    const dur = Math.max(600, (((_a = SH.board) == null ? void 0 : _a.sealMax) || 1.2) * 1e3);
     sealer.classList.add("press");
-    const lid = h(`<div class="fx-lid" style="left:${r.left - 3}px;top:${r.top - 6}px;width:${r.width + 6}px"></div>`);
-    document.body.appendChild(lid);
+    const lid = h('<div class="fx-lid cup-attached-lid"></div>');
+    cupEl.appendChild(lid);
     lid.animate([
       { transform: "translateY(-64px) scaleX(.86)", opacity: 0, offset: 0 },
       { transform: "translateY(-44px) scaleX(.92)", opacity: 1, offset: 0.2 },
@@ -3096,7 +3354,9 @@
     sfx("seal");
   }
   on("cup:pick", (size) => {
+    const board = SH.board;
     setTimeout(() => {
+      if (SH.board !== board || !canShowBrewFx() || board.phase !== "cup") return;
       updateBoard(true);
       flyCupIn(size);
       sfx("cup");
@@ -3117,8 +3377,8 @@
       cs.classList.add("plop");
     }
     const s = $("#sealer");
-    s?.classList.add("ding");
-    setTimeout(() => s?.classList.remove("ding"), 600);
+    s == null ? void 0 : s.classList.add("ding");
+    setTimeout(() => s == null ? void 0 : s.classList.remove("ding"), 600);
   });
   on("top", () => updateBoard(true));
   on("flavor", () => updateBoard(true));
@@ -3208,11 +3468,12 @@
     bd.parentElement.classList.toggle("has", SH.onlineQ.length > 0);
   }
   function updateLobbyBtn() {
+    var _a;
     const c = $("#lobbyCnt");
     if (!c) return;
     const dirty2 = SH.tables.filter((t) => t.s === "dirty").length;
     c.textContent = `${SH.tables.filter((t) => t.s === "busy").length}/${SH.tables.length}`;
-    $("#lobbyGo")?.classList.toggle("alert", dirty2 > 0);
+    (_a = $("#lobbyGo")) == null ? void 0 : _a.classList.toggle("alert", dirty2 > 0);
   }
   function hintText() {
     if (!S.settings.hints) return "";
@@ -3233,6 +3494,7 @@
   }
   var cntT = 0;
   function frameSell(dt, force) {
+    var _a;
     if (S.phase !== "sell") return;
     updateClock();
     if (SH.view === "lobby") {
@@ -3262,12 +3524,13 @@
     const st = $("#stream");
     const b = SH.board;
     const slot = $("#cupslot");
-    if (b?.pouring && b.tea && slot) {
+    slot == null ? void 0 : slot.classList.toggle("pouring-art", !!(b == null ? void 0 : b.pouring));
+    if ((b == null ? void 0 : b.pouring) && b.tea && slot) {
       const d = $(`.disp[data-tea="${b.tea}"] .tap`);
       if (d && st) {
         const a = d.getBoundingClientRect(), r0 = root.getBoundingClientRect();
         const tapX = a.left + a.width / 2;
-        if (slot._pour?.tea !== b.tea) {
+        if (((_a = slot._pour) == null ? void 0 : _a.tea) !== b.tea) {
           const board = slot.offsetParent, br = board.getBoundingClientRect();
           const baseL = br.left + board.clientLeft + slot.offsetLeft, baseT = br.top + board.clientTop + slot.offsetTop;
           const cupEl = slot.querySelector(".cup");
@@ -3288,7 +3551,7 @@
       }
     } else {
       if (st) st.style.display = "none";
-      if (slot?._pour) {
+      if (slot == null ? void 0 : slot._pour) {
         slot._pour = null;
         slot.style.transform = "";
         slot.classList.remove("under-tap");
@@ -3303,7 +3566,7 @@
       }
       updatePhone();
       updateLobbyBtn();
-      for (const d of $$(".disp", root)) d.classList.toggle("pouring", !!(b?.pouring && b.tea === d.dataset.tea));
+      for (const d of $$(".disp", root)) d.classList.toggle("pouring", !!((b == null ? void 0 : b.pouring) && b.tea === d.dataset.tea));
     }
   }
   function openOnlineList() {
@@ -3693,7 +3956,8 @@
       }
     },
     bind(root2) {
-      root2.querySelector("[data-rate]")?.addEventListener("input", (e) => {
+      var _a;
+      (_a = root2.querySelector("[data-rate]")) == null ? void 0 : _a.addEventListener("input", (e) => {
         S.tax.rate = +e.target.value / 100;
         markDirty("panel");
       });
@@ -3703,9 +3967,9 @@
     return `<div class="brh"><h4>\u{1F3E2} H\u1EC6 TH\u1ED0NG CHI NH\xC1NH TR\u1EF0C THU\u1ED8C</h4><p>M\u1EDF r\u1ED9ng chu\u1ED7i c\u1EEDa h\xE0ng tr\xE0 s\u1EEFa \u0111\u1EC3 thu h\xFAt th\xEAm kh\xE1ch v\xE0 t\u1EA1o d\xF2ng ti\u1EC1n th\u1EE5 \u0111\u1ED9ng m\u1ED7i ng\xE0y.</p></div>` + BRANCHES.map((b) => {
       const o = S.branches[b.id];
       const cost = b.cost;
-      const lastTxt = o?.last ? `<small>H\xF4m qua: doanh thu ${fmtK(o.last.r)} \xB7 l\xE3i r\xF2ng <b class="${o.last.p >= 0 ? "pos" : "neg"}">${fmtK(o.last.p)}</b></small>` : "";
+      const lastTxt = (o == null ? void 0 : o.last) ? `<small>H\xF4m qua: doanh thu ${fmtK(o.last.r)} \xB7 l\xE3i r\xF2ng <b class="${o.last.p >= 0 ? "pos" : "neg"}">${fmtK(o.last.p)}</b></small>` : "";
       return `<div class="brcard ${o ? "open" : ""}"><div class="br-top"><span class="br-ic">${b.icon}</span><div class="grow"><b>${b.name}</b><small>${esc(b.desc)}</small></div><span class="chip ${o ? "green" : ""}">${o ? "\u0110ang ho\u1EA1t \u0111\u1ED9ng" : "Ch\u01B0a m\u1EDF"}</span></div>
-        <div class="br-st"><div>\u{1F4B5} Ti\u1EC1n thu\xEA m\u1EB7t b\u1EB1ng: <b class="neg">\u2212${fmtK(b.rent)}/ng\xE0y</b></div><div>\u{1F465} Ph\xE1t l\u01B0\u01A1ng (${o?.staff || 0} NV): <b class="neg">\u2212${fmtK((o?.staff || 0) * 15e4)}/ng\xE0y</b></div>
+        <div class="br-st"><div>\u{1F4B5} Ti\u1EC1n thu\xEA m\u1EB7t b\u1EB1ng: <b class="neg">\u2212${fmtK(b.rent)}/ng\xE0y</b></div><div>\u{1F465} Ph\xE1t l\u01B0\u01A1ng (${(o == null ? void 0 : o.staff) || 0} NV): <b class="neg">\u2212${fmtK(((o == null ? void 0 : o.staff) || 0) * 15e4)}/ng\xE0y</b></div>
           <div>\u{1F4E6} Nh\u1EADp li\u1EC7u nguy\xEAn li\u1EC7u: <b class="neg">\u2212${fmtK(b.rev[0] * b.ing[0])} ~ ${fmtK(b.rev[1] * b.ing[1])}/ng\xE0y</b></div><div>\u{1F4C8} Doanh thu t\u1EF1 \u0111\u1ED9ng: <b class="pos">+${fmtK(b.rev[0])} ~ ${fmtK(b.rev[1])}/ng\xE0y</b></div>
           <div>\u2B50 \u0110\xE1nh gi\xE1 b\xECnh qu\xE2n: <b>${o ? S.rating.toFixed(1) : "(Ch\u01B0a m\u1EDF)"}</b></div>${lastTxt}</div>
         ${o ? `<div class="row2"><span>\u{1F465} Nh\xE2n vi\xEAn chi nh\xE1nh:</span><div class="stepper"><button data-act="bstaff-" data-id="${b.id}">\u2212</button><input class="num" type="number" inputmode="numeric" min="0" max="3" value="${o.staff || 0}" data-bstaff="${b.id}" aria-label="Nh\xE2n vi\xEAn chi nh\xE1nh"><button data-act="bstaff+" data-id="${b.id}">+</button></div></div>` : `<button class="btn pri block" data-act="bopen" data-id="${b.id}">${fmtK(cost)}<br/>Thu\xEA & M\u1EDF chi nh\xE1nh</button>`}</div>`;
@@ -3725,7 +3989,7 @@
     const last2 = S.history[S.history.length - 1];
     const main = last2 ? last2.profit - last2.branch - last2.fran - last2.interest : 0;
     const brN = Object.keys(S.branches).length;
-    const brP = last2?.branch || 0, frP = last2?.fran || 0;
+    const brP = (last2 == null ? void 0 : last2.branch) || 0, frP = (last2 == null ? void 0 : last2.fran) || 0;
     const total = main + brP + frP;
     const tot = Math.max(1, Math.abs(main) + Math.abs(brP) + Math.abs(frP));
     const bar2 = (l, v) => `<div class="sbar"><span>${l}</span><div class="bar"><i style="width:${Math.abs(v) / tot * 100}%"></i></div><b>${fmtK(v)}</b></div>`;
@@ -3817,7 +4081,7 @@
       return `<div class="profile"><div class="pf-h">${logoHTML(60)}<div><h4>${esc(S.shopName)} ${verified ? "\u2714\uFE0F" : ""}</h4><small class="${verified ? "green" : "grayish"}">${verified ? "\u{1F331} \u0110\xE3 t\xEDch xanh" : "\u{1F331} \u0110ang x\xE2y th\u01B0\u01A1ng hi\u1EC7u"}</small><p class="muted">${verified ? "K\xEAnh \u1EA9m th\u1EF1c ch\xEDnh th\u1EE9c" : "C\u1EA7n 50K followers & 4.5\u2605 \u0111\u1EC3 t\xEDch xanh"}</p></div></div>
       <div class="pf-s"><div><b>${S.followers.toLocaleString("vi-VN")}</b><small>Ng\u01B0\u1EDDi theo d\xF5i</small></div><div><b>${S.rating.toFixed(1)} \u2605</b><small>${S.ratingCount} \u0111\xE1nh gi\xE1</small></div><div><b>+${traffic}%</b><small>Buff t\u1EEB Ads</small></div></div></div>
       <div class="adbox"><h4>\u{1F4E3} Qu\u1EA3ng c\xE1o t\u0103ng kh\xE1ch</h4><p class="sub">\u0110ang ch\u1EA1y ${ad ? 1 : 0}/1 chi\u1EBFn d\u1ECBch${ad ? ` \xB7 c\xF2n ${S.social.ad.endsDay - S.day + 1} ng\xE0y` : ""}</p>
-      ${ADS.map((a) => `<div class="adcard ${ad?.id === a.id ? "run" : ""}" data-act="adinfo" data-id="${a.id}"><span class="ad-ic">${a.icon}</span><div class="ad-m"><b>${a.name}</b><small>+${Math.round(a.traffic * 100)}% kh\xE1ch \xB7 ${a.days} ng\xE0y \xB7 \u24D8</small></div><button class="btn pri sm ad-btn" data-act="ad" data-id="${a.id}" ${ad ? "disabled" : ""}>${ad?.id === a.id ? "\u0110ang ch\u1EA1y" : `<b>${fmtK(a.cost)}</b><small>K\xEDch ho\u1EA1t</small>`}</button></div>`).join("")}</div>
+      ${ADS.map((a) => `<div class="adcard ${(ad == null ? void 0 : ad.id) === a.id ? "run" : ""}" data-act="adinfo" data-id="${a.id}"><span class="ad-ic">${a.icon}</span><div class="ad-m"><b>${a.name}</b><small>+${Math.round(a.traffic * 100)}% kh\xE1ch \xB7 ${a.days} ng\xE0y \xB7 \u24D8</small></div><button class="btn pri sm ad-btn" data-act="ad" data-id="${a.id}" ${ad ? "disabled" : ""}>${(ad == null ? void 0 : ad.id) === a.id ? "\u0110ang ch\u1EA1y" : `<b>${fmtK(a.cost)}</b><small>K\xEDch ho\u1EA1t</small>`}</button></div>`).join("")}</div>
       <div class="vidbox"><h4>\u{1F3AC} \u0110\u0103ng video qu\u1EA3ng b\xE1</h4><p>T\u1EC9 l\u1EC7 Viral: <b>25%</b> \xB7 M\u1ED7i l\u1EA7n quay nh\u1EADn ng\u1EABu nhi\xEAn % buff kh\xE1ch. S\u1ED1 l\u01B0\u1EE3t quay h\xF4m nay d\u1EF1a v\xE0o chi\u1EBFn d\u1ECBch ads (${used}/${quota} l\u01B0\u1EE3t/ng\xE0y).</p>
       <button class="btn ${used < quota ? "pri" : "ghost"} block" data-act="video" ${used < quota ? "" : "disabled"}>${used < quota ? "\u{1F3A5} Quay & \u0111\u0103ng video" : "\u{1F512} C\u1EA7n ch\u1EA1y chi\u1EBFn d\u1ECBch Ads \u0111\u1EC3 quay video"}</button></div>
       <h4 class="feedh">\u{1F4F1} B\u1EA3ng tin</h4>
@@ -3876,7 +4140,7 @@
     return `<button class="plot grow" data-act="plant" data-i="${i}" aria-label="\u0110ang l\u1EDBn"><span>${p.grown ? "\u{1F33F}" : "\u{1F331}"}</span><small>${left} ng\xE0y</small></button>`;
   }
   function harvest(i) {
-    const p = S.garden.plots[i], sd = p?.seed && seedDef(p.seed);
+    const p = S.garden.plots[i], sd = (p == null ? void 0 : p.seed) && seedDef(p.seed);
     if (!sd || p.grown < sd.days) return 0;
     const q = randInt(sd.yield[0], sd.yield[1]);
     const id = sd.gives;
@@ -4183,9 +4447,9 @@
     acts: {
       pin: (t) => {
         const el = document.getElementById("loc-" + t.dataset.id);
-        el?.scrollIntoView({ behavior: "smooth", block: "center" });
-        el?.classList.add("flash");
-        setTimeout(() => el?.classList.remove("flash"), 1400);
+        el == null ? void 0 : el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el == null ? void 0 : el.classList.add("flash");
+        setTimeout(() => el == null ? void 0 : el.classList.remove("flash"), 1400);
       },
       startup: (t) => {
         const l = LOCATIONS[t.dataset.id];
@@ -4276,15 +4540,12 @@
     },
     acts: {
       copycode: async () => {
-        try {
-          await navigator.clipboard.writeText(S.friends.code);
-          toast("\u0110\xE3 sao ch\xE9p m\xE3 m\u1EDDi!", "ok");
-        } catch (e) {
-          toast("M\xE3 c\u1EE7a b\u1EA1n: " + S.friends.code, "ok");
-        }
+        if (await copyText(S.friends.code)) toast("\u0110\xE3 sao ch\xE9p m\xE3 m\u1EDDi!", "ok");
+        else alertBox("M\xE3 m\u1EDDi c\u1EE7a b\u1EA1n", `<input class="field" readonly value="${esc(S.friends.code)}" aria-label="M\xE3 m\u1EDDi">Nh\u1EA5n gi\u1EEF m\xE3 \u0111\u1EC3 sao ch\xE9p.`);
       },
       addf: () => {
-        const v = ($("#friendCode")?.value || "").trim().toUpperCase();
+        var _a;
+        const v = (((_a = $("#friendCode")) == null ? void 0 : _a.value) || "").trim().toUpperCase();
         if (!/^TTN-[A-Z0-9]{3,8}$/.test(v)) return toast("M\xE3 b\u1EA1n b\xE8 kh\xF4ng h\u1EE3p l\u1EC7 (d\u1EA1ng TTN-XXXXX)", "err");
         if (v === S.friends.code) return toast("\u0110\xF3 l\xE0 m\xE3 c\u1EE7a b\u1EA1n!", "err");
         if (S.friends.list.some((x) => x.id === v)) return toast("\u0110\xE3 l\xE0 b\u1EA1n r\u1ED3i", "err");
@@ -4359,6 +4620,21 @@
   };
   var PANELS3 = { vuon, thucung, khoinghiep, sanh, danhgia, tongket, banbe, suutam };
 
+  // js/pearl-art.js
+  var PALETTES = [["#a68b78", "#30221f"], ["#fff4a1", "#e8a51c"], ["#ffe1ef", "#ed6ba4"], ["#e2ffd8", "#65b887"], ["#f1dfff", "#a379da"]];
+  var MARKS = [
+    '<path d="M31 51 Q40 61 49 51" fill="none" stroke="#ffe6ba" stroke-width="3" stroke-linecap="round"/><circle cx="29" cy="41" r="3" fill="#ffe6ba"/><circle cx="51" cy="41" r="3" fill="#ffe6ba"/>',
+    '<path d="M40 23 L45 35 L59 36 L48 45 L52 59 L40 51 L28 59 L32 45 L21 36 L35 35Z" fill="#fff7cb" stroke="#c98811" stroke-width="2"/>',
+    '<path d="M40 57 C17 42 21 24 32 28 Q40 29 40 36 Q44 24 53 28 C68 36 52 49 40 57Z" fill="#fff1f7" stroke="#cf5389" stroke-width="2"/>',
+    '<path d="M24 53 Q18 25 58 24 Q59 54 24 53Z" fill="#d8ffd5" stroke="#438a60" stroke-width="2"/><path d="M25 53 L49 33 M36 43 L35 32 M41 38 L53 39" fill="none" stroke="#438a60" stroke-width="2" stroke-linecap="round"/>',
+    '<path d="M23 48 Q20 22 42 25 Q63 29 55 47 Q46 65 32 49 Q26 36 40 34 Q51 36 43 44" fill="none" stroke="#f8eeff" stroke-width="5" stroke-linecap="round"/>'
+  ];
+  var serial = 0;
+  function pearlIcon(type, cls = "") {
+    const [light, dark] = PALETTES[type], id = `pearl-gloss-${serial++}`;
+    return `<svg class="pearl-icon ${cls}" viewBox="0 0 80 80" aria-hidden="true" focusable="false"><defs><radialGradient id="${id}" cx="30%" cy="22%" r="80%"><stop stop-color="${light}"/><stop offset="1" stop-color="${dark}"/></radialGradient></defs><circle cx="40" cy="42" r="34" fill="${dark}" opacity=".2"/><circle cx="40" cy="38" r="33" fill="url(#${id})" stroke="${dark}" stroke-width="2"/><ellipse cx="27" cy="19" rx="13" ry="7" fill="white" opacity=".6" transform="rotate(-24 27 19)"/>${MARKS[type]}<path d="M60 15V23 M56 19H64" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".9"/></svg>`;
+  }
+
   // js/minigames.js
   var N = 7;
   var ICONS = ["\u{1F9CB}", "\u{1F353}", "\u{1F96D}", "\u{1F375}", "\u{1F347}"];
@@ -4369,6 +4645,7 @@
   var rt = (q) => Math.floor(Math.random() * q.types);
   var mk = (q, t = rt(q)) => ({ id: uid++, t, sp: null });
   function newGrid(q) {
+    var _a, _b, _c, _d;
     const g = Array.from({ length: N }, () => Array(N).fill(null));
     for (let r = 0; r < N; r++) {
       for (let c = 0; c < N; c++) {
@@ -4376,22 +4653,23 @@
         do {
           t = rt(q);
           tries++;
-        } while (tries < 20 && (c >= 2 && g[r][c - 1]?.t === t && g[r][c - 2]?.t === t || r >= 2 && g[r - 1][c]?.t === t && g[r - 2][c]?.t === t));
+        } while (tries < 20 && (c >= 2 && ((_a = g[r][c - 1]) == null ? void 0 : _a.t) === t && ((_b = g[r][c - 2]) == null ? void 0 : _b.t) === t || r >= 2 && ((_c = g[r - 1][c]) == null ? void 0 : _c.t) === t && ((_d = g[r - 2][c]) == null ? void 0 : _d.t) === t));
         g[r][c] = mk(q, t);
       }
     }
     return g;
   }
   function findMatches(g, swapCells = []) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const mark = /* @__PURE__ */ new Set();
     const runs = [];
     const key = (r, c) => r * N + c;
     for (let r = 0; r < N; r++) {
       let c = 0;
       while (c < N) {
-        const t = g[r][c]?.t;
+        const t = (_a = g[r][c]) == null ? void 0 : _a.t;
         let e = c + 1;
-        while (t !== void 0 && e < N && g[r][e]?.t === t) e++;
+        while (t !== void 0 && e < N && ((_b = g[r][e]) == null ? void 0 : _b.t) === t) e++;
         if (t !== void 0 && e - c >= 3) {
           runs.push({ dir: "h", r, c, len: e - c, t });
           for (let k = c; k < e; k++) mark.add(key(r, k));
@@ -4402,9 +4680,9 @@
     for (let c = 0; c < N; c++) {
       let r = 0;
       while (r < N) {
-        const t = g[r][c]?.t;
+        const t = (_c = g[r][c]) == null ? void 0 : _c.t;
         let e = r + 1;
-        while (t !== void 0 && e < N && g[e][c]?.t === t) e++;
+        while (t !== void 0 && e < N && ((_d = g[e][c]) == null ? void 0 : _d.t) === t) e++;
         if (t !== void 0 && e - r >= 3) {
           runs.push({ dir: "v", r, c, len: e - r, t });
           for (let k = r; k < e; k++) mark.add(key(k, c));
@@ -4434,8 +4712,8 @@
       for (const [dr, dc] of [[0, 0], [0, -1], [-1, 0], [-1, -1]]) {
         const r0 = s.r + dr, c0 = s.c + dc;
         if (r0 < 0 || c0 < 0 || r0 + 1 >= N || c0 + 1 >= N) continue;
-        const t = g[r0][c0]?.t;
-        if (t !== void 0 && g[r0][c0 + 1]?.t === t && g[r0 + 1][c0]?.t === t && g[r0 + 1][c0 + 1]?.t === t && !specials.some((p) => p.sp === "fish")) {
+        const t = (_e = g[r0][c0]) == null ? void 0 : _e.t;
+        if (t !== void 0 && ((_f = g[r0][c0 + 1]) == null ? void 0 : _f.t) === t && ((_g = g[r0 + 1][c0]) == null ? void 0 : _g.t) === t && ((_h = g[r0 + 1][c0 + 1]) == null ? void 0 : _h.t) === t && !specials.some((p) => p.sp === "fish")) {
           [[r0, c0], [r0, c0 + 1], [r0 + 1, c0], [r0 + 1, c0 + 1]].forEach(([r, c]) => mark.add(key(r, c)));
           specials.push({ r: s.r, c: s.c, sp: "fish", t });
         }
@@ -4444,6 +4722,7 @@
     return { mark, specials };
   }
   function expand(g, mark, q, hintType) {
+    var _a, _b;
     const key = (r, c) => r * N + c;
     const queue = [...mark];
     const seen = new Set(queue);
@@ -4459,7 +4738,7 @@
     while (queue.length) {
       const k = queue.shift();
       const r = Math.floor(k / N), c = k % N, tile = g[r][c];
-      if (!tile?.sp) continue;
+      if (!(tile == null ? void 0 : tile.sp)) continue;
       q.used[tile.sp] = (q.used[tile.sp] || 0) + 1;
       if (tile.sp === "stripeH") for (let i = 0; i < N; i++) add(r, i);
       else if (tile.sp === "stripeV") for (let i = 0; i < N; i++) add(i, c);
@@ -4468,8 +4747,8 @@
         add(r, c);
         for (let i = 0; i < 3; i++) add(randInt(0, N - 1), randInt(0, N - 1));
       } else if (tile.sp === "rainbow") {
-        const t = hintType ?? g[randInt(0, N - 1)][randInt(0, N - 1)]?.t;
-        for (let rr = 0; rr < N; rr++) for (let cc = 0; cc < N; cc++) if (g[rr][cc]?.t === t) add(rr, cc);
+        const t = hintType != null ? hintType : (_a = g[randInt(0, N - 1)][randInt(0, N - 1)]) == null ? void 0 : _a.t;
+        for (let rr = 0; rr < N; rr++) for (let cc = 0; cc < N; cc++) if (((_b = g[rr][cc]) == null ? void 0 : _b.t) === t) add(rr, cc);
       }
     }
   }
@@ -4591,10 +4870,11 @@
     $("#cBar").style.width = `${clamp(q.score / q.cfg.score * 100, 0, 100)}%`;
   }
   async function resolve(q, swapCells) {
+    var _a;
     let cascade = 0, first = true;
     while (true) {
       const { mark, specials } = findMatches(q.g, first ? swapCells : []);
-      if (!mark.size && !q.forceMark?.size) break;
+      if (!mark.size && !((_a = q.forceMark) == null ? void 0 : _a.size)) break;
       if (q.forceMark) {
         q.forceMark.forEach((k) => mark.add(k));
         q.forceMark = null;
@@ -4743,12 +5023,12 @@
     bindActions(m.body, { retry: restart, next: restart, x: () => m.close() });
     const board = $("#crushBoard", m.body);
     let down = null;
-    board.addEventListener("pointerdown", (e) => {
+    const pointerDown = (e) => {
       const el = e.target.closest(".mt");
       if (!el || !Q || Q.busy || Q.over) return;
       down = { r: +el.dataset.r, c: +el.dataset.c, x: e.clientX, y: e.clientY };
-    });
-    board.addEventListener("pointerup", (e) => {
+    };
+    const pointerUp = (e) => {
       if (!down || !Q) return;
       const d = down;
       down = null;
@@ -4768,7 +5048,38 @@
         sfx("click");
         paint(Q);
       }
-    });
+    };
+    board.style.touchAction = "none";
+    if (window.PointerEvent) {
+      board.addEventListener("pointerdown", (e) => {
+        var _a;
+        pointerDown(e);
+        if (down) (_a = board.setPointerCapture) == null ? void 0 : _a.call(board, e.pointerId);
+      });
+      board.addEventListener("pointerup", pointerUp);
+      board.addEventListener("pointercancel", () => {
+        down = null;
+      });
+    } else {
+      board.addEventListener("touchstart", (e) => {
+        if (e.touches.length !== 1) {
+          down = null;
+          return;
+        }
+        e.preventDefault();
+        pointerDown({ target: e.target, clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
+      }, { passive: false });
+      board.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        const t = e.changedTouches[0];
+        if (t) pointerUp({ clientX: t.clientX, clientY: t.clientY });
+      }, { passive: false });
+      board.addEventListener("touchcancel", () => {
+        down = null;
+      });
+      board.addEventListener("mousedown", pointerDown);
+      board.addEventListener("mouseup", pointerUp);
+    }
   }
   function crushDebug() {
     return { get Q() {
@@ -4783,15 +5094,18 @@
   var PCOL = PIDS.length;
   var P2 = null;
   function pearlBurst(el, color, big) {
+    const layer = $("#pFx"), stage = $("#pStage");
+    if (!layer || !stage) return;
+    const origin = stage.getBoundingClientRect();
     const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
-    const ring = h(`<span class="pfx-ring" style="left:${x}px;top:${y}px;border-color:${color}"></span>`);
-    document.body.appendChild(ring);
+    const ring = h(`<span class="pfx-ring" style="left:${x - origin.left}px;top:${y - origin.top}px;border-color:${color}"></span>`);
+    layer.appendChild(ring);
     ring.animate([{ transform: "translate(-50%,-50%) scale(.3)", opacity: 0.9 }, { transform: "translate(-50%,-50%) scale(1.9)", opacity: 0 }], { duration: 420, easing: "ease-out" }).onfinish = () => ring.remove();
     const n = big ? 7 : 5;
     for (let i = 0; i < n; i++) {
       const a = i / n * Math.PI * 2 + rand(-0.3, 0.3), d = rand(24, big ? 62 : 48), s = rand(5, 9);
-      const f = h(`<span class="pfx-dot" style="left:${x}px;top:${y}px;width:${s}px;height:${s}px;background:${color}"></span>`);
-      document.body.appendChild(f);
+      const f = h(`<span class="pfx-dot" style="left:${x - origin.left}px;top:${y - origin.top}px;width:${s}px;height:${s}px;background:${color}">${i % 3 === 0 ? "\u2726" : ""}</span>`);
+      layer.appendChild(f);
       f.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d + 14}px)) scale(.3)`, opacity: 0 }], { duration: rand(380, 560), easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => f.remove();
     }
   }
@@ -4835,7 +5149,7 @@
   function pRender(fall) {
     const el = $("#pBoard");
     if (!el || !P2) return;
-    el.innerHTML = P2.b.map((row, r) => row.map((v, c) => `<button class="pc" data-act="pop" data-r="${r}" data-c="${c}" aria-label="${esc(ITEMS[PIDS[v]].name)}"><i class="pb" style="--pc:${ITEMS[PIDS[v]].color}"></i></button>`).join("")).join("");
+    el.innerHTML = P2.b.map((row, r) => row.map((v, c) => `<button class="pc pearl-cell p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="${esc(ITEMS[PIDS[v]].name)}"><span class="pb pearl-character" style="--pc:${ITEMS[PIDS[v]].color};--float-delay:${(r + c) * 0.13}s">${pearlIcon(v)}</span></button>`).join("")).join("");
     const balls = $$("#pBoard .pb");
     const step = el.firstElementChild ? el.firstElementChild.offsetHeight + 5 : 50;
     let maxFall = 0;
@@ -4848,16 +5162,42 @@
         b.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }], { duration: 300, delay: i * 6, easing: "ease-out", fill: "backwards" });
       }
     });
+    const game = P2;
     if (maxFall) {
       sfx("swoosh");
-      setTimeout(() => P2 && !P2.over && sfx("bounce"), 170 + maxFall * 60);
+      setTimeout(() => P2 === game && !game.over && sfx("bounce"), 170 + maxFall * 60);
     }
     pStats();
   }
   function pStats() {
+    var _a;
+    if (!P2 || !$("#pScore")) return;
     $("#pScore").textContent = P2.score;
     $("#pTime").textContent = Math.ceil(P2.t) + "s";
     $("#pBar").style.width = `${P2.t / PDUR * 100}%`;
+    $("#pGoalFill").style.width = `${Math.min(100, P2.score / PGOAL * 100)}%`;
+    $("#pGoalText").textContent = `${P2.score}/${PGOAL}`;
+    $("#pBest").textContent = Math.max(S.pearl.best, P2.score);
+    $("#pComboCount").textContent = `\xD7${Math.max(1, Math.min(P2.combo, 6))}`;
+    $("#pLastGain").textContent = P2.lastGain ? `+${P2.lastGain}` : "\u2014";
+    $("#pEquation").textContent = P2.lastGroup ? `${P2.lastGroup}\xB2 \xD7 ${P2.lastMul} = +${P2.lastGain}` : "\u0110i\u1EC3m = s\u1ED1 vi\xEAn\xB2 \xD7 combo";
+    $("#pPopped").textContent = sum(P2.cnt);
+    $("#pComboFill").style.width = `${P2.combo ? Math.max(0, 1 - (performance.now() - P2.lastPop) / PCOMBO_MS) * 100 : 0}%`;
+    (_a = $(".pg")) == null ? void 0 : _a.classList.toggle("time-warning", P2.t <= 8);
+  }
+  function pScoreFx(cell, gain, group, mul) {
+    const stage = $("#pStage"), layer = $("#pFx");
+    if (!stage || !layer) return;
+    const origin = stage.getBoundingClientRect(), r = cell.getBoundingClientRect();
+    const x = r.left + r.width / 2 - origin.left, y = r.top + r.height / 2 - origin.top;
+    const label = h(`<span class="pearl-gain" style="left:${x}px;top:${y}px">+${gain}<small>${group} vi\xEAn \xB7 \xD7${mul}</small></span>`);
+    layer.appendChild(label);
+    label.animate([{ transform: "translate(-50%,-30%) scale(.5)", opacity: 0 }, { transform: "translate(-50%,-75%) scale(1.15)", opacity: 1, offset: 0.25 }, { transform: "translate(-50%,-140%) scale(1)", opacity: 0 }], { duration: 850, easing: "ease-out" }).onfinish = () => label.remove();
+    const target = $("#pScore").getBoundingClientRect();
+    const spark = h(`<span class="pearl-score-flight" style="left:${x}px;top:${y}px">\u2726</span>`);
+    layer.appendChild(spark);
+    spark.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 }, { transform: `translate(${target.left - origin.left - x}px,${target.top - origin.top - y}px) scale(.4)`, opacity: 0 }], { duration: 650, easing: "ease-in" }).onfinish = () => spark.remove();
+    $("#pScore").animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], { duration: 320 });
   }
   function pComboFx(mul) {
     const e = $("#pCombo");
@@ -4892,21 +5232,24 @@
     markDirty("hud", "panel");
     requestSave();
     sfx(win ? "win" : "lose");
-    const rw = rewards.length ? rewards.map(([id, q]) => `<span class="prw"><i class="pb sm" style="--pc:${ITEMS[id].color}"></i>+${q} ${esc(ITEMS[id].name)}</span>`).join("") : '<span class="muted">Ch\u01B0a \u0111\u1EE7 vi\xEAn \u0111\u1EC3 nh\u1EADn tr\xE2n ch\xE2u</span>';
+    const rw = rewards.length ? rewards.map(([id, q]) => `<span class="prw">${pearlIcon(PIDS.indexOf(id), "reward-pearl")}+${q} ${esc(ITEMS[id].name)}</span>`).join("") : '<span class="muted">Ch\u01B0a \u0111\u1EE7 vi\xEAn \u0111\u1EC3 nh\u1EADn tr\xE2n ch\xE2u</span>';
     $("#pBody").innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F642}"}</div><h3>${win ? "TH\xC0NH C\xD4NG!" : "C\u1ED1 l\xEAn l\u1EA7n sau!"}</h3><p>\u0110i\u1EC3m: <b>${P2.score}</b> \xB7 Combo cao nh\u1EA5t: <b>x${P2.maxMul}</b> (k\u1EF7 l\u1EE5c ${S.pearl.best})</p><p>Ti\u1EC1n th\u01B0\u1EDFng: <b class="money">+${fmtK(money)}</b></p><div class="prws">${rw}</div>${extra}<button class="btn pri block" data-act="x">Nh\u1EADn th\u01B0\u1EDFng \u{1F381}</button></div>`;
   }
   function openPearl() {
     if (S.pearl.playsDay >= 3) return toast("H\xF4m nay b\u1EA1n \u0111\xE3 ch\u01A1i \u0111\u1EE7 3 l\u01B0\u1EE3t Tr\xE2n Ch\xE2u N\u1ED5", "err");
-    const m = openModal({ id: "pearl", cls: "small", onClose: () => {
-      if (P2?.timer) clearInterval(P2.timer);
+    const m = openModal({ id: "pearl", cls: "pearl-modal", onClose: () => {
+      if (P2 == null ? void 0 : P2.timer) clearInterval(P2.timer);
       P2 = null;
-    }, html: `<div id="pBody"><h3 class="m-title">\u26AB Tr\xE2n Ch\xE2u N\u1ED5</h3><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Nh\xF3m c\xE0ng l\u1EDBn \u0111i\u1EC3m c\xE0ng cao, n\u1ED5 li\xEAn ti\u1EBFp trong ${PCOMBO_MS / 1e3}s = nh\xE2n combo! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y. Cu\u1ED1i v\xE1n nh\u1EADn th\xEAm tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u cho kho.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>` });
+    }, html: `<div id="pBody"><h3 class="m-title">\u2728 Tr\xE2n Ch\xE2u N\u1ED5</h3><div class="pearl-preview">${PIDS.map((_, i) => pearlIcon(i)).join("")}</div><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Nh\xF3m c\xE0ng l\u1EDBn \u0111i\u1EC3m c\xE0ng cao, n\u1ED5 li\xEAn ti\u1EBFp trong ${PCOMBO_MS / 1e3}s = nh\xE2n combo! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y. Cu\u1ED1i v\xE1n nh\u1EADn th\xEAm tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u cho kho.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>` });
     bindActions(m.body, {
       x: () => m.close(),
       start: () => {
+        if (P2 && !P2.over) return;
         S.pearl.playsDay++;
-        P2 = { b: pNew(), score: 0, combo: 0, maxMul: 1, lastPop: 0, cnt: Array(PCOL).fill(0), t: PDUR, over: false, timer: null };
-        $("#pBody").innerHTML = `<div class="pg"><div class="mg-head"><span>\u2B50 <b id="pScore">0</b></span><span id="pCombo" class="pcombo"></span><span>\u23F1 <b id="pTime">30s</b></span></div><div class="bar"><i id="pBar"></i></div><div class="pboard" id="pBoard"></div><p class="m-text center muted">M\u1EE5c ti\xEAu ${PGOAL} \u0111i\u1EC3m \xB7 K\u1EF7 l\u1EE5c: <b>${S.pearl.best}</b></p></div>`;
+        requestSave();
+        P2 = { b: pNew(), score: 0, combo: 0, maxMul: 1, lastPop: 0, lastGain: 0, lastGroup: 0, lastMul: 1, busy: false, cnt: Array(PCOL).fill(0), t: PDUR, over: false, timer: null };
+        if (!pHas(P2.b)) P2.b = pNew();
+        $("#pBody").innerHTML = `<div class="pg"><div class="pearl-heading"><b>\u2728 TR\xC2N CH\xC2U N\u1ED4</b><span>\u23F1 <b id="pTime">30s</b></span></div><div class="pearl-scoreboard"><div><small>\u0110I\u1EC2M T\xCDCH L\u0168Y</small><b id="pScore">0</b></div><div><small>K\u1EF6 L\u1EE4C</small><b id="pBest">${S.pearl.best}</b></div><div><small>COMBO</small><b id="pComboCount">\xD71</b></div><div><small>V\u1EEAA NH\u1EACN</small><b id="pLastGain">\u2014</b></div></div><div class="pearl-progress"><span>M\u1EE5c ti\xEAu <b id="pGoalText">0/${PGOAL}</b></span><div class="bar goal-bar"><i id="pGoalFill"></i></div><div class="bar time-bar"><i id="pBar"></i></div></div><div class="pearl-combo-row"><span id="pCombo" class="pcombo">S\u1EB5n s\xE0ng!</span><div class="bar combo-bar"><i id="pComboFill"></i></div></div><div class="pearl-stage" id="pStage"><div class="pboard" id="pBoard"></div><div class="pearl-fx" id="pFx" aria-hidden="true"></div></div><div class="pearl-calculation"><b id="pEquation">\u0110i\u1EC3m = s\u1ED1 vi\xEAn\xB2 \xD7 combo</b><span>\u0110\xE3 n\u1ED5 <b id="pPopped">0</b> vi\xEAn</span></div></div>`;
         pRender();
         sfx("fly");
         let last2 = performance.now();
@@ -4922,17 +5265,13 @@
           if (P2.combo && now - P2.lastPop > PCOMBO_MS) {
             P2.combo = 0;
             const e = $("#pCombo");
-            if (e) e.textContent = "";
+            if (e) e.textContent = "N\u1ED5 li\xEAn ti\u1EBFp \u0111\u1EC3 combo!";
           }
-          const tm = $("#pTime");
-          if (tm) {
-            tm.textContent = Math.ceil(P2.t) + "s";
-            $("#pBar").style.width = `${P2.t / PDUR * 100}%`;
-          }
+          pStats();
         }, 120);
       },
       pop: (t) => {
-        if (!P2 || P2.over) return;
+        if (!P2 || P2.over || P2.busy) return;
         const r = +t.dataset.r, c = +t.dataset.c, g = pGroup(P2.b, r, c);
         if (g.length < 2) {
           P2.combo = 0;
@@ -4949,26 +5288,45 @@
         const gain = g.length * g.length * mul, col = P2.b[r][c], color = ITEMS[PIDS[col]].color, big = g.length >= 5;
         P2.score += gain;
         P2.cnt[col] += g.length;
+        P2.lastGain = gain;
+        P2.lastGroup = g.length;
+        P2.lastMul = mul;
+        P2.busy = true;
+        const game = P2;
         for (const [y, x] of g) {
           const cell = $(`.pc[data-r="${y}"][data-c="${x}"]`);
           if (cell) {
             pearlBurst(cell, color, big);
-            cell.firstElementChild.style.visibility = "hidden";
+            cell.classList.add("pearl-popping");
           }
           P2.b[y][x] = -1;
         }
-        fxText(`+${gain}`, t, big ? "g big" : "g");
-        if (big || mul >= 3) fxSpark(t, big ? 10 : 6);
+        pScoreFx(t, gain, g.length, mul);
+        pStats();
         sfx(g.length >= 6 ? "pearlBoom" : g.length >= 4 ? "pearlPop2" : "pearlPop");
-        if (mul >= 2) setTimeout(() => sfx("combo" + mul), 90);
+        if (mul >= 2) setTimeout(() => {
+          if (P2 === game && !game.over) sfx("combo" + mul);
+        }, 90);
         pComboFx(mul);
-        const fall = pCollapse(P2.b);
-        if (!pHas(P2.b)) {
-          P2.b = pNew();
-          pRender();
-        } else pRender(fall);
+        setTimeout(() => {
+          if (P2 !== game || game.over) return;
+          const fall = pCollapse(game.b);
+          if (!pHas(game.b)) {
+            game.b = pNew();
+            pRender();
+          } else pRender(fall);
+          const settle2 = 170 + Math.max(...fall.flat()) * 60;
+          setTimeout(() => {
+            if (P2 === game && !game.over) game.busy = false;
+          }, settle2);
+        }, 160);
       }
     });
+  }
+  function pearlDebug() {
+    return { get state() {
+      return P2;
+    }, open: openPearl, group: pGroup, render: pRender, end: pEnd };
   }
   var crush = {
     html() {
@@ -5112,10 +5470,13 @@
       m.body.scrollTop = sc;
       bindInput();
     };
-    const bindInput = () => $("[data-slogan]", m.body)?.addEventListener("input", (e) => {
-      d.slogan = e.target.value;
-      $(".stamp-prev", m.body).innerHTML = stampSVG(d, 150);
-    });
+    const bindInput = () => {
+      var _a;
+      return (_a = $("[data-slogan]", m.body)) == null ? void 0 : _a.addEventListener("input", (e) => {
+        d.slogan = e.target.value;
+        $(".stamp-prev", m.body).innerHTML = stampSVG(d, 150);
+      });
+    };
     bindInput();
     bindActions(m.body, {
       frame: (t) => {
@@ -5217,7 +5578,8 @@
     });
     bindNav();
     const panelActs = new Proxy({}, { get: (_, k) => (t, e) => {
-      const fn = PANELS[S.tab]?.acts?.[k];
+      var _a, _b;
+      const fn = (_b = (_a = PANELS[S.tab]) == null ? void 0 : _a.acts) == null ? void 0 : _b[k];
       if (fn) fn(t, e);
       else if (k === "goto") goTab(t.dataset.to);
     } });
@@ -5228,7 +5590,10 @@
     if (S.phase !== "home" && S.phase !== "end") return;
     S.tab = tab;
     markDirty("panel", "tiles");
-    if (scroll) setTimeout(() => $("#panel")?.scrollIntoView({ behavior: "smooth", block: "start" }), 30);
+    if (scroll) setTimeout(() => {
+      var _a;
+      return (_a = $("#panel")) == null ? void 0 : _a.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 30);
   }
   function renderTiles() {
     const g = groupOf(S.tab);
@@ -5254,13 +5619,14 @@
     navBound = true;
     bindActions($("#nav"), {
       nav: (t) => {
+        var _a, _b;
         const g = GROUPS.find((x) => x.id === t.dataset.group);
         if (groupOf(S.tab).id === g.id) {
-          $("#view")?.scrollTo({ top: 0, behavior: "smooth" });
+          (_a = $("#view")) == null ? void 0 : _a.scrollTo({ top: 0, behavior: "smooth" });
           return;
         }
         goTab(g.tabs[0], false);
-        $("#view")?.scrollTo({ top: 0 });
+        (_b = $("#view")) == null ? void 0 : _b.scrollTo({ top: 0 });
       }
     });
   }
@@ -5284,11 +5650,12 @@
   }
   var tabScroll = {};
   function renderPanel() {
+    var _a;
     const el = $("#panel");
     if (!el) return;
     const P3 = PANELS[S.tab] || PANELS.kho;
     el.innerHTML = `<div class="panel-in" data-tab="${S.tab}">${P3.html()}</div>`;
-    P3.bind?.(el);
+    (_a = P3.bind) == null ? void 0 : _a.call(P3, el);
     const row = el.querySelector(".tabs.scroll");
     if (row) {
       const on2 = row.querySelector(".tab.on");
@@ -5372,28 +5739,37 @@
     });
   }
   function openPanelModal(tab) {
+    var _a;
     const P3 = PANELS[tab];
     const m = openModal({ id: "pm-" + tab, cls: "tall", html: `<div class="panel-in">${P3.html()}</div>` });
     const redraw = () => {
+      var _a2;
       m.body.innerHTML = `<div class="panel-in">${P3.html()}</div>`;
-      P3.bind?.(m.body);
+      (_a2 = P3.bind) == null ? void 0 : _a2.call(P3, m.body);
     };
     bindActions(m.body, new Proxy({}, { get: (_, k) => (t, e) => {
-      const fn = P3.acts?.[k];
+      var _a2;
+      const fn = (_a2 = P3.acts) == null ? void 0 : _a2[k];
       if (fn) {
         fn(t, e);
         setTimeout(redraw, 20);
       }
     } }));
-    P3.bind?.(m.body);
+    (_a = P3.bind) == null ? void 0 : _a.call(P3, m.body);
     return m;
   }
 
   // js/tutorial.js
-  var goNav = (g) => () => document.querySelector(`.nav-i[data-group="${g}"]`)?.click();
+  var goNav = (g) => () => {
+    var _a;
+    return (_a = document.querySelector(`.nav-i[data-group="${g}"]`)) == null ? void 0 : _a.click();
+  };
   var goKho = (tab) => () => {
     goNav("kho")();
-    setTimeout(() => document.querySelector(`.tab[data-v="${tab}"]`)?.click(), 60);
+    setTimeout(() => {
+      var _a;
+      return (_a = document.querySelector(`.tab[data-v="${tab}"]`)) == null ? void 0 : _a.click();
+    }, 60);
   };
   var STEPS = {
     home: [
@@ -5584,21 +5960,26 @@
     on("kpi:cycle", () => toast("\u{1F4CA} H\u1EBFt chu k\u1EF3 KPI 7 ca: nh\xE2n vi\xEAn nh\u1EADn th\u01B0\u1EDFng \u0111\u1ECBnh k\u1EF3!", "gold", 3e3));
     on("unlock", () => markDirty("board"));
     on("purchase", () => markDirty("hud"));
+    const background = () => {
+      saveGame();
+      if (S.phase === "sell" && SH.on && !isModalOpen("pause")) openPause();
+    };
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        saveGame();
-        if (S.phase === "sell" && SH.on && !isModalOpen("pause")) openPause();
-      }
+      if (document.hidden) background();
     });
-    window.addEventListener("beforeunload", () => {
-      if (S.phase !== "sell") saveGame();
-    });
+    window.addEventListener("pagehide", background);
+    document.addEventListener("pause", background);
+    window.addEventListener("beforeunload", saveGame);
+    on("save:error", () => toast("Kh\xF4ng l\u01B0u \u0111\u01B0\u1EE3c ti\u1EBFn tr\xECnh. H\xE3y xu\u1EA5t m\xE3 sao l\u01B0u trong C\xE0i \u0111\u1EB7t.", "err", 6500));
+    setInterval(() => {
+      if (S.phase === "sell" && SH.on && !document.hidden) saveGame();
+    }, 1e4);
     window.addEventListener("error", (e) => console.error("[game]", e.error || e.message));
     window.addEventListener("unhandledrejection", (e) => console.error("[game]", e.reason));
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         const m = $("#modal .modal-back:last-child .modal-x");
-        m?.click();
+        m == null ? void 0 : m.click();
       }
     });
   }
@@ -5642,13 +6023,16 @@
         emit("reset");
       },
       save: saveGame,
-      crush: crushDebug
+      crush: crushDebug,
+      pearl: pearlDebug
     };
     console.info("%c\u{1F9CB} debugGame s\u1EB5n s\xE0ng", "color:#e8416a;font-weight:bold");
   }
   function boot() {
     initAudio();
     const loaded = loadGame();
+    const resumed = restoreShiftRuntime();
+    if (resumed) setPaused(true);
     ensureForecast();
     if (!S.eventId || !loaded) S.eventId = pickEvent();
     applyTheme();
@@ -5669,6 +6053,7 @@
       }
       markDirty("hud", "view", "cta");
       if (S.phase === "end") setTimeout(openDaySummary, 350);
+      else if (resumed) openPause();
       else if (S.phase === "home") setTimeout(() => maybeTutorial("home"), 600);
     });
   }

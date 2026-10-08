@@ -13,7 +13,7 @@ import {
 import { renderSell, frameSell } from './brewui.js';
 import { renderHome, renderBoard, renderTiles, renderNav, renderPanel, renderCta, bindCta, goTab, openPanelModal } from './home.js';
 import { tickCountdown } from './panels2.js';
-import { crushDebug } from './minigames.js';
+import { crushDebug, pearlDebug } from './minigames.js';
 import { armTutorial, maybeTutorial, replayTutorial } from './tutorial.js';
 
 function renderView() {
@@ -53,8 +53,13 @@ function wire() {
   on('kpi:cycle', () => toast('📊 Hết chu kỳ KPI 7 ca: nhân viên nhận thưởng định kỳ!', 'gold', 3000));
   on('unlock', () => markDirty('board'));
   on('purchase', () => markDirty('hud'));
-  document.addEventListener('visibilitychange', () => { if (document.hidden) { saveGame(); if (S.phase === 'sell' && SH.on && !isModalOpen('pause')) openPause(); } });
-  window.addEventListener('beforeunload', () => { if (S.phase !== 'sell') saveGame(); });
+  const background = () => { saveGame(); if (S.phase === 'sell' && SH.on && !isModalOpen('pause')) openPause(); };
+  document.addEventListener('visibilitychange', () => { if (document.hidden) background(); });
+  window.addEventListener('pagehide', background);
+  document.addEventListener('pause', background); // Cordova-style APK wrappers
+  window.addEventListener('beforeunload', saveGame);
+  on('save:error', () => toast('Không lưu được tiến trình. Hãy xuất mã sao lưu trong Cài đặt.', 'err', 6500));
+  setInterval(() => { if (S.phase === 'sell' && SH.on && !document.hidden) saveGame(); }, 10000);
   window.addEventListener('error', (e) => console.error('[game]', e.error || e.message));
   window.addEventListener('unhandledrejection', (e) => console.error('[game]', e.reason));
   // Giữ trạng thái "đang tạm dừng" khi có modal pause
@@ -76,6 +81,7 @@ function exposeDebug() {
     reset: () => { wipeSave(); emit('reset'); },
     save: saveGame,
     crush: crushDebug,
+    pearl: pearlDebug,
   };
   console.info('%c🧋 debugGame sẵn sàng', 'color:#e8416a;font-weight:bold');
 }
@@ -83,6 +89,9 @@ function exposeDebug() {
 function boot() {
   initAudio();
   const loaded = loadGame();
+  const resumed = G.restoreShiftRuntime();
+  // Do not advance a restored shift while the intro covers the game.
+  if (resumed) setPaused(true);
   E.ensureForecast();
   if (!S.eventId || !loaded) S.eventId = E.pickEvent();
   applyTheme();
@@ -98,6 +107,7 @@ function boot() {
     if (S.firstRun) { S.firstRun = false; S.started = true; armTutorial(); requestSave(); }
     markDirty('hud', 'view', 'cta');
     if (S.phase === 'end') setTimeout(openDaySummary, 350);
+    else if (resumed) openPause();
     else if (S.phase === 'home') setTimeout(() => maybeTutorial('home'), 600);
   });
 }

@@ -9,6 +9,7 @@ import {
 import * as E from './econ.js';
 import { SH, closeNow, nextDay } from './sell.js';
 import { icon } from './icons.js';
+import { copyText } from './platform.js';
 
 /* ===== Delegation ===== */
 export function bindActions(root, map) {
@@ -22,6 +23,8 @@ export function bindActions(root, map) {
 
 /* ===== Toast ===== */
 export function toast(msg, type = '', dur = 2300) {
+  // Routine sale notifications must not cover the counter while playing.
+  if (S.phase === 'sell' && !isModalOpen() && type !== 'err') return;
   const root = $('#toasts');
   if (!root) return;
   const t = h(`<div class="toast ${type}">${esc(msg)}</div>`);
@@ -38,12 +41,14 @@ const centerOf = (t) => {
   return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 };
 export function fxText(text, target, cls = '') {
+  if (S.phase === 'sell') return;
   const { x, y } = centerOf(target);
   const f = h(`<div class="fx-float ${cls}" style="left:${x}px;top:${y}px">${esc(text)}</div>`);
   $('#fx').appendChild(f);
   setTimeout(() => f.remove(), 1000);
 }
 export function fxCoins(target, n = 5) {
+  if (S.phase === 'sell') return;
   const from = centerOf(target);
   const to = centerOf($('[data-money]'));
   for (let i = 0; i < n; i++) {
@@ -54,6 +59,7 @@ export function fxCoins(target, n = 5) {
   }
 }
 export function fxSpark(target, n = 8) {
+  if (S.phase === 'sell' && isModalOpen()) return;
   const { x, y } = centerOf(target);
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2, d = rand(24, 56);
@@ -67,6 +73,7 @@ export function fxSpark(target, n = 8) {
 const stack = [];
 export function openModal({ html: body, cls = '', title = '', onClose = null, closable = true, id = '' }) {
   if (id) { const ex = stack.find((m) => m.id === id); if (ex) { ex.body.innerHTML = body; return ex; } }
+  emit('modal:open');
   const back = h(`<div class="modal-back"><div class="modal ${cls}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
     ${closable ? '<button class="modal-x" data-modal-x aria-label="Đóng">✕</button>' : ''}<div class="modal-body"></div></div></div>`);
   const bodyEl = $('.modal-body', back);
@@ -78,7 +85,7 @@ export function openModal({ html: body, cls = '', title = '', onClose = null, cl
     if (i < 0) return;
     stack.splice(i, 1);
     back.remove();
-    if (!stack.length) $('#modal').classList.remove('on');
+    if (!stack.length) { $('#modal').classList.remove('on'); $('#app').classList.remove('modal-open'); }
     onClose?.();
   }
   // Vuốt xuống ở phần đầu bảng để đóng (bottom sheet)
@@ -91,6 +98,7 @@ export function openModal({ html: body, cls = '', title = '', onClose = null, cl
   back.addEventListener('click', (e) => { if (e.target === back && closable) close(); });
   stack.push(m);
   $('#modal').classList.add('on');
+  $('#app').classList.add('modal-open');
   return m;
 }
 export const closeTopModal = () => stack[stack.length - 1]?.close();
@@ -262,13 +270,20 @@ export function openDaySummary() {
 function sliderRow(label, key, icon) {
   const v = Math.round(S.settings[key] * 100);
   return `<div class="vol"><div class="vol-h"><b>${icon} ${label}</b><span class="pct" data-pct="${key}">${v}%</span></div>
-    <div class="vol-r"><button class="rb" data-act="vol-" data-k="${key}">−</button><input type="range" min="0" max="100" value="${v}" data-slider="${key}" aria-label="${label}"><button class="rb" data-act="vol+" data-k="${key}">＋</button><button class="rb" data-act="mute" data-k="${key}">${v ? '🔊' : '🔇'}</button></div></div>`;
+    <div class="vol-r"><button class="rb" data-act="vol-" data-k="${key}">−</button><input type="range" min="0" max="100" value="${v}" data-slider="${key}" aria-label="${label}"><button class="rb" data-act="vol+" data-k="${key}">＋</button><button class="rb" data-act="mute" data-k="${key}" aria-label="${v ? 'Tắt' : 'Bật'} ${label}" aria-pressed="${!v}">${v ? '🔊' : '🔇'}</button></div></div>`;
 }
 function bindSliders(m) {
   const set = (k, v) => {
-    S.settings[k] = clamp(v, 0, 1);
+    S.settings[k] = Math.round(clamp(v, 0, 1) * 100) / 100;
     const sl = $(`[data-slider="${k}"]`, m.body); if (sl) sl.value = Math.round(S.settings[k] * 100);
     const p = $(`[data-pct="${k}"]`, m.body); if (p) p.textContent = Math.round(S.settings[k] * 100) + '%';
+    const button = $(`[data-act="mute"][data-k="${k}"]`, m.body);
+    if (button) {
+      const muted = S.settings[k] === 0;
+      button.textContent = muted ? '🔇' : '🔊';
+      button.setAttribute('aria-pressed', String(muted));
+      button.setAttribute('aria-label', `${muted ? 'Bật' : 'Tắt'} ${sl?.getAttribute('aria-label') || 'âm thanh'}`);
+    }
     applyVolumes(); if (k === 'music') restartMusic(); requestSave();
   };
   $$('[data-slider]', m.body).forEach((s) => s.addEventListener('input', () => set(s.dataset.slider, s.value / 100)));
@@ -293,6 +308,12 @@ export function openPause() {
 }
 
 /* ===== Cài đặt ===== */
+const MUSIC_OPTIONS = [
+  ['lofi', 'Lofi Chill Quán Cafe'], ['vui', 'Vui nhộn'],
+  ['spring', '🌸 Mùa Xuân'], ['summer', '☀️ Mùa Hạ'],
+  ['autumn', '🍂 Mùa Thu'], ['winter', '❄️ Mùa Đông'], ['off', 'Tắt nhạc'],
+];
+const musicStyleName = () => MUSIC_OPTIONS.find(([id]) => id === S.settings.style)?.[1] || 'Tắt nhạc';
 export function openSettings() {
   const sell = S.phase === 'sell';
   if (sell) setPaused(true);
@@ -308,7 +329,7 @@ export function openSettings() {
     ${row('theme', '🎨', 'Màu giao diện', THEMES[S.settings.theme].name)}
     ${row('haptic', '📳', 'Rung', HAPTIC_NAMES[S.settings.haptic ?? 2])}
     <div class="box">${sliderRow('Nhạc nền quán', 'music', '🎵')}${sliderRow('Âm thanh pha chế & SFX', 'sfx', '🧋')}</div>
-    ${row('style', '🎼', 'Nhạc nền & Mùa', S.settings.style === 'lofi' ? 'Lofi Chill Quán Cafe' : S.settings.style === 'vui' ? 'Vui nhộn' : 'Tắt nhạc')}
+    ${row('style', '🎼', 'Nhạc nền & Mùa', musicStyleName())}
     ${row('export', '📦', 'Sao lưu tiến trình', S.savedAt ? 'Đã lưu' : 'Chưa sao lưu')}
     ${row('backups', '🗂️', 'Khôi phục bản tự lưu', `Game tự lưu ${listBackups().length} cuối ngày gần nhất`)}
     ${row('import', '🔑', 'Khôi phục từ mã')}
@@ -316,7 +337,6 @@ export function openSettings() {
     <button class="btn pri block" data-act="close">Đóng</button>` });
   const sliders = bindSliders(m);
   const setVal = (act, text) => { const e = $(`[data-act="${act}"] em`, m.body); if (e) e.textContent = text; };
-  const styleName = () => (S.settings.style === 'lofi' ? 'Lofi Chill Quán Cafe' : S.settings.style === 'vui' ? 'Vui nhộn' : 'Tắt nhạc');
   bindActions(m.body, {
     ...sliders, close: () => m.close(), guide: () => openGuide(), news: () => alertBox('🎁 Có gì mới', CHANGELOG.map((c) => `<p>• ${esc(c)}</p>`).join('')),
     update: () => confirmBox('Cập nhật bản mới', 'Lưu game và tải lại trang để lấy bản mới nhất?', () => { saveGame(); location.reload(); }),
@@ -324,7 +344,7 @@ export function openSettings() {
     shiftMin: () => openChoice('⏱️ Thời gian bán mỗi ngày', SHIFT_MINUTES.map((n) => [n, `${n} phút`]), S.settings.shiftMinNext, (v) => { S.settings.shiftMinNext = v; requestSave(); setVal('shiftMin', `${v} phút · áp dụng từ ngày sau`); }),
     haptic: () => openChoice('📳 Rung khi thao tác & chơi game', HAPTIC_NAMES.map((n, i) => [i, n]), S.settings.haptic ?? 2, (v) => { S.settings.haptic = v; requestSave(); setVal('haptic', HAPTIC_NAMES[v]); buzz([30, 40, 30]); }),
     theme: () => openThemePicker(() => setVal('theme', THEMES[S.settings.theme].name)),
-    style: () => openChoice('🎼 Nhạc nền & Mùa', [['lofi', 'Lofi Chill Quán Cafe'], ['vui', 'Vui nhộn'], ['off', 'Tắt nhạc']], S.settings.style, (v) => { S.settings.style = v; restartMusic(); requestSave(); setVal('style', styleName()); }),
+    style: () => openChoice('🎼 Nhạc nền & Mùa', MUSIC_OPTIONS, S.settings.style, (v) => { S.settings.style = v; restartMusic(); requestSave(); setVal('style', musicStyleName()); }),
     export: () => openExport(), import: () => openImport(), backups: () => openBackups(),
     reset: () => confirmBox('Chơi lại từ đầu?', 'Toàn bộ tiến trình sẽ bị xoá vĩnh viễn. Bạn chắc chắn chứ?', () => { closeAllModals(); wipeSave(); applyTheme(); emit('reset'); }, 'Xoá & chơi lại', true),
   });
@@ -334,7 +354,7 @@ function openExport() {
   const m = openModal({ cls: 'small', html: `<h3 class="m-title">📦 Mã sao lưu</h3><p class="m-text">Sao chép mã bên dưới và cất ở nơi an toàn. Dán vào "Khôi phục từ mã" để chơi tiếp trên máy khác.</p>
     <textarea class="code" readonly data-code>${code}</textarea><button class="btn pri block" data-act="copy">📋 Sao chép</button><button class="btn ghost block" data-act="x">Đóng</button>` });
   bindActions(m.body, {
-    copy: async () => { try { await navigator.clipboard.writeText(code); toast('Đã sao chép mã!', 'ok'); } catch (e) { $('[data-code]', m.body).select(); document.execCommand?.('copy'); toast('Đã chọn mã, hãy sao chép', 'ok'); } },
+    copy: async () => { if (await copyText(code)) toast('Đã sao chép mã!', 'ok'); else { const input = $('[data-code]', m.body); input.focus(); input.select(); input.setSelectionRange(0, code.length); toast('Hãy nhấn giữ mã đã chọn để sao chép', ''); } },
     x: () => m.close(),
   });
 }
@@ -437,24 +457,36 @@ export function openForecast() {
 }
 
 /* ===== Toàn màn hình (ẩn thanh địa chỉ trình duyệt) ===== */
+let fsPending = false;
+function lockPortrait() {
+  try { const result = screen.orientation?.lock?.('portrait'); result?.catch?.(() => {}); } catch (e) { /* Device controls orientation. */ }
+}
 export function goFullscreen() {
   try {
     const d = document.documentElement;
-    if (document.fullscreenElement || document.webkitFullscreenElement) return;
+    if (document.fullscreenElement || document.webkitFullscreenElement) { lockPortrait(); return; }
+    if (fsPending) return;
     const f = d.requestFullscreen || d.webkitRequestFullscreen || d.msRequestFullscreen;
-    if (f) { const r = f.call(d, { navigationUI: 'hide' }); if (r && r.catch) r.catch(() => {}); }
-    screen.orientation?.lock?.('portrait').catch(() => {});
-  } catch (e) { /* trình duyệt không cho: bỏ qua */ }
+    if (f) {
+      fsPending = true;
+      const r = f.call(d, { navigationUI: 'hide' });
+      if (r && r.then) r.then(() => { fsPending = false; lockPortrait(); }, () => { fsPending = false; });
+      else fsPending = false;
+    }
+  } catch (e) { fsPending = false; /* Retry on the first user gesture. */ }
 }
 /** Thử vào toàn màn hình ở các lần chạm đầu; đã vào được một lần thì thôi, không làm phiền (và không bật lại thông báo của Chrome). */
 let fsDone = false;
-document.addEventListener('fullscreenchange', () => { if (document.fullscreenElement) fsDone = true; });
+const fullscreenChanged = () => { if (document.fullscreenElement || document.webkitFullscreenElement) { fsDone = true; lockPortrait(); } };
+document.addEventListener('fullscreenchange', fullscreenChanged);
+document.addEventListener('webkitfullscreenchange', fullscreenChanged);
 for (const ev of ['pointerup', 'touchend', 'click', 'keydown']) document.addEventListener(ev, () => { if (!fsDone) goFullscreen(); }, { passive: true });
 
 /* ===== Intro ===== */
 export function showIntro(onPlay) {
   const el = $('#intro');
   el.hidden = false;
+  goFullscreen();
   const hasSave = S.started;
   el.innerHTML = `
     <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="spark" style="left:12%;top:36%">✦</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">✦</span></div>

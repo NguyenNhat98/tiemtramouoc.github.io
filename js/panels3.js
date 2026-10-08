@@ -8,6 +8,7 @@ import {
   S, markDirty, requestSave, esc, fmt, fmtK, sum, sfx, clamp, rand, randInt, pick, chance, wpick, emit, $,
 } from './core.js';
 import * as E from './econ.js';
+import { copyText } from './platform.js';
 import { toast, fxSpark, fxText, openModal, alertBox, bindActions, plHTML, aggregate, confirmBox } from './ui.js';
 
 /* ===== VƯỜN CÂY ===== */
@@ -314,7 +315,7 @@ const banbe = {
       <h5 class="grp">🏆 Bảng xếp hạng tài sản</h5>${board.map((x, i) => `<div class="dl ${x.id === 'me' ? 'me' : ''}"><span>${i + 1}. ${x.av} ${esc(x.name)}</span><b>${fmtK(x.rich)}</b></div>`).join('')}`;
   },
   acts: {
-    copycode: async () => { try { await navigator.clipboard.writeText(S.friends.code); toast('Đã sao chép mã mời!', 'ok'); } catch (e) { toast('Mã của bạn: ' + S.friends.code, 'ok'); } },
+    copycode: async () => { if (await copyText(S.friends.code)) toast('Đã sao chép mã mời!', 'ok'); else alertBox('Mã mời của bạn', `<input class="field" readonly value="${esc(S.friends.code)}" aria-label="Mã mời">Nhấn giữ mã để sao chép.`); },
     addf: () => {
       const v = ($('#friendCode')?.value || '').trim().toUpperCase();
       if (!/^TTN-[A-Z0-9]{3,8}$/.test(v)) return toast('Mã bạn bè không hợp lệ (dạng TTN-XXXXX)', 'err');
