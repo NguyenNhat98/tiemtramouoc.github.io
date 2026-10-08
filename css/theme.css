@@ -204,3 +204,38 @@ body { font-size: 14px; }
 .intro .link { margin: 6px 0 calc(40px + var(--safe-b)); font-size: 14px; font-weight: 700; color: #6b4a3a; }
 .intro .ver { left: 16px; bottom: calc(12px + var(--safe-b)); font-size: 12px; }
 
+/* ---------- Phong cách pastel hồng (tham khảo tài liệu thiết kế) ---------- */
+[data-theme="cream"] {
+  --bg: #FDF0DF; --card: #FFFAF2; --paper: #FBE6D0;
+  --pink: #EE7A96; --pink2: #F5A3B7; --pink-soft: #FFE1E8;
+  --brown: #5A3A2E; --brown2: #8F6B58; --text: #4B3329; --muted: #A08674;
+  --line: rgba(120, 80, 60, .16); --wood: #D2A878; --wood-d: #B5895A;
+}
+body { background: #F2DFC8; }
+.btn { border-radius: 999px; }
+.btn.pri, .btn.grad { background: linear-gradient(#F596AD, #EC7390); box-shadow: 0 3px 0 #C75673; }
+.btn.big { border-radius: 999px; }
+.tab { border-radius: 999px; background: #fff; border: 1.5px solid #F0DCC6; font-weight: 700; }
+.tab.on { background: linear-gradient(#F596AD, #EC7390); color: #fff; border-color: transparent; box-shadow: 0 2px 0 #C75673; }
+.chip.y { background: #FFF1C8; border-color: #F0D58A; } .chip.green { background: #E2F3E4; border-color: #B7DCBD; color: #2f6b3f; }
+.nav { border-radius: 18px 18px 0 0; box-shadow: 0 -4px 12px rgba(120, 80, 60, .1); border-top: 0; }
+.krow, .grow-row, .nrow, .erow, .lcard, .box { border-radius: 16px; }
+.warnbox { border-radius: 16px; }
+/* hộp thoại giữa màn hình, bo tròn */
+.modal-back { place-items: center; padding: 14px; }
+.modal { max-width: 440px; border-radius: 24px; padding-top: 0; animation: popIn .22s ease backwards; }
+.modal::before { display: none; }
+.modal-x { border-radius: 50%; }
+/* màn chuẩn bị: mái hiên + bảng hiệu */
+.home-awning { height: 44px; margin: -10px -14px -22px; position: relative; z-index: 1; flex: none; background: repeating-linear-gradient(90deg, #F0A9B4 0 36px, #FFF6EA 36px 72px); filter: drop-shadow(0 4px 4px rgba(150, 80, 70, .2));
+  -webkit-mask: linear-gradient(#000, #000) top / 100% calc(100% - 14px) no-repeat, radial-gradient(circle at 18px 0, #000 18px, transparent 19px) bottom / 36px 14px repeat-x;
+  mask: linear-gradient(#000, #000) top / 100% calc(100% - 14px) no-repeat, radial-gradient(circle at 18px 0, #000 18px, transparent 19px) bottom / 36px 14px repeat-x; }
+.shopcard { position: relative; z-index: 2; background: #FFFDF8; border: 3px solid #E9C9A4; border-radius: 22px; box-shadow: 0 4px 0 #D9B48C, var(--sh); }
+.sign-name { font-size: 22px; color: var(--pink); }
+.loc-chips .chip { border-radius: 999px; }
+.chalk { background: #2F4A3A; border: 6px solid #B0845C; border-radius: 16px; padding: 10px 14px 10px; color: #F6F2E2; box-shadow: var(--sh); }
+.chalk h3 { color: #fff; }
+.tiles { background: #EAD7BF; border-radius: 18px; }
+.tile.on { background: #FFFAF1; }
+.evb { background: #FFF3D1; border: 2.5px solid #F6C84E; border-radius: 16px; }
+

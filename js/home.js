@@ -36,6 +36,7 @@ export function renderHome() {
   if (S.phase === 'sell') return;
   const loc = LOCATIONS[S.location];
   view.innerHTML = `<div class="home" id="home">
+    <div class="home-awning" aria-hidden="true"></div>
     <div class="shopcard"><button class="sign-logo" data-act="logo" aria-label="Đổi logo quán">${logoHTML(52)}</button>
       <div class="sc-main"><button class="sign-name" data-act="rename" aria-label="Sửa tên tiệm"><span>${esc(S.shopName)}</span> <i>✎</i></button>
         <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">🏮 Sảnh Trà</button></div></div></div>

@@ -4805,6 +4805,7 @@
     if (S.phase === "sell") return;
     const loc = LOCATIONS[S.location];
     view.innerHTML = `<div class="home" id="home">
+    <div class="home-awning" aria-hidden="true"></div>
     <div class="shopcard"><button class="sign-logo" data-act="logo" aria-label="\u0110\u1ED5i logo qu\xE1n">${logoHTML(52)}</button>
       <div class="sc-main"><button class="sign-name" data-act="rename" aria-label="S\u1EEDa t\xEAn ti\u1EC7m"><span>${esc(S.shopName)}</span> <i>\u270E</i></button>
         <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">\u{1F3EE} S\u1EA3nh Tr\xE0</button></div></div></div>
