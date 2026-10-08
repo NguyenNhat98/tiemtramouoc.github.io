@@ -2635,7 +2635,7 @@
   }
 
   // js/brewui.js
-  var sizePx = { M: [62, 88], L: [74, 104] };
+  var sizePx = { M: [54, 76], L: [64, 90] };
   function cupHTML(c, { mini = false, stamp = true } = {}) {
     const [w, hgt] = sizePx[c.size || "M"];
     const k = mini ? 0.55 : 1;
@@ -4783,7 +4783,7 @@
     ["sanh", "S\u1EA3nh Tr\xE0", "\u{1F3EE}"],
     ["chinhanh", "Chi Nh\xE1nh", "\u{1F3E2}"],
     ["mxh", "M\u1EA1ng X\xE3 H\u1ED9i", "\u{1F4F1}"],
-    ["nhansu", "Nh\xE2n s\u1EF1", "\u{1F3C6}"],
+    ["nhansu", "Qu\u1EA3n l\xFD nh\xE2n s\u1EF1", "\u{1F3C6}"],
     ["thue", "Thu\u1EBF & Bank", "\u{1F4DC}"],
     ["nangcap", "N\xE2ng c\u1EA5p", "\u{1F6E0}\uFE0F"],
     ["giaban", "Gi\xE1 b\xE1n", "\u{1F4B5}"],
@@ -4812,7 +4812,7 @@
       <div class="sc-main"><button class="sign-name" data-act="rename" aria-label="S\u1EEDa t\xEAn ti\u1EC7m"><span>${esc(S.shopName)}</span> <i>\u270E</i></button>
         <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">\u{1F3EE} S\u1EA3nh Tr\xE0</button></div></div></div>
     <div class="chalk" id="board"></div>
-    <div class="gtabs" id="tiles"></div>
+    <div class="tiles" id="tiles"></div>
     <div class="evb" id="evb"></div>
     <div class="expect" id="exp"></div>
     <div class="panel" id="panel"></div>
@@ -4845,10 +4845,7 @@
   function renderTiles() {
     const g = groupOf(S.tab);
     const el = $("#tiles");
-    if (el) el.innerHTML = g.tabs.map((id) => {
-      const label = TILE_BY_ID[id][1];
-      return `<button class="tile ${S.tab === id ? "on" : ""}" data-act="tile" data-tab="${id}">${label}${id === "thucung" && !S.pet ? " \u{1F512}" : ""}</button>`;
-    }).join("");
+    if (el) el.innerHTML = TILES.filter((t) => t[0] !== "suutam").map(([id, label, emo]) => `<button class="tile ${S.tab === id ? "on" : ""}" data-act="tile" data-tab="${id}"><span class="t-i">${emo}</span>${label}${id === "thucung" && !S.pet ? "<em>\u{1F512}</em>" : ""}</button>`).join("");
     renderNav();
   }
   function renderNav() {
@@ -4891,10 +4888,11 @@
     if (!el) return;
     const teas = TEAS.filter((t) => S.onMenu[t] && S.unlocked[t]);
     const tops = TOPS.filter((t) => S.onMenu[t] && S.unlocked[t]);
-    const tag = (n, p, cls = "") => `<div class="mtag ${cls}"><span>${esc(n)}</span><b>${p}</b></div>`;
-    el.innerHTML = `<div class="mb-h"><h3>Th\u1EF1c \u0111\u01A1n h\xF4m nay</h3><small>Size L +${fmtK(priceOf("sizeL"))}</small></div>
-    <div class="mb-row">${teas.map((t) => tag(ITEMS[t].name, fmtK(priceOf(t)))).join("") || "<em>Ch\u01B0a c\xF3 m\xF3n</em>"}</div>
-    ${tops.length ? `<div class="mb-row sm">${tops.map((t) => tag(ITEMS[t].name, "+" + fmtK(priceOf(t)), "top")).join("")}</div>` : ""}`;
+    const row = (n, p) => `<div class="cr"><span>${esc(n)}</span><b>${p}</b></div>`;
+    el.innerHTML = `<h3>\u{1F964} Menu h\xF4m nay</h3>
+    <div class="cols">${teas.map((t) => row(ITEMS[t].name, fmtK(priceOf(t)))).join("") || "<em>Ch\u01B0a c\xF3 m\xF3n</em>"}</div>
+    ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row(ITEMS[t].name, "+" + fmtK(priceOf(t)))).join("")}</div>` : ""}
+    <div class="sz">Size L +${fmtK(priceOf("sizeL"))}</div>`;
   }
   function renderPanel() {
     const el = $("#panel");

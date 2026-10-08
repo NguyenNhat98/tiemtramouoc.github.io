@@ -10,7 +10,7 @@ import { SH } from './sell.js';
 import { toast, fxText, fxCoins, fxSpark, bindActions, logoHTML, openModal, updateClock } from './ui.js';
 
 /* ===== Hình ly ===== */
-const sizePx = { M: [62, 88], L: [74, 104] };
+const sizePx = { M: [54, 76], L: [64, 90] };
 export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const [w, hgt] = sizePx[c.size || 'M'];
   const k = mini ? 0.55 : 1;

@@ -16,7 +16,7 @@ import { icon } from './icons.js';
 export const PANELS = { ...PANELS1, ...PANELS2, ...PANELS3, crush };
 export const TILES = [
   ['kho', 'Kho', '📦'], ['vuon', 'Vườn cây', '🪴'], ['thucung', 'Thú cưng', '🐕'], ['khoinghiep', 'Khởi nghiệp', '🗺️'], ['sanh', 'Sảnh Trà', '🏮'], ['chinhanh', 'Chi Nhánh', '🏢'],
-  ['mxh', 'Mạng Xã Hội', '📱'], ['nhansu', 'Nhân sự', '🏆'], ['thue', 'Thuế & Bank', '📜'], ['nangcap', 'Nâng cấp', '🛠️'], ['giaban', 'Giá bán', '💵'], ['danhgia', 'Đánh giá', '⭐'],
+  ['mxh', 'Mạng Xã Hội', '📱'], ['nhansu', 'Quản lý nhân sự', '🏆'], ['thue', 'Thuế & Bank', '📜'], ['nangcap', 'Nâng cấp', '🛠️'], ['giaban', 'Giá bán', '💵'], ['danhgia', 'Đánh giá', '⭐'],
   ['tongket', 'Tổng kết', '📊'], ['banbe', 'Bạn bè', '👥'], ['crush', 'Milk Tea Crush', '🍬'], ['suutam', 'Sưu tầm', '🎴'],
 ];
 /** 16 chức năng gom thành 5 nhóm trên thanh điều hướng đáy. */
@@ -40,7 +40,7 @@ export function renderHome() {
       <div class="sc-main"><button class="sign-name" data-act="rename" aria-label="Sửa tên tiệm"><span>${esc(S.shopName)}</span> <i>✎</i></button>
         <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">🏮 Sảnh Trà</button></div></div></div>
     <div class="chalk" id="board"></div>
-    <div class="gtabs" id="tiles"></div>
+    <div class="tiles" id="tiles"></div>
     <div class="evb" id="evb"></div>
     <div class="expect" id="exp"></div>
     <div class="panel" id="panel"></div>
@@ -66,7 +66,7 @@ export function goTab(tab, scroll = true) {
 export function renderTiles() {
   const g = groupOf(S.tab);
   const el = $('#tiles');
-  if (el) el.innerHTML = g.tabs.map((id) => { const label = TILE_BY_ID[id][1]; return `<button class="tile ${S.tab === id ? 'on' : ''}" data-act="tile" data-tab="${id}">${label}${id === 'thucung' && !S.pet ? ' 🔒' : ''}</button>`; }).join('');
+  if (el) el.innerHTML = TILES.filter((t) => t[0] !== 'suutam').map(([id, label, emo]) => `<button class="tile ${S.tab === id ? 'on' : ''}" data-act="tile" data-tab="${id}"><span class="t-i">${emo}</span>${label}${id === 'thucung' && !S.pet ? '<em>🔒</em>' : ''}</button>`).join('');
   renderNav();
 }
 /** Thanh điều hướng đáy (chỉ hiện ở màn chuẩn bị). */
@@ -104,10 +104,11 @@ export function renderBoard() {
   if (!el) return;
   const teas = TEAS.filter((t) => S.onMenu[t] && S.unlocked[t]);
   const tops = TOPS.filter((t) => S.onMenu[t] && S.unlocked[t]);
-  const tag = (n, p, cls = '') => `<div class="mtag ${cls}"><span>${esc(n)}</span><b>${p}</b></div>`;
-  el.innerHTML = `<div class="mb-h"><h3>Thực đơn hôm nay</h3><small>Size L +${fmtK(E.priceOf('sizeL'))}</small></div>
-    <div class="mb-row">${teas.map((t) => tag(ITEMS[t].name, fmtK(E.priceOf(t)))).join('') || '<em>Chưa có món</em>'}</div>
-    ${tops.length ? `<div class="mb-row sm">${tops.map((t) => tag(ITEMS[t].name, '+' + fmtK(E.priceOf(t)), 'top')).join('')}</div>` : ''}`;
+  const row = (n, p) => `<div class="cr"><span>${esc(n)}</span><b>${p}</b></div>`;
+  el.innerHTML = `<h3>🥤 Menu hôm nay</h3>
+    <div class="cols">${teas.map((t) => row(ITEMS[t].name, fmtK(E.priceOf(t)))).join('') || '<em>Chưa có món</em>'}</div>
+    ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row(ITEMS[t].name, '+' + fmtK(E.priceOf(t)))).join('')}</div>` : ''}
+    <div class="sz">Size L +${fmtK(E.priceOf('sizeL'))}</div>`;
 }
 export function renderPanel() {
   const el = $('#panel');
