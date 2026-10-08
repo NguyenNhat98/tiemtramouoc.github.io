@@ -385,16 +385,11 @@ export function showIntro(onPlay) {
   el.hidden = false;
   const hasSave = S.started;
   el.innerHTML = `
-    <div class="intro-sky"><span class="moon"></span><span class="spark" style="left:18%;top:30%">✦</span><span class="spark" style="right:20%;top:24%;animation-delay:-1s">✦</span><span class="spark" style="left:70%;top:46%;animation-delay:-1.7s">✦</span></div>
-    <div class="noren" aria-hidden="true"><i class="rod"></i><div class="nr-row"><b class="nr a"></b><b class="nr b"></b><b class="nr a"></b><b class="nr b"></b></div></div>
-    <p class="intro-kicker">茶 · TIỆM TRÀ NHỎ</p>
+    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="spark" style="left:30%;top:10%">✦</span><span class="spark" style="right:30%;top:20%;animation-delay:-1s">✦</span></div>
+    <div class="intro-awning"></div>
+    <div class="lanterns" aria-hidden="true"><span>🏮</span><span>🏮</span><span>🏮</span></div>
     <h1 class="intro-title">Tiệm Trà<br/>Mơ Ước</h1>
-    <div class="intro-cup" aria-hidden="true">
-      <svg viewBox="0 0 120 120" width="150" height="150"><g class="steam"><path d="M44 30c-6-8 6-12 0-22M60 32c-6-8 6-12 0-22M76 30c-6-8 6-12 0-22" fill="none" stroke="#b9a58f" stroke-width="3" stroke-linecap="round"/></g>
-        <path d="M22 44h76l-6 40c-1 8-8 14-16 14H44c-8 0-15-6-16-14z" fill="#fbf8f1" stroke="#3b2f2a" stroke-width="3"/>
-        <path d="M26 52h68l-3 20H29z" fill="#8aa56f" opacity=".85"/><path d="M98 54c14 0 14 22 0 22" fill="none" stroke="#3b2f2a" stroke-width="3" stroke-linecap="round"/>
-        <ellipse cx="60" cy="108" rx="34" ry="5" fill="#3b2f2a" opacity=".12"/></svg>
-    </div>
+    <div class="intro-counter" aria-hidden="true"><div class="cups"><span>🧋</span><span>🥤</span><span>🧋</span><span>🍵</span></div><div class="cat">🐱<small>z z</small></div><div class="plants"><span>🪴</span><span>🌿</span></div></div>
     <p class="intro-tag">Pha trà, đón khách, mở tiệm nhỏ của riêng bạn</p>
     <div class="intro-info">${esc(S.shopName)} · Ngày ${S.day} · ${fmtK(S.money)}</div>
     <button class="btn pri big" data-act="play">${hasSave ? 'Chơi tiếp' : 'Chơi mới'}</button>
