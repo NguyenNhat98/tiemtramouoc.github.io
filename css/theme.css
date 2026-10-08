@@ -279,3 +279,32 @@ body { background: #F2DFC8; }
 .choice.on { border-color: var(--pink); background: var(--pink-soft); font-weight: 700; } .choice i { font-style: normal; color: var(--pink); font-weight: 800; }
 .choice:active { transform: scale(.98); }
 
+
+/* ======================================================================
+   CHỮ TOÀN GAME: một font duy nhất (Be Vietnam Pro), thang cỡ chữ thống nhất
+   Tiêu đề 17-19 · mục 14-15 · nội dung 13-14 · phụ 12 · nhãn nhỏ 11
+   ====================================================================== */
+:root { --font-serif: var(--font); }
+body { font-family: var(--font); font-size: 14px; line-height: 1.4; }
+button, input, select, textarea { font-family: inherit; }
+.intro-title { font-family: 'Noto Serif', Georgia, serif; }
+h1, h2, h3, h4, h5, .m-title, .set-title, .sign-name, .hud-day b, .hud-money b, .cta-btn, .btn.big, .tag-w { font-family: var(--font); letter-spacing: 0; }
+h1 { font-size: 22px; } h2 { font-size: 19px; } h3 { font-size: 17px; } h4 { font-size: 15px; } h5 { font-size: 13px; }
+h1, h2, h3, h4, h5 { font-weight: 700; line-height: 1.25; }
+.m-title { font-size: 17px; font-weight: 700; } .set-title { font-size: 18px; font-weight: 700; }
+.m-text, .box, .rules { font-size: 13.5px; line-height: 1.45; }
+.btn { font-size: 13.5px; font-weight: 600; } .btn.sm { font-size: 12.5px; } .btn.big { font-size: 16px; font-weight: 700; }
+.cta-btn { font-size: 15px; font-weight: 700; }
+.set-row b { font-size: 14px; font-weight: 600; } .set-row em { font-size: 12px; }
+.krow b, .nrow b, .erow b, .grow-row b, .k-main b { font-size: 14px; font-weight: 600; line-height: 1.25; }
+.k-main small, .nrow small, .krow small, .erow small { font-size: 12px; font-weight: 400; color: var(--muted); }
+.grp { font-size: 13.5px; font-weight: 700; }
+.catcard h4 { font-size: 15px; font-weight: 700; margin: 2px 0; }
+.catcard p { font-size: 12.5px; line-height: 1.4; }
+.catcard > div:first-child b:first-child { font-size: 11.5px; font-weight: 700; letter-spacing: .2px; }
+.hud-day b { font-size: 15px; } .hud-money b { font-size: 20px; font-weight: 700; } .hud-money small { font-size: 11px; font-weight: 600; }
+.tab { font-size: 13px; font-weight: 600; } .tab.on { font-weight: 700; }
+.chip { font-size: 12px; } .muted, small { font-size: 12px; }
+.nav-i { font-size: 11.5px; } .tile { font-size: 11.5px; }
+.sign-name { font-size: 20px; font-weight: 700; }
+.toast { font-size: 13.5px; font-weight: 500; }
