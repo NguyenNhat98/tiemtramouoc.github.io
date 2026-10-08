@@ -3044,10 +3044,15 @@
     const stack2 = $(`.stack[data-size="${size}"]`);
     if (!cupEl || !stack2) return;
     const a = stack2.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
-    cupEl.animate([
-      { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px,${a.top - b.top - 10}px) scale(.6) rotate(-18deg)`, opacity: 0.2 },
-      { transform: "translate(0,0) scale(1) rotate(0)", opacity: 1 }
-    ], { duration: 420, easing: "cubic-bezier(.3,1.35,.55,1)" });
+    const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height * 0.25 - (b.top + b.height / 2);
+    const STEPS2 = 14, lift = 26, frames2 = [];
+    for (let i = 0; i <= STEPS2; i++) {
+      const t = i / STEPS2, e = 1 - Math.pow(1 - t, 3);
+      frames2.push({ transform: `translate(${(dx * (1 - e)).toFixed(1)}px,${(dy * (1 - e) - lift * 4 * t * (1 - t)).toFixed(1)}px) scale(${(0.72 + 0.28 * e).toFixed(3)})`, opacity: Math.min(1, 0.25 + t * 4), offset: t });
+    }
+    frames2.push({ transform: "translate(0,0) scale(1.06,.93)", opacity: 1, offset: 0.93 }, { transform: "translate(0,0) scale(1)", opacity: 1, offset: 1 });
+    frames2.sort((x, y) => x.offset - y.offset);
+    cupEl.animate(frames2, { duration: 560, easing: "linear" });
   }
   function sealAnim() {
     const cupEl = $("#cupslot .cup"), sealer = $("#sealer");
@@ -3241,14 +3246,32 @@
     updateBoard(false);
     const st = $("#stream");
     const b = SH.board;
-    if (b?.pouring && b.tea) {
-      const d = $(`.disp[data-tea="${b.tea}"] .tap`), cup = $("#cupslot");
-      if (d && cup && st) {
-        const a = d.getBoundingClientRect(), c2 = cup.getBoundingClientRect(), r0 = root.getBoundingClientRect();
-        st.style.cssText = `display:block;left:${a.left + a.width / 2 - 3 - r0.left}px;top:${a.bottom - r0.top}px;height:${Math.max(0, c2.top + c2.height * 0.2 - a.bottom)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+    const cupEl = $("#cupslot .cup");
+    if (b?.pouring && b.tea && cupEl) {
+      const d = $(`.disp[data-tea="${b.tea}"] .tap`);
+      if (d && st) {
+        const a = d.getBoundingClientRect(), r0 = root.getBoundingClientRect();
+        const cr = cupEl.getBoundingClientRect(), sh = cupEl._shift || { x: 0, y: 0 };
+        const baseCx = cr.left + cr.width / 2 - sh.x, baseTop = cr.top - sh.y;
+        const gap = 30;
+        const nx = a.left + a.width / 2 - baseCx, ny = a.bottom + gap - baseTop;
+        if (!cupEl._shift || Math.abs(sh.x - nx) > 0.5 || Math.abs(sh.y - ny) > 0.5) {
+          cupEl._shift = { x: nx, y: ny };
+          cupEl.style.transform = `translate(${nx.toFixed(1)}px,${ny.toFixed(1)}px)`;
+          cupEl.classList.add("under-tap");
+        }
+        const mouthY = baseTop + ny + 4;
+        st.style.cssText = `display:block;left:${a.left + a.width / 2 - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.max(0, mouthY - a.bottom + 2)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
         if (Math.random() < 0.15) sfx("pour");
       }
-    } else if (st) st.style.display = "none";
+    } else {
+      if (st) st.style.display = "none";
+      if (cupEl && cupEl._shift) {
+        cupEl._shift = null;
+        cupEl.style.transform = "";
+        cupEl.classList.remove("under-tap");
+      }
+    }
     if (cntT <= 0 || force) {
       cntT = 0.25;
       for (const el of $$("[data-cnt]", root)) {
