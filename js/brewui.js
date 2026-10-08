@@ -165,6 +165,10 @@ function dropFx(fromEl, color) {
   if (!fromEl || !slot) return;
   const cupEl = $('.cup', slot) || slot;
   const a = fromEl.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
+  // trân châu rơi tới mặt trà trong ly thì biến mất: trà càng đầy thì biến mất càng sớm (càng gần miệng ly)
+  const liq = cupEl.querySelector?.('.c-liq');
+  const lr = liq ? liq.getBoundingClientRect() : null;
+  const surfaceY = lr && lr.height > 2 ? lr.top + 3 : b.bottom - 8;
   const n = 5, STEPS = 22, SPLIT = 0.62;
   for (let k = 0; k < n; k++) {
     const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
@@ -172,7 +176,7 @@ function dropFx(fromEl, color) {
     document.body.appendChild(ball);
     // đích 1: bay vòng lên trên miệng ly · đích 2: rơi thẳng xuống lòng ly
     const rx = b.left + b.width / 2 + rand(-b.width * 0.18, b.width * 0.18) - sx, ry = b.top - 16 - sy;
-    const dy2 = b.top + b.height * 0.58 - (sy + ry);
+    const dy2 = surfaceY - (sy + ry);
     const rise = Math.max(40, Math.min(90, Math.abs(ry) * 0.35 + 36));
     const frames = [];
     for (let i = 0; i <= STEPS; i++) {
@@ -193,14 +197,14 @@ function dropFx(fromEl, color) {
     ball.animate(frames, { duration: 820, delay: k * 95, easing: 'linear', fill: 'backwards' }).onfinish = () => {
       ball.remove();
       if (k === 0) { slot.classList.remove('plop'); void slot.offsetWidth; slot.classList.add('plop'); }
-      if (k === n - 1) splash(slot, color);
+      if (k === n - 1) splash(slot, color, surfaceY);
     };
   }
 }
 /** Vòng sóng + giọt bắn tại miệng ly. */
-function splash(cup, color) {
+function splash(cup, color, atY) {
   const r = cup.getBoundingClientRect();
-  const x = r.left + r.width / 2, y = r.top + r.height * 0.5;
+  const x = r.left + r.width / 2, y = atY ?? r.top + r.height * 0.5;
   fxSpark({ x, y }, 5);
   const ring = h(`<div class="fx-ripple" style="left:${x}px;top:${y}px;border-color:${color}"></div>`);
   document.body.appendChild(ring);

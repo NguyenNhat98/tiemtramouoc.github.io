@@ -2994,13 +2994,16 @@
     if (!fromEl || !slot) return;
     const cupEl = $(".cup", slot) || slot;
     const a = fromEl.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
+    const liq = cupEl.querySelector?.(".c-liq");
+    const lr = liq ? liq.getBoundingClientRect() : null;
+    const surfaceY = lr && lr.height > 2 ? lr.top + 3 : b.bottom - 8;
     const n = 5, STEPS2 = 22, SPLIT = 0.62;
     for (let k = 0; k < n; k++) {
       const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
       const ball = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color}"></div>`);
       document.body.appendChild(ball);
       const rx = b.left + b.width / 2 + rand(-b.width * 0.18, b.width * 0.18) - sx, ry = b.top - 16 - sy;
-      const dy2 = b.top + b.height * 0.58 - (sy + ry);
+      const dy2 = surfaceY - (sy + ry);
       const rise = Math.max(40, Math.min(90, Math.abs(ry) * 0.35 + 36));
       const frames2 = [];
       for (let i = 0; i <= STEPS2; i++) {
@@ -3027,13 +3030,13 @@
           void slot.offsetWidth;
           slot.classList.add("plop");
         }
-        if (k === n - 1) splash(slot, color);
+        if (k === n - 1) splash(slot, color, surfaceY);
       };
     }
   }
-  function splash(cup, color) {
+  function splash(cup, color, atY) {
     const r = cup.getBoundingClientRect();
-    const x = r.left + r.width / 2, y = r.top + r.height * 0.5;
+    const x = r.left + r.width / 2, y = atY ?? r.top + r.height * 0.5;
     fxSpark({ x, y }, 5);
     const ring = h(`<div class="fx-ripple" style="left:${x}px;top:${y}px;border-color:${color}"></div>`);
     document.body.appendChild(ring);
