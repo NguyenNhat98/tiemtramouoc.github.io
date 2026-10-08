@@ -422,3 +422,10 @@ body { background: color-mix(in srgb, var(--bg) 85%, #7a5a3a); }
 .krow .plan { display: block; min-height: 16px; line-height: 16px; }
 .krow .k-main { justify-content: center; }
 .stepper { min-width: 138px; justify-content: flex-end; }
+
+/* Nút đóng (✕) không đè lên phần đầu của hộp thoại */
+.modal-body { padding-top: 6px; }
+.mg-head { padding-right: 42px; min-height: 34px; align-items: center; gap: 8px; }
+.modal .c-head, .modal .pg > .bar { margin-right: 0; }
+.modal .c-head { padding-right: 42px; }
+.modal-x { top: 10px; right: 10px; }
