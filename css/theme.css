@@ -320,3 +320,17 @@ h1, h2, h3, h4, h5 { font-weight: 700; line-height: 1.25; }
 .ad-ic { width: 42px; height: 42px; border-radius: 12px; background: var(--pink-soft); display: grid; place-items: center; font-size: 22px; }
 .ad-m { min-width: 0; display: flex; flex-direction: column; gap: 2px; } .ad-m b { font-size: 14px; font-weight: 600; line-height: 1.25; } .ad-m small { font-size: 12px; color: var(--muted); }
 .ad-btn { min-width: 84px; min-height: 40px; padding: 4px 10px; flex-direction: column; gap: 0; line-height: 1.15; } .ad-btn b { font-size: 14px; font-weight: 700; } .ad-btn small { font-size: 10.5px; opacity: .9; font-weight: 500; color: inherit; }
+
+/* ---------- Quầy: số ly dùng chung, trân châu, hiệu ứng ---------- */
+.stacks { position: relative; }
+.cupcnt { top: -8px; right: -10px; }
+.tray .pile { gap: 1px; padding: 0 2px; }
+.tray .pile i, .c-top, .fx-ball { box-shadow: inset -1.5px -2px 3px rgba(0, 0, 0, .35), 0 1px 1px rgba(0, 0, 0, .25);
+  background-image: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .5) 0 9%, rgba(255, 255, 255, 0) 30%); }
+.tray .pile i { width: 11px; height: 11px; margin: 0; }
+.fx-ball { width: 13px; height: 13px; will-change: transform; }
+.cup.sealing { animation: none; }
+.fx-lid { position: fixed; z-index: 90; height: 10px; border-radius: 6px 6px 3px 3px; pointer-events: none; will-change: transform;
+  background: linear-gradient(#fffaf2, #e5d8c6); border: 1px solid #d3c5b0; box-shadow: 0 2px 4px rgba(0, 0, 0, .22); }
+.cupslot.plop .cup { animation: plopSoft .4s cubic-bezier(.3, 1.4, .6, 1); }
+@keyframes plopSoft { 0% { transform: scale(1) } 35% { transform: scale(1.05, .95) } 100% { transform: scale(1) } }

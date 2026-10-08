@@ -20,7 +20,7 @@ export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const liq = tea ? `linear-gradient(${tea.color}, ${tea.color}${fl ? '' : ''})` : 'transparent';
   const flav = fl ? `<i class="c-flav" style="background:${fl.color}"></i>` : '';
   const tops = (c.tops || []).map((t) => `<i class="c-top" style="background-color:${ITEMS[t].color}"></i>`.repeat(3)).join('');
-  const lid = c.phase === 'sealing' || c.phase === 'ready' ? '<i class="c-lid"></i>' : '';
+  const lid = c.phase === 'ready' ? '<i class="c-lid"></i>' : '';
   const straw = c.phase === 'ready' ? '<i class="c-straw"></i>' : '';
   const st = stamp && !mini && E.equipLevel('nhanDien') > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : '';
   return `<div class="cup ${c.phase || ''}" style="width:${w * k}px;height:${hgt * k}px">
@@ -48,8 +48,9 @@ export function renderSell() {
       <div class="tag-w">QUẦY TRÀ</div>
       <div class="shelf-row">
         <div class="stacks">
-          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b><span class="cnt" data-cnt="ly">0</span></button>
-          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="ly">0</span></button>
+          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b></button>
+          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b></button>
+          <span class="cnt cupcnt" data-cnt="ly" title="Số ly còn lại (dùng chung M và L)">0</span>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join('')}</div>
       </div>
@@ -100,7 +101,7 @@ function fillTrays() {
   $('#trays').innerHTML = order.slice(0, slots).map((t) => {
     const it = ITEMS[t];
     const locked = !S.unlocked[t], off = S.unlocked[t] && !S.onMenu[t];
-    const dots = `<i style="background-color:${it.color}"></i>`.repeat(9);
+    const dots = `<i style="background-color:${it.color}"></i>`.repeat(14);
     return `<button class="tray ${locked ? 'locked' : ''} ${off ? 'off' : ''}" data-act="top" data-t="${t}" aria-label="${it.name}"><div class="pile">${dots}</div>${locked ? '<em class="lk">🔒</em>' : ''}<small>${it.name.replace('Trân châu ', 'TC ').replace('Thạch ', 'Th. ')}</small><span class="cnt" data-cnt="${t}">0</span></button>`;
   }).join('');
 }
@@ -164,20 +165,26 @@ function dropFx(fromEl, color) {
   const cup = $('#cupslot');
   if (!fromEl || !cup) return;
   const a = fromEl.getBoundingClientRect(), b = cup.getBoundingClientRect();
-  const n = 4;
+  const n = 5, STEPS = 18;
   for (let k = 0; k < n; k++) {
-    const sx = a.left + a.width / 2 + rand(-8, 8), sy = a.top + a.height / 2;
+    const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
     const ball = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color}"></div>`);
     document.body.appendChild(ball);
-    const dx = b.left + b.width / 2 + rand(-10, 10) - sx, dy = b.top + b.height * 0.42 - sy;
-    ball.animate([
-      { transform: 'translate(0,0) scale(1) rotate(0)', offset: 0 },
-      { transform: `translate(${dx * 0.5}px,${Math.min(dy, 0) - 60}px) scale(1.15) rotate(120deg)`, offset: 0.45 },
-      { transform: `translate(${dx}px,${dy}px) scale(.85) rotate(260deg)`, offset: 0.85 },
-      { transform: `translate(${dx}px,${dy + 6}px) scale(1.2,.7) rotate(280deg)`, offset: 1 },
-    ], { duration: 520, delay: k * 70, easing: 'cubic-bezier(.4,0,.7,1)', fill: 'backwards' }).onfinish = () => {
+    const dx = b.left + b.width / 2 + rand(-10, 10) - sx, dy = b.top + b.height * 0.5 - sy;
+    const rise = 34 + rand(0, 22), sway = rand(-6, 6);
+    // quỹ đạo parabol: bay lên rồi rơi theo trọng lực, đáp nhẹ vào ly
+    const frames = [];
+    for (let i = 0; i <= STEPS; i++) {
+      const t = i / STEPS, ex = 1 - (1 - t) * (1 - t);
+      const x = dx * ex + sway * Math.sin(t * Math.PI);
+      const y = dy * t * t * (3 - 2 * t) * 0.35 + dy * t * 0.65 - rise * 4 * t * (1 - t);
+      const sc = 1 + 0.18 * Math.sin(t * Math.PI) - (t > 0.85 ? (t - 0.85) * 1.6 : 0);
+      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(2)})`, opacity: t > 0.92 ? 1 - (t - 0.92) * 8 : 1, offset: t });
+    }
+    ball.animate(frames, { duration: 680, delay: k * 85, easing: 'linear', fill: 'backwards' }).onfinish = () => {
       ball.remove();
-      if (k === n - 1) { cup.classList.remove('plop'); void cup.offsetWidth; cup.classList.add('plop'); splash(cup, color); }
+      if (k === 0) { cup.classList.remove('plop'); void cup.offsetWidth; cup.classList.add('plop'); }
+      if (k === n - 1) splash(cup, color);
     };
   }
 }
@@ -203,22 +210,30 @@ function flyCupIn(size) {
 function sealAnim() {
   const cupEl = $('#cupslot .cup'), sealer = $('#sealer');
   if (!cupEl || !sealer) return;
-  const dur = Math.max(500, (SH.board?.sealMax || 1.2) * 1000);
-  const a = cupEl.getBoundingClientRect(), b = sealer.getBoundingClientRect();
-  const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height * 0.55 - (a.top + a.height / 2);
+  const dur = Math.max(600, (SH.board?.sealMax || 1.2) * 1000);
+  const r = cupEl.getBoundingClientRect();
   sealer.classList.add('press');
+  // nắp rơi xuống miệng ly, rồi ép nhẹ
+  const lid = h(`<div class="fx-lid" style="left:${r.left - 3}px;top:${r.top - 6}px;width:${r.width + 6}px"></div>`);
+  document.body.appendChild(lid);
+  lid.animate([
+    { transform: 'translateY(-64px) scaleX(.86)', opacity: 0, offset: 0 },
+    { transform: 'translateY(-44px) scaleX(.92)', opacity: 1, offset: 0.2 },
+    { transform: 'translateY(0) scaleX(1)', opacity: 1, offset: 0.62, easing: 'cubic-bezier(.4,0,1,.7)' },
+    { transform: 'translateY(4px) scaleX(1.04)', opacity: 1, offset: 0.74 },
+    { transform: 'translateY(0) scaleX(1)', opacity: 1, offset: 0.86 },
+    { transform: 'translateY(0) scaleX(1)', opacity: 1, offset: 1 },
+  ], { duration: dur, easing: 'ease-out' }).onfinish = () => lid.remove();
   cupEl.animate([
-    { transform: 'translate(0,0)', offset: 0 },
-    { transform: `translate(${dx}px,${dy}px) scale(.8)`, offset: 0.3 },
-    { transform: `translate(${dx}px,${dy}px) scale(.8)`, offset: 0.7 },
-    { transform: 'translate(0,0) scale(1)', offset: 1 },
-  ], { duration: dur, easing: 'ease-in-out' });
+    { transform: 'none', offset: 0 }, { transform: 'none', offset: 0.6 },
+    { transform: 'scale(1.05,.93)', offset: 0.72 }, { transform: 'scale(.99,1.03)', offset: 0.86 }, { transform: 'none', offset: 1 },
+  ], { duration: dur, easing: 'ease-out' });
   setTimeout(() => sealer.classList.remove('press'), dur);
   sfx('seal');
 }
 on('cup:pick', (size) => { setTimeout(() => { updateBoard(true); flyCupIn(size); sfx('cup'); }, 0); });
 on('seal:start', () => { updateBoard(true); sealAnim(); });
-on('seal:done', () => { sfx('ding'); updateBoard(true); const s = $('#sealer'); s?.classList.add('ding'); setTimeout(() => s?.classList.remove('ding'), 600); });
+on('seal:done', () => { sfx('ding'); updateBoard(true); const cs = $('#cupslot'); if (cs) { fxSpark({ x: cs.getBoundingClientRect().left + cs.offsetWidth / 2, y: cs.getBoundingClientRect().top + cs.offsetHeight * 0.35 }, 6); cs.classList.remove('plop'); void cs.offsetWidth; cs.classList.add('plop'); } const s = $('#sealer'); s?.classList.add('ding'); setTimeout(() => s?.classList.remove('ding'), 600); });
 on('top', () => updateBoard(true));
 on('flavor', () => updateBoard(true));
 on('auto:pour', () => updateBoard(true));
