@@ -274,4 +274,8 @@ body { background: #F2DFC8; }
 .thm-it i { width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .25); }
 .thm-it b { font-size: 12.5px; font-weight: 700; text-align: center; line-height: 1.15; }
 .thm-it.on { border-color: var(--pink); box-shadow: 0 0 0 2px var(--pink-soft); }
+.choice-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.choice { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 14px; background: var(--card); border: 2px solid var(--line); font-weight: 600; font-size: 14px; transition: border-color .15s, background .15s; }
+.choice.on { border-color: var(--pink); background: var(--pink-soft); font-weight: 700; } .choice i { font-style: normal; color: var(--pink); font-weight: 800; }
+.choice:active { transform: scale(.98); }
 

@@ -2275,6 +2275,13 @@
     }
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", t.bg);
   }
+  function openChoice(title, opts, cur2, onPick) {
+    const m = openModal({ cls: "small", html: `<h3 class="m-title">${title}</h3><div class="choice-list">${opts.map(([v, label], i) => `<button class="choice ${v === cur2 ? "on" : ""}" data-act="pick" data-i="${i}"><span>${label}</span><i>${v === cur2 ? "\u2713" : ""}</i></button>`).join("")}</div><button class="btn block" data-act="x">\u0110\xF3ng</button>` });
+    bindActions(m.body, { pick: (t) => {
+      onPick(opts[+t.dataset.i][0]);
+      m.close();
+    }, x: () => m.close() });
+  }
   function openThemePicker(onDone) {
     const sw = (id, t) => `<button class="thm-it ${S.settings.theme === id ? "on" : ""}" data-act="pick" data-k="${id}"><i style="background:linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)"></i><b>${t.name}</b></button>`;
     const m = openModal({ cls: "small", html: `<h3 class="m-title">M\xE0u giao di\u1EC7n</h3><p class="m-text center">Ch\u1ECDn m\xE0u b\u1EA1n th\xEDch, \u0111\u1ED5i l\xFAc n\xE0o c\u0169ng \u0111\u01B0\u1EE3c.</p>
@@ -2485,10 +2492,11 @@
     <button class="btn pri block" data-act="close">\u0110\xF3ng</button>`
     });
     const sliders = bindSliders(m);
-    const refresh = () => {
-      m.close();
-      openSettings();
+    const setVal = (act, text) => {
+      const e = $(`[data-act="${act}"] em`, m.body);
+      if (e) e.textContent = text;
     };
+    const styleName = () => S.settings.style === "lofi" ? "Lofi Chill Qu\xE1n Cafe" : S.settings.style === "vui" ? "Vui nh\u1ED9n" : "T\u1EAFt nh\u1EA1c";
     bindActions(m.body, {
       ...sliders,
       close: () => m.close(),
@@ -2498,25 +2506,23 @@
         saveGame();
         location.reload();
       }),
-      hints: () => {
-        S.settings.hints = !S.settings.hints;
+      hints: () => openChoice("\u{1F9ED} Ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc", [[true, "T\u1EF1 \u0111\u1ED9ng"], [false, "T\u1EAFt"]], S.settings.hints, (v) => {
+        S.settings.hints = v;
         requestSave();
-        refresh();
-      },
-      shiftMin: () => {
-        const i = SHIFT_MINUTES.indexOf(S.settings.shiftMinNext);
-        S.settings.shiftMinNext = SHIFT_MINUTES[(i + 1) % SHIFT_MINUTES.length];
+        setVal("hints", v ? "T\u1EF1 \u0111\u1ED9ng" : "T\u1EAFt");
+      }),
+      shiftMin: () => openChoice("\u23F1\uFE0F Th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y", SHIFT_MINUTES.map((n) => [n, `${n} ph\xFAt`]), S.settings.shiftMinNext, (v) => {
+        S.settings.shiftMinNext = v;
         requestSave();
-        refresh();
-      },
-      theme: () => openThemePicker(refresh),
-      style: () => {
-        const k = ["lofi", "vui", "off"];
-        S.settings.style = k[(k.indexOf(S.settings.style) + 1) % k.length];
+        setVal("shiftMin", `${v} ph\xFAt \xB7 \xE1p d\u1EE5ng t\u1EEB ng\xE0y sau`);
+      }),
+      theme: () => openThemePicker(() => setVal("theme", THEMES[S.settings.theme].name)),
+      style: () => openChoice("\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a", [["lofi", "Lofi Chill Qu\xE1n Cafe"], ["vui", "Vui nh\u1ED9n"], ["off", "T\u1EAFt nh\u1EA1c"]], S.settings.style, (v) => {
+        S.settings.style = v;
         restartMusic();
         requestSave();
-        refresh();
-      },
+        setVal("style", styleName());
+      }),
       export: () => openExport(),
       import: () => openImport(),
       backups: () => openBackups(),

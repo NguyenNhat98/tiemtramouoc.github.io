@@ -125,6 +125,11 @@ export function applyTheme() {
   for (const [n, v] of Object.entries(THEME_DARK)) { if (t.dark) st.setProperty(n, v); else st.removeProperty(n); }
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t.bg);
 }
+/** Popup chọn một trong nhiều lựa chọn (thay cho việc bấm xoay vòng từng giá trị). */
+function openChoice(title, opts, cur, onPick) {
+  const m = openModal({ cls: 'small', html: `<h3 class="m-title">${title}</h3><div class="choice-list">${opts.map(([v, label], i) => `<button class="choice ${v === cur ? 'on' : ''}" data-act="pick" data-i="${i}"><span>${label}</span><i>${v === cur ? '✓' : ''}</i></button>`).join('')}</div><button class="btn block" data-act="x">Đóng</button>` });
+  bindActions(m.body, { pick: (t) => { onPick(opts[+t.dataset.i][0]); m.close(); }, x: () => m.close() });
+}
 function openThemePicker(onDone) {
   const sw = (id, t) => `<button class="thm-it ${S.settings.theme === id ? 'on' : ''}" data-act="pick" data-k="${id}"><i style="background:linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)"></i><b>${t.name}</b></button>`;
   const m = openModal({ cls: 'small', html: `<h3 class="m-title">Màu giao diện</h3><p class="m-text center">Chọn màu bạn thích, đổi lúc nào cũng được.</p>
@@ -301,14 +306,15 @@ export function openSettings() {
     ${row('reset', '↩️', 'Chơi lại từ đầu')}
     <button class="btn pri block" data-act="close">Đóng</button>` });
   const sliders = bindSliders(m);
-  const refresh = () => { m.close(); openSettings(); };
+  const setVal = (act, text) => { const e = $(`[data-act="${act}"] em`, m.body); if (e) e.textContent = text; };
+  const styleName = () => (S.settings.style === 'lofi' ? 'Lofi Chill Quán Cafe' : S.settings.style === 'vui' ? 'Vui nhộn' : 'Tắt nhạc');
   bindActions(m.body, {
     ...sliders, close: () => m.close(), guide: () => openGuide(), news: () => alertBox('🎁 Có gì mới', CHANGELOG.map((c) => `<p>• ${esc(c)}</p>`).join('')),
     update: () => confirmBox('Cập nhật bản mới', 'Lưu game và tải lại trang để lấy bản mới nhất?', () => { saveGame(); location.reload(); }),
-    hints: () => { S.settings.hints = !S.settings.hints; requestSave(); refresh(); },
-    shiftMin: () => { const i = SHIFT_MINUTES.indexOf(S.settings.shiftMinNext); S.settings.shiftMinNext = SHIFT_MINUTES[(i + 1) % SHIFT_MINUTES.length]; requestSave(); refresh(); },
-    theme: () => openThemePicker(refresh),
-    style: () => { const k = ['lofi', 'vui', 'off']; S.settings.style = k[(k.indexOf(S.settings.style) + 1) % k.length]; restartMusic(); requestSave(); refresh(); },
+    hints: () => openChoice('🧭 Chỉ dẫn từng bước', [[true, 'Tự động'], [false, 'Tắt']], S.settings.hints, (v) => { S.settings.hints = v; requestSave(); setVal('hints', v ? 'Tự động' : 'Tắt'); }),
+    shiftMin: () => openChoice('⏱️ Thời gian bán mỗi ngày', SHIFT_MINUTES.map((n) => [n, `${n} phút`]), S.settings.shiftMinNext, (v) => { S.settings.shiftMinNext = v; requestSave(); setVal('shiftMin', `${v} phút · áp dụng từ ngày sau`); }),
+    theme: () => openThemePicker(() => setVal('theme', THEMES[S.settings.theme].name)),
+    style: () => openChoice('🎼 Nhạc nền & Mùa', [['lofi', 'Lofi Chill Quán Cafe'], ['vui', 'Vui nhộn'], ['off', 'Tắt nhạc']], S.settings.style, (v) => { S.settings.style = v; restartMusic(); requestSave(); setVal('style', styleName()); }),
     export: () => openExport(), import: () => openImport(), backups: () => openBackups(),
     reset: () => confirmBox('Chơi lại từ đầu?', 'Toàn bộ tiến trình sẽ bị xoá vĩnh viễn. Bạn chắc chắn chứ?', () => { closeAllModals(); wipeSave(); applyTheme(); emit('reset'); }, 'Xoá & chơi lại', true),
   });
