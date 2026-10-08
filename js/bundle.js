@@ -7,7 +7,7 @@
 
   // js/config.js
   var DEBUG = true;
-  var VERSION = "3.0.1";
+  var VERSION = "3.1.0";
   var SAVE_KEY = "tiemTraMoUoc3";
   var SAVE_VERSION = 1;
   var SHIFT_START_H = 10;
@@ -478,6 +478,7 @@
   var SLOGANS = ["Tr\xE0 s\u1EEFa m\u1ED7i ng\xE0y", "Ngon t\u1EEB gi\u1ECDt \u0111\u1EA7u", "Pha b\u1EB1ng c\u1EA3 tr\xE1i tim", "Nh\u1ECF m\xE0 c\xF3 v\xF5", "Chill c\xF9ng tr\xE0 s\u1EEFa", "B\u1ECF tr\u1ED1ng"];
   var SHIFT_MINUTES = [3, 4, 5];
   var CHANGELOG = [
+    "v3.1: To\xE0n m\xE0n h\xECnh, m\xE0n m\u1EDF \u0111\u1EA7u g\u1ECDn \u0111\u1EB9p, h\u01B0\u1EDBng d\u1EABn chi ti\u1EBFt + h\u01B0\u1EDBng d\u1EABn l\u1EA7n \u0111\u1EA7u (c\xF3 b\u1ECF qua), qu\u1EA7y pha ch\u1EBF v\u1EBD l\u1EA1i, b\u1EA3n \u0111\u1ED3 & th\u1EBB \u0111\u1ECBa \u0111i\u1EC3m c\xF3 h\xECnh n\u1EC1n, kh\xE1ch \u0111\u1EBFn \u0111\u1EC1u v\xE0 ch\u1EADm h\u01A1n, hi\u1EC7u \u1EE9ng n\u1ED5/combo m\u01B0\u1EE3t h\u01A1n, s\u1EEDa t\u1EA3i logo.",
     "v3.0: L\xE0m l\u1EA1i to\xE0n b\u1ED9 giao di\u1EC7n & v\xF2ng ch\u01A1i theo k\u1ECBch b\u1EA3n chi ti\u1EBFt (15 menu, pha ch\u1EBF c\xF3 hi\u1EC7u \u1EE9ng, s\u1EA3nh tr\xE0, chi nh\xE1nh, nh\xE2n s\u1EF1\u2026).",
     "Th\xEAm 2 mini game: Milk Tea Crush v\xE0 Tr\xE2n Ch\xE2u N\u1ED5.",
     "Th\xEAm kh\u1EDFi nghi\u1EC7p xuy\xEAn Vi\u1EC7t v\u1EDBi 10 \u0111\u1ECBa \u0111i\u1EC3m, th\xFA c\u01B0ng, v\u01B0\u1EDDn c\xE2y 16 \xF4."
@@ -1383,8 +1384,10 @@
   function expectedCustomers() {
     const b = bonus();
     const rating = 0.8 + clamp(S.rating, 1, 5) * 0.05;
-    const base = 20 + 1.2 * Math.min(S.day, 60) + b.extraCust;
-    return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating));
+    const base = 8 + 0.5 * Math.min(S.day, 60) + b.extraCust * 0.5;
+    const wealth = 1 + clamp(Math.log10(Math.max(S.money, 1e3) / 1e3) * 0.12, 0, 0.6);
+    const staffBoost = 1 + Math.min(0.9, staffCount() * 0.15);
+    return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating * wealth * staffBoost));
   }
   function onlineProgress() {
     return { profit: sum(S.history, (x) => x.profit) + (S.today.profit || 0), orders: sum(S.history, (x) => x.cups) + S.today.cups, rating: S.rating };
@@ -1419,22 +1422,26 @@
   });
   var SH = { on: false };
   function spawnPlan(n, total) {
-    const seg = [[10, 11, 1], [11, 13, 2.2], [13, 17, 1], [17, 19, 2.2], [19, 22, 1.2]];
+    const seg = [[10, 11, 1], [11, 13, 1.7], [13, 17, 1], [17, 19, 1.7], [19, 22, 1.1]];
     const tot = sum(seg, (s) => (s[1] - s[0]) * s[2]);
-    const times = [];
-    for (let i = 0; i < n; i++) {
-      let r = Math.random() * tot, tHour = 10;
+    const hourAt = (q) => {
+      let r = q * tot;
       for (const [a, b, w] of seg) {
         const m = (b - a) * w;
-        if (r <= m) {
-          tHour = a + r / w;
-          break;
-        }
+        if (r <= m) return a + r / w;
         r -= m;
       }
-      times.push((tHour - 10) / 12 * total * 0.94 + 1);
+      return 22;
+    };
+    const times = [];
+    const minGap = Math.max(5, total / Math.max(n, 1) * 0.35);
+    for (let i = 0; i < n; i++) {
+      const q = clamp((i + 0.5 + rand(-0.28, 0.28)) / n, 0, 0.999);
+      let t = (hourAt(q) - 10) / 12 * total * 0.94 + 4;
+      if (times.length && t - times[times.length - 1] < minGap) t = times[times.length - 1] + minGap;
+      times.push(t);
     }
-    return times.sort((a, b) => a - b);
+    return times;
   }
   function makeOrder() {
     const b = bonus();
@@ -1539,6 +1546,14 @@
       sat: 0,
       cupsDone: 0
     });
+    if (S.settings.tut && S.settings.tut.sell === false) {
+      const c = newCustomer();
+      c.order.tops = [];
+      c.order.flavor = null;
+      c.text = orderText(ARCHETYPES[c.key], c.order);
+      SH.queue.push(c);
+      SH.pi = Math.min(SH.pi + 1, SH.plan.length);
+    }
     const nt = bonus().tables;
     for (let i = 0; i < nt; i++) SH.tables.push({ s: "free", t: 0 });
     S.phase = "sell";
@@ -2494,15 +2509,35 @@
     });
   }
   function openGuide() {
-    const m = openModal({ id: "guide", cls: "settings", html: `<h2 class="set-title">\u{1F4D6} H\u01B0\u1EDBng d\u1EABn</h2>
-    <div class="guide">
-    <p><b>1. Chu\u1EA9n b\u1ECB:</b> v\xE0o <b>Kho</b>, ch\u1ECDn s\u1ED1 l\u01B0\u1EE3ng Tr\xE0 \xB7 Topping \xB7 D\u1EE5ng c\u1EE5 r\u1ED3i b\u1EA5m <b>N\u1EA5u & nh\u1EADp</b>. C\xF3 \u0111\u1EE7 nguy\xEAn li\u1EC7u th\xEC b\u1EA5m <b>M\u1EDF c\u1EEDa</b>.</p>
-    <p><b>2. Pha ly:</b> kh\xE1ch g\u1ECDi m\xF3n \u2192 ch\u1EA1m ch\u1ED3ng ly (\u0111\xFAng size M/L) \u2192 ch\u1EA1m b\xECnh tr\xE0 \u0111\u1EC3 r\xF3t, ch\u1EA1m l\u1EA7n n\u1EEFa \u0111\u1EC3 d\u1EEBng (r\xF3t v\xE0o v\xF9ng v\xE0ng) \u2192 ch\u1EA1m chai h\u01B0\u01A1ng (n\u1EBFu c\xF3) \u2192 ch\u1EA1m khay topping \u2192 ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b> \u2192 ch\u1EA1m ly ho\xE0n thi\u1EC7n \u0111\u1EC3 giao kh\xE1ch.</p>
-    <p><b>3. M\u1EB9o:</b> \u0111\u1ED5i kh\xE1ch \u01B0u ti\xEAn b\u1EB1ng c\xE1ch ch\u1EA1m avatar tr\xEAn m\xE1i hi\xEAn; th\xF9ng r\xE1c \u0111\u1EC3 \u0111\u1ED5 ly sai; ki\xEAn nh\u1EABn c\u1EE7a kh\xE1ch gi\u1EA3m d\u1EA7n; \u2605 cao th\xEC kh\xE1ch \u0111\xF4ng.</p>
-    <p><b>4. L\u1EDBn d\u1EA7n:</b> n\xE2ng c\u1EA5p qu\u1EA7y, thu\xEA nh\xE2n vi\xEAn, m\u1EDF chi nh\xE1nh, kh\u1EDFi nghi\u1EC7p xuy\xEAn Vi\u1EC7t, ch\u1EA1y qu\u1EA3ng c\xE1o, nu\xF4i th\xFA c\u01B0ng, \u0111\xF3ng thu\u1EBF nh\u1EADn buff, g\u1EEDi ti\u1EBFt ki\u1EC7m.</p>
-    <p><b>5. Gi\xE1 b\xE1n:</b> \u0111\u1EEBng \u0111\u1EA9y gi\xE1 qu\xE1 cao \u2014 tr\xE0 tr\xEAn 50k, topping tr\xEAn 20k s\u1EBD l\xE0m kh\xE1ch b\u1ECF \u0111i (tr\u1EEB khi c\xF3 Qu\u1EA3n l\xFD t\u1EADp s\u1EF1).</p></div>
-    <button class="btn pri block" data-act="x">\u0110\xE3 hi\u1EC3u</button>` });
-    bindActions(m.body, { x: () => m.close() });
+    const step = (ico, title, body) => `<div class="g-step"><div class="g-ico">${ico}</div><div class="g-txt"><b>${title}</b><p>${body}</p></div></div>`;
+    const m = openModal({ id: "guide", cls: "settings", html: `<h2 class="set-title">\u{1F4D6} H\u01B0\u1EDBng d\u1EABn ch\u01A1i</h2>
+    <div class="guide rich">
+    <div class="g-sec"><h4>\u{1F3E0} 1. Chu\u1EA9n b\u1ECB m\u1ED7i ng\xE0y</h4>
+      ${step("\u{1F4E6}", "V\xE0o Kho", "Ch\u1ECDn s\u1ED1 l\u01B0\u1EE3ng <b>Tr\xE0 \u{1FAD6}</b>, <b>Topping \u{1F9CB}</b> v\xE0 <b>D\u1EE5ng c\u1EE5 \u{1F964}</b> (ly, \u0111\xE1, \u0111\u01B0\u1EDDng) c\u1EA7n d\xF9ng cho ng\xE0y h\xF4m nay.")}
+      ${step("\u{1F6D2}", "N\u1EA5u & nh\u1EADp", "B\u1EA5m n\xFAt h\u1ED3ng <b>N\u1EA5u & nh\u1EADp</b> \u1EDF \u0111\xE1y m\xE0n h\xECnh \u0111\u1EC3 tr\u1EA3 ti\u1EC1n nh\u1EADp h\xE0ng. N\xFAt \u0111\u1ECF \u26A0\uFE0F ngh\u0129a l\xE0 c\xF2n thi\u1EBFu nguy\xEAn li\u1EC7u.")}
+      ${step("\u{1F3EE}", "M\u1EDF c\u1EEDa", "\u0110\u1EE7 nguy\xEAn li\u1EC7u th\xEC b\u1EA5m <b>M\u1EDF c\u1EEDa</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng.")}</div>
+    <div class="g-sec"><h4>\u{1F9CB} 2. Pha ly khi b\xE1n h\xE0ng</h4>
+      ${step("\u{1F464}", "\u0110\u1ECDc \u0111\u01A1n", "Kh\xE1ch hi\u1EC7n bong b\xF3ng tho\u1EA1i: size, lo\u1EA1i tr\xE0, h\u01B0\u01A1ng, topping. V\xF2ng xanh quanh avatar l\xE0 <b>\u0111\u1ED9 ki\xEAn nh\u1EABn</b>.")}
+      ${step("\u{1F964}", "L\u1EA5y ly", "Ch\u1EA1m \u0111\xFAng <b>ch\u1ED3ng ly M ho\u1EB7c L</b> tr\xEAn qu\u1EA7y tr\xE0.")}
+      ${step("\u{1FAD6}", "R\xF3t tr\xE0", "Ch\u1EA1m <b>b\xECnh tr\xE0</b> \u0111\u1EC3 r\xF3t, ch\u1EA1m l\u1EA7n n\u1EEFa \u0111\u1EC3 d\u1EEBng khi thanh t\u1EDBi <b>v\xF9ng v\xE0ng</b>.")}
+      ${step("\u{1F36F}", "H\u01B0\u01A1ng & topping", "Ch\u1EA1m <b>chai h\u01B0\u01A1ng</b> (n\u1EBFu c\xF3) r\u1ED3i ch\u1EA1m c\xE1c khay <b>topping</b> kh\xE1ch y\xEAu c\u1EA7u.")}
+      ${step("\u{1F512}", "\u0110\xF3ng n\u1EAFp", "Ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b> b\xEAn ph\u1EA3i, ch\u1EDD \u0111\xE8n READY.")}
+      ${step("\u{1F91D}", "Giao kh\xE1ch", "Ch\u1EA1m <b>ly ho\xE0n thi\u1EC7n</b> tr\xEAn th\u1EDBt \u0111\u1EC3 giao. \u0110\xFAng + nhanh = nhi\u1EC1u sao v\xE0 ti\u1EC1n boa!")}</div>
+    <div class="g-sec"><h4>\u{1F4A1} 3. M\u1EB9o hay</h4>
+      ${step("\u{1F446}", "\u0110\u1ED5i kh\xE1ch", "Ch\u1EA1m avatar tr\xEAn m\xE1i hi\xEAn \u0111\u1EC3 ph\u1EE5c v\u1EE5 kh\xE1ch \u01B0u ti\xEAn (ng\u01B0\u1EDDi s\u1EAFp h\u1EBFt ki\xEAn nh\u1EABn).")}
+      ${step("\u{1F5D1}\uFE0F", "L\xE0m sai?", "Ch\u1EA1m <b>th\xF9ng r\xE1c</b> \u0111\u1EC3 \u0111\u1ED5 ly r\u1ED3i pha l\u1EA1i.")}
+      ${step("\u2B50", "\u0110\xE1nh gi\xE1", "Sao cao th\xEC kh\xE1ch \u0111\xF4ng h\u01A1n. B\xE0n b\u1EA9n \u1EDF S\u1EA3nh nh\u1EDB d\u1ECDn \u0111\u1EC3 c\xF3 th\xEAm kh\xE1ch ng\u1ED3i.")}</div>
+    <div class="g-sec"><h4>\u{1F680} 4. L\u1EDBn d\u1EA7n</h4>
+      ${step("\u{1F6E0}\uFE0F", "N\xE2ng c\u1EA5p & nh\xE2n s\u1EF1", "N\xE2ng c\u1EA5p qu\u1EA7y, <b>thu\xEA nh\xE2n vi\xEAn</b> \u2013 kh\xE1ch s\u1EBD \u0111\u1EBFn nhanh v\xE0 \u0111\xF4ng h\u01A1n khi qu\xE1n c\xF3 ti\u1EC1n v\xE0 \u0111\u1ED9i ng\u0169.")}
+      ${step("\u{1F5FA}\uFE0F", "Kh\u1EDFi nghi\u1EC7p & chi nh\xE1nh", "M\u1EDF chi nh\xE1nh, kh\u1EDFi nghi\u1EC7p xuy\xEAn Vi\u1EC7t, ch\u1EA1y qu\u1EA3ng c\xE1o, nu\xF4i th\xFA c\u01B0ng, \u0111\xF3ng thu\u1EBF nh\u1EADn buff, g\u1EEDi ti\u1EBFt ki\u1EC7m.")}
+      ${step("\u{1F4B5}", "Gi\xE1 b\xE1n", "\u0110\u1EEBng \u0111\u1EA9y gi\xE1 qu\xE1 cao \u2014 tr\xE0 tr\xEAn 50k, topping tr\xEAn 20k s\u1EBD l\xE0m kh\xE1ch b\u1ECF \u0111i (tr\u1EEB khi c\xF3 Qu\u1EA3n l\xFD t\u1EADp s\u1EF1).")}</div>
+    </div>
+    <button class="btn blue block" data-act="replay">\u{1F393} Xem h\u01B0\u1EDBng d\u1EABn t\u01B0\u01A1ng t\xE1c t\u1EEBng b\u01B0\u1EDBc</button>
+    <button class="btn pri block" data-act="x" style="margin-top:6px">\u0110\xE3 hi\u1EC3u</button>` });
+    bindActions(m.body, { x: () => m.close(), replay: () => {
+      m.close();
+      emit("tutorial:replay");
+    } });
   }
   function openForecast() {
     const ev = eventOf();
@@ -2517,12 +2552,28 @@
     <button class="btn pri block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, { x: () => m.close() });
   }
+  function goFullscreen() {
+    try {
+      const d = document.documentElement;
+      if (document.fullscreenElement || document.webkitFullscreenElement) return;
+      const f = d.requestFullscreen || d.webkitRequestFullscreen || d.msRequestFullscreen;
+      if (f) {
+        const r = f.call(d, { navigationUI: "hide" });
+        if (r && r.catch) r.catch(() => {
+        });
+      }
+      screen.orientation?.lock?.("portrait").catch(() => {
+      });
+    } catch (e) {
+    }
+  }
+  document.addEventListener("pointerup", () => goFullscreen(), { once: true, passive: true });
   function showIntro(onPlay) {
     const el = $("#intro");
     el.hidden = false;
     const hasSave = S.started;
     el.innerHTML = `
-    <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="pearl">\u26AB</span></div>
+    <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="pearl">\u26AB</span><span class="spark" style="left:30%;top:9%">\u2728</span><span class="spark" style="right:24%;top:20%;animation-delay:-1s">\u2728</span><span class="spark" style="left:16%;top:30%;animation-delay:-1.7s">\u2728</span></div>
     <div class="intro-awning"></div>
     <div class="lanterns"><span>\u{1F3EE}</span><span>\u{1F3EE}</span><span>\u{1F3EE}</span></div>
     <h1 class="intro-title">Ti\u1EC7m Tr\xE0<br/>M\u01A1 \u01AF\u1EDBc</h1>
@@ -2537,9 +2588,13 @@
     <button class="link" data-act="guide">H\u01B0\u1EDBng d\u1EABn</button>
     <small class="ver">${VERSION}</small>`;
     bindActions(el, { play: () => {
+      goFullscreen();
       el.hidden = true;
       onPlay();
-    }, guide: () => openGuide() });
+    }, guide: () => {
+      goFullscreen();
+      openGuide();
+    } });
   }
 
   // js/brewui.js
@@ -2552,7 +2607,7 @@
     const fill = clamp((c.fill ?? 0) / 1, 0, 1.15);
     const liq = tea ? `linear-gradient(${tea.color}, ${tea.color}${fl ? "" : ""})` : "transparent";
     const flav = fl ? `<i class="c-flav" style="background:${fl.color}"></i>` : "";
-    const tops = (c.tops || []).map((t) => `<i class="c-top" style="background:${ITEMS[t].color}"></i>`.repeat(3)).join("");
+    const tops = (c.tops || []).map((t) => `<i class="c-top" style="background-color:${ITEMS[t].color}"></i>`.repeat(3)).join("");
     const lid = c.phase === "sealing" || c.phase === "ready" ? '<i class="c-lid"></i>' : "";
     const straw = c.phase === "ready" ? '<i class="c-straw"></i>' : "";
     const st = stamp && !mini && equipLevel("nhanDien") > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : "";
@@ -2579,11 +2634,11 @@
       <div class="tag-w">QU\u1EA6Y TR\xC0</div>
       <div class="shelf-row">
         <div class="stacks">
-          <button class="stack" data-act="cup" data-size="M" aria-label="L\u1EA5y ly size M"><div class="cups"><i></i><i></i><i></i><i></i></div><b>M</b><span class="cnt" data-cnt="ly">0</span></button>
-          <button class="stack big" data-act="cup" data-size="L" aria-label="L\u1EA5y ly size L"><div class="cups l"><i></i><i></i><i></i><i></i><i></i></div><b>L</b><span class="cnt" data-cnt="ly">0</span></button>
+          <button class="stack" data-act="cup" data-size="M" aria-label="L\u1EA5y ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b><span class="cnt" data-cnt="ly">0</span></button>
+          <button class="stack big" data-act="cup" data-size="L" aria-label="L\u1EA5y ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="ly">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join("")}</div>
-        <button class="sealer" id="sealer" data-act="seal" aria-label="M\xE1y \u0111\xF3ng n\u1EAFp"><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span></div><div class="sl-slot"></div></button>
+        <button class="sealer" id="sealer" data-act="seal" aria-label="M\xE1y \u0111\xF3ng n\u1EAFp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
       </div>
       <div class="flav-row" id="flavs"></div>
     </div>
@@ -2614,7 +2669,7 @@
     const locked = !S.unlocked[t];
     const off = S.unlocked[t] && !S.onMenu[t];
     return `<button class="disp ${locked ? "locked" : ""} ${off ? "off" : ""}" data-act="disp" data-tea="${t}" aria-label="${it.name}" ${locked ? 'data-locked="1"' : ""}>
-    <div class="jar"><i class="jl" style="background:${it.color}"></i><span class="lab">${it.short}</span>${locked ? '<em class="lk">\u{1F512}</em>' : ""}</div><div class="tap"></div>
+    <i class="jlid"></i><div class="jar"><i class="jl" style="background:${it.color}"></i><span class="lab">${it.short}</span>${locked ? '<em class="lk">\u{1F512}</em>' : ""}</div><div class="tap"><i class="drip" style="background:${it.color}"></i></div>
     <span class="cnt" data-cnt="${t}">0</span></button>`;
   }
   function fillFlavors() {
@@ -2627,7 +2682,7 @@
     $("#trays").innerHTML = order.slice(0, slots).map((t) => {
       const it = ITEMS[t];
       const locked = !S.unlocked[t], off = S.unlocked[t] && !S.onMenu[t];
-      const dots = `<i style="background:${it.color}"></i>`.repeat(7);
+      const dots = `<i style="background-color:${it.color}"></i>`.repeat(9);
       return `<button class="tray ${locked ? "locked" : ""} ${off ? "off" : ""}" data-act="top" data-t="${t}" aria-label="${it.name}"><div class="pile">${dots}</div>${locked ? '<em class="lk">\u{1F512}</em>' : ""}<small>${it.name.replace("Tr\xE2n ch\xE2u ", "TC ").replace("Th\u1EA1ch ", "Th. ")}</small><span class="cnt" data-cnt="${t}">0</span></button>`;
     }).join("");
   }
@@ -2732,19 +2787,35 @@
     const cup = $("#cupslot");
     if (!fromEl || !cup) return;
     const a = fromEl.getBoundingClientRect(), b = cup.getBoundingClientRect();
-    const ball = h(`<div class="fx-ball" style="left:${a.left + a.width / 2 - 8}px;top:${a.top + a.height / 2 - 8}px;background:${color}"></div>`);
-    document.body.appendChild(ball);
-    const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height * 0.45 - (a.top + a.height / 2);
-    ball.animate([
-      { transform: "translate(0,0) scale(1)", offset: 0 },
-      { transform: `translate(${dx * 0.5}px,${dy - 50}px) scale(1.1)`, offset: 0.5 },
-      { transform: `translate(${dx}px,${dy}px) scale(.8)`, offset: 1 }
-    ], { duration: 460, easing: "cubic-bezier(.4,0,.6,1)" }).onfinish = () => {
-      ball.remove();
-      cup.classList.remove("plop");
-      void cup.offsetWidth;
-      cup.classList.add("plop");
-    };
+    const n = 4;
+    for (let k = 0; k < n; k++) {
+      const sx = a.left + a.width / 2 + rand(-8, 8), sy = a.top + a.height / 2;
+      const ball = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color}"></div>`);
+      document.body.appendChild(ball);
+      const dx = b.left + b.width / 2 + rand(-10, 10) - sx, dy = b.top + b.height * 0.42 - sy;
+      ball.animate([
+        { transform: "translate(0,0) scale(1) rotate(0)", offset: 0 },
+        { transform: `translate(${dx * 0.5}px,${Math.min(dy, 0) - 60}px) scale(1.15) rotate(120deg)`, offset: 0.45 },
+        { transform: `translate(${dx}px,${dy}px) scale(.85) rotate(260deg)`, offset: 0.85 },
+        { transform: `translate(${dx}px,${dy + 6}px) scale(1.2,.7) rotate(280deg)`, offset: 1 }
+      ], { duration: 520, delay: k * 70, easing: "cubic-bezier(.4,0,.7,1)", fill: "backwards" }).onfinish = () => {
+        ball.remove();
+        if (k === n - 1) {
+          cup.classList.remove("plop");
+          void cup.offsetWidth;
+          cup.classList.add("plop");
+          splash(cup, color);
+        }
+      };
+    }
+  }
+  function splash(cup, color) {
+    const r = cup.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height * 0.5;
+    fxSpark({ x, y }, 5);
+    const ring = h(`<div class="fx-ripple" style="left:${x}px;top:${y}px;border-color:${color}"></div>`);
+    document.body.appendChild(ring);
+    setTimeout(() => ring.remove(), 520);
   }
   function flyCupIn(size) {
     const slot = $("#cupslot"), cupEl = slot?.firstElementChild;
@@ -3182,9 +3253,9 @@
   };
   function equipRow(eq) {
     const lv = equipLevel(eq.id), next = equipNext(eq.id);
-    const cur = lv > 0 ? eq.tiers[lv - 1] : null;
+    const cur2 = lv > 0 ? eq.tiers[lv - 1] : null;
     return `<div class="erow"><span class="k-ico big">${eq.icon}</span><div class="k-main"><div class="k-t"><b>${eq.name}</b><span class="tier">C${Math.max(lv, 1)}</span></div>
-    <small>${cur ? `${cur.n}: ${cur.d}` : "Ch\u01B0a s\u1EDF h\u1EEFu"}</small>
+    <small>${cur2 ? `${cur2.n}: ${cur2.d}` : "Ch\u01B0a s\u1EDF h\u1EEFu"}</small>
     <div class="pips">${eq.tiers.map((_, i) => `<i class="${i < lv ? "on" : ""}"></i>`).join("")}</div>
     ${next ? `<button class="btn sm gold full" data-act="equip" data-id="${eq.id}">L\xEAn C${lv + 1} \xB7 ${next.n} \xB7 ${fmtK(next.c)}</button>` : '<button class="btn sm ghost full" disabled>\u0110\xE3 \u0111\u1EA1t c\u1EA5p t\u1ED1i \u0111a</button>'}</div></div>`;
   }
@@ -3698,19 +3769,54 @@
   function locCard(id) {
     const l = LOCATIONS[id];
     const here = S.location === id;
-    return `<div class="loccard ${here ? "here" : ""}" id="loc-${id}"><div class="loc-img ${id}"><span class="loc-tag">${l.icon} ${esc(l.tag)}</span><h4>${l.icon} ${esc(l.name)}</h4></div>
+    return `<div class="loccard ${here ? "here" : ""}" id="loc-${id}"><div class="loc-img ${id}">${sceneHTML(id)}<span class="loc-tag">${l.icon} ${esc(l.tag)}</span><h4>${l.icon} ${esc(l.name)}</h4></div>
     <div class="loc-body"><i class="slogan">"${esc(l.slogan)}"</i><p>${esc(l.desc)}</p>
     <div class="pro"><b>\u{1F7E2} L\u1EE3i Th\u1EBF Kinh Doanh (\u01AFu \u0110i\u1EC3m):</b>${l.pro.map((x) => `<p>\u2022 ${esc(x)}</p>`).join("")}</div>
     ${l.con.length ? `<div class="con"><b>\u{1F534} Th\u1EED Th\xE1ch V\u1EADn H\xE0nh (Kh\xF3 Kh\u0103n):</b>${l.con.map((x) => `<p>\u2022 ${esc(x)}</p>`).join("")}</div>` : ""}
     <button class="btn ${here ? "ghost" : "pri"} block" data-act="startup" data-id="${id}" ${here ? "disabled" : ""}>${here ? "\u2705 \u0110ang \u0110\u1EB7t Qu\xE1n T\u1EA1i \u0110\xE2y" : `\u{1F680} Kh\u1EDFi Nghi\u1EC7p T\u1EA1i ${l.name} \xB7 ${fmtK(LOCATION_COST)}`}</button></div></div>`;
   }
+  var SCENES = {
+    goc: [["\u{1F3E1}", 46, 64, 8], ["\u{1F333}", 16, 44, 8], ["\u{1FAB4}", 80, 34, 8], ["\u{1F9CB}", 30, 30, 6]],
+    hanoi: [["\u{1F3EF}", 60, 60, 10], ["\u{1F338}", 14, 36, 10], ["\u{1F6D5}", 82, 44, 10], ["\u{1F3EE}", 38, 26, 60], ["\u{1FAB7}", 46, 28, 4]],
+    hcm: [["\u{1F3D9}\uFE0F", 58, 74, 8], ["\u{1F307}", 16, 50, 12], ["\u{1F6F5}", 36, 30, 4], ["\u{1F306}", 84, 46, 8]],
+    hue: [["\u{1F3EF}", 54, 70, 8], ["\u{1F338}", 18, 36, 8], ["\u{1F6F6}", 82, 30, 4], ["\u{1F3EE}", 36, 26, 56]],
+    danang: [["\u{1F309}", 54, 72, 6], ["\u{1F3D6}\uFE0F", 16, 44, 6], ["\u26F1\uFE0F", 84, 32, 6], ["\u{1F30A}", 36, 30, 2]],
+    sapa: [["\u{1F3D4}\uFE0F", 48, 80, 4], ["\u{1F33E}", 16, 40, 6], ["\u2601\uFE0F", 80, 30, 54], ["\u{1F332}", 86, 38, 6], ["\u{1F375}", 30, 28, 4]],
+    halong: [["\u26F5", 46, 50, 14], ["\u{1F3DD}\uFE0F", 18, 52, 6], ["\u{1FAA8}", 76, 42, 6], ["\u{1F30A}", 50, 30, 2]],
+    bmt: [["\u2615", 22, 42, 8], ["\u{1F333}", 56, 58, 8], ["\u{1F418}", 82, 44, 6], ["\u{1F33F}", 38, 30, 4]],
+    canTho: [["\u{1F6F6}", 40, 46, 6], ["\u{1F34D}", 16, 36, 8], ["\u{1F965}", 80, 36, 8], ["\u{1F334}", 60, 58, 8]],
+    caMau: [["\u{1F980}", 22, 38, 6], ["\u{1F333}", 54, 54, 8], ["\u{1F990}", 80, 30, 6], ["\u{1F30A}", 38, 28, 2]],
+    hoangSa: [["\u{1F3DD}\uFE0F", 46, 66, 6], ["\u{1F334}", 22, 46, 8], ["\u2693", 82, 34, 6], ["\u{1F6A2}", 66, 36, 34]]
+  };
+  var sceneHTML = (id) => `<div class="loc-scene" aria-hidden="true">${(SCENES[id] || []).map(([e, x, sz, b]) => `<span style="left:${x}%;font-size:${sz}px;bottom:${b}px">${e}</span>`).join("")}</div>`;
+  var VM_BANDS = [["#f7e7c0", 0, 24], ["#f3e0b4", 24, 44], ["#f9e9c6", 44, 60], ["#f4e2b8", 60, 100]];
+  var vmapSvg = () => `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <defs><clipPath id="vnclip"><polygon points="${MAP_PATH}"/></clipPath>
+    <pattern id="vwave" width="6" height="4" patternUnits="userSpaceOnUse"><path d="M0 2 Q1.5 0 3 2 T6 2" fill="none" stroke="#9cc7cf" stroke-width=".25" opacity=".7"/></pattern></defs>
+  <rect width="100" height="100" fill="#eedfb4"/>
+  <rect width="100" height="100" fill="url(#vwave)" opacity="0"/>
+  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" class="sea"/>
+  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" fill="url(#vwave)"/>
+  <polygon points="${MAP_PATH}" fill="none" stroke="#b9dde2" stroke-width="2.4" stroke-linejoin="round" opacity=".7"/>
+  <g clip-path="url(#vnclip)">${VM_BANDS.map(([c, y0, y1]) => `<rect x="0" y="${y0}" width="100" height="${y1 - y0}" fill="${c}"/>`).join("")}
+    <path d="M30 20 L40 25 L46 22 M40 25 L42 34 L50 36 M42 34 L40 44 M50 36 L56 40 M44 58 L54 60 M54 60 L60 64 M50 70 L58 72 M52 80 L58 82 M46 90 L54 90" class="prov"/>
+    <path d="M36 18 Q44 26 41 33 T47 39" class="river"/><path d="M46 70 Q52 78 50 86 T56 96" class="river"/>
+  </g>
+  <polygon points="${MAP_PATH}" class="land"/>
+  <g class="isl"><circle cx="86" cy="53" r="1"/><circle cx="83" cy="55" r=".8"/><circle cx="89" cy="56" r=".7"/><circle cx="85" cy="72" r=".9"/><circle cx="89" cy="76" r=".8"/><circle cx="83" cy="78" r=".7"/><circle cx="91" cy="80" r=".9"/><circle cx="34" cy="90" r="1.6"/></g>
+</svg>
+<span class="vm-d vm-lbl" style="left:80%;top:38%">BI\u1EC2N \u0110\xD4NG</span><span class="vm-d vm-lbl dim" style="left:12%;top:6%">TRUNG QU\u1ED0C</span><span class="vm-d vm-lbl dim" style="left:12%;top:46%">L\xC0O</span><span class="vm-d vm-lbl dim" style="left:16%;top:78%">CAMPUCHIA</span><span class="vm-d vm-lbl dim" style="left:16%;top:97%">V\u1ECANH TH\xC1I LAN</span>
+<span class="vm-d" style="left:20%;top:11%;font-size:26px">\u26F0\uFE0F</span><span class="vm-d" style="left:12%;top:20%;font-size:20px">\u{1F332}</span><span class="vm-d" style="left:30%;top:32%;font-size:22px">\u{1F33F}</span><span class="vm-d" style="left:34%;top:60%;font-size:22px">\u{1F333}</span>
+<span class="vm-d vm-boat" style="left:82%;top:24%">\u26F5</span><span class="vm-d vm-boat" style="left:76%;top:62%;animation-delay:-1.5s">\u{1F6A2}</span><span class="vm-d vm-boat" style="left:72%;top:92%;animation-delay:-3s">\u{1F6F6}</span>
+<span class="vm-d" style="left:88%;top:8%;font-size:26px">\u{1F9ED}</span><span class="vm-d" style="left:74%;top:47%;font-size:16px">\u{1F41A}</span><span class="vm-d" style="left:90%;top:90%;font-size:22px">\u{1F419}</span>
+<div class="vm-legend"><span>\u{1F4CD} Qu\xE1n tr\xE0</span><span>\u{1F3DD}\uFE0F \u0110\u1EA3o</span></div>`;
   var khoinghiep = {
     html() {
       const pins = Object.entries(LOCATIONS).map(([id, l]) => `<button class="pin ${S.location === id ? "on" : ""}" style="left:${l.map[0]}%;top:${l.map[1]}%" data-act="pin" data-id="${id}" aria-label="${esc(l.name)}"><span>${l.icon}</span><small>${esc(l.name)}</small></button>`).join("");
-      const cur = LOCATIONS[S.location];
-      return `<div class="cur-loc"><span class="chip y">\u{1F3E0} TI\u1EC6M TR\xC0 G\u1ED0C (BAN \u0110\u1EA6U)</span><span class="chip green">\u2B50 \u0110ANG KINH DOANH</span><h4>${cur.icon} ${esc(cur.name)}</h4><i>"${esc(cur.slogan)}"</i><p>${esc(cur.desc)}</p></div>
+      const cur2 = LOCATIONS[S.location];
+      return `<div class="cur-loc"><span class="chip y">\u{1F3E0} TI\u1EC6M TR\xC0 G\u1ED0C (BAN \u0110\u1EA6U)</span><span class="chip green">\u2B50 \u0110ANG KINH DOANH</span><h4>${cur2.icon} ${esc(cur2.name)}</h4><i>"${esc(cur2.slogan)}"</i><p>${esc(cur2.desc)}</p></div>
       <h4 class="subh">B\u1EA3n \u0110\u1ED3 Kh\u1EDFi Nghi\u1EC7p Xuy\xEAn Vi\u1EC7t</h4><p class="muted">Ch\u1EA1m v\xE0o c\xE1c bi\u1EC3u t\u01B0\u1EE3ng ghim tr\xEAn b\u1EA3n \u0111\u1ED3 ho\u1EB7c danh s\xE1ch b\xEAn d\u01B0\u1EDBi \u0111\u1EC3 ch\u1ECDn \u0111\u1ECBa \u0111i\u1EC3m m\u1EDF qu\xE1n. M\u1ED7i t\u1EC9nh th\xE0nh mang l\u1EA1i l\u1EE3i th\u1EBF doanh thu v\xE0 th\u1EED th\xE1ch v\u1EADn h\xE0nh \u0111\u1ED9c b\u1EA3n!</p>
-      <div class="vmap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="${MAP_PATH}" class="land"/><circle cx="87" cy="55" r="1.2" class="isl"/><circle cx="84" cy="62" r="1" class="isl"/><circle cx="90" cy="66" r="1.2" class="isl"/><circle cx="82" cy="50" r="0.9" class="isl"/></svg>${pins}</div>
+      <div class="vmap">${vmapSvg()}${pins}</div>
       <h4 class="subh">Danh S\xE1ch \u0110\u1ECBa \u0110i\u1EC3m Kinh Doanh</h4>${Object.keys(LOCATIONS).map(locCard).join("")}`;
     },
     acts: {
@@ -3764,9 +3870,9 @@
   function periodEntries(mode, idx) {
     const hs = S.history;
     const len = mode === "day" ? 1 : mode === "week" ? 7 : 30;
-    const end = hs.length - idx * len;
-    const start = Math.max(0, end - len);
-    return { list: hs.slice(start, end), label: mode === "day" ? hs[end - 1] ? `Ng\xE0y ${hs[end - 1].day}` : "\u2014" : mode === "week" ? `Tu\u1EA7n ${Math.ceil(Math.max(1, hs.length - idx * 7) / 7)}` : `Th\xE1ng ${Math.ceil(Math.max(1, hs.length - idx * 30) / 30)}`, can: { prev: start > 0, next: idx > 0 } };
+    const end2 = hs.length - idx * len;
+    const start = Math.max(0, end2 - len);
+    return { list: hs.slice(start, end2), label: mode === "day" ? hs[end2 - 1] ? `Ng\xE0y ${hs[end2 - 1].day}` : "\u2014" : mode === "week" ? `Tu\u1EA7n ${Math.ceil(Math.max(1, hs.length - idx * 7) / 7)}` : `Th\xE1ng ${Math.ceil(Math.max(1, hs.length - idx * 30) / 30)}`, can: { prev: start > 0, next: idx > 0 } };
   }
   var tongket = {
     html() {
@@ -4060,6 +4166,59 @@
     }
     for (const [id, el] of present) if (!keep.has(id) && !el.classList.contains("pop")) el.remove();
   }
+  var tileCenter = (r, c) => ({ x: (c + 0.5) * 100 / N, y: (r + 0.5) * 100 / N });
+  function burst(board, r, c, icon, big = false) {
+    if (!board || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const { x, y } = tileCenter(r, c);
+    const n = big ? 10 : 6;
+    const w = board.clientWidth || 300;
+    for (let i = 0; i < n; i++) {
+      const a = i / n * Math.PI * 2 + rand(-0.3, 0.3), d = rand(0.45, big ? 1.5 : 1) * w / N * 1.5;
+      const el = h(`<span class="mfx" style="left:${x}%;top:${y}%;font-size:${rand(big ? 14 : 11, big ? 22 : 17)}px">${i % 3 === 0 ? "\u2728" : i % 3 === 1 ? icon : "\u{1F4A5}"}</span>`);
+      board.appendChild(el);
+      el.animate([
+        { transform: "translate(-50%,-50%) scale(.4) rotate(0)", opacity: 1 },
+        { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.2) rotate(${rand(-200, 200)}deg)`, opacity: 1, offset: 0.55 },
+        { transform: `translate(calc(-50% + ${Math.cos(a) * d * 1.2}px), calc(-50% + ${Math.sin(a) * d * 1.2 + 14}px)) scale(.2) rotate(${rand(-320, 320)}deg)`, opacity: 0 }
+      ], { duration: rand(380, 560), easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => el.remove();
+    }
+    const ring = h(`<span class="mfx-ring" style="left:${x}%;top:${y}%"></span>`);
+    board.appendChild(ring);
+    setTimeout(() => ring.remove(), 420);
+  }
+  function specialFx(board, sp, r, c) {
+    if (!board) return;
+    const { x, y } = tileCenter(r, c);
+    if (sp === "stripeH" || sp === "stripeV") {
+      const beam = h(`<span class="mbeam ${sp === "stripeH" ? "hz" : "vt"}" style="${sp === "stripeH" ? `top:${y}%` : `left:${x}%`}"></span>`);
+      board.appendChild(beam);
+      setTimeout(() => beam.remove(), 520);
+    } else if (sp === "bomb") {
+      const w = h(`<span class="mshock" style="left:${x}%;top:${y}%"></span>`);
+      board.appendChild(w);
+      setTimeout(() => w.remove(), 560);
+    } else if (sp === "fish") {
+      const f = h(`<span class="mfish" style="left:${x}%;top:${y}%">\u{1F41F}</span>`);
+      board.appendChild(f);
+      const tx = rand(-0.4, 0.4) * board.clientWidth, ty = rand(-0.4, 0.4) * board.clientWidth;
+      f.animate([{ transform: "translate(-50%,-50%) scale(1)" }, { transform: `translate(calc(-50% + ${tx / 2}px), calc(-50% + ${ty / 2 - 40}px)) scale(1.5) rotate(180deg)` }, { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1) rotate(360deg)` }], { duration: 560, easing: "ease-in-out" }).onfinish = () => f.remove();
+    } else if (sp === "rainbow") {
+      const f = h('<span class="mflash"></span>');
+      board.appendChild(f);
+      setTimeout(() => f.remove(), 600);
+    }
+  }
+  function comboBanner(board, n) {
+    const words = ["", "", "COMBO x2!", "NGON QU\xC1! x3", "SI\xCAU C\u1EA4P! x4", "HO\xC0N H\u1EA2O! x5"];
+    const t = h(`<div class="mcombo c${Math.min(n, 5)}">${words[Math.min(n, 5)] || "HUY\u1EC0N THO\u1EA0I! x" + n}</div>`);
+    board.appendChild(t);
+    setTimeout(() => t.remove(), 900);
+    if (n >= 3) {
+      board.classList.remove("shake");
+      void board.offsetWidth;
+      board.classList.add("shake");
+    }
+  }
   function updateHud(q) {
     if (!$("#cMoves")) return;
     $("#cMoves").textContent = q.moves;
@@ -4092,15 +4251,19 @@
           if (t.t === 0) q.got++;
         }
       }
+      const board = $("#crushBoard");
       for (const k of cleared) {
         const r = Math.floor(k / N), c = k % N, t = q.g[r][c];
         const el = $(`.mt[data-id="${t.id}"]`);
         if (el) {
           el.classList.add("pop");
-          setTimeout(() => el.remove(), 220);
+          setTimeout(() => el.remove(), 260);
         }
+        if (t.sp) specialFx(board, t.sp, r, c);
+        burst(board, r, c, ICONS[t.t], !!t.sp || cleared.length >= 6);
         q.g[r][c] = null;
       }
+      if (cleared.length >= 5 && cascade === 1) fxSpark(board, 6);
       for (const s of specials) {
         if (!q.g[s.r][s.c]) q.g[s.r][s.c] = { id: uid++, t: s.t, sp: s.sp };
         else {
@@ -4109,11 +4272,11 @@
         }
         q.made[s.sp] = (q.made[s.sp] || 0) + 1;
       }
-      if (cascade > 1) fxText(`Combo x${cascade}!`, $("#crushBoard"), "g");
-      else if (pts >= 200) fxText(`+${pts}`, $("#crushBoard"), "");
+      if (cascade > 1) comboBanner(board, cascade);
+      if (pts >= 60) fxText(`+${pts}`, board, cascade > 1 ? "g" : "");
       sfx(cascade > 1 ? "boom" : "match");
       updateHud(q);
-      await wait(240);
+      await wait(300);
       if (Q !== q) return;
       gravity(q.g, q);
       paint(q);
@@ -4234,17 +4397,22 @@
         if (b.r >= 0 && b.c >= 0 && b.r < N && b.c < N) swap(Q, { r: d.r, c: d.c }, b);
         return;
       }
-      const cur = { r: d.r, c: d.c };
-      if (Q.sel && Math.abs(Q.sel.r - cur.r) + Math.abs(Q.sel.c - cur.c) === 1) {
+      const cur2 = { r: d.r, c: d.c };
+      if (Q.sel && Math.abs(Q.sel.r - cur2.r) + Math.abs(Q.sel.c - cur2.c) === 1) {
         const a = Q.sel;
         Q.sel = null;
-        swap(Q, a, cur);
+        swap(Q, a, cur2);
       } else {
-        Q.sel = cur;
+        Q.sel = cur2;
         sfx("click");
         paint(Q);
       }
     });
+  }
+  function crushDebug() {
+    return { get Q() {
+      return Q;
+    }, swap, N, open: openCrush };
   }
   var PN = 6;
   var PCOL = 5;
@@ -4252,6 +4420,15 @@
   var PGOAL = 120;
   var PEARL = ["\u26AB", "\u{1FA77}", "\u{1F49A}", "\u{1F49B}", "\u{1F499}"];
   var P = null;
+  function pearlBurst(el) {
+    const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    for (let i = 0; i < 5; i++) {
+      const a = rand(0, Math.PI * 2), d = rand(20, 46);
+      const f = h(`<span class="mfx-fix" style="left:${x}px;top:${y}px">${i % 2 ? "\u2728" : "\u{1F4A5}"}</span>`);
+      document.body.appendChild(f);
+      f.animate([{ transform: "translate(-50%,-50%) scale(.5)", opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.1)`, opacity: 0 }], { duration: 480, easing: "ease-out" }).onfinish = () => f.remove();
+    }
+  }
   var pRand = () => randInt(0, PCOL - 1);
   function pNew() {
     return Array.from({ length: PN }, () => Array.from({ length: PN }, pRand));
@@ -4353,6 +4530,11 @@
         for (const [y, x] of g) P.b[y][x] = -1;
         $("#pCombo").textContent = mul > 1 ? `Combo x${mul}!` : "";
         fxText(`+${gain}`, t, "g");
+        for (const [y, x] of g) {
+          const cell = $(`.pc[data-r="${y}"][data-c="${x}"]`);
+          if (cell) pearlBurst(cell);
+        }
+        if (mul >= 3) fxSpark(t, 8);
         sfx(g.length >= 5 ? "level" : "match");
         pCollapse(P.b);
         if (!pHas(P.b)) P.b = pNew();
@@ -4393,37 +4575,59 @@
   }
   function fileToDataURL(file, size = 160) {
     return new Promise((resolve2, reject) => {
-      const fr = new FileReader();
-      fr.onerror = reject;
-      fr.onload = () => {
-        const img = new Image();
-        img.onerror = reject;
-        img.onload = () => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error("decode"));
+      };
+      img.onload = () => {
+        try {
           const cv = document.createElement("canvas");
           cv.width = cv.height = size;
           const ctx2 = cv.getContext("2d");
-          const s = Math.min(img.width, img.height);
-          ctx2.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+          const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
+          const s = Math.min(w, hh);
+          ctx2.fillStyle = "#fff";
+          ctx2.fillRect(0, 0, size, size);
+          ctx2.drawImage(img, (w - s) / 2, (hh - s) / 2, s, s, 0, 0, size, size);
           resolve2(cv.toDataURL("image/jpeg", 0.82));
-        };
-        img.src = fr.result;
+        } catch (err) {
+          reject(err);
+        } finally {
+          URL.revokeObjectURL(url);
+        }
       };
-      fr.readAsDataURL(file);
+      img.src = url;
     });
   }
   function pickImage(cb) {
     const inp = document.createElement("input");
     inp.type = "file";
     inp.accept = "image/*";
-    inp.onchange = async () => {
-      const f = inp.files?.[0];
-      if (!f) return;
+    inp.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0;width:1px;height:1px";
+    document.body.appendChild(inp);
+    let done = false;
+    const finish2 = () => {
+      if (!done) {
+        done = true;
+        setTimeout(() => inp.remove(), 1500);
+      }
+    };
+    inp.addEventListener("change", async () => {
+      const f = inp.files && inp.files[0];
+      if (!f) {
+        finish2();
+        return;
+      }
       try {
         cb(await fileToDataURL(f));
       } catch (e) {
-        toast("Kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c \u1EA3nh", "err");
+        toast("Kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c \u1EA3nh, h\xE3y th\u1EED \u1EA3nh kh\xE1c (JPG/PNG)", "err");
       }
-    };
+      finish2();
+    });
+    inp.addEventListener("cancel", finish2);
     inp.click();
   }
   function openLogoModal() {
@@ -4704,6 +4908,110 @@
     return m;
   }
 
+  // js/tutorial.js
+  var STEPS = {
+    home: [
+      { sel: '.tile[data-tab="kho"]', ico: "\u{1F4E6}", t: "B\u01B0\u1EDBc 1 \xB7 Ch\u1ECDn nguy\xEAn li\u1EC7u", d: "M\u1EDF <b>Kho</b>, ch\u1ECDn s\u1ED1 l\u01B0\u1EE3ng <b>Tr\xE0</b>, <b>Topping</b> v\xE0 <b>D\u1EE5ng c\u1EE5</b> b\u1EA1n mu\u1ED1n d\xF9ng h\xF4m nay b\u1EB1ng n\xFAt \u2212 / +." },
+      { sel: "#cta .cta-btn", ico: "\u{1F6D2}", t: "B\u01B0\u1EDBc 2 \xB7 Nh\u1EADp nguy\xEAn li\u1EC7u", d: "B\u1EA5m n\xFAt <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n v\xE0 \u0111\u01B0a nguy\xEAn li\u1EC7u v\xE0o kho. N\xFAt \u0111\u1ECF \u26A0\uFE0F ngh\u0129a l\xE0 b\u1EA1n c\xF2n thi\u1EBFu m\xF3n b\u1EAFt bu\u1ED9c." },
+      { sel: "#cta .cta-btn", ico: "\u{1F3EE}", t: "B\u01B0\u1EDBc 3 \xB7 M\u1EDF c\u1EEDa", d: "Khi \u0111\u1EE7 nguy\xEAn li\u1EC7u, n\xFAt \u0111\u1ED5i th\xE0nh <b>M\u1EDF c\u1EEDa</b>. B\u1EA5m \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng!" }
+    ],
+    sell: [
+      { sel: ".cust-zone", ico: "\u{1F464}", t: "B\u01B0\u1EDBc 4 \xB7 Kh\xE1ch g\u1ECDi m\xF3n", d: "Kh\xE1ch hi\u1EC7n <b>bong b\xF3ng tho\u1EA1i</b> cho bi\u1EBFt size, lo\u1EA1i tr\xE0, h\u01B0\u01A1ng v\xE0 topping. Thanh <b>Ki\xEAn nh\u1EABn</b> c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i." },
+      { sel: ".stacks", ico: "\u{1F964}", t: "L\u1EA5y ly", d: "Ch\u1EA1m \u0111\xFAng <b>ch\u1ED3ng ly M ho\u1EB7c L</b> m\xE0 kh\xE1ch y\xEAu c\u1EA7u." },
+      { sel: "#disps", ico: "\u{1FAD6}", t: "R\xF3t tr\xE0", d: "Ch\u1EA1m <b>b\xECnh tr\xE0</b> \u0111\u1EC3 r\xF3t, ch\u1EA1m l\u1EA7n n\u1EEFa \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>." },
+      { sel: "#trays", ico: "\u{1F9CB}", t: "Th\xEAm topping", d: "Ch\u1EA1m c\xE1c <b>khay topping</b> kh\xE1ch mu\u1ED1n (v\xE0 chai h\u01B0\u01A1ng n\u1EBFu c\xF3)." },
+      { sel: "#sealer", ico: "\u{1F512}", t: "\u0110\xF3ng n\u1EAFp", d: "Ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b>, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly ho\xE0n thi\u1EC7n</b> tr\xEAn th\u1EDBt \u0111\u1EC3 giao kh\xE1ch." },
+      { sel: "#lobbyGo", ico: "\u{1FA91}", t: "Ra s\u1EA3nh", d: "S\u1EA3nh c\xF3 b\xE0n gh\u1EBF: d\u1ECDn b\xE0n b\u1EA9n \u0111\u1EC3 kh\xE1ch ng\u1ED3i t\u1EA1i qu\xE1n v\xE0 boa th\xEAm. Ch\xFAc b\u1EA1n m\u1ED9t ng\xE0y b\xE1n \u0111\u1EAFt h\xE0ng! \u{1F389}" }
+    ]
+  };
+  var cur = null;
+  function ensureUi() {
+    let el = $("#coach");
+    if (el) return el;
+    el = h('<div id="coach" class="coach" hidden><div class="coach-ring"></div><div class="coach-card"></div></div>');
+    document.body.appendChild(el);
+    return el;
+  }
+  function targetOf(step) {
+    return step.sel.split(",").map((q) => document.querySelector(q.trim())).find((n) => n && n.offsetParent !== null) || null;
+  }
+  function place() {
+    if (!cur) return;
+    const el = $("#coach"), ring = el.querySelector(".coach-ring"), card = el.querySelector(".coach-card");
+    const st = STEPS[cur.phase][cur.i];
+    const t = targetOf(st);
+    if (t) {
+      const r = t.getBoundingClientRect();
+      ring.style.cssText = `display:block;left:${r.left - 5}px;top:${r.top - 5}px;width:${r.width + 10}px;height:${r.height + 10}px`;
+      const ch = card.offsetHeight || 160;
+      const below = r.bottom + 12 + ch < innerHeight;
+      card.style.top = below ? `${r.bottom + 12}px` : `${Math.max(8, r.top - 12 - ch)}px`;
+    } else {
+      ring.style.display = "none";
+      card.style.top = `${Math.max(8, (innerHeight - (card.offsetHeight || 160)) / 2)}px`;
+    }
+    cur.raf = requestAnimationFrame(place);
+  }
+  function show() {
+    const el = ensureUi(), card = el.querySelector(".coach-card");
+    const steps = STEPS[cur.phase], st = steps[cur.i], last2 = cur.i === steps.length - 1;
+    el.hidden = false;
+    card.innerHTML = `<div class="coach-h"><span class="coach-ico">${st.ico}</span><div><small>H\u01AF\u1EDANG D\u1EAAN ${cur.i + 1}/${steps.length}</small><b>${esc(st.t)}</b></div></div>
+    <p>${st.d}</p>
+    <div class="coach-dots">${steps.map((_, k) => `<i class="${k === cur.i ? "on" : k < cur.i ? "done" : ""}"></i>`).join("")}</div>
+    <div class="coach-btns"><button class="btn ghost sm" data-c="skip">B\u1ECF qua h\u01B0\u1EDBng d\u1EABn</button><button class="btn pri sm" data-c="next">${last2 ? "Xong \u2713" : "Ti\u1EBFp \u2192"}</button></div>`;
+    card.querySelector('[data-c="skip"]').onclick = () => {
+      sfx("click");
+      end(true);
+    };
+    card.querySelector('[data-c="next"]').onclick = () => {
+      sfx("click");
+      if (last2) end(false);
+      else {
+        cur.i++;
+        show();
+      }
+    };
+    cancelAnimationFrame(cur.raf);
+    place();
+  }
+  function end(skipped) {
+    if (!cur) return;
+    cancelAnimationFrame(cur.raf);
+    const phase = cur.phase;
+    if (phase === "sell") setPaused(false);
+    cur = null;
+    const el = $("#coach");
+    if (el) el.hidden = true;
+    S.settings.tut = S.settings.tut || {};
+    S.settings.tut[phase] = true;
+    if (skipped) {
+      S.settings.tut.home = true;
+      S.settings.tut.sell = true;
+    }
+    requestSave();
+  }
+  function startTutorial(phase) {
+    if (cur) end(false);
+    cur = { phase, i: 0, raf: 0 };
+    if (phase === "sell") setPaused(true);
+    show();
+  }
+  function armTutorial() {
+    S.settings.tut = { home: false, sell: false };
+    requestSave();
+  }
+  function replayTutorial() {
+    S.settings.tut = { home: false, sell: false };
+    requestSave();
+    startTutorial(S.phase === "sell" ? "sell" : "home");
+  }
+  function maybeTutorial(phase) {
+    const t = S.settings.tut;
+    if (!t || t[phase] || cur) return;
+    startTutorial(phase);
+  }
+
   // js/main.js
   function renderView() {
     if (S.phase === "sell") {
@@ -4761,6 +5069,8 @@
       restartMusic();
       markDirty("view", "hud", "cta");
     });
+    on("shift:start", () => setTimeout(() => maybeTutorial("sell"), 700));
+    on("tutorial:replay", () => replayTutorial());
     on("kpi:cycle", () => toast("\u{1F4CA} H\u1EBFt chu k\u1EF3 KPI 7 ca: nh\xE2n vi\xEAn nh\u1EADn th\u01B0\u1EDFng \u0111\u1ECBnh k\u1EF3!", "gold", 3e3));
     on("unlock", () => markDirty("board"));
     on("purchase", () => markDirty("hud"));
@@ -4821,7 +5131,8 @@
         wipeSave();
         emit("reset");
       },
-      save: saveGame
+      save: saveGame,
+      crush: crushDebug
     };
     console.info("%c\u{1F9CB} debugGame s\u1EB5n s\xE0ng", "color:#e8416a;font-weight:bold");
   }
@@ -4843,11 +5154,12 @@
       if (S.firstRun) {
         S.firstRun = false;
         S.started = true;
+        armTutorial();
         requestSave();
-        setTimeout(openGuide, 350);
       }
       markDirty("hud", "view", "cta");
       if (S.phase === "end") setTimeout(openDaySummary, 350);
+      else if (S.phase === "home") setTimeout(() => maybeTutorial("home"), 600);
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

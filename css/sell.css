@@ -124,3 +124,79 @@
   .sealer { width: 50px; height: 78px; } .sl-lid { left: 4px; right: 4px; }
   .cust-av { width: 66px; } .cust-av .face { font-size: 54px; }
 }
+
+/* ======================================================================
+   NÂNG CẤP GIAO DIỆN QUẦY (v3.1): ly, bình trà, máy đóng nắp, khay topping
+   ====================================================================== */
+.shelf-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; gap: 6px; margin-top: 4px; padding: 2px 2px 0; }
+.shelf-row::after { content: ''; grid-column: 1 / -1; height: 6px; margin-top: -2px; border-radius: 3px; background: linear-gradient(#d2a874, #b88a58); box-shadow: 0 2px 3px rgba(80, 40, 10, .25); }
+
+/* --- Chồng ly M / L: ly nhựa trong suốt xếp chồng --- */
+.stacks { display: flex; gap: 8px; align-items: flex-end; }
+.stack { width: 44px; padding-bottom: 2px; }
+.stack.big { width: 50px; }
+.cupstack { position: relative; width: 38px; height: 56px; clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%); background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, .95) 0 3px, rgba(190, 215, 232, .75) 3px 6px),
+    linear-gradient(90deg, rgba(255,255,255,.9), rgba(200,225,240,.55) 45%, rgba(255,255,255,.85)); }
+.cupstack.l { width: 46px; height: 68px; }
+.cupstack .rim { position: absolute; left: 0; right: 0; top: 0; height: 7px; background: linear-gradient(#fff, #d6e6f0); border-bottom: 1.5px solid rgba(120, 160, 190, .6); }
+.stack b { font-size: 15px; color: #6b4a2a; line-height: 1; margin-top: 1px; text-shadow: 0 1px 0 #fff; }
+.stack:active .cupstack { transform: translateY(-4px); transition: transform .1s; }
+
+/* --- Bình trà: bình thủy tinh có nắp, vòi, giọt nhỏ --- */
+.disps { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; min-width: 0; justify-content: initial; }
+.disp { width: auto; min-width: 0; }
+.jlid { display: block; width: 62%; height: 7px; border-radius: 6px 6px 2px 2px; background: linear-gradient(#f4f4f4, #bfc4c8); box-shadow: 0 1px 2px rgba(0,0,0,.25); position: relative; z-index: 2; }
+.jlid::before { content: ''; position: absolute; left: 38%; right: 38%; top: -4px; height: 5px; border-radius: 4px 4px 0 0; background: #9aa0a5; }
+.jar { width: 100%; max-width: 46px; height: 58px; border-radius: 8px 8px 12px 12px; background: linear-gradient(90deg, rgba(255,255,255,.75), rgba(255,255,255,.3) 40%, rgba(255,255,255,.65)); border: 2px solid rgba(255,255,255,.95); box-shadow: 0 2px 5px rgba(80, 50, 20, .25), inset 0 0 8px rgba(255,255,255,.8); }
+.jar::after { content: ''; position: absolute; left: 12%; top: 6%; width: 14%; height: 60%; border-radius: 6px; background: rgba(255,255,255,.55); pointer-events: none; z-index: 3; }
+.jar .jl { height: 74%; opacity: .95; background-image: linear-gradient(180deg, rgba(255,255,255,.35), transparent 22%); }
+.jar .lab { left: 3px; right: 3px; top: 38%; font-size: 7px; letter-spacing: -.1px; padding: 2px 0; border-radius: 4px; box-shadow: 0 1px 1px rgba(0,0,0,.15); }
+.disp .tap { position: relative; width: 14px; height: 13px; margin-top: 1px; background: linear-gradient(90deg, #b9bec3, #7d8388 60%, #a9afb4); border-radius: 3px 3px 7px 7px; }
+.disp .tap::before { content: ''; position: absolute; left: -5px; top: 1px; width: 7px; height: 4px; border-radius: 3px; background: #8d9398; }
+.disp .tap .drip { position: absolute; left: 50%; bottom: -6px; width: 5px; height: 6px; margin-left: -2.5px; border-radius: 50% 50% 60% 60%; opacity: 0; }
+.disp.pouring .tap .drip { animation: dripDown .35s linear infinite; }
+.disp.pouring .jar .jl { animation: liqWave 1s ease-in-out infinite; }
+@keyframes dripDown { 0% { opacity: 1; transform: translateY(-2px) } 100% { opacity: 0; transform: translateY(10px) } }
+@keyframes liqWave { 50% { filter: brightness(1.12) } }
+.disp:active:not(.locked) .jar { transform: scale(.96); }
+.disp.pouring .tap { background: linear-gradient(90deg, #ffc4d3, #f06f8f 60%, #ffb3c6); box-shadow: 0 0 8px var(--pink); }
+
+/* --- Máy đóng nắp --- */
+.sealer { width: 60px; height: 88px; margin: 0; }
+.sl-head { position: absolute; left: 10px; right: 10px; top: 0; height: 14px; border-radius: 7px 7px 2px 2px; background: linear-gradient(#f2b27a, #d07a3e); box-shadow: 0 2px 3px rgba(0,0,0,.25); z-index: 3; }
+.sl-lid { left: 14px; right: 14px; top: 12px; height: 12px; border-radius: 3px 3px 7px 7px; background: linear-gradient(#a7acb1, #6f757a); z-index: 2; }
+.sl-body { left: 0; right: 0; top: 24px; bottom: 0; padding-top: 6px; flex-direction: column; align-items: center; gap: 4px; border-radius: 10px 10px 8px 8px; background: linear-gradient(90deg, #c9ced3, #f1f3f5 35%, #a9aeb3); border: 1.5px solid #8b9095; }
+.sl-led { font-size: 7.5px; height: 12px; line-height: 1.5; letter-spacing: .3px; }
+.sl-knobs { display: flex; gap: 6px; } .sl-knobs i { width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #e0583d 55%, #8f2a18); box-shadow: 0 1px 2px rgba(0,0,0,.4); } .sl-knobs i:nth-child(2) { background: radial-gradient(circle at 35% 30%, #fff, #f3b53c 55%, #9a6a10); }
+.sl-slot { left: 14px; right: 14px; bottom: 5px; height: 17px; border-radius: 3px 3px 6px 6px; background: linear-gradient(#262a2e, #4a4f54); box-shadow: inset 0 2px 4px rgba(0,0,0,.6); }
+.sealer.press .sl-lid, .sealer.press .sl-head { animation: lidPress .5s ease .3s; }
+.sealer.press .sl-led { color: #ffb347; }
+
+/* --- Khay topping: hộp inox có đống topping bóng --- */
+.trays { gap: 5px; padding: 6px; background: linear-gradient(#c6cacf, #a9aeb4); border-radius: 12px; box-shadow: inset 0 0 8px rgba(0,0,0,.28), 0 2px 4px rgba(0,0,0,.18); }
+.tray { aspect-ratio: 1 / .95; border-radius: 8px; background: linear-gradient(#f4f6f7, #d4d8db); border: 2px solid #fff; box-shadow: inset 0 -4px 6px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.2); justify-content: flex-end; padding-bottom: 2px; }
+.tray .pile { position: absolute; left: 6%; right: 6%; top: 8%; bottom: 20%; display: flex; flex-wrap: wrap; align-content: flex-end; justify-content: center; gap: 0; width: auto; max-height: none; overflow: hidden; border-radius: 40% 40% 6px 6px; }
+.tray .pile i { width: 11px; height: 11px; margin: -1.5px; border-radius: 50%; box-shadow: inset -1.5px -2px 3px rgba(0,0,0,.4), 0 1px 1px rgba(0,0,0,.25); background-image: radial-gradient(circle at 32% 28%, rgba(255,255,255,.85) 0 18%, rgba(255,255,255,0) 45%); }
+.tray small { position: relative; z-index: 2; font-size: 7.5px; background: rgba(255,255,255,.85); padding: 0 4px; border-radius: 4px; }
+.tray:active:not(.locked) .pile i { animation: bounceTop .3s ease; }
+@keyframes bounceTop { 50% { transform: translateY(-3px) } }
+
+/* --- Ly trên thớt --- */
+.cup { filter: drop-shadow(0 3px 3px rgba(0,0,0,.28)); }
+.c-body { background: linear-gradient(90deg, rgba(255,255,255,.75), rgba(255,255,255,.3) 40%, rgba(255,255,255,.6)); }
+.c-liq { background-image: linear-gradient(180deg, rgba(255,255,255,.35), transparent 18%); }
+.c-liq::before { content: ''; position: absolute; left: -10%; right: -10%; top: -3px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.4); animation: surfaceWave 1.2s ease-in-out infinite; }
+@keyframes surfaceWave { 50% { transform: translateX(4px) scaleY(1.3) } }
+.c-top { background-image: radial-gradient(circle at 32% 28%, rgba(255,255,255,.85) 0 18%, rgba(255,255,255,0) 45%); }
+.fx-ball { width: 14px; height: 14px; background-image: radial-gradient(circle at 32% 28%, rgba(255,255,255,.85) 0 18%, rgba(255,255,255,0) 45%); }
+.fx-ripple { position: fixed; z-index: 86; width: 10px; height: 10px; margin: -5px 0 0 -5px; border: 3px solid #fff; border-radius: 50%; pointer-events: none; animation: ripple .5s ease-out forwards; }
+@keyframes ripple { to { transform: scale(7, 2.2); opacity: 0; } }
+.stream { width: 8px; box-shadow: 0 0 6px rgba(255,255,255,.7); }
+
+@media (max-width: 400px) {
+  .stack { width: 38px; } .stack.big { width: 44px; }
+  .cupstack { width: 32px; height: 50px; } .cupstack.l { width: 40px; height: 62px; }
+  .disps { gap: 2px; } .jar { height: 54px; } .jar .lab { font-size: 6px; }
+  .sealer { width: 52px; height: 82px; }
+}

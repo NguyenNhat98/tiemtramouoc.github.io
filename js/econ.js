@@ -376,8 +376,11 @@ export function utilityToday() { return Math.round(BASE_UTILITY * (1 + bonus().u
 export function expectedCustomers() {
   const b = bonus();
   const rating = 0.8 + clamp(S.rating, 1, 5) * 0.05;
-  const base = 20 + 1.2 * Math.min(S.day, 60) + b.extraCust;
-  return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating));
+  // Khởi đầu ít khách; tăng dần theo ngày, tiền tích lũy và số nhân viên thuê.
+  const base = 8 + 0.5 * Math.min(S.day, 60) + b.extraCust * 0.5;
+  const wealth = 1 + clamp(Math.log10(Math.max(S.money, 1000) / 1000) * 0.12, 0, 0.6);
+  const staffBoost = 1 + Math.min(0.9, staffCount() * 0.15);
+  return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating * wealth * staffBoost));
 }
 
 /** Tiến độ mở khóa bán online: lợi nhuận tích lũy, tổng đơn, đánh giá. */

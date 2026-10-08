@@ -13,6 +13,8 @@ import {
 import { renderSell, frameSell } from './brewui.js';
 import { renderHome, renderBoard, renderTiles, renderPanel, renderCta, bindCta, goTab, openPanelModal } from './home.js';
 import { tickCountdown } from './panels2.js';
+import { crushDebug } from './minigames.js';
+import { armTutorial, maybeTutorial, replayTutorial } from './tutorial.js';
 
 function renderView() {
   if (S.phase === 'sell') { renderSell(); return; }
@@ -45,6 +47,8 @@ function wire() {
   on('shift:end', () => { markDirty('view', 'hud', 'cta'); setTimeout(openDaySummary, 350); });
   on('day:next', () => { applyTheme(); markDirty('view', 'hud', 'panel', 'cta', 'board'); });
   on('reset', () => { G.resetShiftRuntime(); E.ensureForecast(); applyTheme(); restartMusic(); markDirty('view', 'hud', 'cta'); });
+  on('shift:start', () => setTimeout(() => maybeTutorial('sell'), 700));
+  on('tutorial:replay', () => replayTutorial());
   on('kpi:cycle', () => toast('📊 Hết chu kỳ KPI 7 ca: nhân viên nhận thưởng định kỳ!', 'gold', 3000));
   on('unlock', () => markDirty('board'));
   on('purchase', () => markDirty('hud'));
@@ -70,6 +74,7 @@ function exposeDebug() {
     nextDay: () => { G.nextDay(); },
     reset: () => { wipeSave(); emit('reset'); },
     save: saveGame,
+    crush: crushDebug,
   };
   console.info('%c🧋 debugGame sẵn sàng', 'color:#e8416a;font-weight:bold');
 }
@@ -89,9 +94,10 @@ function boot() {
   showIntro(() => {
     sfx('click');
     restartMusic();
-    if (S.firstRun) { S.firstRun = false; S.started = true; requestSave(); setTimeout(openGuide, 350); }
+    if (S.firstRun) { S.firstRun = false; S.started = true; armTutorial(); requestSave(); }
     markDirty('hud', 'view', 'cta');
     if (S.phase === 'end') setTimeout(openDaySummary, 350);
+    else if (S.phase === 'home') setTimeout(() => maybeTutorial('home'), 600);
   });
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();

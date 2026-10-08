@@ -63,3 +63,52 @@
 .pboard { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; width: 100%; }
 .pc { aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font-size: 22px; box-shadow: var(--sh-sm); } .pc:active { transform: scale(.88); }
 .pc.p0 { background: #4a352c; } .pc.p1 { background: #ffb7c9; } .pc.p2 { background: #9bd9a8; } .pc.p3 { background: #ffe08a; } .pc.p4 { background: #a7c9ff; }
+
+/* ===== Hướng dẫn chi tiết (modal) ===== */
+.guide.rich { max-height: 62vh; overflow-y: auto; padding-right: 2px; margin-bottom: 8px; }
+.g-sec { background: #fff; border-radius: 16px; padding: 8px 10px 4px; margin-bottom: 8px; box-shadow: var(--sh-sm); }
+.g-sec h4 { font-size: 15.5px; color: #a8355b; margin-bottom: 4px; }
+.g-step { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; border-top: 1px dashed var(--line); }
+.g-step:first-of-type { border-top: 0; }
+.g-ico { flex: none; width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(#fff1d6, #ffe0b0); display: grid; place-items: center; font-size: 22px; box-shadow: var(--sh-sm); }
+.g-txt b { font-size: 14px; } .g-txt p { margin: 1px 0 0; font-size: 13px; line-height: 1.35; }
+
+/* ===== Coach mark (hướng dẫn lần đầu) ===== */
+.coach { position: fixed; inset: 0; z-index: 120; pointer-events: none; }
+.coach-ring { position: fixed; border-radius: 14px; border: 3px solid #ffd54a; box-shadow: 0 0 0 9999px rgba(40, 20, 10, .45), 0 0 18px 4px rgba(255, 213, 74, .8); animation: coachPulse 1.2s ease-in-out infinite; pointer-events: none; }
+@keyframes coachPulse { 50% { box-shadow: 0 0 0 9999px rgba(40, 20, 10, .45), 0 0 26px 8px rgba(255, 213, 74, .95); } }
+.coach-card { position: fixed; left: 50%; transform: translateX(-50%); width: min(92vw, 440px); background: #fffaf1; border-radius: 18px; padding: 12px 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); pointer-events: auto; }
+.coach-h { display: flex; gap: 10px; align-items: center; }
+.coach-ico { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(#ffe9a8, #ffd06a); display: grid; place-items: center; font-size: 26px; flex: none; }
+.coach-h small { display: block; color: var(--pink); font-weight: 800; font-size: 11px; letter-spacing: .5px; } .coach-h b { font-size: 16px; color: var(--brown); }
+.coach-card p { margin: 8px 0 6px; font-size: 14px; line-height: 1.4; }
+.coach-dots { display: flex; gap: 5px; justify-content: center; margin-bottom: 8px; } .coach-dots i { width: 8px; height: 8px; border-radius: 50%; background: #e5d9cf; } .coach-dots i.on { background: var(--pink); transform: scale(1.3); } .coach-dots i.done { background: #8fd1a1; }
+.coach-btns { display: flex; justify-content: space-between; gap: 8px; }
+
+/* ===== Hiệu ứng Milk Tea Crush (v3.1): nổ, bay, combo ===== */
+.mt { transition: left .26s cubic-bezier(.34, 1.4, .5, 1), top .3s cubic-bezier(.34, 1.4, .5, 1), transform .15s; }
+.mt.pop { animation: crushPop2 .26s ease-out forwards; z-index: 3; }
+@keyframes crushPop2 { 0% { transform: scale(1); filter: brightness(1) } 35% { transform: scale(1.3) rotate(8deg); filter: brightness(1.8) } 100% { transform: scale(0) rotate(-30deg); opacity: 0 } }
+.mt.sp span { animation: pulseSp 1s ease infinite, wobbleSp 1.6s ease-in-out infinite; }
+@keyframes wobbleSp { 50% { transform: rotate(5deg) scale(1.06) } }
+.mfx { position: absolute; z-index: 6; pointer-events: none; line-height: 1; will-change: transform; }
+.mfx-fix { position: fixed; z-index: 120; pointer-events: none; font-size: 15px; line-height: 1; }
+.mfx-ring { position: absolute; z-index: 5; width: 14%; height: 14%; margin: -7% 0 0 -7%; border-radius: 50%; border: 3px solid #fff3a0; box-shadow: 0 0 10px #ffd54a; pointer-events: none; animation: ringOut .4s ease-out forwards; }
+@keyframes ringOut { from { transform: scale(.3); opacity: 1 } to { transform: scale(2.2); opacity: 0 } }
+.mbeam { position: absolute; z-index: 5; pointer-events: none; background: linear-gradient(90deg, transparent, #fff7b0, #ffb300, #fff7b0, transparent); box-shadow: 0 0 14px #ffb300; animation: beamOn .5s ease-out forwards; }
+.mbeam.hz { left: 0; right: 0; height: 9%; margin-top: -4.5%; transform-origin: center; }
+.mbeam.vt { top: 0; bottom: 0; width: 9%; margin-left: -4.5%; background: linear-gradient(180deg, transparent, #fff7b0, #ffb300, #fff7b0, transparent); }
+@keyframes beamOn { 0% { transform: scale(0, 1); opacity: 1 } 40% { transform: scale(1, 1.4); opacity: 1 } 100% { transform: scale(1, 0); opacity: 0 } }
+.mbeam.vt { animation-name: beamOnV; } @keyframes beamOnV { 0% { transform: scale(1, 0); opacity: 1 } 40% { transform: scale(1.4, 1); opacity: 1 } 100% { transform: scale(0, 1); opacity: 0 } }
+.mshock { position: absolute; z-index: 5; width: 14%; height: 14%; margin: -7% 0 0 -7%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, .9), rgba(255, 140, 60, .6) 55%, transparent 70%); pointer-events: none; animation: shockOut .55s ease-out forwards; }
+@keyframes shockOut { from { transform: scale(.4); opacity: 1 } to { transform: scale(4.4); opacity: 0 } }
+.mfish { position: absolute; z-index: 6; font-size: 26px; pointer-events: none; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .4)); }
+.mflash { position: absolute; inset: 0; z-index: 5; pointer-events: none; background: conic-gradient(from 0deg, #ff6b6b, #ffd93d, #6bcf7f, #4dabf7, #b197fc, #ff6b6b); mix-blend-mode: screen; opacity: 0; animation: rainFlash .6s ease-out; }
+@keyframes rainFlash { 0% { opacity: 0 } 30% { opacity: .75 } 100% { opacity: 0 } }
+.mcombo { position: absolute; left: 50%; top: 42%; z-index: 8; pointer-events: none; white-space: nowrap; font-weight: 900; font-size: 30px; color: #fff; letter-spacing: 1px; -webkit-text-stroke: 1.5px #e8416a; text-shadow: 0 3px 0 #e8416a, 0 0 18px rgba(255, 255, 255, .9); animation: comboIn .9s cubic-bezier(.2, 1.4, .4, 1) forwards; }
+.mcombo.c3 { color: #fff3a0; font-size: 34px; } .mcombo.c4, .mcombo.c5 { color: #ffd54a; font-size: 38px; -webkit-text-stroke-color: #c0307a; }
+@keyframes comboIn { 0% { transform: translate(-50%, -50%) scale(.2) rotate(-12deg); opacity: 0 } 25% { transform: translate(-50%, -50%) scale(1.25) rotate(4deg); opacity: 1 } 70% { transform: translate(-50%, -60%) scale(1) rotate(0); opacity: 1 } 100% { transform: translate(-50%, -110%) scale(1); opacity: 0 } }
+.crush-board.shake { animation: boardShake .35s ease; }
+@keyframes boardShake { 0%, 100% { transform: translate(0) } 20% { transform: translate(-4px, 2px) } 40% { transform: translate(4px, -2px) } 60% { transform: translate(-3px, -2px) } 80% { transform: translate(3px, 2px) } }
+.pc { transition: transform .12s; } .pc:active { transform: scale(.8); }
+.pcombo { font-weight: 900; color: #e8416a; animation: popIn .25s ease both; }

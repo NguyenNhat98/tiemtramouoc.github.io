@@ -145,19 +145,55 @@ const MAP_PATH = '30,5 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,5
 function locCard(id) {
   const l = LOCATIONS[id];
   const here = S.location === id;
-  return `<div class="loccard ${here ? 'here' : ''}" id="loc-${id}"><div class="loc-img ${id}"><span class="loc-tag">${l.icon} ${esc(l.tag)}</span><h4>${l.icon} ${esc(l.name)}</h4></div>
+  return `<div class="loccard ${here ? 'here' : ''}" id="loc-${id}"><div class="loc-img ${id}">${sceneHTML(id)}<span class="loc-tag">${l.icon} ${esc(l.tag)}</span><h4>${l.icon} ${esc(l.name)}</h4></div>
     <div class="loc-body"><i class="slogan">"${esc(l.slogan)}"</i><p>${esc(l.desc)}</p>
     <div class="pro"><b>🟢 Lợi Thế Kinh Doanh (Ưu Điểm):</b>${l.pro.map((x) => `<p>• ${esc(x)}</p>`).join('')}</div>
     ${l.con.length ? `<div class="con"><b>🔴 Thử Thách Vận Hành (Khó Khăn):</b>${l.con.map((x) => `<p>• ${esc(x)}</p>`).join('')}</div>` : ''}
     <button class="btn ${here ? 'ghost' : 'pri'} block" data-act="startup" data-id="${id}" ${here ? 'disabled' : ''}>${here ? '✅ Đang Đặt Quán Tại Đây' : `🚀 Khởi Nghiệp Tại ${l.name} · ${fmtK(LOCATION_COST)}`}</button></div></div>`;
 }
+const SCENES = {
+  goc: [['🏡', 46, 64, 8], ['🌳', 16, 44, 8], ['🪴', 80, 34, 8], ['🧋', 30, 30, 6]],
+  hanoi: [['🏯', 60, 60, 10], ['🌸', 14, 36, 10], ['🛕', 82, 44, 10], ['🏮', 38, 26, 60], ['🪷', 46, 28, 4]],
+  hcm: [['🏙️', 58, 74, 8], ['🌇', 16, 50, 12], ['🛵', 36, 30, 4], ['🌆', 84, 46, 8]],
+  hue: [['🏯', 54, 70, 8], ['🌸', 18, 36, 8], ['🛶', 82, 30, 4], ['🏮', 36, 26, 56]],
+  danang: [['🌉', 54, 72, 6], ['🏖️', 16, 44, 6], ['⛱️', 84, 32, 6], ['🌊', 36, 30, 2]],
+  sapa: [['🏔️', 48, 80, 4], ['🌾', 16, 40, 6], ['☁️', 80, 30, 54], ['🌲', 86, 38, 6], ['🍵', 30, 28, 4]],
+  halong: [['⛵', 46, 50, 14], ['🏝️', 18, 52, 6], ['🪨', 76, 42, 6], ['🌊', 50, 30, 2]],
+  bmt: [['☕', 22, 42, 8], ['🌳', 56, 58, 8], ['🐘', 82, 44, 6], ['🌿', 38, 30, 4]],
+  canTho: [['🛶', 40, 46, 6], ['🍍', 16, 36, 8], ['🥥', 80, 36, 8], ['🌴', 60, 58, 8]],
+  caMau: [['🦀', 22, 38, 6], ['🌳', 54, 54, 8], ['🦐', 80, 30, 6], ['🌊', 38, 28, 2]],
+  hoangSa: [['🏝️', 46, 66, 6], ['🌴', 22, 46, 8], ['⚓', 82, 34, 6], ['🚢', 66, 36, 34]],
+};
+const sceneHTML = (id) => `<div class="loc-scene" aria-hidden="true">${(SCENES[id] || []).map(([e, x, sz, b]) => `<span style="left:${x}%;font-size:${sz}px;bottom:${b}px">${e}</span>`).join('')}</div>`;
+const VM_BANDS = [['#f7e7c0', 0, 24], ['#f3e0b4', 24, 44], ['#f9e9c6', 44, 60], ['#f4e2b8', 60, 100]];
+const vmapSvg = () => `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <defs><clipPath id="vnclip"><polygon points="${MAP_PATH}"/></clipPath>
+    <pattern id="vwave" width="6" height="4" patternUnits="userSpaceOnUse"><path d="M0 2 Q1.5 0 3 2 T6 2" fill="none" stroke="#9cc7cf" stroke-width=".25" opacity=".7"/></pattern></defs>
+  <rect width="100" height="100" fill="#eedfb4"/>
+  <rect width="100" height="100" fill="url(#vwave)" opacity="0"/>
+  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" class="sea"/>
+  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" fill="url(#vwave)"/>
+  <polygon points="${MAP_PATH}" fill="none" stroke="#b9dde2" stroke-width="2.4" stroke-linejoin="round" opacity=".7"/>
+  <g clip-path="url(#vnclip)">${VM_BANDS.map(([c, y0, y1]) => `<rect x="0" y="${y0}" width="100" height="${y1 - y0}" fill="${c}"/>`).join('')}
+    <path d="M30 20 L40 25 L46 22 M40 25 L42 34 L50 36 M42 34 L40 44 M50 36 L56 40 M44 58 L54 60 M54 60 L60 64 M50 70 L58 72 M52 80 L58 82 M46 90 L54 90" class="prov"/>
+    <path d="M36 18 Q44 26 41 33 T47 39" class="river"/><path d="M46 70 Q52 78 50 86 T56 96" class="river"/>
+  </g>
+  <polygon points="${MAP_PATH}" class="land"/>
+  <g class="isl"><circle cx="86" cy="53" r="1"/><circle cx="83" cy="55" r=".8"/><circle cx="89" cy="56" r=".7"/><circle cx="85" cy="72" r=".9"/><circle cx="89" cy="76" r=".8"/><circle cx="83" cy="78" r=".7"/><circle cx="91" cy="80" r=".9"/><circle cx="34" cy="90" r="1.6"/></g>
+</svg>
+<span class="vm-d vm-lbl" style="left:80%;top:38%">BIỂN ĐÔNG</span><span class="vm-d vm-lbl dim" style="left:12%;top:6%">TRUNG QUỐC</span><span class="vm-d vm-lbl dim" style="left:12%;top:46%">LÀO</span><span class="vm-d vm-lbl dim" style="left:16%;top:78%">CAMPUCHIA</span><span class="vm-d vm-lbl dim" style="left:16%;top:97%">VỊNH THÁI LAN</span>
+<span class="vm-d" style="left:20%;top:11%;font-size:26px">⛰️</span><span class="vm-d" style="left:12%;top:20%;font-size:20px">🌲</span><span class="vm-d" style="left:30%;top:32%;font-size:22px">🌿</span><span class="vm-d" style="left:34%;top:60%;font-size:22px">🌳</span>
+<span class="vm-d vm-boat" style="left:82%;top:24%">⛵</span><span class="vm-d vm-boat" style="left:76%;top:62%;animation-delay:-1.5s">🚢</span><span class="vm-d vm-boat" style="left:72%;top:92%;animation-delay:-3s">🛶</span>
+<span class="vm-d" style="left:88%;top:8%;font-size:26px">🧭</span><span class="vm-d" style="left:74%;top:47%;font-size:16px">🐚</span><span class="vm-d" style="left:90%;top:90%;font-size:22px">🐙</span>
+<div class="vm-legend"><span>📍 Quán trà</span><span>🏝️ Đảo</span></div>`;
+
 const khoinghiep = {
   html() {
     const pins = Object.entries(LOCATIONS).map(([id, l]) => `<button class="pin ${S.location === id ? 'on' : ''}" style="left:${l.map[0]}%;top:${l.map[1]}%" data-act="pin" data-id="${id}" aria-label="${esc(l.name)}"><span>${l.icon}</span><small>${esc(l.name)}</small></button>`).join('');
     const cur = LOCATIONS[S.location];
     return `<div class="cur-loc"><span class="chip y">🏠 TIỆM TRÀ GỐC (BAN ĐẦU)</span><span class="chip green">⭐ ĐANG KINH DOANH</span><h4>${cur.icon} ${esc(cur.name)}</h4><i>"${esc(cur.slogan)}"</i><p>${esc(cur.desc)}</p></div>
       <h4 class="subh">Bản Đồ Khởi Nghiệp Xuyên Việt</h4><p class="muted">Chạm vào các biểu tượng ghim trên bản đồ hoặc danh sách bên dưới để chọn địa điểm mở quán. Mỗi tỉnh thành mang lại lợi thế doanh thu và thử thách vận hành độc bản!</p>
-      <div class="vmap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="${MAP_PATH}" class="land"/><circle cx="87" cy="55" r="1.2" class="isl"/><circle cx="84" cy="62" r="1" class="isl"/><circle cx="90" cy="66" r="1.2" class="isl"/><circle cx="82" cy="50" r="0.9" class="isl"/></svg>${pins}</div>
+      <div class="vmap">${vmapSvg()}${pins}</div>
       <h4 class="subh">Danh Sách Địa Điểm Kinh Doanh</h4>${Object.keys(LOCATIONS).map(locCard).join('')}`;
   },
   acts: {

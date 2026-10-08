@@ -13,20 +13,23 @@ export const SH = { on: false };
 
 /* ===== Sinh khách ===== */
 function spawnPlan(n, total) {
-  // Giờ cao điểm 11–13h và 17–19h đông hơn.
-  const seg = [[10, 11, 1], [11, 13, 2.2], [13, 17, 1], [17, 19, 2.2], [19, 22, 1.2]];
+  // Giờ cao điểm 11–13h và 17–19h đông hơn, nhưng khách đến ĐỀU (chia theo phân vị + nhiễu nhỏ), không dồn cục.
+  const seg = [[10, 11, 1], [11, 13, 1.7], [13, 17, 1], [17, 19, 1.7], [19, 22, 1.1]];
   const tot = sum(seg, (s) => (s[1] - s[0]) * s[2]);
+  const hourAt = (q) => {
+    let r = q * tot;
+    for (const [a, b, w] of seg) { const m = (b - a) * w; if (r <= m) return a + r / w; r -= m; }
+    return 22;
+  };
   const times = [];
+  const minGap = Math.max(5, total / Math.max(n, 1) * 0.35);
   for (let i = 0; i < n; i++) {
-    let r = Math.random() * tot, tHour = 10;
-    for (const [a, b, w] of seg) {
-      const m = (b - a) * w;
-      if (r <= m) { tHour = a + (r / w); break; }
-      r -= m;
-    }
-    times.push(((tHour - 10) / 12) * total * 0.94 + 1);
+    const q = clamp((i + 0.5 + rand(-0.28, 0.28)) / n, 0, 0.999);
+    let t = ((hourAt(q) - 10) / 12) * total * 0.94 + 4;
+    if (times.length && t - times[times.length - 1] < minGap) t = times[times.length - 1] + minGap;
+    times.push(t);
   }
-  return times.sort((a, b) => a - b);
+  return times;
 }
 
 export function makeOrder() {
@@ -97,6 +100,11 @@ export function startShift() {
     staffT: {}, jobs: [], over: 0, fb: [], buyT: 0, fin: false, critic: E.eventOf().critic ? { at: total * rand(0.35, 0.6), done: false } : null,
     sat: 0, cupsDone: 0,
   });
+  // Lần đầu: có sẵn 1 khách để hướng dẫn minh họa ngay (đơn giản, không topping).
+  if (S.settings.tut && S.settings.tut.sell === false) {
+    const c = newCustomer(); c.order.tops = []; c.order.flavor = null; c.text = orderText(ARCHETYPES[c.key], c.order);
+    SH.queue.push(c); SH.pi = Math.min(SH.pi + 1, SH.plan.length);
+  }
   const nt = E.bonus().tables;
   for (let i = 0; i < nt; i++) SH.tables.push({ s: 'free', t: 0 });
   S.phase = 'sell';

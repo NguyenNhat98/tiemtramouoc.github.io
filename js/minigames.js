@@ -148,6 +148,53 @@ function paint(q, fresh = false) {
   }
   for (const [id, el] of present) if (!keep.has(id) && !el.classList.contains('pop')) el.remove();
 }
+/* ===== Hiệu ứng ===== */
+const tileCenter = (r, c) => ({ x: (c + 0.5) * 100 / N, y: (r + 0.5) * 100 / N });
+/** Nổ tung: các mảnh nhỏ + emoji bay tỏa ra từ ô. */
+function burst(board, r, c, icon, big = false) {
+  if (!board || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const { x, y } = tileCenter(r, c);
+  const n = big ? 10 : 6;
+  const w = board.clientWidth || 300;
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + rand(-0.3, 0.3), d = rand(0.45, big ? 1.5 : 1.0) * w / N * 1.5;
+    const el = h(`<span class="mfx" style="left:${x}%;top:${y}%;font-size:${rand(big ? 14 : 11, big ? 22 : 17)}px">${i % 3 === 0 ? '✨' : i % 3 === 1 ? icon : '💥'}</span>`);
+    board.appendChild(el);
+    el.animate([
+      { transform: 'translate(-50%,-50%) scale(.4) rotate(0)', opacity: 1 },
+      { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.2) rotate(${rand(-200, 200)}deg)`, opacity: 1, offset: 0.55 },
+      { transform: `translate(calc(-50% + ${Math.cos(a) * d * 1.2}px), calc(-50% + ${Math.sin(a) * d * 1.2 + 14}px)) scale(.2) rotate(${rand(-320, 320)}deg)`, opacity: 0 },
+    ], { duration: rand(380, 560), easing: 'cubic-bezier(.2,.7,.4,1)' }).onfinish = () => el.remove();
+  }
+  const ring = h(`<span class="mfx-ring" style="left:${x}%;top:${y}%"></span>`);
+  board.appendChild(ring); setTimeout(() => ring.remove(), 420);
+}
+/** Hiệu ứng riêng cho thẻ đặc biệt khi kích hoạt. */
+function specialFx(board, sp, r, c) {
+  if (!board) return;
+  const { x, y } = tileCenter(r, c);
+  if (sp === 'stripeH' || sp === 'stripeV') {
+    const beam = h(`<span class="mbeam ${sp === 'stripeH' ? 'hz' : 'vt'}" style="${sp === 'stripeH' ? `top:${y}%` : `left:${x}%`}"></span>`);
+    board.appendChild(beam); setTimeout(() => beam.remove(), 520);
+  } else if (sp === 'bomb') {
+    const w = h(`<span class="mshock" style="left:${x}%;top:${y}%"></span>`);
+    board.appendChild(w); setTimeout(() => w.remove(), 560);
+  } else if (sp === 'fish') {
+    const f = h(`<span class="mfish" style="left:${x}%;top:${y}%">🐟</span>`);
+    board.appendChild(f);
+    const tx = rand(-0.4, 0.4) * board.clientWidth, ty = rand(-0.4, 0.4) * board.clientWidth;
+    f.animate([{ transform: 'translate(-50%,-50%) scale(1)' }, { transform: `translate(calc(-50% + ${tx / 2}px), calc(-50% + ${ty / 2 - 40}px)) scale(1.5) rotate(180deg)` }, { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1) rotate(360deg)` }], { duration: 560, easing: 'ease-in-out' }).onfinish = () => f.remove();
+  } else if (sp === 'rainbow') {
+    const f = h('<span class="mflash"></span>');
+    board.appendChild(f); setTimeout(() => f.remove(), 600);
+  }
+}
+function comboBanner(board, n) {
+  const words = ['', '', 'COMBO x2!', 'NGON QUÁ! x3', 'SIÊU CẤP! x4', 'HOÀN HẢO! x5'];
+  const t = h(`<div class="mcombo c${Math.min(n, 5)}">${words[Math.min(n, 5)] || 'HUYỀN THOẠI! x' + n}</div>`);
+  board.appendChild(t); setTimeout(() => t.remove(), 900);
+  if (n >= 3) { board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); }
+}
 function updateHud(q) {
   if (!$('#cMoves')) return;
   $('#cMoves').textContent = q.moves;
@@ -174,22 +221,26 @@ async function resolve(q, swapCells) {
     q.score += pts;
     for (const k of cleared) { const r = Math.floor(k / N), c = k % N, t = q.g[r][c]; if (t) { if (t.t === 0) q.got++; } }
     // hiệu ứng
+    const board = $('#crushBoard');
     for (const k of cleared) {
       const r = Math.floor(k / N), c = k % N, t = q.g[r][c];
       const el = $(`.mt[data-id="${t.id}"]`);
-      if (el) { el.classList.add('pop'); setTimeout(() => el.remove(), 220); }
+      if (el) { el.classList.add('pop'); setTimeout(() => el.remove(), 260); }
+      if (t.sp) specialFx(board, t.sp, r, c);
+      burst(board, r, c, ICONS[t.t], !!t.sp || cleared.length >= 6);
       q.g[r][c] = null;
     }
+    if (cleared.length >= 5 && cascade === 1) fxSpark(board, 6);
     for (const s of specials) {
       if (!q.g[s.r][s.c]) q.g[s.r][s.c] = { id: uid++, t: s.t, sp: s.sp };
       else { q.g[s.r][s.c].sp = s.sp; q.g[s.r][s.c].t = s.t; }
       q.made[s.sp] = (q.made[s.sp] || 0) + 1;
     }
-    if (cascade > 1) fxText(`Combo x${cascade}!`, $('#crushBoard'), 'g');
-    else if (pts >= 200) fxText(`+${pts}`, $('#crushBoard'), '');
+    if (cascade > 1) comboBanner(board, cascade);
+    if (pts >= 60) fxText(`+${pts}`, board, cascade > 1 ? 'g' : '');
     sfx(cascade > 1 ? 'boom' : 'match');
     updateHud(q);
-    await wait(240);
+    await wait(300);
     if (Q !== q) return;
     gravity(q.g, q);
     paint(q);
@@ -297,13 +348,23 @@ export function openCrush() {
 }
 /** API kiểm thử/debug: hoán đổi hai ô liền kề trên bàn hiện tại. */
 export function crushDebug() {
-  return { get Q() { return Q; }, swap, N };
+  return { get Q() { return Q; }, swap, N, open: openCrush };
 }
 
 /* ======================= TRÂN CHÂU NỔ ======================= */
 const PN = 6, PCOL = 5, PDUR = 30, PGOAL = 120;
 const PEARL = ['⚫', '🩷', '💚', '💛', '💙'];
 let P = null;
+/** Nổ tung hạt trân châu (bay ra từ nút). */
+function pearlBurst(el) {
+  const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  for (let i = 0; i < 5; i++) {
+    const a = rand(0, Math.PI * 2), d = rand(20, 46);
+    const f = h(`<span class="mfx-fix" style="left:${x}px;top:${y}px">${i % 2 ? '✨' : '💥'}</span>`);
+    document.body.appendChild(f);
+    f.animate([{ transform: 'translate(-50%,-50%) scale(.5)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.1)`, opacity: 0 }], { duration: 480, easing: 'ease-out' }).onfinish = () => f.remove();
+  }
+}
 const pRand = () => randInt(0, PCOL - 1);
 function pNew() { return Array.from({ length: PN }, () => Array.from({ length: PN }, pRand)); }
 function pGroup(b, r, c) {
@@ -374,6 +435,8 @@ export function openPearl() {
       for (const [y, x] of g) P.b[y][x] = -1;
       $('#pCombo').textContent = mul > 1 ? `Combo x${mul}!` : '';
       fxText(`+${gain}`, t, 'g');
+      for (const [y, x] of g) { const cell = $(`.pc[data-r="${y}"][data-c="${x}"]`); if (cell) pearlBurst(cell); }
+      if (mul >= 3) fxSpark(t, 8);
       sfx(g.length >= 5 ? 'level' : 'match');
       pCollapse(P.b);
       if (!pHas(P.b)) P.b = pNew();

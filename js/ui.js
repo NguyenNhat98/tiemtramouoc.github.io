@@ -320,15 +320,32 @@ function openBackups() {
 
 /* ===== Hướng dẫn ===== */
 export function openGuide() {
-  const m = openModal({ id: 'guide', cls: 'settings', html: `<h2 class="set-title">📖 Hướng dẫn</h2>
-    <div class="guide">
-    <p><b>1. Chuẩn bị:</b> vào <b>Kho</b>, chọn số lượng Trà · Topping · Dụng cụ rồi bấm <b>Nấu & nhập</b>. Có đủ nguyên liệu thì bấm <b>Mở cửa</b>.</p>
-    <p><b>2. Pha ly:</b> khách gọi món → chạm chồng ly (đúng size M/L) → chạm bình trà để rót, chạm lần nữa để dừng (rót vào vùng vàng) → chạm chai hương (nếu có) → chạm khay topping → chạm <b>máy đóng nắp</b> → chạm ly hoàn thiện để giao khách.</p>
-    <p><b>3. Mẹo:</b> đổi khách ưu tiên bằng cách chạm avatar trên mái hiên; thùng rác để đổ ly sai; kiên nhẫn của khách giảm dần; ★ cao thì khách đông.</p>
-    <p><b>4. Lớn dần:</b> nâng cấp quầy, thuê nhân viên, mở chi nhánh, khởi nghiệp xuyên Việt, chạy quảng cáo, nuôi thú cưng, đóng thuế nhận buff, gửi tiết kiệm.</p>
-    <p><b>5. Giá bán:</b> đừng đẩy giá quá cao — trà trên 50k, topping trên 20k sẽ làm khách bỏ đi (trừ khi có Quản lý tập sự).</p></div>
-    <button class="btn pri block" data-act="x">Đã hiểu</button>` });
-  bindActions(m.body, { x: () => m.close() });
+  const step = (ico, title, body) => `<div class="g-step"><div class="g-ico">${ico}</div><div class="g-txt"><b>${title}</b><p>${body}</p></div></div>`;
+  const m = openModal({ id: 'guide', cls: 'settings', html: `<h2 class="set-title">📖 Hướng dẫn chơi</h2>
+    <div class="guide rich">
+    <div class="g-sec"><h4>🏠 1. Chuẩn bị mỗi ngày</h4>
+      ${step('📦', 'Vào Kho', 'Chọn số lượng <b>Trà 🫖</b>, <b>Topping 🧋</b> và <b>Dụng cụ 🥤</b> (ly, đá, đường) cần dùng cho ngày hôm nay.')}
+      ${step('🛒', 'Nấu & nhập', 'Bấm nút hồng <b>Nấu & nhập</b> ở đáy màn hình để trả tiền nhập hàng. Nút đỏ ⚠️ nghĩa là còn thiếu nguyên liệu.')}
+      ${step('🏮', 'Mở cửa', 'Đủ nguyên liệu thì bấm <b>Mở cửa</b> để bắt đầu ca bán hàng.')}</div>
+    <div class="g-sec"><h4>🧋 2. Pha ly khi bán hàng</h4>
+      ${step('👤', 'Đọc đơn', 'Khách hiện bong bóng thoại: size, loại trà, hương, topping. Vòng xanh quanh avatar là <b>độ kiên nhẫn</b>.')}
+      ${step('🥤', 'Lấy ly', 'Chạm đúng <b>chồng ly M hoặc L</b> trên quầy trà.')}
+      ${step('🫖', 'Rót trà', 'Chạm <b>bình trà</b> để rót, chạm lần nữa để dừng khi thanh tới <b>vùng vàng</b>.')}
+      ${step('🍯', 'Hương & topping', 'Chạm <b>chai hương</b> (nếu có) rồi chạm các khay <b>topping</b> khách yêu cầu.')}
+      ${step('🔒', 'Đóng nắp', 'Chạm <b>máy đóng nắp</b> bên phải, chờ đèn READY.')}
+      ${step('🤝', 'Giao khách', 'Chạm <b>ly hoàn thiện</b> trên thớt để giao. Đúng + nhanh = nhiều sao và tiền boa!')}</div>
+    <div class="g-sec"><h4>💡 3. Mẹo hay</h4>
+      ${step('👆', 'Đổi khách', 'Chạm avatar trên mái hiên để phục vụ khách ưu tiên (người sắp hết kiên nhẫn).')}
+      ${step('🗑️', 'Làm sai?', 'Chạm <b>thùng rác</b> để đổ ly rồi pha lại.')}
+      ${step('⭐', 'Đánh giá', 'Sao cao thì khách đông hơn. Bàn bẩn ở Sảnh nhớ dọn để có thêm khách ngồi.')}</div>
+    <div class="g-sec"><h4>🚀 4. Lớn dần</h4>
+      ${step('🛠️', 'Nâng cấp & nhân sự', 'Nâng cấp quầy, <b>thuê nhân viên</b> – khách sẽ đến nhanh và đông hơn khi quán có tiền và đội ngũ.')}
+      ${step('🗺️', 'Khởi nghiệp & chi nhánh', 'Mở chi nhánh, khởi nghiệp xuyên Việt, chạy quảng cáo, nuôi thú cưng, đóng thuế nhận buff, gửi tiết kiệm.')}
+      ${step('💵', 'Giá bán', 'Đừng đẩy giá quá cao — trà trên 50k, topping trên 20k sẽ làm khách bỏ đi (trừ khi có Quản lý tập sự).')}</div>
+    </div>
+    <button class="btn blue block" data-act="replay">🎓 Xem hướng dẫn tương tác từng bước</button>
+    <button class="btn pri block" data-act="x" style="margin-top:6px">Đã hiểu</button>` });
+  bindActions(m.body, { x: () => m.close(), replay: () => { m.close(); emit('tutorial:replay'); } });
 }
 
 /* ===== Dự báo thời tiết ===== */
@@ -343,13 +360,26 @@ export function openForecast() {
   bindActions(m.body, { x: () => m.close() });
 }
 
+/* ===== Toàn màn hình (ẩn thanh địa chỉ trình duyệt) ===== */
+export function goFullscreen() {
+  try {
+    const d = document.documentElement;
+    if (document.fullscreenElement || document.webkitFullscreenElement) return;
+    const f = d.requestFullscreen || d.webkitRequestFullscreen || d.msRequestFullscreen;
+    if (f) { const r = f.call(d, { navigationUI: 'hide' }); if (r && r.catch) r.catch(() => {}); }
+    screen.orientation?.lock?.('portrait').catch(() => {});
+  } catch (e) { /* trình duyệt không cho: bỏ qua */ }
+}
+/** Chạm bất kỳ đâu lần đầu → vào toàn màn hình (nếu người chơi bấm ra ngoài). */
+document.addEventListener('pointerup', () => goFullscreen(), { once: true, passive: true });
+
 /* ===== Intro ===== */
 export function showIntro(onPlay) {
   const el = $('#intro');
   el.hidden = false;
   const hasSave = S.started;
   el.innerHTML = `
-    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="pearl">⚫</span></div>
+    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="pearl">⚫</span><span class="spark" style="left:30%;top:9%">✨</span><span class="spark" style="right:24%;top:20%;animation-delay:-1s">✨</span><span class="spark" style="left:16%;top:30%;animation-delay:-1.7s">✨</span></div>
     <div class="intro-awning"></div>
     <div class="lanterns"><span>🏮</span><span>🏮</span><span>🏮</span></div>
     <h1 class="intro-title">Tiệm Trà<br/>Mơ Ước</h1>
@@ -363,6 +393,6 @@ export function showIntro(onPlay) {
     <button class="btn pri big" data-act="play">${hasSave ? 'Chơi tiếp' : 'Chơi mới'}</button>
     <button class="link" data-act="guide">Hướng dẫn</button>
     <small class="ver">${VERSION}</small>`;
-  bindActions(el, { play: () => { el.hidden = true; onPlay(); }, guide: () => openGuide() });
+  bindActions(el, { play: () => { goFullscreen(); el.hidden = true; onPlay(); }, guide: () => { goFullscreen(); openGuide(); } });
 }
 void ITEMS; void SHIFT_START_H; void wait; void replaceState; void newState; void fmt; void on; void E;

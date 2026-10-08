@@ -3,7 +3,7 @@
  * sảnh bàn ghế. Mọi bước đều có hiệu ứng (lấy ly, rót trà, bỏ topping, đóng nắp, giao ly).
  */
 import { ITEMS, TEAS, FLAVORS, TOPS, SIZE_L_PRICE } from './config.js';
-import { S, on, emit, markDirty, $, $$, h, esc, fmtK, sfx, clamp, wait, sum } from './core.js';
+import { S, on, emit, markDirty, $, $$, h, esc, fmtK, sfx, clamp, wait, sum, rand } from './core.js';
 import * as E from './econ.js';
 import * as G from './sell.js';
 import { SH } from './sell.js';
@@ -19,7 +19,7 @@ export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const fill = clamp((c.fill ?? 0) / 1.0, 0, 1.15);
   const liq = tea ? `linear-gradient(${tea.color}, ${tea.color}${fl ? '' : ''})` : 'transparent';
   const flav = fl ? `<i class="c-flav" style="background:${fl.color}"></i>` : '';
-  const tops = (c.tops || []).map((t) => `<i class="c-top" style="background:${ITEMS[t].color}"></i>`.repeat(3)).join('');
+  const tops = (c.tops || []).map((t) => `<i class="c-top" style="background-color:${ITEMS[t].color}"></i>`.repeat(3)).join('');
   const lid = c.phase === 'sealing' || c.phase === 'ready' ? '<i class="c-lid"></i>' : '';
   const straw = c.phase === 'ready' ? '<i class="c-straw"></i>' : '';
   const st = stamp && !mini && E.equipLevel('nhanDien') > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : '';
@@ -48,11 +48,11 @@ export function renderSell() {
       <div class="tag-w">QUẦY TRÀ</div>
       <div class="shelf-row">
         <div class="stacks">
-          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cups"><i></i><i></i><i></i><i></i></div><b>M</b><span class="cnt" data-cnt="ly">0</span></button>
-          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cups l"><i></i><i></i><i></i><i></i><i></i></div><b>L</b><span class="cnt" data-cnt="ly">0</span></button>
+          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b><span class="cnt" data-cnt="ly">0</span></button>
+          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="ly">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join('')}</div>
-        <button class="sealer" id="sealer" data-act="seal" aria-label="Máy đóng nắp"><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span></div><div class="sl-slot"></div></button>
+        <button class="sealer" id="sealer" data-act="seal" aria-label="Máy đóng nắp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
       </div>
       <div class="flav-row" id="flavs"></div>
     </div>
@@ -83,7 +83,7 @@ function dispHTML(t) {
   const locked = !S.unlocked[t];
   const off = S.unlocked[t] && !S.onMenu[t];
   return `<button class="disp ${locked ? 'locked' : ''} ${off ? 'off' : ''}" data-act="disp" data-tea="${t}" aria-label="${it.name}" ${locked ? 'data-locked="1"' : ''}>
-    <div class="jar"><i class="jl" style="background:${it.color}"></i><span class="lab">${it.short}</span>${locked ? '<em class="lk">🔒</em>' : ''}</div><div class="tap"></div>
+    <i class="jlid"></i><div class="jar"><i class="jl" style="background:${it.color}"></i><span class="lab">${it.short}</span>${locked ? '<em class="lk">🔒</em>' : ''}</div><div class="tap"><i class="drip" style="background:${it.color}"></i></div>
     <span class="cnt" data-cnt="${t}">0</span></button>`;
 }
 function fillFlavors() {
@@ -96,7 +96,7 @@ function fillTrays() {
   $('#trays').innerHTML = order.slice(0, slots).map((t) => {
     const it = ITEMS[t];
     const locked = !S.unlocked[t], off = S.unlocked[t] && !S.onMenu[t];
-    const dots = `<i style="background:${it.color}"></i>`.repeat(7);
+    const dots = `<i style="background-color:${it.color}"></i>`.repeat(9);
     return `<button class="tray ${locked ? 'locked' : ''} ${off ? 'off' : ''}" data-act="top" data-t="${t}" aria-label="${it.name}"><div class="pile">${dots}</div>${locked ? '<em class="lk">🔒</em>' : ''}<small>${it.name.replace('Trân châu ', 'TC ').replace('Thạch ', 'Th. ')}</small><span class="cnt" data-cnt="${t}">0</span></button>`;
   }).join('');
 }
@@ -160,14 +160,31 @@ function dropFx(fromEl, color) {
   const cup = $('#cupslot');
   if (!fromEl || !cup) return;
   const a = fromEl.getBoundingClientRect(), b = cup.getBoundingClientRect();
-  const ball = h(`<div class="fx-ball" style="left:${a.left + a.width / 2 - 8}px;top:${a.top + a.height / 2 - 8}px;background:${color}"></div>`);
-  document.body.appendChild(ball);
-  const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height * 0.45 - (a.top + a.height / 2);
-  ball.animate([
-    { transform: 'translate(0,0) scale(1)', offset: 0 },
-    { transform: `translate(${dx * 0.5}px,${dy - 50}px) scale(1.1)`, offset: 0.5 },
-    { transform: `translate(${dx}px,${dy}px) scale(.8)`, offset: 1 },
-  ], { duration: 460, easing: 'cubic-bezier(.4,0,.6,1)' }).onfinish = () => { ball.remove(); cup.classList.remove('plop'); void cup.offsetWidth; cup.classList.add('plop'); };
+  const n = 4;
+  for (let k = 0; k < n; k++) {
+    const sx = a.left + a.width / 2 + rand(-8, 8), sy = a.top + a.height / 2;
+    const ball = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color}"></div>`);
+    document.body.appendChild(ball);
+    const dx = b.left + b.width / 2 + rand(-10, 10) - sx, dy = b.top + b.height * 0.42 - sy;
+    ball.animate([
+      { transform: 'translate(0,0) scale(1) rotate(0)', offset: 0 },
+      { transform: `translate(${dx * 0.5}px,${Math.min(dy, 0) - 60}px) scale(1.15) rotate(120deg)`, offset: 0.45 },
+      { transform: `translate(${dx}px,${dy}px) scale(.85) rotate(260deg)`, offset: 0.85 },
+      { transform: `translate(${dx}px,${dy + 6}px) scale(1.2,.7) rotate(280deg)`, offset: 1 },
+    ], { duration: 520, delay: k * 70, easing: 'cubic-bezier(.4,0,.7,1)', fill: 'backwards' }).onfinish = () => {
+      ball.remove();
+      if (k === n - 1) { cup.classList.remove('plop'); void cup.offsetWidth; cup.classList.add('plop'); splash(cup, color); }
+    };
+  }
+}
+/** Vòng sóng + giọt bắn tại miệng ly. */
+function splash(cup, color) {
+  const r = cup.getBoundingClientRect();
+  const x = r.left + r.width / 2, y = r.top + r.height * 0.5;
+  fxSpark({ x, y }, 5);
+  const ring = h(`<div class="fx-ripple" style="left:${x}px;top:${y}px;border-color:${color}"></div>`);
+  document.body.appendChild(ring);
+  setTimeout(() => ring.remove(), 520);
 }
 function flyCupIn(size) {
   const slot = $('#cupslot'), cupEl = slot?.firstElementChild;

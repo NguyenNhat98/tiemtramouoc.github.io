@@ -27,33 +27,42 @@ export function stampSVG(st, size = 150, name = S.shopName) {
 }
 
 function fileToDataURL(file, size = 160) {
+  // Dùng objectURL (nhẹ hơn FileReader với ảnh chụp điện thoại hàng chục MB), vẽ cắt vuông lên canvas.
   return new Promise((resolve, reject) => {
-    const fr = new FileReader();
-    fr.onerror = reject;
-    fr.onload = () => {
-      const img = new Image();
-      img.onerror = reject;
-      img.onload = () => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
+    img.onload = () => {
+      try {
         const cv = document.createElement('canvas');
         cv.width = cv.height = size;
         const ctx = cv.getContext('2d');
-        const s = Math.min(img.width, img.height);
-        ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+        const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
+        const s = Math.min(w, hh);
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size);
+        ctx.drawImage(img, (w - s) / 2, (hh - s) / 2, s, s, 0, 0, size, size);
         resolve(cv.toDataURL('image/jpeg', 0.82));
-      };
-      img.src = fr.result;
+      } catch (err) { reject(err); } finally { URL.revokeObjectURL(url); }
     };
-    fr.readAsDataURL(file);
+    img.src = url;
   });
 }
+/** Mở hộp chọn ảnh. Input phải nằm trong DOM thì trình duyệt điện thoại mới bắn sự kiện change ổn định. */
 function pickImage(cb) {
   const inp = document.createElement('input');
-  inp.type = 'file'; inp.accept = 'image/*';
-  inp.onchange = async () => {
-    const f = inp.files?.[0];
-    if (!f) return;
-    try { cb(await fileToDataURL(f)); } catch (e) { toast('Không đọc được ảnh', 'err'); }
-  };
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;width:1px;height:1px';
+  document.body.appendChild(inp);
+  let done = false;
+  const finish = () => { if (!done) { done = true; setTimeout(() => inp.remove(), 1500); } };
+  inp.addEventListener('change', async () => {
+    const f = inp.files && inp.files[0];
+    if (!f) { finish(); return; }
+    try { cb(await fileToDataURL(f)); } catch (e) { toast('Không đọc được ảnh, hãy thử ảnh khác (JPG/PNG)', 'err'); }
+    finish();
+  });
+  inp.addEventListener('cancel', finish);
   inp.click();
 }
 
