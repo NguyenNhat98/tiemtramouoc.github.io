@@ -248,4 +248,7 @@ body { background: #F2DFC8; }
 .nav-i.on::before { display: none; }
 .nav-i.on .ic { background: var(--pink-soft); border-radius: 12px; padding: 4px; width: 38px; height: 28px; box-sizing: border-box; }
 .nav-i.on { font-weight: 700; }
+.nav-e { font-style: normal; font-size: 26px; line-height: 1; width: 46px; height: 32px; display: grid; place-items: center; border-radius: 14px; filter: grayscale(.35) opacity(.8); transition: transform .15s, background .15s; }
+.nav-i.on .nav-e { background: var(--pink-soft); filter: none; transform: translateY(-2px) scale(1.08); box-shadow: 0 2px 0 rgba(238, 122, 150, .35); }
+.nav-i:active .nav-e { transform: scale(.9); }
 

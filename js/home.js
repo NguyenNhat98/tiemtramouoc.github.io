@@ -21,11 +21,11 @@ export const TILES = [
 ];
 /** 16 chức năng gom thành 5 nhóm trên thanh điều hướng đáy. */
 export const GROUPS = [
-  { id: 'tiem', label: 'Tiệm', icon: 'tiem', tabs: ['giaban', 'sanh', 'tongket', 'danhgia'] },
-  { id: 'kho', label: 'Kho', icon: 'kho', tabs: ['kho', 'vuon', 'thucung'] },
-  { id: 'pt', label: 'Phát triển', icon: 'phattrien', tabs: ['nangcap', 'nhansu', 'chinhanh', 'khoinghiep'] },
-  { id: 'xh', label: 'Xã hội', icon: 'xahoi', tabs: ['mxh', 'banbe'] },
-  { id: 'them', label: 'Thêm', icon: 'them', tabs: ['crush', 'thue', 'suutam'] },
+  { id: 'tiem', label: 'Tiệm', icon: '🏪', tabs: ['giaban', 'sanh', 'tongket', 'danhgia'] },
+  { id: 'kho', label: 'Kho', icon: '📦', tabs: ['kho', 'vuon', 'thucung'] },
+  { id: 'pt', label: 'Phát triển', icon: '📈', tabs: ['nangcap', 'nhansu', 'chinhanh', 'khoinghiep'] },
+  { id: 'xh', label: 'Xã hội', icon: '👥', tabs: ['mxh', 'banbe'] },
+  { id: 'them', label: 'Thêm', icon: '🎀', tabs: ['crush', 'thue', 'suutam'] },
 ];
 const groupOf = (tab) => GROUPS.find((g) => g.tabs.includes(tab)) || GROUPS[1];
 const TILE_BY_ID = Object.fromEntries(TILES.map((t) => [t[0], t]));
@@ -78,7 +78,7 @@ export function renderNav() {
   el.hidden = !show;
   if (!show) { el.innerHTML = ''; return; }
   const cur = groupOf(S.tab).id;
-  el.innerHTML = GROUPS.map((g) => `<button class="nav-i ${cur === g.id ? 'on' : ''}" data-act="nav" data-group="${g.id}" aria-label="${g.label}">${icon(g.icon, 22)}<span>${g.label}</span></button>`).join('');
+  el.innerHTML = GROUPS.map((g) => `<button class="nav-i ${cur === g.id ? 'on' : ''}" data-act="nav" data-group="${g.id}" aria-label="${g.label}"><i class="nav-e">${g.icon}</i><span>${g.label}</span></button>`).join('');
 }
 let navBound = false;
 function bindNav() {

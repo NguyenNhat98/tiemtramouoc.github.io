@@ -4791,11 +4791,11 @@
     ["suutam", "S\u01B0u t\u1EA7m", "\u{1F3B4}"]
   ];
   var GROUPS = [
-    { id: "tiem", label: "Ti\u1EC7m", icon: "tiem", tabs: ["giaban", "sanh", "tongket", "danhgia"] },
-    { id: "kho", label: "Kho", icon: "kho", tabs: ["kho", "vuon", "thucung"] },
-    { id: "pt", label: "Ph\xE1t tri\u1EC3n", icon: "phattrien", tabs: ["nangcap", "nhansu", "chinhanh", "khoinghiep"] },
-    { id: "xh", label: "X\xE3 h\u1ED9i", icon: "xahoi", tabs: ["mxh", "banbe"] },
-    { id: "them", label: "Th\xEAm", icon: "them", tabs: ["crush", "thue", "suutam"] }
+    { id: "tiem", label: "Ti\u1EC7m", icon: "\u{1F3EA}", tabs: ["giaban", "sanh", "tongket", "danhgia"] },
+    { id: "kho", label: "Kho", icon: "\u{1F4E6}", tabs: ["kho", "vuon", "thucung"] },
+    { id: "pt", label: "Ph\xE1t tri\u1EC3n", icon: "\u{1F4C8}", tabs: ["nangcap", "nhansu", "chinhanh", "khoinghiep"] },
+    { id: "xh", label: "X\xE3 h\u1ED9i", icon: "\u{1F465}", tabs: ["mxh", "banbe"] },
+    { id: "them", label: "Th\xEAm", icon: "\u{1F380}", tabs: ["crush", "thue", "suutam"] }
   ];
   var groupOf = (tab) => GROUPS.find((g) => g.tabs.includes(tab)) || GROUPS[1];
   var TILE_BY_ID = Object.fromEntries(TILES.map((t) => [t[0], t]));
@@ -4856,7 +4856,7 @@
       return;
     }
     const cur2 = groupOf(S.tab).id;
-    el.innerHTML = GROUPS.map((g) => `<button class="nav-i ${cur2 === g.id ? "on" : ""}" data-act="nav" data-group="${g.id}" aria-label="${g.label}">${icon(g.icon, 22)}<span>${g.label}</span></button>`).join("");
+    el.innerHTML = GROUPS.map((g) => `<button class="nav-i ${cur2 === g.id ? "on" : ""}" data-act="nav" data-group="${g.id}" aria-label="${g.label}"><i class="nav-e">${g.icon}</i><span>${g.label}</span></button>`).join("");
   }
   var navBound = false;
   function bindNav() {
