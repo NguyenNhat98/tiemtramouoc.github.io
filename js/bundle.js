@@ -3044,22 +3044,10 @@
     const stack2 = $(`.stack[data-size="${size}"]`);
     if (!cupEl || !stack2) return;
     const a = stack2.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
-    const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height * 0.3 - (b.top + b.height / 2);
-    const clone = cupEl.cloneNode(true);
-    clone.style.cssText = `position:fixed;left:${b.left}px;top:${b.top}px;width:${b.width}px;height:${b.height}px;margin:0;z-index:90;pointer-events:none;transition:none;will-change:transform`;
-    cupEl.style.visibility = "hidden";
-    document.body.appendChild(clone);
-    const STEPS2 = 16, lift = 30, frames2 = [];
-    for (let i = 0; i <= STEPS2; i++) {
-      const t = i / STEPS2, e = 1 - Math.pow(1 - t, 3);
-      frames2.push({ transform: `translate(${(dx * (1 - e)).toFixed(1)}px,${(dy * (1 - e) - lift * 4 * t * (1 - t)).toFixed(1)}px) scale(${(0.7 + 0.3 * e).toFixed(3)})`, offset: t });
-    }
-    const done = () => {
-      clone.remove();
-      cupEl.style.visibility = "";
-      cupEl.animate([{ transform: "scale(1.05,.94)" }, { transform: "none" }], { duration: 220, easing: "ease-out" });
-    };
-    clone.animate(frames2, { duration: 520, easing: "linear", fill: "forwards" }).onfinish = done;
+    cupEl.animate([
+      { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px,${a.top - b.top - 10}px) scale(.6) rotate(-18deg)`, opacity: 0.2 },
+      { transform: "translate(0,0) scale(1) rotate(0)", opacity: 1 }
+    ], { duration: 420, easing: "cubic-bezier(.3,1.35,.55,1)" });
   }
   function sealAnim() {
     const cupEl = $("#cupslot .cup"), sealer = $("#sealer");
@@ -3253,35 +3241,14 @@
     updateBoard(false);
     const st = $("#stream");
     const b = SH.board;
-    const slotEl = $("#cupslot");
-    const cupEl = slotEl?.querySelector(".cup");
-    if (b?.pouring && b.tea && cupEl) {
-      const d = $(`.disp[data-tea="${b.tea}"] .tap`);
-      if (d && st) {
-        const a = d.getBoundingClientRect(), r0 = root.getBoundingClientRect();
-        const board = slotEl.offsetParent, br = board.getBoundingClientRect();
-        const baseL = br.left + board.clientLeft + slotEl.offsetLeft, baseT = br.top + board.clientTop + slotEl.offsetTop;
-        const cupTop = baseT + slotEl.offsetHeight - 6 - cupEl.offsetHeight;
-        const tapX = a.left + a.width / 2;
-        const nx = Math.round(tapX - (baseL + slotEl.offsetWidth / 2)), ny = Math.round(a.bottom + 30 - cupTop);
-        const key = `${nx},${ny}`;
-        if (slotEl._shiftKey !== key) {
-          slotEl._shiftKey = key;
-          slotEl.style.transform = `translate(${nx}px,${ny}px)`;
-          slotEl.classList.add("under-tap");
-        }
-        const mouthY = cupTop + ny + 4;
-        st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.max(0, mouthY - a.bottom + 2)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+    if (b?.pouring && b.tea) {
+      const d = $(`.disp[data-tea="${b.tea}"] .tap`), cup = $("#cupslot");
+      if (d && cup && st) {
+        const a = d.getBoundingClientRect(), c2 = cup.getBoundingClientRect(), r0 = root.getBoundingClientRect();
+        st.style.cssText = `display:block;left:${a.left + a.width / 2 - 3 - r0.left}px;top:${a.bottom - r0.top}px;height:${Math.max(0, c2.top + c2.height * 0.2 - a.bottom)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
         if (Math.random() < 0.15) sfx("pour");
       }
-    } else {
-      if (st) st.style.display = "none";
-      if (slotEl && slotEl._shiftKey) {
-        slotEl._shiftKey = null;
-        slotEl.style.transform = "";
-        slotEl.classList.remove("under-tap");
-      }
-    }
+    } else if (st) st.style.display = "none";
     if (cntT <= 0 || force) {
       cntT = 0.25;
       for (const el of $$("[data-cnt]", root)) {
