@@ -294,10 +294,18 @@ export const NPC_FRIENDS = [
 
 /* ========== Giao diện & logo ========== */
 export const THEMES = {
-  cream: { name: 'Kem sữa', bg: '#fdf3e4', accent: '#f06f8f' },
-  matcha: { name: 'Matcha', bg: '#eef3e2', accent: '#4fa36d' },
-  dau: { name: 'Dâu', bg: '#fff0f2', accent: '#e8486b' },
-  dem: { name: 'Đêm', bg: '#2b2540', accent: '#a98bff' },
+  cream: { name: 'Kem sữa', bg: '#FDF0DF', card: '#FFFAF2', accent: '#EE7A96', accent2: '#F5A3B7', soft: '#FFE1E8' },
+  nau: { name: 'Nâu cà phê', bg: '#F1E6DA', card: '#FBF5EE', accent: '#9A6444', accent2: '#C79A7A', soft: '#EBD9C8' },
+  socola: { name: 'Sô cô la', bg: '#EADFD3', card: '#F8F1EA', accent: '#6B4226', accent2: '#A27B5C', soft: '#E0CDBB' },
+  dau: { name: 'Hồng dâu', bg: '#FFEFF3', card: '#FFF8FA', accent: '#E0507F', accent2: '#F29AB5', soft: '#FFD6E2' },
+  camdao: { name: 'Cam đào', bg: '#FFF0E2', card: '#FFF8F0', accent: '#EA8A55', accent2: '#F5B592', soft: '#FFDFC8' },
+  thai: { name: 'Trà Thái', bg: '#FFF1DE', card: '#FFF8EC', accent: '#E07B39', accent2: '#F0A870', soft: '#FFDDBA' },
+  chanh: { name: 'Vàng chanh', bg: '#FBF8DC', card: '#FFFDF0', accent: '#C9AA2E', accent2: '#E0CC6A', soft: '#F4EDB0' },
+  matcha: { name: 'Xanh matcha', bg: '#EEF4E2', card: '#F8FBEF', accent: '#5FA95F', accent2: '#98CC98', soft: '#D7EFD9' },
+  bacha: { name: 'Bạc hà', bg: '#E8F6F1', card: '#F5FBF9', accent: '#4FAF93', accent2: '#8DCDB8', soft: '#CDEDE3' },
+  bien: { name: 'Xanh biển', bg: '#E9F2FB', card: '#F6FAFE', accent: '#4A8BD0', accent2: '#8DB8E6', soft: '#D0E3F6' },
+  khoai: { name: 'Tím khoai môn', bg: '#F0EAFA', card: '#F9F6FD', accent: '#8F6BC8', accent2: '#B79BE0', soft: '#E1D5F4' },
+  dem: { name: 'Đêm dịu', bg: '#2B2540', card: '#3A3356', accent: '#E58CB3', accent2: '#F0B0CC', soft: '#51477A', dark: true },
 };
 export const LOGO_ICONS = ['🧋', '🦊', '🐧', '🐻', '🦔', '🐥', '🦌', '🦉', '🐢', '🐹', '🦋', '🦝', '🐻', '🐰', '🐼', '🍓', '🍊', '🥭', '💎', '🌈', '☁️', '☀️', '🌙', '🎈', '🎁', '🍰', '🍦', '🧁', '🍩', '🍪', '💗', '⭐', '✨', '👑', '🎀'];
 export const STAMP_COLORS = ['#ffffff', '#fde8cf', '#ffd6e0', '#d6f2e4', '#8b5a3c', '#2f2a3a', '#ffe08a', '#e3d6ff'];

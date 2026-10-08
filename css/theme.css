@@ -6,7 +6,7 @@
   --font: 'Be Vietnam Pro', 'Segoe UI', system-ui, sans-serif;
   --font-serif: 'Noto Serif', 'Times New Roman', Georgia, serif;
 }
-[data-theme="cream"] {
+:root {
   --bg: #F4EEE3; --card: #FBF8F1; --card2: #fff;
   --pink: #C8442F; --pink2: #E07A62; --pink-soft: #F3D9D1;
   --brown: #3B2F2A; --brown2: #8A6F5C; --text: #3B2F2A; --muted: #8C7B6E;
@@ -205,7 +205,7 @@ body { font-size: 14px; }
 .intro .ver { left: 16px; bottom: calc(12px + var(--safe-b)); font-size: 12px; }
 
 /* ---------- Phong cách pastel hồng (tham khảo tài liệu thiết kế) ---------- */
-[data-theme="cream"] {
+:root {
   --bg: #FDF0DF; --card: #FFFAF2; --paper: #FBE6D0;
   --pink: #EE7A96; --pink2: #F5A3B7; --pink-soft: #FFE1E8;
   --brown: #5A3A2E; --brown2: #8F6B58; --text: #4B3329; --muted: #A08674;
@@ -267,4 +267,11 @@ body { background: #F2DFC8; }
 .warnbox[open] > :not(summary) { margin-left: 12px; margin-right: 12px; } .warnbox[open] > :last-child { margin-bottom: 10px; }
 .adcard { cursor: pointer; } .adcard .ad-i { margin-left: auto; color: var(--muted); font-style: normal; font-size: 16px; }
 .adcard .ad-s { font-size: 12.5px; color: var(--brown2); font-weight: 500; margin: 2px 0 0; }
+
+/* ---------- Chọn màu giao diện ---------- */
+.thm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 14px; }
+.thm-it { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 8px; border-radius: 16px; background: var(--card); border: 2.5px solid var(--line); }
+.thm-it i { width: 40px; height: 40px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .25); }
+.thm-it b { font-size: 12.5px; font-weight: 700; text-align: center; line-height: 1.15; }
+.thm-it.on { border-color: var(--pink); box-shadow: 0 0 0 2px var(--pink-soft); }
 

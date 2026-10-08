@@ -468,10 +468,18 @@
     { id: "f4", name: "Ti\u1EC7m Gi\xF3 Bi\u1EC3n", av: "\u{1F30A}", rating: 4.1, rich: 75e4 }
   ];
   var THEMES = {
-    cream: { name: "Kem s\u1EEFa", bg: "#fdf3e4", accent: "#f06f8f" },
-    matcha: { name: "Matcha", bg: "#eef3e2", accent: "#4fa36d" },
-    dau: { name: "D\xE2u", bg: "#fff0f2", accent: "#e8486b" },
-    dem: { name: "\u0110\xEAm", bg: "#2b2540", accent: "#a98bff" }
+    cream: { name: "Kem s\u1EEFa", bg: "#FDF0DF", card: "#FFFAF2", accent: "#EE7A96", accent2: "#F5A3B7", soft: "#FFE1E8" },
+    nau: { name: "N\xE2u c\xE0 ph\xEA", bg: "#F1E6DA", card: "#FBF5EE", accent: "#9A6444", accent2: "#C79A7A", soft: "#EBD9C8" },
+    socola: { name: "S\xF4 c\xF4 la", bg: "#EADFD3", card: "#F8F1EA", accent: "#6B4226", accent2: "#A27B5C", soft: "#E0CDBB" },
+    dau: { name: "H\u1ED3ng d\xE2u", bg: "#FFEFF3", card: "#FFF8FA", accent: "#E0507F", accent2: "#F29AB5", soft: "#FFD6E2" },
+    camdao: { name: "Cam \u0111\xE0o", bg: "#FFF0E2", card: "#FFF8F0", accent: "#EA8A55", accent2: "#F5B592", soft: "#FFDFC8" },
+    thai: { name: "Tr\xE0 Th\xE1i", bg: "#FFF1DE", card: "#FFF8EC", accent: "#E07B39", accent2: "#F0A870", soft: "#FFDDBA" },
+    chanh: { name: "V\xE0ng chanh", bg: "#FBF8DC", card: "#FFFDF0", accent: "#C9AA2E", accent2: "#E0CC6A", soft: "#F4EDB0" },
+    matcha: { name: "Xanh matcha", bg: "#EEF4E2", card: "#F8FBEF", accent: "#5FA95F", accent2: "#98CC98", soft: "#D7EFD9" },
+    bacha: { name: "B\u1EA1c h\xE0", bg: "#E8F6F1", card: "#F5FBF9", accent: "#4FAF93", accent2: "#8DCDB8", soft: "#CDEDE3" },
+    bien: { name: "Xanh bi\u1EC3n", bg: "#E9F2FB", card: "#F6FAFE", accent: "#4A8BD0", accent2: "#8DB8E6", soft: "#D0E3F6" },
+    khoai: { name: "T\xEDm khoai m\xF4n", bg: "#F0EAFA", card: "#F9F6FD", accent: "#8F6BC8", accent2: "#B79BE0", soft: "#E1D5F4" },
+    dem: { name: "\u0110\xEAm d\u1ECBu", bg: "#2B2540", card: "#3A3356", accent: "#E58CB3", accent2: "#F0B0CC", soft: "#51477A", dark: true }
   };
   var LOGO_ICONS = ["\u{1F9CB}", "\u{1F98A}", "\u{1F427}", "\u{1F43B}", "\u{1F994}", "\u{1F425}", "\u{1F98C}", "\u{1F989}", "\u{1F422}", "\u{1F439}", "\u{1F98B}", "\u{1F99D}", "\u{1F43B}", "\u{1F430}", "\u{1F43C}", "\u{1F353}", "\u{1F34A}", "\u{1F96D}", "\u{1F48E}", "\u{1F308}", "\u2601\uFE0F", "\u2600\uFE0F", "\u{1F319}", "\u{1F388}", "\u{1F381}", "\u{1F370}", "\u{1F366}", "\u{1F9C1}", "\u{1F369}", "\u{1F36A}", "\u{1F497}", "\u2B50", "\u2728", "\u{1F451}", "\u{1F380}"];
   var STAMP_COLORS = ["#ffffff", "#fde8cf", "#ffd6e0", "#d6f2e4", "#8b5a3c", "#2f2a3a", "#ffe08a", "#e3d6ff"];
@@ -2249,9 +2257,40 @@
     const inner = l.img ? `<img src="${l.img}" alt="Logo qu\xE1n" />` : `<span>${l.emoji}</span>`;
     return `<span class="logo-c ${cls}" style="--sz:${size}px">${inner}</span>`;
   }
+  var THEME_DARK = { "--text": "#f1ebff", "--muted": "#b8aedc", "--brown": "#e8dfff", "--brown2": "#b8aedc", "--card2": "#453d66", "--line": "rgba(255,255,255,.14)" };
   function applyTheme() {
-    document.documentElement.dataset.theme = S.settings.theme || "cream";
+    const k = THEMES[S.settings.theme] ? S.settings.theme : "cream";
+    const t = THEMES[k], st = document.documentElement.style;
+    document.documentElement.dataset.theme = k;
     document.documentElement.dataset.season = S.season || "spring";
+    st.setProperty("--bg", t.bg);
+    st.setProperty("--paper", t.bg);
+    st.setProperty("--card", t.card);
+    st.setProperty("--pink", t.accent);
+    st.setProperty("--pink2", t.accent2);
+    st.setProperty("--pink-soft", t.soft);
+    for (const [n, v] of Object.entries(THEME_DARK)) {
+      if (t.dark) st.setProperty(n, v);
+      else st.removeProperty(n);
+    }
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", t.bg);
+  }
+  function openThemePicker(onDone) {
+    const sw = (id, t) => `<button class="thm-it ${S.settings.theme === id ? "on" : ""}" data-act="pick" data-k="${id}"><i style="background:linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)"></i><b>${t.name}</b></button>`;
+    const m = openModal({ cls: "small", html: `<h3 class="m-title">M\xE0u giao di\u1EC7n</h3><p class="m-text center">Ch\u1ECDn m\xE0u b\u1EA1n th\xEDch, \u0111\u1ED5i l\xFAc n\xE0o c\u0169ng \u0111\u01B0\u1EE3c.</p>
+    <div class="thm-grid">${Object.entries(THEMES).map(([id, t]) => sw(id, t)).join("")}</div><button class="btn pri block" data-act="done">Xong</button>` });
+    bindActions(m.body, {
+      pick: (t) => {
+        S.settings.theme = t.dataset.k;
+        applyTheme();
+        requestSave();
+        for (const el of $$(".thm-it", m.body)) el.classList.toggle("on", el === t);
+      },
+      done: () => {
+        m.close();
+        onDone?.();
+      }
+    });
   }
   function renderHud() {
     const el = $("#hud");
@@ -2470,13 +2509,7 @@
         requestSave();
         refresh();
       },
-      theme: () => {
-        const k = Object.keys(THEMES);
-        S.settings.theme = k[(k.indexOf(S.settings.theme) + 1) % k.length];
-        applyTheme();
-        requestSave();
-        refresh();
-      },
+      theme: () => openThemePicker(refresh),
       style: () => {
         const k = ["lofi", "vui", "off"];
         S.settings.style = k[(k.indexOf(S.settings.style) + 1) % k.length];

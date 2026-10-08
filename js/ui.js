@@ -114,9 +114,25 @@ export function logoHTML(size = 56, cls = '') {
   const inner = l.img ? `<img src="${l.img}" alt="Logo quán" />` : `<span>${l.emoji}</span>`;
   return `<span class="logo-c ${cls}" style="--sz:${size}px">${inner}</span>`;
 }
+const THEME_DARK = { '--text': '#f1ebff', '--muted': '#b8aedc', '--brown': '#e8dfff', '--brown2': '#b8aedc', '--card2': '#453d66', '--line': 'rgba(255,255,255,.14)' };
 export function applyTheme() {
-  document.documentElement.dataset.theme = S.settings.theme || 'cream';
+  const k = THEMES[S.settings.theme] ? S.settings.theme : 'cream';
+  const t = THEMES[k], st = document.documentElement.style;
+  document.documentElement.dataset.theme = k;
   document.documentElement.dataset.season = S.season || 'spring';
+  st.setProperty('--bg', t.bg); st.setProperty('--paper', t.bg); st.setProperty('--card', t.card);
+  st.setProperty('--pink', t.accent); st.setProperty('--pink2', t.accent2); st.setProperty('--pink-soft', t.soft);
+  for (const [n, v] of Object.entries(THEME_DARK)) { if (t.dark) st.setProperty(n, v); else st.removeProperty(n); }
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t.bg);
+}
+function openThemePicker(onDone) {
+  const sw = (id, t) => `<button class="thm-it ${S.settings.theme === id ? 'on' : ''}" data-act="pick" data-k="${id}"><i style="background:linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)"></i><b>${t.name}</b></button>`;
+  const m = openModal({ cls: 'small', html: `<h3 class="m-title">Màu giao diện</h3><p class="m-text center">Chọn màu bạn thích, đổi lúc nào cũng được.</p>
+    <div class="thm-grid">${Object.entries(THEMES).map(([id, t]) => sw(id, t)).join('')}</div><button class="btn pri block" data-act="done">Xong</button>` });
+  bindActions(m.body, {
+    pick: (t) => { S.settings.theme = t.dataset.k; applyTheme(); requestSave(); for (const el of $$('.thm-it', m.body)) el.classList.toggle('on', el === t); },
+    done: () => { m.close(); onDone?.(); },
+  });
 }
 
 /* ===== Header ===== */
@@ -291,7 +307,7 @@ export function openSettings() {
     update: () => confirmBox('Cập nhật bản mới', 'Lưu game và tải lại trang để lấy bản mới nhất?', () => { saveGame(); location.reload(); }),
     hints: () => { S.settings.hints = !S.settings.hints; requestSave(); refresh(); },
     shiftMin: () => { const i = SHIFT_MINUTES.indexOf(S.settings.shiftMinNext); S.settings.shiftMinNext = SHIFT_MINUTES[(i + 1) % SHIFT_MINUTES.length]; requestSave(); refresh(); },
-    theme: () => { const k = Object.keys(THEMES); S.settings.theme = k[(k.indexOf(S.settings.theme) + 1) % k.length]; applyTheme(); requestSave(); refresh(); },
+    theme: () => openThemePicker(refresh),
     style: () => { const k = ['lofi', 'vui', 'off']; S.settings.style = k[(k.indexOf(S.settings.style) + 1) % k.length]; restartMusic(); requestSave(); refresh(); },
     export: () => openExport(), import: () => openImport(), backups: () => openBackups(),
     reset: () => confirmBox('Chơi lại từ đầu?', 'Toàn bộ tiến trình sẽ bị xoá vĩnh viễn. Bạn chắc chắn chứ?', () => { closeAllModals(); wipeSave(); applyTheme(); emit('reset'); }, 'Xoá & chơi lại', true),
