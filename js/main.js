@@ -11,12 +11,13 @@ import {
   renderHud, initHud, setHudActions, openPause, openSettings, openGuide, openForecast, openDaySummary, applyTheme, showIntro, toast, closeAllModals, isModalOpen, bindActions,
 } from './ui.js';
 import { renderSell, frameSell } from './brewui.js';
-import { renderHome, renderBoard, renderTiles, renderPanel, renderCta, bindCta, goTab, openPanelModal } from './home.js';
+import { renderHome, renderBoard, renderTiles, renderNav, renderPanel, renderCta, bindCta, goTab, openPanelModal } from './home.js';
 import { tickCountdown } from './panels2.js';
 import { crushDebug } from './minigames.js';
 import { armTutorial, maybeTutorial, replayTutorial } from './tutorial.js';
 
 function renderView() {
+  const app = $('#app'); if (app) app.dataset.phase = S.phase;
   if (S.phase === 'sell') { renderSell(); return; }
   renderHome();
 }
@@ -29,7 +30,7 @@ function frame(dt) {
 
 function wire() {
   registerRenderer('hud', renderHud);
-  registerRenderer('view', () => { renderView(); renderCta(); });
+  registerRenderer('view', () => { renderView(); renderCta(); renderNav(); });
   registerRenderer('panel', () => { if (S.phase !== 'sell') renderPanel(); });
   registerRenderer('tiles', renderTiles);
   registerRenderer('board', renderBoard);

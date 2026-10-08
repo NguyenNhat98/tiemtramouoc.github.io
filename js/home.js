@@ -11,24 +11,36 @@ import { PANELS2 } from './panels2.js';
 import { PANELS3 } from './panels3.js';
 import { crush } from './minigames.js';
 import { openLogoModal } from './avatar.js';
+import { icon } from './icons.js';
 
 export const PANELS = { ...PANELS1, ...PANELS2, ...PANELS3, crush };
 export const TILES = [
   ['kho', 'Kho', '📦'], ['vuon', 'Vườn cây', '🪴'], ['thucung', 'Thú cưng', '🐕'], ['khoinghiep', 'Khởi nghiệp', '🗺️'], ['sanh', 'Sảnh Trà', '🏮'], ['chinhanh', 'Chi Nhánh', '🏢'],
-  ['mxh', 'Mạng Xã Hội', '📱'], ['nhansu', 'Quản lý nhân sự', '🏆'], ['thue', 'Thuế & Bank', '📜'], ['nangcap', 'Nâng cấp', '🛠️'], ['giaban', 'Giá bán', '💵'], ['danhgia', 'Đánh giá', '⭐'],
-  ['tongket', 'Tổng kết', '📊'], ['banbe', 'Bạn bè', '👥'], ['crush', 'Milk Tea Crush', '🍬'],
+  ['mxh', 'Mạng Xã Hội', '📱'], ['nhansu', 'Nhân sự', '🏆'], ['thue', 'Thuế & Bank', '📜'], ['nangcap', 'Nâng cấp', '🛠️'], ['giaban', 'Giá bán', '💵'], ['danhgia', 'Đánh giá', '⭐'],
+  ['tongket', 'Tổng kết', '📊'], ['banbe', 'Bạn bè', '👥'], ['crush', 'Milk Tea Crush', '🍬'], ['suutam', 'Sưu tầm', '🎴'],
 ];
-const ALL_TABS = [...TILES.map((t) => t[0]), 'suutam'];
+/** 16 chức năng gom thành 5 nhóm trên thanh điều hướng đáy. */
+export const GROUPS = [
+  { id: 'tiem', label: 'Tiệm', icon: 'tiem', tabs: ['giaban', 'sanh', 'tongket'] },
+  { id: 'kho', label: 'Kho', icon: 'kho', tabs: ['kho', 'vuon'] },
+  { id: 'pt', label: 'Phát triển', icon: 'phattrien', tabs: ['nangcap', 'nhansu', 'chinhanh', 'khoinghiep'] },
+  { id: 'xh', label: 'Xã hội', icon: 'xahoi', tabs: ['mxh', 'banbe', 'danhgia', 'thucung'] },
+  { id: 'them', label: 'Thêm', icon: 'them', tabs: ['crush', 'thue', 'suutam'] },
+];
+const groupOf = (tab) => GROUPS.find((g) => g.tabs.includes(tab)) || GROUPS[1];
+const TILE_BY_ID = Object.fromEntries(TILES.map((t) => [t[0], t]));
+const ALL_TABS = TILES.map((t) => t[0]);
 
 export function renderHome() {
   const view = $('#view');
   if (S.phase === 'sell') return;
   const loc = LOCATIONS[S.location];
   view.innerHTML = `<div class="home" id="home">
-    <div class="sign"><button class="sign-logo" data-act="logo" aria-label="Đổi logo quán">${logoHTML(54)}</button><button class="sign-name" data-act="rename" aria-label="Sửa tên tiệm"><span>${esc(S.shopName)}</span> <i>✎</i></button></div>
-    <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name === 'Tiệm Trà Ban Đầu' ? 'Tiệm Trà Ban Đầu' : loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">🏮 Sảnh Trà</button></div>
+    <div class="shopcard"><button class="sign-logo" data-act="logo" aria-label="Đổi logo quán">${logoHTML(52)}</button>
+      <div class="sc-main"><button class="sign-name" data-act="rename" aria-label="Sửa tên tiệm"><span>${esc(S.shopName)}</span> <i>✎</i></button>
+        <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">🏮 Sảnh Trà</button></div></div></div>
     <div class="chalk" id="board"></div>
-    <div class="tiles" id="tiles"></div>
+    <div class="gtabs" id="tiles"></div>
     <div class="evb" id="evb"></div>
     <div class="expect" id="exp"></div>
     <div class="panel" id="panel"></div>
@@ -40,6 +52,7 @@ export function renderHome() {
     goto: (t) => goTab(t.dataset.to),
     tile: (t) => goTab(t.dataset.tab, false),
   });
+  bindNav();
   const panelActs = new Proxy({}, { get: (_, k) => (t, e) => { const fn = PANELS[S.tab]?.acts?.[k]; if (fn) fn(t, e); else if (k === 'goto') goTab(t.dataset.to); } });
   bindActions($('#panel'), panelActs);
 }
@@ -51,9 +64,33 @@ export function goTab(tab, scroll = true) {
   if (scroll) setTimeout(() => $('#panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
 }
 export function renderTiles() {
+  const g = groupOf(S.tab);
   const el = $('#tiles');
+  if (el) el.innerHTML = g.tabs.map((id) => { const label = TILE_BY_ID[id][1]; return `<button class="tile ${S.tab === id ? 'on' : ''}" data-act="tile" data-tab="${id}">${label}${id === 'thucung' && !S.pet ? ' 🔒' : ''}</button>`; }).join('');
+  renderNav();
+}
+/** Thanh điều hướng đáy (chỉ hiện ở màn chuẩn bị). */
+export function renderNav() {
+  const el = $('#nav');
   if (!el) return;
-  el.innerHTML = TILES.map(([id, label, ico]) => `<button class="tile ${S.tab === id ? 'on' : ''}" data-act="tile" data-tab="${id}" aria-label="${label}"><span class="t-i">${ico}</span><small>${label}</small>${id === 'thucung' && !S.pet ? '<em>🔒</em>' : ''}</button>`).join('');
+  const show = S.phase === 'home' || S.phase === 'end';
+  el.hidden = !show;
+  if (!show) { el.innerHTML = ''; return; }
+  const cur = groupOf(S.tab).id;
+  el.innerHTML = GROUPS.map((g) => `<button class="nav-i ${cur === g.id ? 'on' : ''}" data-act="nav" data-group="${g.id}" aria-label="${g.label}">${icon(g.icon, 22)}<span>${g.label}</span></button>`).join('');
+}
+let navBound = false;
+function bindNav() {
+  if (navBound) return;
+  navBound = true;
+  bindActions($('#nav'), {
+    nav: (t) => {
+      const g = GROUPS.find((x) => x.id === t.dataset.group);
+      if (groupOf(S.tab).id === g.id) { $('#view')?.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+      goTab(g.tabs[0], false);
+      $('#view')?.scrollTo({ top: 0 });
+    },
+  });
 }
 export function renderEvent() {
   const ev = E.eventOf();
@@ -67,9 +104,10 @@ export function renderBoard() {
   if (!el) return;
   const teas = TEAS.filter((t) => S.onMenu[t] && S.unlocked[t]);
   const tops = TOPS.filter((t) => S.onMenu[t] && S.unlocked[t]);
-  const row = (n, p) => `<div class="cr"><span>${esc(n)}</span><b>${p}</b></div>`;
-  el.innerHTML = `<h3>🥤 Menu hôm nay</h3><div class="cols">${teas.map((t) => row(ITEMS[t].name, fmtK(E.priceOf(t)))).join('') || '<em>Chưa có món</em>'}</div>
-    ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row(ITEMS[t].name, '+' + fmtK(E.priceOf(t)))).join('')}</div>` : ''}<div class="sz">Size L +${fmtK(E.priceOf('sizeL'))}</div>`;
+  const tag = (n, p, cls = '') => `<div class="mtag ${cls}"><span>${esc(n)}</span><b>${p}</b></div>`;
+  el.innerHTML = `<div class="mb-h"><h3>Thực đơn hôm nay</h3><small>Size L +${fmtK(E.priceOf('sizeL'))}</small></div>
+    <div class="mb-row">${teas.map((t) => tag(ITEMS[t].name, fmtK(E.priceOf(t)))).join('') || '<em>Chưa có món</em>'}</div>
+    ${tops.length ? `<div class="mb-row sm">${tops.map((t) => tag(ITEMS[t].name, '+' + fmtK(E.priceOf(t)), 'top')).join('')}</div>` : ''}`;
 }
 export function renderPanel() {
   const el = $('#panel');

@@ -52,18 +52,22 @@ export function renderSell() {
           <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="ly">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join('')}</div>
-        <button class="sealer" id="sealer" data-act="seal" aria-label="Máy đóng nắp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
       </div>
       <div class="flav-row" id="flavs"></div>
     </div>
     <div class="work">
-      <div class="work-l">
-        <div class="tag-w sm">PHA LY</div>
-        <button class="phone" data-act="phone" aria-label="Đơn online"><span>📱</span><b id="phoneBadge">0</b></button>
-        <div class="board" id="wboard"><div class="cupslot" id="cupslot" data-act="boardTap"></div>
-          <div class="board-txt" id="boardTxt">Lấy ly<br/>M hoặc L</div>
-          <div class="pourbar" id="pourbar"><div class="pb-zone"></div><i id="pbFill"></i></div></div>
-        <button class="trash" data-act="trash" aria-label="Thùng rác">🗑️</button>
+      <div class="work-row">
+        <div class="work-l">
+          <div class="tag-w sm">PHA LY</div>
+          <div class="board" id="wboard"><div class="cupslot" id="cupslot" data-act="boardTap"></div>
+            <div class="board-txt" id="boardTxt">Lấy ly<br/>M hoặc L</div>
+            <div class="pourbar" id="pourbar"><div class="pb-zone"></div><i id="pbFill"></i></div></div>
+        </div>
+        <button class="sealer" id="sealer" data-act="seal" aria-label="Máy đóng nắp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
+        <div class="work-side">
+          <button class="phone" data-act="phone" aria-label="Đơn online"><span>📱</span><b id="phoneBadge">0</b></button>
+          <button class="trash" data-act="trash" aria-label="Thùng rác">🗑️</button>
+        </div>
       </div>
       <div class="trays" id="trays"></div>
     </div>

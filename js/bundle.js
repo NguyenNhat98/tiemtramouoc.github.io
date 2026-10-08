@@ -2101,6 +2101,25 @@
     return { ...t, author: a, day: S.day, views: randInt(20, 180) + "K", likes: randInt(2, 20) + "K" };
   }
 
+  // js/icons.js
+  var P = {
+    menu: '<path d="M4 7h16M4 12h16M4 17h10"/>',
+    pause: '<rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/>',
+    settings: '<circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21M5.6 5.6l1.9 1.9M16.5 16.5l1.9 1.9M18.4 5.6l-1.9 1.9M7.5 16.5l-1.9 1.9"/>',
+    book: '<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V18c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v12.5"/>',
+    branch: '<path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/>',
+    collect: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/>',
+    tiem: '<path d="M3.5 10.5L5 5h14l1.5 5.5"/><path d="M3.5 10.5a2.8 2.8 0 0 0 5.5 0 2.8 2.8 0 0 0 6 0 2.8 2.8 0 0 0 5.5 0"/><path d="M5.5 13v7h13v-7"/><path d="M10 20v-4h4v4"/>',
+    kho: '<path d="M3.5 7.5L12 3.5l8.5 4v9L12 20.5l-8.5-4z"/><path d="M3.5 7.5L12 11.5l8.5-4M12 11.5v9"/>',
+    phattrien: '<path d="M4 19V10M10 19V5M16 19v-7M21 19H3"/><path d="M13.5 9l3.5-3.5L20 8.5"/>',
+    xahoi: '<circle cx="9" cy="8.5" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M17.5 14.5c2.4 0 3.8 1.7 3.8 4"/>',
+    them: '<circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/>',
+    star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/>'
+  };
+  function icon(name, size = 22, cls = "") {
+    return `<svg class="ic ${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name] || ""}</svg>`;
+  }
+
   // js/ui.js
   function bindActions(root2, map) {
     root2.addEventListener("click", (e) => {
@@ -2178,6 +2197,24 @@
       if (!stack.length) $("#modal").classList.remove("on");
       onClose?.();
     }
+    const sheet = $(".modal", back);
+    let dragY = null;
+    sheet.addEventListener("touchstart", (e) => {
+      const r = sheet.getBoundingClientRect();
+      dragY = e.touches[0].clientY - r.top < 34 ? e.touches[0].clientY : null;
+    }, { passive: true });
+    sheet.addEventListener("touchmove", (e) => {
+      if (dragY == null) return;
+      const dy = Math.max(0, e.touches[0].clientY - dragY);
+      sheet.style.transform = `translateY(${dy}px)`;
+    }, { passive: true });
+    sheet.addEventListener("touchend", (e) => {
+      if (dragY == null) return;
+      const dy = e.changedTouches[0].clientY - dragY;
+      dragY = null;
+      if (dy > 90 && closable) close();
+      else sheet.style.transform = "";
+    });
     $("[data-modal-x]", back)?.addEventListener("click", () => {
       sfx("click");
       close();
@@ -2227,14 +2264,13 @@
     const stars = Array.from({ length: 5 }, (_, i) => `<i class="${i + 1 <= Math.round(full) ? "on" : ""}">\u2605</i>`).join("");
     el.innerHTML = `
     <div class="hud-l">
-      <button class="hbtn ${sell ? "pause" : ""}" data-act="${sell ? "pause" : "settings"}" aria-label="${sell ? "T\u1EA1m d\u1EEBng" : "C\xE0i \u0111\u1EB7t"}">${sell ? "\u23F8" : "\u2699\uFE0F"}</button>
-      <button class="hbtn" data-act="${sell ? "settings" : "guide"}" aria-label="${sell ? "C\xE0i \u0111\u1EB7t" : "H\u01B0\u1EDBng d\u1EABn"}">${sell ? "\u2699\uFE0F" : "\u{1F4D6}"}</button>
+      <button class="hbtn ${sell ? "pause" : ""}" data-act="${sell ? "pause" : "settings"}" aria-label="${sell ? "T\u1EA1m d\u1EEBng" : "C\xE0i \u0111\u1EB7t"}">${icon(sell ? "pause" : "menu", 18)}</button>
     </div>
-    <div class="hud-day"><b>Ng\xE0y ${S.day}</b> <span class="hud-sub">${sub}</span>
+    <div class="hud-day"><b>Ng\xE0y ${S.day}</b><span class="hud-sub">${sub}</span>
       <button class="wx" data-act="forecast" aria-label="D\u1EF1 b\xE1o th\u1EDDi ti\u1EBFt">${w.icon} ${se.name} \xB7 ${S.temp}\xB0C</button></div>
-    <div class="hud-c"><small>${esc(S.shopName)}</small><b data-money>${fmtK(S.money)}</b></div>
     <div class="hud-r">
-      <div class="hud-r-btns"><button class="chip-btn orange" data-act="branchTop">Chi nh\xE1nh</button><button class="chip-btn gold" data-act="collectTop">S\u01B0u t\u1EA7m</button></div>
+      <div class="hud-money"><small>${esc(S.shopName)}</small><b data-money>${fmtK(S.money)}</b></div>
+      <div class="hud-r-btns"><button class="hbtn sm" data-act="${sell ? "settings" : "guide"}" aria-label="${sell ? "C\xE0i \u0111\u1EB7t" : "H\u01B0\u1EDBng d\u1EABn"}">${icon(sell ? "settings" : "book", 16)}</button><button class="hbtn sm" data-act="branchTop" aria-label="Chi nh\xE1nh">${icon("branch", 16)}</button><button class="hbtn sm" data-act="collectTop" aria-label="S\u01B0u t\u1EA7m">${icon("collect", 16)}</button></div>
       <div class="hud-rate"><span class="stars">${stars}</span><small>${S.rating.toFixed(1).replace(".", ",")} \xB7 ${S.ratingCount} \u0110G</small></div>
     </div>`;
   }
@@ -2338,9 +2374,9 @@
       }
     });
   }
-  function sliderRow(label, key, icon) {
+  function sliderRow(label, key, icon2) {
     const v = Math.round(S.settings[key] * 100);
-    return `<div class="vol"><div class="vol-h"><b>${icon} ${label}</b><span class="pct" data-pct="${key}">${v}%</span></div>
+    return `<div class="vol"><div class="vol-h"><b>${icon2} ${label}</b><span class="pct" data-pct="${key}">${v}%</span></div>
     <div class="vol-r"><button class="rb" data-act="vol-" data-k="${key}">\u2212</button><input type="range" min="0" max="100" value="${v}" data-slider="${key}" aria-label="${label}"><button class="rb" data-act="vol+" data-k="${key}">\uFF0B</button><button class="rb" data-act="mute" data-k="${key}">${v ? "\u{1F50A}" : "\u{1F507}"}</button></div></div>`;
   }
   function bindSliders(m) {
@@ -2386,7 +2422,7 @@
   function openSettings() {
     const sell = S.phase === "sell";
     if (sell) setPaused(true);
-    const row = (act, icon, label, value = "") => `<button class="set-row" data-act="${act}"><span class="si">${icon}</span><b>${label}</b><em>${value}</em></button>`;
+    const row = (act, icon2, label, value = "") => `<button class="set-row" data-act="${act}"><span class="si">${icon2}</span><b>${label}</b><em>${value}</em></button>`;
     const m = openModal({
       id: "settings",
       cls: "settings",
@@ -2573,14 +2609,15 @@
     el.hidden = false;
     const hasSave = S.started;
     el.innerHTML = `
-    <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="pearl">\u26AB</span><span class="spark" style="left:30%;top:9%">\u2728</span><span class="spark" style="right:24%;top:20%;animation-delay:-1s">\u2728</span><span class="spark" style="left:16%;top:30%;animation-delay:-1.7s">\u2728</span></div>
-    <div class="intro-awning"></div>
-    <div class="lanterns"><span>\u{1F3EE}</span><span>\u{1F3EE}</span><span>\u{1F3EE}</span></div>
+    <div class="intro-sky"><span class="moon"></span><span class="spark" style="left:18%;top:30%">\u2726</span><span class="spark" style="right:20%;top:24%;animation-delay:-1s">\u2726</span><span class="spark" style="left:70%;top:46%;animation-delay:-1.7s">\u2726</span></div>
+    <div class="noren" aria-hidden="true"><i class="rod"></i><div class="nr-row"><b class="nr a"></b><b class="nr b"></b><b class="nr a"></b><b class="nr b"></b></div></div>
+    <p class="intro-kicker">\u8336 \xB7 TI\u1EC6M TR\xC0 NH\u1ECE</p>
     <h1 class="intro-title">Ti\u1EC7m Tr\xE0<br/>M\u01A1 \u01AF\u1EDBc</h1>
-    <div class="intro-counter">
-      <div class="cups"><span>\u{1F964}</span><span>\u{1F9CB}</span><span>\u{1F375}</span><span>\u{1F9C3}</span></div>
-      <div class="cat">\u{1F63A}<small>z z z</small></div>
-      <div class="plants"><span>\u{1F335}</span><span>\u{1FAB4}</span></div>
+    <div class="intro-cup" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="150" height="150"><g class="steam"><path d="M44 30c-6-8 6-12 0-22M60 32c-6-8 6-12 0-22M76 30c-6-8 6-12 0-22" fill="none" stroke="#b9a58f" stroke-width="3" stroke-linecap="round"/></g>
+        <path d="M22 44h76l-6 40c-1 8-8 14-16 14H44c-8 0-15-6-16-14z" fill="#fbf8f1" stroke="#3b2f2a" stroke-width="3"/>
+        <path d="M26 52h68l-3 20H29z" fill="#8aa56f" opacity=".85"/><path d="M98 54c14 0 14 22 0 22" fill="none" stroke="#3b2f2a" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="60" cy="108" rx="34" ry="5" fill="#3b2f2a" opacity=".12"/></svg>
     </div>
     <p class="intro-tag">Pha tr\xE0, \u0111\xF3n kh\xE1ch, m\u1EDF ti\u1EC7m nh\u1ECF c\u1EE7a ri\xEAng b\u1EA1n</p>
     <div class="intro-info">${esc(S.shopName)} \xB7 Ng\xE0y ${S.day} \xB7 ${fmtK(S.money)}</div>
@@ -2638,18 +2675,22 @@
           <button class="stack big" data-act="cup" data-size="L" aria-label="L\u1EA5y ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="ly">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join("")}</div>
-        <button class="sealer" id="sealer" data-act="seal" aria-label="M\xE1y \u0111\xF3ng n\u1EAFp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
       </div>
       <div class="flav-row" id="flavs"></div>
     </div>
     <div class="work">
-      <div class="work-l">
-        <div class="tag-w sm">PHA LY</div>
-        <button class="phone" data-act="phone" aria-label="\u0110\u01A1n online"><span>\u{1F4F1}</span><b id="phoneBadge">0</b></button>
-        <div class="board" id="wboard"><div class="cupslot" id="cupslot" data-act="boardTap"></div>
-          <div class="board-txt" id="boardTxt">L\u1EA5y ly<br/>M ho\u1EB7c L</div>
-          <div class="pourbar" id="pourbar"><div class="pb-zone"></div><i id="pbFill"></i></div></div>
-        <button class="trash" data-act="trash" aria-label="Th\xF9ng r\xE1c">\u{1F5D1}\uFE0F</button>
+      <div class="work-row">
+        <div class="work-l">
+          <div class="tag-w sm">PHA LY</div>
+          <div class="board" id="wboard"><div class="cupslot" id="cupslot" data-act="boardTap"></div>
+            <div class="board-txt" id="boardTxt">L\u1EA5y ly<br/>M ho\u1EB7c L</div>
+            <div class="pourbar" id="pourbar"><div class="pb-zone"></div><i id="pbFill"></i></div></div>
+        </div>
+        <button class="sealer" id="sealer" data-act="seal" aria-label="M\xE1y \u0111\xF3ng n\u1EAFp"><div class="sl-head"></div><div class="sl-lid"></div><div class="sl-body"><span class="sl-led">READY</span><div class="sl-knobs"><i></i><i></i></div></div><div class="sl-slot"></div></button>
+        <div class="work-side">
+          <button class="phone" data-act="phone" aria-label="\u0110\u01A1n online"><span>\u{1F4F1}</span><b id="phoneBadge">0</b></button>
+          <button class="trash" data-act="trash" aria-label="Th\xF9ng r\xE1c">\u{1F5D1}\uFE0F</button>
+        </div>
       </div>
       <div class="trays" id="trays"></div>
     </div>
@@ -4167,14 +4208,14 @@
     for (const [id, el] of present) if (!keep.has(id) && !el.classList.contains("pop")) el.remove();
   }
   var tileCenter = (r, c) => ({ x: (c + 0.5) * 100 / N, y: (r + 0.5) * 100 / N });
-  function burst(board, r, c, icon, big = false) {
+  function burst(board, r, c, icon2, big = false) {
     if (!board || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const { x, y } = tileCenter(r, c);
     const n = big ? 10 : 6;
     const w = board.clientWidth || 300;
     for (let i = 0; i < n; i++) {
       const a = i / n * Math.PI * 2 + rand(-0.3, 0.3), d = rand(0.45, big ? 1.5 : 1) * w / N * 1.5;
-      const el = h(`<span class="mfx" style="left:${x}%;top:${y}%;font-size:${rand(big ? 14 : 11, big ? 22 : 17)}px">${i % 3 === 0 ? "\u2728" : i % 3 === 1 ? icon : "\u{1F4A5}"}</span>`);
+      const el = h(`<span class="mfx" style="left:${x}%;top:${y}%;font-size:${rand(big ? 14 : 11, big ? 22 : 17)}px">${i % 3 === 0 ? "\u2728" : i % 3 === 1 ? icon2 : "\u{1F4A5}"}</span>`);
       board.appendChild(el);
       el.animate([
         { transform: "translate(-50%,-50%) scale(.4) rotate(0)", opacity: 1 },
@@ -4419,7 +4460,7 @@
   var PDUR = 30;
   var PGOAL = 120;
   var PEARL = ["\u26AB", "\u{1FA77}", "\u{1F49A}", "\u{1F49B}", "\u{1F499}"];
-  var P = null;
+  var P2 = null;
   function pearlBurst(el) {
     const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
     for (let i = 0; i < 5; i++) {
@@ -4459,21 +4500,21 @@
   var pHas = (b) => b.some((row, r) => row.some((_, c) => pGroup(b, r, c).length >= 2));
   function pRender() {
     const el = $("#pBoard");
-    if (!el || !P) return;
-    el.innerHTML = P.b.map((row, r) => row.map((v, c) => `<button class="pc p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="Tr\xE2n ch\xE2u">${PEARL[v]}</button>`).join("")).join("");
-    $("#pScore").textContent = P.score;
-    $("#pTime").textContent = Math.ceil(P.t) + "s";
-    $("#pBar").style.width = `${P.t / PDUR * 100}%`;
+    if (!el || !P2) return;
+    el.innerHTML = P2.b.map((row, r) => row.map((v, c) => `<button class="pc p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="Tr\xE2n ch\xE2u">${PEARL[v]}</button>`).join("")).join("");
+    $("#pScore").textContent = P2.score;
+    $("#pTime").textContent = Math.ceil(P2.t) + "s";
+    $("#pBar").style.width = `${P2.t / PDUR * 100}%`;
   }
   function pEnd() {
-    if (!P || P.over) return;
-    P.over = true;
-    clearInterval(P.timer);
-    const win = P.score >= PGOAL;
-    const money = P.score * 60, pearls = Math.floor(P.score / 40);
+    if (!P2 || P2.over) return;
+    P2.over = true;
+    clearInterval(P2.timer);
+    const win = P2.score >= PGOAL;
+    const money = P2.score * 60, pearls = Math.floor(P2.score / 40);
     S.money += money;
     addStock("tcDen", pearls);
-    S.pearl.best = Math.max(S.pearl.best, P.score);
+    S.pearl.best = Math.max(S.pearl.best, P2.score);
     let extra = "";
     if (win && chance(0.3)) {
       S.collection.packs++;
@@ -4482,52 +4523,52 @@
     markDirty("hud", "panel");
     requestSave();
     sfx(win ? "level" : "sad");
-    $("#pBody").innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F642}"}</div><h3>${win ? "TH\xC0NH C\xD4NG!" : "C\u1ED1 l\xEAn l\u1EA7n sau!"}</h3><p>\u0110i\u1EC3m: <b>${P.score}</b> (k\u1EF7 l\u1EE5c ${S.pearl.best})</p><p>Ti\u1EC1n th\u01B0\u1EDFng: <b class="money">+${fmtK(money)}</b> \xB7 Tr\xE2n ch\xE2u \u0111en: <b>+${pearls}</b></p>${extra}<button class="btn pri block" data-act="x">Nh\u1EADn th\u01B0\u1EDFng \u{1F381}</button></div>`;
+    $("#pBody").innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F642}"}</div><h3>${win ? "TH\xC0NH C\xD4NG!" : "C\u1ED1 l\xEAn l\u1EA7n sau!"}</h3><p>\u0110i\u1EC3m: <b>${P2.score}</b> (k\u1EF7 l\u1EE5c ${S.pearl.best})</p><p>Ti\u1EC1n th\u01B0\u1EDFng: <b class="money">+${fmtK(money)}</b> \xB7 Tr\xE2n ch\xE2u \u0111en: <b>+${pearls}</b></p>${extra}<button class="btn pri block" data-act="x">Nh\u1EADn th\u01B0\u1EDFng \u{1F381}</button></div>`;
   }
   function openPearl() {
     if (S.pearl.playsDay >= 3) return toast("H\xF4m nay b\u1EA1n \u0111\xE3 ch\u01A1i \u0111\u1EE7 3 l\u01B0\u1EE3t Tr\xE2n Ch\xE2u N\u1ED5", "err");
     const m = openModal({ id: "pearl", cls: "small", onClose: () => {
-      if (P?.timer) clearInterval(P.timer);
-      P = null;
+      if (P2?.timer) clearInterval(P2.timer);
+      P2 = null;
     }, html: `<div id="pBody"><h3 class="m-title">\u26AB Tr\xE2n Ch\xE2u N\u1ED5</h3><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Combo li\xEAn ti\u1EBFp = nh\xE2n \u0111i\u1EC3m! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>` });
     bindActions(m.body, {
       x: () => m.close(),
       start: () => {
         S.pearl.playsDay++;
-        P = { b: pNew(), score: 0, combo: 0, t: PDUR, over: false, timer: null };
+        P2 = { b: pNew(), score: 0, combo: 0, t: PDUR, over: false, timer: null };
         $("#pBody").innerHTML = `<div class="pg"><div class="mg-head"><span>\u2B50 <b id="pScore">0</b></span><span id="pCombo" class="pcombo"></span><span>\u23F1 <b id="pTime">30s</b></span></div><div class="bar"><i id="pBar"></i></div><div class="pboard" id="pBoard"></div><p class="m-text center muted">Ch\u1EA1m nh\xF3m \u22652 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau. Combo li\xEAn ti\u1EBFp = nh\xE2n \u0111i\u1EC3m! M\u1EE5c ti\xEAu ${PGOAL} \u0111i\u1EC3m.</p></div>`;
         pRender();
         let last2 = performance.now();
-        P.timer = setInterval(() => {
+        P2.timer = setInterval(() => {
           const now = performance.now();
-          P.t -= (now - last2) / 1e3;
+          P2.t -= (now - last2) / 1e3;
           last2 = now;
-          if (P.t <= 0) {
-            P.t = 0;
+          if (P2.t <= 0) {
+            P2.t = 0;
             pEnd();
             return;
           }
           const tm = $("#pTime");
           if (tm) {
-            tm.textContent = Math.ceil(P.t) + "s";
-            $("#pBar").style.width = `${P.t / PDUR * 100}%`;
+            tm.textContent = Math.ceil(P2.t) + "s";
+            $("#pBar").style.width = `${P2.t / PDUR * 100}%`;
           }
         }, 120);
       },
       pop: (t) => {
-        if (!P || P.over) return;
-        const r = +t.dataset.r, c = +t.dataset.c, g = pGroup(P.b, r, c);
+        if (!P2 || P2.over) return;
+        const r = +t.dataset.r, c = +t.dataset.c, g = pGroup(P2.b, r, c);
         if (g.length < 2) {
-          P.combo = 0;
+          P2.combo = 0;
           $("#pCombo").textContent = "";
           sfx("pop");
           return;
         }
-        P.combo++;
-        const mul = P.combo >= 5 ? 5 : P.combo >= 3 ? 3 : P.combo >= 2 ? 2 : 1;
+        P2.combo++;
+        const mul = P2.combo >= 5 ? 5 : P2.combo >= 3 ? 3 : P2.combo >= 2 ? 2 : 1;
         const gain = g.length * g.length * mul;
-        P.score += gain;
-        for (const [y, x] of g) P.b[y][x] = -1;
+        P2.score += gain;
+        for (const [y, x] of g) P2.b[y][x] = -1;
         $("#pCombo").textContent = mul > 1 ? `Combo x${mul}!` : "";
         fxText(`+${gain}`, t, "g");
         for (const [y, x] of g) {
@@ -4536,8 +4577,8 @@
         }
         if (mul >= 3) fxSpark(t, 8);
         sfx(g.length >= 5 ? "level" : "match");
-        pCollapse(P.b);
-        if (!pHas(P.b)) P.b = pNew();
+        pCollapse(P2.b);
+        if (!pHas(P2.b)) P2.b = pNew();
         pRender();
       }
     });
@@ -4559,7 +4600,7 @@
   var sid = 0;
   function stampSVG(st, size = 150, name = S.shopName) {
     const id = "sp" + sid++;
-    const icon = st.img ? `<image href="${st.img}" x="30" y="26" width="40" height="40" clip-path="circle(20px at 20px 20px)" preserveAspectRatio="xMidYMid slice"/>` : `<text x="50" y="${st.textStyle === "curveBottom" ? 56 : 58}" text-anchor="middle" font-size="30">${st.icon}</text>`;
+    const icon2 = st.img ? `<image href="${st.img}" x="30" y="26" width="40" height="40" clip-path="circle(20px at 20px 20px)" preserveAspectRatio="xMidYMid slice"/>` : `<text x="50" y="${st.textStyle === "curveBottom" ? 56 : 58}" text-anchor="middle" font-size="30">${st.icon}</text>`;
     const frame2 = st.frame === "round" ? `<circle cx="50" cy="50" r="47" fill="${st.bg}" stroke="#f06f8f" stroke-width="3"/>` : st.frame === "rounded" ? `<rect x="4" y="4" width="92" height="92" rx="22" fill="${st.bg}" stroke="#f06f8f" stroke-width="3"/>` : `<circle cx="50" cy="46" r="42" fill="${st.bg}" stroke="#f06f8f" stroke-width="3"/><path d="M8 72 L50 84 L92 72 L92 90 L50 98 L8 90 Z" fill="#f06f8f"/>`;
     const dark = ["#8b5a3c", "#2f2a3a"].includes(st.bg);
     const fg = dark ? "#fff" : "#7a3b4d";
@@ -4570,7 +4611,7 @@
     else if (st.textStyle === "curveBottom") text = `<path id="${id}" d="M14,56 A36,36 0 0 0 86,56" fill="none"/><text font-size="${fs}" font-weight="800" fill="${fg}" letter-spacing="1"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${nm}</textPath></text>`;
     else text = `<text x="50" y="${st.frame === "ribbon" ? 88 : 78}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${st.frame === "ribbon" ? "#fff" : fg}">${nm}</text>`;
     const slogan = st.slogan && st.slogan !== "B\u1ECF tr\u1ED1ng" && st.textStyle !== "curveBottom" && st.frame !== "ribbon" ? `<text x="50" y="88" text-anchor="middle" font-size="5" fill="${fg}" opacity=".8">${esc(st.slogan)}</text>` : "";
-    const iconEl = icon;
+    const iconEl = icon2;
     return `<svg class="stamp-svg" width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="Tem th\u01B0\u01A1ng hi\u1EC7u">${frame2}${iconEl}${text}${slogan}</svg>`;
   }
   function fileToDataURL(file, size = 160) {
@@ -4742,25 +4783,36 @@
     ["sanh", "S\u1EA3nh Tr\xE0", "\u{1F3EE}"],
     ["chinhanh", "Chi Nh\xE1nh", "\u{1F3E2}"],
     ["mxh", "M\u1EA1ng X\xE3 H\u1ED9i", "\u{1F4F1}"],
-    ["nhansu", "Qu\u1EA3n l\xFD nh\xE2n s\u1EF1", "\u{1F3C6}"],
+    ["nhansu", "Nh\xE2n s\u1EF1", "\u{1F3C6}"],
     ["thue", "Thu\u1EBF & Bank", "\u{1F4DC}"],
     ["nangcap", "N\xE2ng c\u1EA5p", "\u{1F6E0}\uFE0F"],
     ["giaban", "Gi\xE1 b\xE1n", "\u{1F4B5}"],
     ["danhgia", "\u0110\xE1nh gi\xE1", "\u2B50"],
     ["tongket", "T\u1ED5ng k\u1EBFt", "\u{1F4CA}"],
     ["banbe", "B\u1EA1n b\xE8", "\u{1F465}"],
-    ["crush", "Milk Tea Crush", "\u{1F36C}"]
+    ["crush", "Milk Tea Crush", "\u{1F36C}"],
+    ["suutam", "S\u01B0u t\u1EA7m", "\u{1F3B4}"]
   ];
-  var ALL_TABS = [...TILES.map((t) => t[0]), "suutam"];
+  var GROUPS = [
+    { id: "tiem", label: "Ti\u1EC7m", icon: "tiem", tabs: ["giaban", "sanh", "tongket"] },
+    { id: "kho", label: "Kho", icon: "kho", tabs: ["kho", "vuon"] },
+    { id: "pt", label: "Ph\xE1t tri\u1EC3n", icon: "phattrien", tabs: ["nangcap", "nhansu", "chinhanh", "khoinghiep"] },
+    { id: "xh", label: "X\xE3 h\u1ED9i", icon: "xahoi", tabs: ["mxh", "banbe", "danhgia", "thucung"] },
+    { id: "them", label: "Th\xEAm", icon: "them", tabs: ["crush", "thue", "suutam"] }
+  ];
+  var groupOf = (tab) => GROUPS.find((g) => g.tabs.includes(tab)) || GROUPS[1];
+  var TILE_BY_ID = Object.fromEntries(TILES.map((t) => [t[0], t]));
+  var ALL_TABS = TILES.map((t) => t[0]);
   function renderHome() {
     const view = $("#view");
     if (S.phase === "sell") return;
     const loc = LOCATIONS[S.location];
     view.innerHTML = `<div class="home" id="home">
-    <div class="sign"><button class="sign-logo" data-act="logo" aria-label="\u0110\u1ED5i logo qu\xE1n">${logoHTML(54)}</button><button class="sign-name" data-act="rename" aria-label="S\u1EEDa t\xEAn ti\u1EC7m"><span>${esc(S.shopName)}</span> <i>\u270E</i></button></div>
-    <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name === "Ti\u1EC7m Tr\xE0 Ban \u0110\u1EA7u" ? "Ti\u1EC7m Tr\xE0 Ban \u0110\u1EA7u" : loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">\u{1F3EE} S\u1EA3nh Tr\xE0</button></div>
+    <div class="shopcard"><button class="sign-logo" data-act="logo" aria-label="\u0110\u1ED5i logo qu\xE1n">${logoHTML(52)}</button>
+      <div class="sc-main"><button class="sign-name" data-act="rename" aria-label="S\u1EEDa t\xEAn ti\u1EC7m"><span>${esc(S.shopName)}</span> <i>\u270E</i></button>
+        <div class="loc-chips"><button class="chip y" data-act="goto" data-to="khoinghiep">${loc.icon} ${esc(loc.name)}</button><button class="chip green" data-act="goto" data-to="sanh">\u{1F3EE} S\u1EA3nh Tr\xE0</button></div></div></div>
     <div class="chalk" id="board"></div>
-    <div class="tiles" id="tiles"></div>
+    <div class="gtabs" id="tiles"></div>
     <div class="evb" id="evb"></div>
     <div class="expect" id="exp"></div>
     <div class="panel" id="panel"></div>
@@ -4775,6 +4827,7 @@
       goto: (t) => goTab(t.dataset.to),
       tile: (t) => goTab(t.dataset.tab, false)
     });
+    bindNav();
     const panelActs = new Proxy({}, { get: (_, k) => (t, e) => {
       const fn = PANELS[S.tab]?.acts?.[k];
       if (fn) fn(t, e);
@@ -4790,9 +4843,41 @@
     if (scroll) setTimeout(() => $("#panel")?.scrollIntoView({ behavior: "smooth", block: "start" }), 30);
   }
   function renderTiles() {
+    const g = groupOf(S.tab);
     const el = $("#tiles");
+    if (el) el.innerHTML = g.tabs.map((id) => {
+      const label = TILE_BY_ID[id][1];
+      return `<button class="tile ${S.tab === id ? "on" : ""}" data-act="tile" data-tab="${id}">${label}${id === "thucung" && !S.pet ? " \u{1F512}" : ""}</button>`;
+    }).join("");
+    renderNav();
+  }
+  function renderNav() {
+    const el = $("#nav");
     if (!el) return;
-    el.innerHTML = TILES.map(([id, label, ico]) => `<button class="tile ${S.tab === id ? "on" : ""}" data-act="tile" data-tab="${id}" aria-label="${label}"><span class="t-i">${ico}</span><small>${label}</small>${id === "thucung" && !S.pet ? "<em>\u{1F512}</em>" : ""}</button>`).join("");
+    const show2 = S.phase === "home" || S.phase === "end";
+    el.hidden = !show2;
+    if (!show2) {
+      el.innerHTML = "";
+      return;
+    }
+    const cur2 = groupOf(S.tab).id;
+    el.innerHTML = GROUPS.map((g) => `<button class="nav-i ${cur2 === g.id ? "on" : ""}" data-act="nav" data-group="${g.id}" aria-label="${g.label}">${icon(g.icon, 22)}<span>${g.label}</span></button>`).join("");
+  }
+  var navBound = false;
+  function bindNav() {
+    if (navBound) return;
+    navBound = true;
+    bindActions($("#nav"), {
+      nav: (t) => {
+        const g = GROUPS.find((x) => x.id === t.dataset.group);
+        if (groupOf(S.tab).id === g.id) {
+          $("#view")?.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+        goTab(g.tabs[0], false);
+        $("#view")?.scrollTo({ top: 0 });
+      }
+    });
   }
   function renderEvent() {
     const ev = eventOf();
@@ -4806,16 +4891,17 @@
     if (!el) return;
     const teas = TEAS.filter((t) => S.onMenu[t] && S.unlocked[t]);
     const tops = TOPS.filter((t) => S.onMenu[t] && S.unlocked[t]);
-    const row = (n, p) => `<div class="cr"><span>${esc(n)}</span><b>${p}</b></div>`;
-    el.innerHTML = `<h3>\u{1F964} Menu h\xF4m nay</h3><div class="cols">${teas.map((t) => row(ITEMS[t].name, fmtK(priceOf(t)))).join("") || "<em>Ch\u01B0a c\xF3 m\xF3n</em>"}</div>
-    ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row(ITEMS[t].name, "+" + fmtK(priceOf(t)))).join("")}</div>` : ""}<div class="sz">Size L +${fmtK(priceOf("sizeL"))}</div>`;
+    const tag = (n, p, cls = "") => `<div class="mtag ${cls}"><span>${esc(n)}</span><b>${p}</b></div>`;
+    el.innerHTML = `<div class="mb-h"><h3>Th\u1EF1c \u0111\u01A1n h\xF4m nay</h3><small>Size L +${fmtK(priceOf("sizeL"))}</small></div>
+    <div class="mb-row">${teas.map((t) => tag(ITEMS[t].name, fmtK(priceOf(t)))).join("") || "<em>Ch\u01B0a c\xF3 m\xF3n</em>"}</div>
+    ${tops.length ? `<div class="mb-row sm">${tops.map((t) => tag(ITEMS[t].name, "+" + fmtK(priceOf(t)), "top")).join("")}</div>` : ""}`;
   }
   function renderPanel() {
     const el = $("#panel");
     if (!el) return;
-    const P2 = PANELS[S.tab] || PANELS.kho;
-    el.innerHTML = `<div class="panel-in" data-tab="${S.tab}">${P2.html()}</div>`;
-    P2.bind?.(el);
+    const P3 = PANELS[S.tab] || PANELS.kho;
+    el.innerHTML = `<div class="panel-in" data-tab="${S.tab}">${P3.html()}</div>`;
+    P3.bind?.(el);
     renderEvent();
   }
   function renderCta() {
@@ -4891,27 +4977,27 @@
     });
   }
   function openPanelModal(tab) {
-    const P2 = PANELS[tab];
-    const m = openModal({ id: "pm-" + tab, cls: "tall", html: `<div class="panel-in">${P2.html()}</div>` });
+    const P3 = PANELS[tab];
+    const m = openModal({ id: "pm-" + tab, cls: "tall", html: `<div class="panel-in">${P3.html()}</div>` });
     const redraw = () => {
-      m.body.innerHTML = `<div class="panel-in">${P2.html()}</div>`;
-      P2.bind?.(m.body);
+      m.body.innerHTML = `<div class="panel-in">${P3.html()}</div>`;
+      P3.bind?.(m.body);
     };
     bindActions(m.body, new Proxy({}, { get: (_, k) => (t, e) => {
-      const fn = P2.acts?.[k];
+      const fn = P3.acts?.[k];
       if (fn) {
         fn(t, e);
         setTimeout(redraw, 20);
       }
     } }));
-    P2.bind?.(m.body);
+    P3.bind?.(m.body);
     return m;
   }
 
   // js/tutorial.js
   var STEPS = {
     home: [
-      { sel: '.tile[data-tab="kho"]', ico: "\u{1F4E6}", t: "B\u01B0\u1EDBc 1 \xB7 Ch\u1ECDn nguy\xEAn li\u1EC7u", d: "M\u1EDF <b>Kho</b>, ch\u1ECDn s\u1ED1 l\u01B0\u1EE3ng <b>Tr\xE0</b>, <b>Topping</b> v\xE0 <b>D\u1EE5ng c\u1EE5</b> b\u1EA1n mu\u1ED1n d\xF9ng h\xF4m nay b\u1EB1ng n\xFAt \u2212 / +." },
+      { sel: '.nav-i[data-group="kho"], .tile[data-tab="kho"]', ico: "\u{1F4E6}", t: "B\u01B0\u1EDBc 1 \xB7 Ch\u1ECDn nguy\xEAn li\u1EC7u", d: "M\u1EDF <b>Kho</b>, ch\u1ECDn s\u1ED1 l\u01B0\u1EE3ng <b>Tr\xE0</b>, <b>Topping</b> v\xE0 <b>D\u1EE5ng c\u1EE5</b> b\u1EA1n mu\u1ED1n d\xF9ng h\xF4m nay b\u1EB1ng n\xFAt \u2212 / +." },
       { sel: "#cta .cta-btn", ico: "\u{1F6D2}", t: "B\u01B0\u1EDBc 2 \xB7 Nh\u1EADp nguy\xEAn li\u1EC7u", d: "B\u1EA5m n\xFAt <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n v\xE0 \u0111\u01B0a nguy\xEAn li\u1EC7u v\xE0o kho. N\xFAt \u0111\u1ECF \u26A0\uFE0F ngh\u0129a l\xE0 b\u1EA1n c\xF2n thi\u1EBFu m\xF3n b\u1EAFt bu\u1ED9c." },
       { sel: "#cta .cta-btn", ico: "\u{1F3EE}", t: "B\u01B0\u1EDBc 3 \xB7 M\u1EDF c\u1EEDa", d: "Khi \u0111\u1EE7 nguy\xEAn li\u1EC7u, n\xFAt \u0111\u1ED5i th\xE0nh <b>M\u1EDF c\u1EEDa</b>. B\u1EA5m \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng!" }
     ],
@@ -5014,6 +5100,8 @@
 
   // js/main.js
   function renderView() {
+    const app = $("#app");
+    if (app) app.dataset.phase = S.phase;
     if (S.phase === "sell") {
       renderSell();
       return;
@@ -5034,6 +5122,7 @@
     registerRenderer("view", () => {
       renderView();
       renderCta();
+      renderNav();
     });
     registerRenderer("panel", () => {
       if (S.phase !== "sell") renderPanel();

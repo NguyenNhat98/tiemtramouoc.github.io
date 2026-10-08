@@ -6,7 +6,7 @@ import { S, $, h, esc, setPaused, requestSave, sfx } from './core.js';
 
 const STEPS = {
   home: [
-    { sel: '.tile[data-tab="kho"]', ico: '📦', t: 'Bước 1 · Chọn nguyên liệu', d: 'Mở <b>Kho</b>, chọn số lượng <b>Trà</b>, <b>Topping</b> và <b>Dụng cụ</b> bạn muốn dùng hôm nay bằng nút − / +.' },
+    { sel: '.nav-i[data-group="kho"], .tile[data-tab="kho"]', ico: '📦', t: 'Bước 1 · Chọn nguyên liệu', d: 'Mở <b>Kho</b>, chọn số lượng <b>Trà</b>, <b>Topping</b> và <b>Dụng cụ</b> bạn muốn dùng hôm nay bằng nút − / +.' },
     { sel: '#cta .cta-btn', ico: '🛒', t: 'Bước 2 · Nhập nguyên liệu', d: 'Bấm nút <b>Nấu & nhập</b> để trả tiền và đưa nguyên liệu vào kho. Nút đỏ ⚠️ nghĩa là bạn còn thiếu món bắt buộc.' },
     { sel: '#cta .cta-btn', ico: '🏮', t: 'Bước 3 · Mở cửa', d: 'Khi đủ nguyên liệu, nút đổi thành <b>Mở cửa</b>. Bấm để bắt đầu ca bán hàng!' },
   ],

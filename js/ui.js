@@ -8,6 +8,7 @@ import {
 } from './core.js';
 import * as E from './econ.js';
 import { SH, closeNow, nextDay } from './sell.js';
+import { icon } from './icons.js';
 
 /* ===== Delegation ===== */
 export function bindActions(root, map) {
@@ -80,6 +81,12 @@ export function openModal({ html: body, cls = '', title = '', onClose = null, cl
     if (!stack.length) $('#modal').classList.remove('on');
     onClose?.();
   }
+  // Vuốt xuống ở phần đầu bảng để đóng (bottom sheet)
+  const sheet = $('.modal', back);
+  let dragY = null;
+  sheet.addEventListener('touchstart', (e) => { const r = sheet.getBoundingClientRect(); dragY = e.touches[0].clientY - r.top < 34 ? e.touches[0].clientY : null; }, { passive: true });
+  sheet.addEventListener('touchmove', (e) => { if (dragY == null) return; const dy = Math.max(0, e.touches[0].clientY - dragY); sheet.style.transform = `translateY(${dy}px)`; }, { passive: true });
+  sheet.addEventListener('touchend', (e) => { if (dragY == null) return; const dy = e.changedTouches[0].clientY - dragY; dragY = null; if (dy > 90 && closable) close(); else sheet.style.transform = ''; });
   $('[data-modal-x]', back)?.addEventListener('click', () => { sfx('click'); close(); });
   back.addEventListener('click', (e) => { if (e.target === back && closable) close(); });
   stack.push(m);
@@ -124,14 +131,13 @@ export function renderHud() {
   const stars = Array.from({ length: 5 }, (_, i) => `<i class="${i + 1 <= Math.round(full) ? 'on' : ''}">★</i>`).join('');
   el.innerHTML = `
     <div class="hud-l">
-      <button class="hbtn ${sell ? 'pause' : ''}" data-act="${sell ? 'pause' : 'settings'}" aria-label="${sell ? 'Tạm dừng' : 'Cài đặt'}">${sell ? '⏸' : '⚙️'}</button>
-      <button class="hbtn" data-act="${sell ? 'settings' : 'guide'}" aria-label="${sell ? 'Cài đặt' : 'Hướng dẫn'}">${sell ? '⚙️' : '📖'}</button>
+      <button class="hbtn ${sell ? 'pause' : ''}" data-act="${sell ? 'pause' : 'settings'}" aria-label="${sell ? 'Tạm dừng' : 'Cài đặt'}">${icon(sell ? 'pause' : 'menu', 18)}</button>
     </div>
-    <div class="hud-day"><b>Ngày ${S.day}</b> <span class="hud-sub">${sub}</span>
+    <div class="hud-day"><b>Ngày ${S.day}</b><span class="hud-sub">${sub}</span>
       <button class="wx" data-act="forecast" aria-label="Dự báo thời tiết">${w.icon} ${se.name} · ${S.temp}°C</button></div>
-    <div class="hud-c"><small>${esc(S.shopName)}</small><b data-money>${fmtK(S.money)}</b></div>
     <div class="hud-r">
-      <div class="hud-r-btns"><button class="chip-btn orange" data-act="branchTop">Chi nhánh</button><button class="chip-btn gold" data-act="collectTop">Sưu tầm</button></div>
+      <div class="hud-money"><small>${esc(S.shopName)}</small><b data-money>${fmtK(S.money)}</b></div>
+      <div class="hud-r-btns"><button class="hbtn sm" data-act="${sell ? 'settings' : 'guide'}" aria-label="${sell ? 'Cài đặt' : 'Hướng dẫn'}">${icon(sell ? 'settings' : 'book', 16)}</button><button class="hbtn sm" data-act="branchTop" aria-label="Chi nhánh">${icon('branch', 16)}</button><button class="hbtn sm" data-act="collectTop" aria-label="Sưu tầm">${icon('collect', 16)}</button></div>
       <div class="hud-rate"><span class="stars">${stars}</span><small>${S.rating.toFixed(1).replace('.', ',')} · ${S.ratingCount} ĐG</small></div>
     </div>`;
 }
@@ -379,14 +385,15 @@ export function showIntro(onPlay) {
   el.hidden = false;
   const hasSave = S.started;
   el.innerHTML = `
-    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="pearl">⚫</span><span class="spark" style="left:30%;top:9%">✨</span><span class="spark" style="right:24%;top:20%;animation-delay:-1s">✨</span><span class="spark" style="left:16%;top:30%;animation-delay:-1.7s">✨</span></div>
-    <div class="intro-awning"></div>
-    <div class="lanterns"><span>🏮</span><span>🏮</span><span>🏮</span></div>
+    <div class="intro-sky"><span class="moon"></span><span class="spark" style="left:18%;top:30%">✦</span><span class="spark" style="right:20%;top:24%;animation-delay:-1s">✦</span><span class="spark" style="left:70%;top:46%;animation-delay:-1.7s">✦</span></div>
+    <div class="noren" aria-hidden="true"><i class="rod"></i><div class="nr-row"><b class="nr a"></b><b class="nr b"></b><b class="nr a"></b><b class="nr b"></b></div></div>
+    <p class="intro-kicker">茶 · TIỆM TRÀ NHỎ</p>
     <h1 class="intro-title">Tiệm Trà<br/>Mơ Ước</h1>
-    <div class="intro-counter">
-      <div class="cups"><span>🥤</span><span>🧋</span><span>🍵</span><span>🧃</span></div>
-      <div class="cat">😺<small>z z z</small></div>
-      <div class="plants"><span>🌵</span><span>🪴</span></div>
+    <div class="intro-cup" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="150" height="150"><g class="steam"><path d="M44 30c-6-8 6-12 0-22M60 32c-6-8 6-12 0-22M76 30c-6-8 6-12 0-22" fill="none" stroke="#b9a58f" stroke-width="3" stroke-linecap="round"/></g>
+        <path d="M22 44h76l-6 40c-1 8-8 14-16 14H44c-8 0-15-6-16-14z" fill="#fbf8f1" stroke="#3b2f2a" stroke-width="3"/>
+        <path d="M26 52h68l-3 20H29z" fill="#8aa56f" opacity=".85"/><path d="M98 54c14 0 14 22 0 22" fill="none" stroke="#3b2f2a" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="60" cy="108" rx="34" ry="5" fill="#3b2f2a" opacity=".12"/></svg>
     </div>
     <p class="intro-tag">Pha trà, đón khách, mở tiệm nhỏ của riêng bạn</p>
     <div class="intro-info">${esc(S.shopName)} · Ngày ${S.day} · ${fmtK(S.money)}</div>
