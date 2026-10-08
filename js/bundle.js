@@ -3197,14 +3197,14 @@
     const life = lifeDays(id);
     const profit = it.price ? priceOf(id) - costOf(id) : 0;
     const pctMargin = it.price ? Math.round(profit / priceOf(id) * 100) : 0;
-    const step = it.kind === "supply" ? 10 : it.kind === "flavor" ? 1 : 5;
+    const step = 1;
     return `<div class="krow">
     <span class="k-ico" style="background:${it.color}33">${it.icon}</span>
     <div class="k-main"><div class="k-t"><b>${it.name}</b>${life ? `<span class="life">\u23F3 ${life} ng\xE0y</span>` : ""}</div>
       ${it.price && it.kind !== "supply" ? `<span class="sale">\u{1F4B5} B\xE1n ${pctMargin}% (+${fmtK(profit)})</span>` : ""}
       <small>\u{1F4E6} ${qty}${it.kind === "flavor" ? " ly" : ""} \xB7 ${fmtK(costOf(id) * (it.kind === "flavor" ? FLAVOR_BOTTLE : 1))}${it.kind === "flavor" ? "/chai" : "/ly"}${exp ? ` \xB7 <em class="warn">\u26A0\uFE0F ${exp} h\u1EBFt h\u1EA1n h\xF4m nay</em>` : ""}${S.lastUsed[id] ? ` \xB7 \u{1F3ED} d\xF9ng ${S.lastUsed[id]}` : ""}</small>
       ${plan ? `<small class="plan">+${plan * unit}${it.kind === "flavor" ? ` ly (${plan} chai)` : ""} \xB7 ${fmtK(unitCost(id) * plan)}</small>` : ""}</div>
-    <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Gi\u1EA3m">\u2212</button><span class="num">${plan * (it.kind === "flavor" ? 1 : 1)}</span><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="T\u0103ng">+</button></div>
+    <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Gi\u1EA3m">\u2212</button><input class="num" type="number" inputmode="numeric" min="0" max="999" value="${plan}" data-plan="${id}" aria-label="S\u1ED1 l\u01B0\u1EE3ng ${it.name}"><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="T\u0103ng">+</button></div>
   </div>`;
   }
   var kho = {
@@ -3234,6 +3234,12 @@
       "k-": (t) => {
         const id = t.dataset.id;
         setPlan(id, (S.plan[id] || 0) - +t.dataset.step);
+      }
+    },
+    bind(root2) {
+      for (const inp of root2.querySelectorAll("[data-plan]")) {
+        inp.addEventListener("focus", () => inp.select());
+        inp.addEventListener("change", () => setPlan(inp.dataset.plan, Math.round(+inp.value || 0)));
       }
     }
   };
@@ -3532,7 +3538,7 @@
         <div class="br-st"><div>\u{1F4B5} Ti\u1EC1n thu\xEA m\u1EB7t b\u1EB1ng: <b class="neg">\u2212${fmtK(b.rent)}/ng\xE0y</b></div><div>\u{1F465} Ph\xE1t l\u01B0\u01A1ng (${o?.staff || 0} NV): <b class="neg">\u2212${fmtK((o?.staff || 0) * 15e4)}/ng\xE0y</b></div>
           <div>\u{1F4E6} Nh\u1EADp li\u1EC7u nguy\xEAn li\u1EC7u: <b class="neg">\u2212${fmtK(b.rev[0] * b.ing[0])} ~ ${fmtK(b.rev[1] * b.ing[1])}/ng\xE0y</b></div><div>\u{1F4C8} Doanh thu t\u1EF1 \u0111\u1ED9ng: <b class="pos">+${fmtK(b.rev[0])} ~ ${fmtK(b.rev[1])}/ng\xE0y</b></div>
           <div>\u2B50 \u0110\xE1nh gi\xE1 b\xECnh qu\xE2n: <b>${o ? S.rating.toFixed(1) : "(Ch\u01B0a m\u1EDF)"}</b></div>${lastTxt}</div>
-        ${o ? `<div class="row2"><span>\u{1F465} Nh\xE2n vi\xEAn chi nh\xE1nh:</span><div class="stepper"><button data-act="bstaff-" data-id="${b.id}">\u2212</button><span class="num">${o.staff || 0}</span><button data-act="bstaff+" data-id="${b.id}">+</button></div></div>` : `<button class="btn pri block" data-act="bopen" data-id="${b.id}">${fmtK(cost)}<br/>Thu\xEA & M\u1EDF chi nh\xE1nh</button>`}</div>`;
+        ${o ? `<div class="row2"><span>\u{1F465} Nh\xE2n vi\xEAn chi nh\xE1nh:</span><div class="stepper"><button data-act="bstaff-" data-id="${b.id}">\u2212</button><input class="num" type="number" inputmode="numeric" min="0" max="3" value="${o.staff || 0}" data-bstaff="${b.id}" aria-label="Nh\xE2n vi\xEAn chi nh\xE1nh"><button data-act="bstaff+" data-id="${b.id}">+</button></div></div>` : `<button class="btn pri block" data-act="bopen" data-id="${b.id}">${fmtK(cost)}<br/>Thu\xEA & M\u1EDF chi nh\xE1nh</button>`}</div>`;
     }).join("");
   }
   function franchiseHTML() {
@@ -3565,6 +3571,18 @@
       const t = S.subtab.cn || "tt";
       const tb = [["tt", "\u{1F3E2} Tr\u1EF1c thu\u1ED9c"], ["nq", "\u{1F91D} Nh\u01B0\u1EE3ng quy\u1EC1n"], ["tk", "\u{1F4CA} Th\u1ED1ng k\xEA"]];
       return `<div class="tabs">${tb.map(([id, l]) => `<button class="tab ${t === id ? "on" : ""}" data-act="sub" data-v="${id}">${l}</button>`).join("")}</div>${t === "tt" ? branchHTML() : t === "nq" ? franchiseHTML() : statsHTML()}`;
+    },
+    bind(root2) {
+      for (const inp of root2.querySelectorAll("[data-bstaff]")) {
+        inp.addEventListener("focus", () => inp.select());
+        inp.addEventListener("change", () => {
+          const o = S.branches[inp.dataset.bstaff];
+          if (o) {
+            o.staff = Math.max(0, Math.min(3, Math.round(+inp.value || 0)));
+            markDirty("panel");
+          }
+        });
+      }
     },
     acts: {
       sub: (t) => {

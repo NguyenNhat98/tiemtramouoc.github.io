@@ -22,14 +22,14 @@ function khoRow(id) {
   const life = E.lifeDays(id);
   const profit = it.price ? E.priceOf(id) - E.costOf(id) : 0;
   const pctMargin = it.price ? Math.round((profit / E.priceOf(id)) * 100) : 0;
-  const step = it.kind === 'supply' ? 10 : it.kind === 'flavor' ? 1 : 5;
+  const step = 1;
   return `<div class="krow">
     <span class="k-ico" style="background:${it.color}33">${it.icon}</span>
     <div class="k-main"><div class="k-t"><b>${it.name}</b>${life ? `<span class="life">⏳ ${life} ngày</span>` : ''}</div>
       ${it.price && it.kind !== 'supply' ? `<span class="sale">💵 Bán ${pctMargin}% (+${fmtK(profit)})</span>` : ''}
       <small>📦 ${qty}${it.kind === 'flavor' ? ' ly' : ''} · ${fmtK(E.costOf(id) * (it.kind === 'flavor' ? FLAVOR_BOTTLE : 1))}${it.kind === 'flavor' ? '/chai' : '/ly'}${exp ? ` · <em class="warn">⚠️ ${exp} hết hạn hôm nay</em>` : ''}${S.lastUsed[id] ? ` · 🏭 dùng ${S.lastUsed[id]}` : ''}</small>
       ${plan ? `<small class="plan">+${plan * unit}${it.kind === 'flavor' ? ` ly (${plan} chai)` : ''} · ${fmtK(E.unitCost(id) * plan)}</small>` : ''}</div>
-    <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Giảm">−</button><span class="num">${plan * (it.kind === 'flavor' ? 1 : 1)}</span><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="Tăng">+</button></div>
+    <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Giảm">−</button><input class="num" type="number" inputmode="numeric" min="0" max="999" value="${plan}" data-plan="${id}" aria-label="Số lượng ${it.name}"><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="Tăng">+</button></div>
   </div>`;
 }
 const kho = {
@@ -49,6 +49,12 @@ const kho = {
     sub: setSub,
     'k+': (t) => { const id = t.dataset.id; E.setPlan(id, (S.plan[id] || 0) + +t.dataset.step); },
     'k-': (t) => { const id = t.dataset.id; E.setPlan(id, (S.plan[id] || 0) - +t.dataset.step); },
+  },
+  bind(root) {
+    for (const inp of root.querySelectorAll('[data-plan]')) {
+      inp.addEventListener('focus', () => inp.select());
+      inp.addEventListener('change', () => E.setPlan(inp.dataset.plan, Math.round(+inp.value || 0)));
+    }
   },
 };
 const khoLegend = () => '<div class="legend">📦 đang có · 🏭 hôm qua dùng · ⚠️ hết hạn hôm nay</div>';

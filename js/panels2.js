@@ -121,7 +121,7 @@ function branchHTML() {
         <div class="br-st"><div>💵 Tiền thuê mặt bằng: <b class="neg">−${fmtK(b.rent)}/ngày</b></div><div>👥 Phát lương (${o?.staff || 0} NV): <b class="neg">−${fmtK((o?.staff || 0) * 150000)}/ngày</b></div>
           <div>📦 Nhập liệu nguyên liệu: <b class="neg">−${fmtK(b.rev[0] * b.ing[0])} ~ ${fmtK(b.rev[1] * b.ing[1])}/ngày</b></div><div>📈 Doanh thu tự động: <b class="pos">+${fmtK(b.rev[0])} ~ ${fmtK(b.rev[1])}/ngày</b></div>
           <div>⭐ Đánh giá bình quân: <b>${o ? S.rating.toFixed(1) : '(Chưa mở)'}</b></div>${lastTxt}</div>
-        ${o ? `<div class="row2"><span>👥 Nhân viên chi nhánh:</span><div class="stepper"><button data-act="bstaff-" data-id="${b.id}">−</button><span class="num">${o.staff || 0}</span><button data-act="bstaff+" data-id="${b.id}">+</button></div></div>` : `<button class="btn pri block" data-act="bopen" data-id="${b.id}">${fmtK(cost)}<br/>Thuê & Mở chi nhánh</button>`}</div>`;
+        ${o ? `<div class="row2"><span>👥 Nhân viên chi nhánh:</span><div class="stepper"><button data-act="bstaff-" data-id="${b.id}">−</button><input class="num" type="number" inputmode="numeric" min="0" max="3" value="${o.staff || 0}" data-bstaff="${b.id}" aria-label="Nhân viên chi nhánh"><button data-act="bstaff+" data-id="${b.id}">+</button></div></div>` : `<button class="btn pri block" data-act="bopen" data-id="${b.id}">${fmtK(cost)}<br/>Thuê & Mở chi nhánh</button>`}</div>`;
     }).join('');
 }
 function franchiseHTML() {
@@ -154,6 +154,12 @@ const chinhanh = {
     const t = S.subtab.cn || 'tt';
     const tb = [['tt', '🏢 Trực thuộc'], ['nq', '🤝 Nhượng quyền'], ['tk', '📊 Thống kê']];
     return `<div class="tabs">${tb.map(([id, l]) => `<button class="tab ${t === id ? 'on' : ''}" data-act="sub" data-v="${id}">${l}</button>`).join('')}</div>${t === 'tt' ? branchHTML() : t === 'nq' ? franchiseHTML() : statsHTML()}`;
+  },
+  bind(root) {
+    for (const inp of root.querySelectorAll('[data-bstaff]')) {
+      inp.addEventListener('focus', () => inp.select());
+      inp.addEventListener('change', () => { const o = S.branches[inp.dataset.bstaff]; if (o) { o.staff = Math.max(0, Math.min(3, Math.round(+inp.value || 0))); markDirty('panel'); } });
+    }
   },
   acts: {
     sub: (t) => { S.subtab.cn = t.dataset.v; markDirty('panel'); },

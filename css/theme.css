@@ -362,3 +362,8 @@ h1, h2, h3, h4, h5 { font-weight: 700; line-height: 1.25; }
 .pl2-diag { font-size: 12.5px; color: var(--brown2); margin-top: 8px; line-height: 1.45; }
 .day-cash { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-radius: 14px; background: var(--card); border: 1.5px solid var(--line); font-size: 14px; } .day-cash b { font-size: 16px; font-weight: 700; }
 .tomorrow { font-size: 13px; font-weight: 500; margin: 10px 0; border-radius: 14px; }
+
+/* Ô số lượng nhập tay */
+.stepper input.num { width: 56px; min-width: 0; height: 36px; padding: 0 2px; font-family: inherit; font-size: 16px; font-weight: 700; color: var(--text); text-align: center; background: #fff; border: 2px solid var(--line); border-radius: 10px; outline: none; -moz-appearance: textfield; appearance: textfield; }
+.stepper input.num::-webkit-outer-spin-button, .stepper input.num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.stepper input.num:focus { border-color: var(--pink); }
