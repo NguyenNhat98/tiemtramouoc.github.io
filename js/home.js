@@ -21,10 +21,10 @@ export const TILES = [
 ];
 /** 16 chức năng gom thành 5 nhóm trên thanh điều hướng đáy. */
 export const GROUPS = [
-  { id: 'tiem', label: 'Tiệm', icon: 'tiem', tabs: ['giaban', 'sanh', 'tongket'] },
-  { id: 'kho', label: 'Kho', icon: 'kho', tabs: ['kho', 'vuon'] },
+  { id: 'tiem', label: 'Tiệm', icon: 'tiem', tabs: ['giaban', 'sanh', 'tongket', 'danhgia'] },
+  { id: 'kho', label: 'Kho', icon: 'kho', tabs: ['kho', 'vuon', 'thucung'] },
   { id: 'pt', label: 'Phát triển', icon: 'phattrien', tabs: ['nangcap', 'nhansu', 'chinhanh', 'khoinghiep'] },
-  { id: 'xh', label: 'Xã hội', icon: 'xahoi', tabs: ['mxh', 'banbe', 'danhgia', 'thucung'] },
+  { id: 'xh', label: 'Xã hội', icon: 'xahoi', tabs: ['mxh', 'banbe'] },
   { id: 'them', label: 'Thêm', icon: 'them', tabs: ['crush', 'thue', 'suutam'] },
 ];
 const groupOf = (tab) => GROUPS.find((g) => g.tabs.includes(tab)) || GROUPS[1];
@@ -67,7 +67,7 @@ export function goTab(tab, scroll = true) {
 export function renderTiles() {
   const g = groupOf(S.tab);
   const el = $('#tiles');
-  if (el) el.innerHTML = TILES.filter((t) => t[0] !== 'suutam').map(([id, label, emo]) => `<button class="tile ${S.tab === id ? 'on' : ''}" data-act="tile" data-tab="${id}"><span class="t-i">${emo}</span>${label}${id === 'thucung' && !S.pet ? '<em>🔒</em>' : ''}</button>`).join('');
+  if (el) el.innerHTML = g.tabs.map((id) => TILE_BY_ID[id]).map(([id, label, emo]) => `<button class="tile ${S.tab === id ? 'on' : ''}" data-act="tile" data-tab="${id}"><span class="t-i">${emo}</span>${label}${id === 'thucung' && !S.pet ? '<em>🔒</em>' : ''}</button>`).join('');
   renderNav();
 }
 /** Thanh điều hướng đáy (chỉ hiện ở màn chuẩn bị). */

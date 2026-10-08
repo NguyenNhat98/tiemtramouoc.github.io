@@ -239,3 +239,13 @@ body { background: #F2DFC8; }
 .tile.on { background: #FFFAF1; }
 .evb { background: #FFF3D1; border: 2.5px solid #F6C84E; border-radius: 16px; }
 
+/* ---------- Ô chức năng theo nhóm + thanh nav đáy ---------- */
+.tiles { grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px 8px; }
+.tile { min-height: 78px; font-size: 12px; padding: 8px 2px 6px; gap: 4px; }
+.tile .t-i { font-size: 36px; }
+.nav-i { font-size: 11.5px; gap: 3px; }
+.nav-i .ic { width: 26px; height: 26px; }
+.nav-i.on::before { display: none; }
+.nav-i.on .ic { background: var(--pink-soft); border-radius: 12px; padding: 4px; width: 38px; height: 28px; box-sizing: border-box; }
+.nav-i.on { font-weight: 700; }
+

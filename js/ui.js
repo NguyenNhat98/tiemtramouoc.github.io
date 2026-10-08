@@ -376,8 +376,8 @@ export function goFullscreen() {
     screen.orientation?.lock?.('portrait').catch(() => {});
   } catch (e) { /* trình duyệt không cho: bỏ qua */ }
 }
-/** Chạm bất kỳ đâu lần đầu → vào toàn màn hình (nếu người chơi bấm ra ngoài). */
-document.addEventListener('pointerup', () => goFullscreen(), { once: true, passive: true });
+/** Mỗi lần chạm, nếu chưa (hoặc đã thoát) toàn màn hình thì vào lại. */
+for (const ev of ['pointerup', 'touchend', 'click']) document.addEventListener(ev, () => goFullscreen(), { passive: true });
 
 /* ===== Intro ===== */
 export function showIntro(onPlay) {
