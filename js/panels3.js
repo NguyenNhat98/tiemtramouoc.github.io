@@ -141,7 +141,6 @@ const thucung = {
 };
 
 /* ===== KHỞI NGHIỆP ===== */
-const MAP_PATH = '30,5 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,96 38,90 42,84 50,80 52,72 50,64 44,58 40,50 38,42 40,34 34,28 30,22 26,16 24,10';
 function locCard(id) {
   const l = LOCATIONS[id];
   const here = S.location === id;
@@ -165,35 +164,71 @@ const SCENES = {
   hoangSa: [['🏝️', 46, 66, 6], ['🌴', 22, 46, 8], ['⚓', 82, 34, 6], ['🚢', 66, 36, 34]],
 };
 const sceneHTML = (id) => `<div class="loc-scene" aria-hidden="true">${(SCENES[id] || []).map(([e, x, sz, b]) => `<span style="left:${x}%;font-size:${sz}px;bottom:${b}px">${e}</span>`).join('')}</div>`;
-const VM_BANDS = [['#f7e7c0', 0, 24], ['#f3e0b4', 24, 44], ['#f9e9c6', 44, 60], ['#f4e2b8', 60, 100]];
-const vmapSvg = () => `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-  <defs><clipPath id="vnclip"><polygon points="${MAP_PATH}"/></clipPath>
-    <pattern id="vwave" width="6" height="4" patternUnits="userSpaceOnUse"><path d="M0 2 Q1.5 0 3 2 T6 2" fill="none" stroke="#9cc7cf" stroke-width=".25" opacity=".7"/></pattern></defs>
-  <rect width="100" height="100" fill="#eedfb4"/>
-  <rect width="100" height="100" fill="url(#vwave)" opacity="0"/>
-  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" class="sea"/>
-  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" fill="url(#vwave)"/>
-  <polygon points="${MAP_PATH}" fill="none" stroke="#b9dde2" stroke-width="2.4" stroke-linejoin="round" opacity=".7"/>
-  <g clip-path="url(#vnclip)">${VM_BANDS.map(([c, y0, y1]) => `<rect x="0" y="${y0}" width="100" height="${y1 - y0}" fill="${c}"/>`).join('')}
-    <path d="M30 20 L40 25 L46 22 M40 25 L42 34 L50 36 M42 34 L40 44 M50 36 L56 40 M44 58 L54 60 M54 60 L60 64 M50 70 L58 72 M52 80 L58 82 M46 90 L54 90" class="prov"/>
-    <path d="M36 18 Q44 26 41 33 T47 39" class="river"/><path d="M46 70 Q52 78 50 86 T56 96" class="river"/>
-  </g>
-  <polygon points="${MAP_PATH}" class="land"/>
-  <g class="isl"><circle cx="86" cy="53" r="1"/><circle cx="83" cy="55" r=".8"/><circle cx="89" cy="56" r=".7"/><circle cx="85" cy="72" r=".9"/><circle cx="89" cy="76" r=".8"/><circle cx="83" cy="78" r=".7"/><circle cx="91" cy="80" r=".9"/><circle cx="34" cy="90" r="1.6"/></g>
-</svg>
-<span class="vm-d vm-lbl" style="left:80%;top:38%">BIỂN ĐÔNG</span><span class="vm-d vm-lbl dim" style="left:12%;top:6%">TRUNG QUỐC</span><span class="vm-d vm-lbl dim" style="left:12%;top:46%">LÀO</span><span class="vm-d vm-lbl dim" style="left:16%;top:78%">CAMPUCHIA</span><span class="vm-d vm-lbl dim" style="left:16%;top:97%">VỊNH THÁI LAN</span>
-<span class="vm-d" style="left:20%;top:11%;font-size:26px">⛰️</span><span class="vm-d" style="left:12%;top:20%;font-size:20px">🌲</span><span class="vm-d" style="left:30%;top:32%;font-size:22px">🌿</span><span class="vm-d" style="left:34%;top:60%;font-size:22px">🌳</span>
-<span class="vm-d vm-boat" style="left:82%;top:24%">⛵</span><span class="vm-d vm-boat" style="left:76%;top:62%;animation-delay:-1.5s">🚢</span><span class="vm-d vm-boat" style="left:72%;top:92%;animation-delay:-3s">🛶</span>
-<span class="vm-d" style="left:88%;top:8%;font-size:26px">🧭</span><span class="vm-d" style="left:74%;top:47%;font-size:16px">🐚</span><span class="vm-d" style="left:90%;top:90%;font-size:22px">🐙</span>
-<div class="vm-legend"><span>📍 Quán trà</span><span>🏝️ Đảo</span></div>`;
+/* ===== Bản đồ Việt Nam: dựng từ toạ độ kinh/vĩ độ, chiếu tuyến tính x=(lon-102)*8, y=(24-lat)*8 → viewBox 100x136 ===== */
+const VM_H = 136;
+const vmXY = ([lo, la]) => [(lo - 102) * 8, (24 - la) * 8];
+const vmF = (n) => +n.toFixed(1);
+const vmPt = (p) => { const [x, y] = vmXY(p); return vmF(x) + ' ' + vmF(y); };
+function vmCurve(pts, tn = 1) { // Catmull-Rom -> Bezier (không gồm điểm đầu)
+  const q = pts.map(vmXY); let d = '';
+  for (let i = 0; i < q.length - 1; i++) {
+    const a = q[i - 1] || q[i], b = q[i], c = q[i + 1], e = q[i + 2] || c, k = tn / 6;
+    d += `C${vmF(b[0] + (c[0] - a[0]) * k)} ${vmF(b[1] + (c[1] - a[1]) * k)} ${vmF(c[0] - (e[0] - b[0]) * k)} ${vmF(c[1] - (e[1] - b[1]) * k)} ${vmF(c[0])} ${vmF(c[1])}`;
+  }
+  return d;
+}
+const vmLine = (pts, tn) => `M${vmPt(pts[0])}${vmCurve(pts, tn)}`;
+const vmLoop = (pts, tn) => `${vmLine([...pts, pts[0]], tn)}Z`;
+const VM_N = [[102.15, 22.40], [102.45, 22.75], [102.9, 22.5], [103.3, 22.75], [103.6, 22.6], [103.95, 22.5], [104.3, 22.82], [104.7, 23.0], [105.0, 23.25], [105.32, 23.37], [105.6, 23.1], [105.95, 23.0], [106.4, 22.9], [106.7, 22.85], [106.6, 22.45], [106.75, 22.0], [107.15, 21.95], [107.45, 21.65], [107.95, 21.55], [108.05, 21.5]];
+const VM_C = [[108.05, 21.5], [107.75, 21.3], [107.5, 21.1], [107.3, 21.0], [107.0, 20.85], [106.8, 20.75], [106.6, 20.55], [106.5, 20.3], [106.2, 20.1], [105.95, 19.9], [105.85, 19.6], [105.8, 19.25], [105.8, 18.7], [106.1, 18.35], [106.4, 18.0], [106.65, 17.55], [107.1, 17.0], [107.5, 16.6], [107.9, 16.35], [108.2, 16.12], [108.35, 15.9], [108.65, 15.55], [108.9, 15.15], [109.05, 14.6], [109.2, 14.0], [109.3, 13.5], [109.4, 13.0], [109.3, 12.5], [109.2, 12.0], [109.1, 11.6], [108.9, 11.3], [108.5, 11.0], [108.1, 10.9], [107.6, 10.55], [107.1, 10.35], [106.85, 10.4], [106.75, 10.3], [106.6, 9.95], [106.4, 9.55], [106.0, 9.3], [105.7, 9.0], [105.35, 8.75], [104.85, 8.6], [104.8, 8.8], [104.95, 9.3], [105.05, 9.8], [105.05, 10.0], [104.8, 10.2], [104.5, 10.42]];
+const VM_W = [[104.5, 10.42], [104.85, 10.9], [105.35, 10.85], [105.8, 11.05], [106.1, 11.35], [106.4, 11.7], [106.9, 11.95], [107.3, 12.15], [107.5, 12.4], [107.4, 13.0], [107.5, 13.5], [107.4, 14.1], [107.55, 14.6], [107.4, 15.15], [107.55, 15.6], [107.2, 15.9], [107.1, 16.2], [106.7, 16.55], [106.55, 17.0], [106.4, 17.0], [105.95, 17.4], [105.6, 17.75], [105.15, 18.3], [104.7, 18.75], [104.0, 19.2], [104.0, 19.7], [104.6, 20.4], [104.1, 20.85], [103.7, 20.65], [103.35, 20.95], [103.0, 21.5], [102.7, 21.7], [102.2, 22.05], [102.15, 22.40]];
+const VM_GULF = [[104.5, 10.42], [104.2, 10.55], [103.6, 10.6], [103.2, 11.0], [102.9, 11.6], [102.5, 12.1], [102.0, 12.4]];
+const VM_CHINA = [[114.5, 22.6], [113.6, 22.1], [112.3, 21.7], [111.0, 21.5], [110.5, 21.1], [110.4, 20.4], [110.2, 20.25], [109.95, 20.9], [109.7, 21.45], [109.1, 21.5], [108.05, 21.5]];
+const VM_HAINAN = [[108.65, 19.35], [108.8, 19.8], [109.3, 20.05], [110.1, 20.1], [110.6, 19.9], [111.0, 19.6], [110.8, 19.0], [110.4, 18.7], [109.7, 18.3], [109.1, 18.25], [108.65, 18.5], [108.6, 19.0]];
+const VM_PQ = [[103.98, 10.45], [104.05, 10.3], [104.0, 10.1], [103.92, 9.95], [103.85, 10.1], [103.88, 10.3]];
+const VM_CD = [[106.55, 8.78], [106.65, 8.72], [106.7, 8.65], [106.6, 8.62], [106.52, 8.7]];
+const VM_LAND = `M${vmPt(VM_N[0])}${vmCurve(VM_N)}${vmCurve(VM_C)}${vmCurve(VM_W)}Z`;
+const VM_SEA = `${vmLine(VM_C)}${vmCurve(VM_GULF)}L${vmPt([102, 7])}L${vmPt([114.5, 7])}L${vmPt(VM_CHINA[0])}${vmCurve(VM_CHINA)}Z`;
+const VM_RIVERS = [
+  [[103.97, 22.5], [104.5, 22.0], [104.95, 21.65], [105.4, 21.3], [105.85, 21.03], [106.2, 20.65], [106.55, 20.25]], // sông Hồng
+  [[104.9, 11.6], [105.1, 11.15], [105.25, 10.8], [105.8, 10.35], [106.3, 10.1], [106.75, 9.95]], // Mê Kông - sông Tiền
+  [[105.3, 10.75], [105.6, 10.2], [105.9, 9.8], [106.2, 9.45]], // sông Hậu
+  [[104.2, 14.2], [104.9, 12.8], [104.9, 11.6]], // Mê Kông thượng
+];
+const VM_MTS = [[103.8, 22.25], [104.25, 22.05], [104.6, 21.6], [103.3, 21.5], [105.6, 18.4], [106.2, 17.6], [106.8, 16.8], [107.1, 15.9], [107.25, 15.2], [108.3, 13.9], [108.4, 13.0], [108.5, 12.0], [105.0, 22.0]];
+const VM_ISL = [[111.2, 16.45], [111.6, 16.55], [111.75, 16.2], [112.3, 16.05], [111.5, 16.85]];
+const VM_TS = [[114.0, 10.3], [113.4, 9.0], [112.9, 9.8], [112.3, 8.9], [111.9, 9.9], [113.9, 9.2], [112.6, 10.0]];
+const vmTxt = (lo, la, t, cls, rot) => { const [x, y] = vmXY([lo, la]); return `<text x="${vmF(x)}" y="${vmF(y)}" class="vt ${cls}"${rot ? ` transform="rotate(${rot} ${vmF(x)} ${vmF(y)})"` : ''}>${t}</text>`; };
+const vmMt = (p) => { const [x, y] = vmXY(p); return `M${vmF(x - 1.3)} ${vmF(y + 0.9)}L${vmF(x - 0.2)} ${vmF(y - 1)}L${vmF(x + 0.5)} ${vmF(y + 0.1)}L${vmF(x + 0.9)} ${vmF(y - 0.5)}L${vmF(x + 1.5)} ${vmF(y + 0.9)}Z`; };
+const vmDot = (p, r) => { const [x, y] = vmXY(p); return `<circle cx="${vmF(x)}" cy="${vmF(y)}" r="${r}"/>`; };
+const VM_PIN_LBL = { goc: ['Tiệm gốc', 'r'], hanoi: ['Hà Nội', 'l'], sapa: ['Sa Pa', 'r'], halong: ['Hạ Long', 'r'], hue: ['Huế', 'l'], danang: ['Đà Nẵng', 'r'], bmt: ['Buôn Ma Thuột', 'r'], hcm: ['TP.HCM', 'r'], canTho: ['Cần Thơ', 'l'], caMau: ['Cà Mau', 'r'], hoangSa: ['Hoàng Sa', 'r'] };
+const vmapSvg = () => `<svg viewBox="0 0 100 ${VM_H}" role="img" aria-label="Bản đồ Việt Nam">
+  <defs><pattern id="vwave" width="7" height="5" patternUnits="userSpaceOnUse"><path d="M0 1.6Q1.75 0 3.5 1.6T7 1.6M-3.5 4.1Q-1.75 2.5 0 4.1T3.5 4.1T7 4.1" class="vwv"/></pattern></defs>
+  <rect width="100" height="${VM_H}" class="vnb"/>
+  ${vmTxt(103.6, 23.3, 'TRUNG QUỐC', 'nb')}${vmTxt(105.3, 17.6, 'LÀO', 'nb', -62)}${vmTxt(102.95, 15.2, 'THÁI LAN', 'nb', -90)}${vmTxt(105.0, 12.2, 'CAMPUCHIA', 'nb')}
+  <path d="${VM_SEA}" class="vsea"/><path d="${VM_SEA}" fill="url(#vwave)"/>
+  <path d="${vmLoop(VM_HAINAN)}" class="vnb2"/>${vmTxt(109.7, 19.1, 'Hải Nam', 'nb s')}
+  ${vmTxt(112.3, 13.6, 'BIỂN ĐÔNG', 'sea')}${vmTxt(107.35, 18.9, 'Vịnh Bắc Bộ', 'sea s')}${vmTxt(103.2, 9.2, 'Vịnh Thái Lan', 'sea s')}
+  <path d="${VM_LAND}" class="vglow"/>
+  <path d="${VM_LAND}" class="land"/>
+  <path d="${vmLoop(VM_PQ)}" class="land isl-l"/><path d="${vmLoop(VM_CD)}" class="land isl-l"/>
+  ${VM_RIVERS.map((r, i) => `<path d="${vmLine(r)}" class="river${i === 3 ? ' dim' : ''}"/>`).join('')}
+  <path d="${VM_MTS.map(vmMt).join('')}" class="mts"/>
+  <g class="isl">${VM_ISL.map((p) => vmDot(p, 0.55)).join('')}</g><g class="isl">${VM_TS.map((p) => vmDot(p, 0.55)).join('')}</g>
+  ${vmTxt(111.5, 15.3, 'Q.đ Hoàng Sa', 'sea s')}${vmTxt(112.7, 8.55, 'Q.đ Trường Sa', 'sea s')}
+  ${vmTxt(103.3, 21.55, 'Hoàng Liên Sơn', 'mt s', 0)}${vmTxt(107.2, 14.35, 'Trường Sơn', 'mt s', -72)}${vmTxt(106.1, 21.7, 'S. Hồng', 'rv s', -38)}${vmTxt(104.75, 11.15, 'S. Mê Kông', 'rv s', 0)}${vmTxt(103.6, 10.85, 'Phú Quốc', 'nb s')}
+  <g class="cmp" transform="translate(89 13)"><circle r="6.2" class="cmp-r"/><path d="M0 -6L1.5 0L0 6L-1.5 0Z" class="cmp-n"/><path d="M-6 0L0 -1.5L6 0L0 1.5Z" class="cmp-e"/><text y="-8" class="vt cmp-t">B</text></g>
+  <g class="scl" transform="translate(36 131)"><path d="M0 0H14.4M0 -1V1M7.2 -.7V.7M14.4 -1V1"/><text x="7.2" y="-2" class="vt s">200 km</text></g>
+</svg>`;
+const VM_LEGEND = '<div class="vm-legend"><span><i class="lg-dot"></i>Quán trà</span><span><i class="lg-isl"></i>Đảo</span><span><i class="lg-rv"></i>Sông</span><span><i class="lg-mt"></i>Núi</span></div>';
 
 const khoinghiep = {
   html() {
-    const pins = Object.entries(LOCATIONS).map(([id, l]) => `<button class="pin ${S.location === id ? 'on' : ''}" style="left:${l.map[0]}%;top:${l.map[1]}%" data-act="pin" data-id="${id}" aria-label="${esc(l.name)}"><span>${l.icon}</span><small>${esc(l.name)}</small></button>`).join('');
+    const pins = Object.entries(LOCATIONS).map(([id, l]) => { const [lb, sd] = VM_PIN_LBL[id] || [l.short || l.name, 'r']; return `<button class="pin pin-${sd} ${S.location === id ? 'on' : ''}" style="left:${l.map[0]}%;top:${l.map[1]}%" data-act="pin" data-id="${id}" aria-label="${esc(l.name)}"><span>${l.icon}</span><small>${esc(lb)}</small></button>`; }).join('');
     const cur = LOCATIONS[S.location];
     return `<div class="cur-loc"><span class="chip y">🏠 TIỆM TRÀ GỐC (BAN ĐẦU)</span><span class="chip green">⭐ ĐANG KINH DOANH</span><h4>${cur.icon} ${esc(cur.name)}</h4><i>"${esc(cur.slogan)}"</i><p>${esc(cur.desc)}</p></div>
       <h4 class="subh">Bản Đồ Khởi Nghiệp Xuyên Việt</h4><p class="muted">Chạm vào các biểu tượng ghim trên bản đồ hoặc danh sách bên dưới để chọn địa điểm mở quán. Mỗi tỉnh thành mang lại lợi thế doanh thu và thử thách vận hành độc bản!</p>
-      <div class="vmap">${vmapSvg()}${pins}</div>
+      <div class="vmap">${vmapSvg()}${pins}${VM_LEGEND}</div>
       <h4 class="subh">Danh Sách Địa Điểm Kinh Doanh</h4>${Object.keys(LOCATIONS).map(locCard).join('')}`;
   },
   acts: {

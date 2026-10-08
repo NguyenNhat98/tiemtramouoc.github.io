@@ -352,7 +352,7 @@ export function frameSell(dt, force) {
     const d = $(`.disp[data-tea="${b.tea}"] .tap`), cup = $('#cupslot');
     if (d && cup && st) {
       const a = d.getBoundingClientRect(), c2 = cup.getBoundingClientRect(), r0 = root.getBoundingClientRect();
-      st.style.cssText = `display:block;left:${a.left + a.width / 2 - 3 - r0.left}px;top:${a.bottom - r0.top}px;height:${Math.max(0, c2.top + c2.height * 0.2 - a.bottom)}px;background:${ITEMS[b.tea].color}`;
+      st.style.cssText = `display:block;left:${a.left + a.width / 2 - 3 - r0.left}px;top:${a.bottom - r0.top}px;height:${Math.max(0, c2.top + c2.height * 0.2 - a.bottom)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
       if (Math.random() < 0.15) sfx('pour');
     }
   } else if (st) st.style.display = 'none';

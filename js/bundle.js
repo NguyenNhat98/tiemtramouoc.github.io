@@ -79,7 +79,7 @@
       con: ["Kh\xF4ng h\u01B0\u1EDFng c\xE1c \u0111i\u1EC3m th\u01B0\u1EDFng \u0111\u1EB7c th\xF9 doanh thu c\u1EE7a c\xE1c t\u1EC9nh th\xE0nh"],
       fx: {},
       pool: null,
-      map: [46, 78]
+      map: [53.6, 57.1]
     },
     hanoi: {
       name: "H\xE0 N\u1ED9i",
@@ -91,7 +91,7 @@
       con: ["Kh\xE1ch kh\xF3 t\xEDnh +5%", "C\u1ED1c ch\xE1y/h\u1ECFng \u22121\u2605"],
       fx: { traffic: 0.15, tip: 0.15, hardCust: 0.05 },
       pool: { sunny: 25, cloudy: 40, rain: 20, cold: 15 },
-      map: [41, 22]
+      map: [30.8, 17.5]
     },
     hcm: {
       name: "TP. H\u1ED3 Ch\xED Minh",
@@ -103,7 +103,7 @@
       con: ["Sau 20h kh\xE1ch kh\xF3 t\xEDnh +10%", "\u0110i\u1EC7n n\u01B0\u1EDBc +20%"],
       fx: { lateBill: 0.25, online: 0.2, utility: 0.2 },
       pool: { sunny: 40, hot: 30, rain: 25, cloudy: 5 },
-      map: [60, 86]
+      map: [37.6, 77.8]
     },
     hue: {
       name: "C\u1ED1 \u0111\xF4 Hu\u1EBF",
@@ -115,7 +115,7 @@
       con: ["Tr\u1EDDi m\u01B0a \u221220% l\u01B0\u1EE3ng kh\xE1ch", "Tr\u1EDDi m\u01B0a \u221220% \u0111\u01A1n tr\u1EF1c tuy\u1EBFn (Online)"],
       fx: { patience: 0.25, billTeas: { olong: 0.2 }, rainTraffic: -0.2, rainOnline: -0.2 },
       pool: { cloudy: 35, rain: 40, sunny: 20, cold: 5 },
-      map: [62, 49]
+      map: [44.7, 44.4]
     },
     danang: {
       name: "\u0110\xE0 N\u1EB5ng",
@@ -127,7 +127,7 @@
       con: ["Kh\xE1ch nh\u1EA1y gi\xE1: t\u0103ng gi\xE1 \u2192 \u221210% kh\u1EA3 n\u0103ng mua", "Kh\xF4ng c\xF3 th\u01B0\u1EDFng doanh thu tr\u1EF1c ti\u1EBFp"],
       fx: { priceSens: 0.1, comboX2: 1 },
       pool: { sunny: 45, cloudy: 25, rain: 15, hot: 15 },
-      map: [66, 55]
+      map: [49.6, 46.8]
     },
     sapa: {
       name: "Sa Pa",
@@ -139,7 +139,7 @@
       con: ["Chi ph\xED nguy\xEAn li\u1EC7u v\u1EADn chuy\u1EC3n +15%", "\u0110\u1ED3 u\u1ED1ng l\u1EA1nh \u221215% ti\u1EC1n boa"],
       fx: { billTeas: { hongTra: 0.2, lucTra: 0.2, olong: 0.2 }, patience: 0.2, ingCost: 0.15, coldTip: -0.15 },
       pool: { cold: 45, cloudy: 30, rain: 20, sunny: 5 },
-      map: [29, 15]
+      map: [14.7, 9.8]
     },
     halong: {
       name: "H\u1EA1 Long",
@@ -151,7 +151,7 @@
       con: ["M\u01B0a b\xE3o \u221225% l\u01B0\u1EE3ng kh\xE1ch", "L\u01B0\u1EE3ng kh\xE1ch ph\u1EE5 thu\u1ED9c m\xF9a du l\u1ECBch"],
       fx: { tip: 0.25, bill: 0.1, rainTraffic: -0.25 },
       pool: { sunny: 35, cloudy: 25, rain: 30, cold: 10 },
-      map: [58, 20]
+      map: [40.6, 17.9]
     },
     bmt: {
       name: "Bu\xF4n Ma Thu\u1ED9t",
@@ -163,7 +163,7 @@
       con: ["\u0110\u01A1n tr\u1EF1c tuy\u1EBFn (Online) \u221230%", "Kh\xE1ch ch\u1EE7 y\u1EBFu mua tr\u1EF1c ti\u1EBFp"],
       fx: { billTeas: { traSua: 0.2, traThai: 0.2 }, rent: -0.25, online: -0.3 },
       pool: { sunny: 50, cloudy: 25, hot: 15, rain: 10 },
-      map: [58, 66]
+      map: [48.3, 66.6]
     },
     canTho: {
       name: "C\u1EA7n Th\u01A1",
@@ -175,7 +175,7 @@
       con: ["N\u1EAFng n\xF3ng khi\u1EBFn kh\xE1ch \xEDt ki\xEAn nh\u1EABn \u221210%", "\u0110\u01A1n tr\u1EF1c tuy\u1EBFn \u221210%"],
       fx: { ingCost: -0.15, traffic: 0.08, patience: -0.1, online: -0.1 },
       pool: { sunny: 40, hot: 30, rain: 25, cloudy: 5 },
-      map: [50, 92]
+      map: [30.2, 82.1]
     },
     caMau: {
       name: "C\xE0 Mau",
@@ -187,7 +187,7 @@
       con: ["L\u01B0\u1EE3ng kh\xE1ch gh\xE9 qu\xE1n \u221210%", "M\u01B0a l\u1EDBn th\u01B0\u1EDDng xuy\xEAn"],
       fx: { rent: -0.35, utility: -0.15, tip: 0.1, traffic: -0.1 },
       pool: { rain: 40, sunny: 30, cloudy: 20, hot: 10 },
-      map: [40, 97]
+      map: [23.8, 87.2]
     },
     hoangSa: {
       name: "Ho\xE0ng Sa \u2013 Tr\u01B0\u1EDDng Sa",
@@ -199,7 +199,7 @@
       con: ["Chi ph\xED nguy\xEAn li\u1EC7u v\u1EADn chuy\u1EC3n +30%", "L\u01B0\u1EE3ng kh\xE1ch gh\xE9 qu\xE1n \u221225%", "\u0110\u01A1n tr\u1EF1c tuy\u1EBFn kh\xF4ng kh\u1EA3 d\u1EE5ng (\u2212100%)"],
       fx: { tip: 0.4, patience: 0.3, ingCost: 0.3, traffic: -0.25, online: -1 },
       pool: { sunny: 35, rain: 30, hot: 20, cloudy: 15 },
-      map: [87, 60]
+      map: [77.6, 44.1]
     }
   };
   var LOCATION_COST = 1e6;
@@ -603,7 +603,7 @@
       friends: { code: "TTN-" + Math.random().toString(36).slice(2, 7).toUpperCase(), list: [], gifted: {} },
       crush: { level: 1, best: 0, perm: 0, gifts: 0 },
       pearl: { best: 0, playsDay: 0 },
-      settings: { music: 0.7, sfx: 0.8, style: "lofi", hints: true, shiftMin: 4, shiftMinNext: 4, theme: "cream", tutorialDone: false },
+      settings: { music: 0.7, sfx: 0.8, style: "lofi", haptic: 2, hints: true, shiftMin: 4, shiftMinNext: 4, theme: "cream", tutorialDone: false },
       firstRun: true,
       started: false,
       savedAt: Date.now()
@@ -897,9 +897,88 @@
     boom: () => {
       tone(120, 0.25, "sawtooth", 0.5);
       tone(80, 0.3, "square", 0.35, 0.05);
+    },
+    /* --- Trân Châu Nổ --- */
+    // nổ lách tách nhỏ (nhóm 2-3 viên), tông ngẫu nhiên nhẹ
+    pearlPop: () => {
+      const f = 700 + Math.random() * 200;
+      tone(f, 0.05, "square", 0.22);
+      tone(f * 1.5, 0.07, "triangle", 0.3, 0.03);
+      tone(f * 2, 0.05, "sine", 0.2, 0.06);
+    },
+    // nổ vừa (4-5 viên): tông cao hơn, 4 nốt tách liên tiếp
+    pearlPop2: () => [880, 1100, 1320, 1760].forEach((f, i) => tone(f * (1 + Math.random() * 0.03), 0.06, i % 2 ? "triangle" : "square", 0.28, i * 0.035)),
+    // nổ lớn (≥6 viên)
+    pearlBoom: () => {
+      tone(110, 0.22, "sawtooth", 0.45);
+      tone(70, 0.3, "square", 0.3, 0.03);
+      [1046, 1318, 1568, 2093].forEach((f, i) => tone(f, 0.12, "triangle", 0.35, 0.05 + i * 0.045));
+    },
+    fly: () => {
+      [400, 520, 680].forEach((f, i) => tone(f, 0.07, "sine", 0.16, i * 0.03));
+    },
+    swoosh: () => {
+      [900, 700, 520, 380].forEach((f, i) => tone(f, 0.06, "sine", 0.14, i * 0.025));
+    },
+    bounce: () => {
+      tone(220, 0.07, "sine", 0.35);
+      tone(330, 0.05, "triangle", 0.18, 0.05);
+    },
+    // arpeggio combo tăng dần theo cấp: gọi sfx('combo2') ... sfx('combo6')
+    combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, "triangle", 0.4, i * 0.06)),
+    ...Object.fromEntries([2, 3, 4, 5, 6].map((l) => ["combo" + l, () => {
+      const b = 523 * Math.pow(1.122, l * 2);
+      [1, 1.25, 1.5, 2, 2.5].slice(0, l + 1).forEach((m, i) => tone(b * m, 0.12, "triangle", 0.42, i * 0.055));
+    }])),
+    collect: () => {
+      tone(1200, 0.06, "sine", 0.3);
+      tone(1600, 0.1, "sine", 0.3, 0.06);
+    },
+    win: () => {
+      [523, 659, 784, 1046, 784, 1046, 1318].forEach((f, i) => tone(f, 0.18, "triangle", 0.55, i * 0.09));
+      tone(1568, 0.5, "sine", 0.3, 0.65);
+    },
+    lose: () => {
+      [440, 392, 330, 262].forEach((f, i) => tone(f, 0.2, "sine", 0.5, i * 0.13));
     }
   };
+  var HAPTIC_MUL = [0, 0.6, 1, 1.7];
+  var HAPTIC = {
+    click: 8,
+    pop: 10,
+    cup: 14,
+    drop: 10,
+    seal: [20, 30, 40],
+    ding: 22,
+    coin: 12,
+    success: [15, 40, 25],
+    error: [40, 30, 40],
+    sad: 30,
+    sparkle: 8,
+    unlock: [20, 30, 20],
+    level: [15, 30, 15, 30, 30],
+    bell: 16,
+    match: 12,
+    boom: [40, 20, 60],
+    pour: 0,
+    combo: [14, 24, 20],
+    bounce: 8,
+    fly: 6,
+    swoosh: 8,
+    collect: [10, 20, 10]
+  };
+  function buzz(pattern = 10) {
+    const m = HAPTIC_MUL[S.settings.haptic ?? 2] || 0;
+    if (pattern === 0) return;
+    if (!m || !navigator.vibrate) return;
+    const arr = Array.isArray(pattern) ? pattern : [pattern];
+    try {
+      navigator.vibrate(arr.map((v, i) => i % 2 === 0 ? Math.max(4, Math.round(v * m)) : v));
+    } catch (e) {
+    }
+  }
   var sfx = (n) => {
+    buzz(HAPTIC[n] ?? 8);
     if (unlocked && S.settings.sfx > 0) SFX[n]?.();
   };
   var STYLES = {
@@ -2120,10 +2199,10 @@
   var P = {
     menu: '<path d="M4 7h16M4 12h16M4 17h10"/>',
     pause: '<rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/>',
-    settings: '<circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21M5.6 5.6l1.9 1.9M16.5 16.5l1.9 1.9M18.4 5.6l-1.9 1.9M7.5 16.5l-1.9 1.9"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
     book: '<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V18c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v12.5"/>',
     branch: '<path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/>',
-    collect: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/>',
+    collect: '<rect x="8" y="3" width="12" height="15" rx="2.2"/><path d="M4.5 7.5V19a2 2 0 0 0 2 2H16"/><path d="M14 8.2l1.1 2.2 2.4.35-1.75 1.7.42 2.4L14 13.7l-2.17 1.15.42-2.4-1.75-1.7 2.4-.35z"/>',
     tiem: '<g fill="currentColor" fill-opacity=".16" stroke="none"><path d="M5 5h14l1.5 5.5H3.5z"/><path d="M5.5 13h13v7h-13z"/></g><path d="M3.5 10.5L5 5h14l1.5 5.5"/><path d="M3.5 10.5a2.8 2.8 0 0 0 5.5 0 2.8 2.8 0 0 0 6 0 2.8 2.8 0 0 0 5.5 0"/><path d="M5.5 13v7h13v-7"/><path d="M10 20v-4.5h4V20"/>',
     kho: '<g fill="currentColor" fill-opacity=".16" stroke="none"><path d="M3.5 7.5L12 3.5l8.5 4L12 11.5z"/><path d="M12 11.5l8.5-4v9L12 20.5z" fill-opacity=".3"/></g><path d="M3.5 7.5L12 3.5l8.5 4v9L12 20.5l-8.5-4z"/><path d="M3.5 7.5L12 11.5l8.5-4M12 11.5v9"/><path d="M7.7 5.6l8.5 4"/>',
     phattrien: '<g fill="currentColor" fill-opacity=".16" stroke="none"><rect x="4" y="12" width="3.6" height="8" rx="1"/><rect x="10.2" y="7.5" width="3.6" height="12.5" rx="1"/><rect x="16.4" y="14" width="3.6" height="6" rx="1"/></g><path d="M4 20.5h16"/><path d="M4.5 9l4.5-4 3.5 2.5L19 3.5"/><path d="M15 3.5h4v4"/>',
@@ -2264,6 +2343,7 @@
     const inner = l.img ? `<img src="${l.img}" alt="Logo qu\xE1n" />` : `<span>${l.emoji}</span>`;
     return `<span class="logo-c ${cls}" style="--sz:${size}px">${inner}</span>`;
   }
+  var HAPTIC_NAMES = ["T\u1EAFt", "Nh\u1EB9", "V\u1EEBa", "M\u1EA1nh"];
   var THEME_DARK = { "--text": "#f1ebff", "--muted": "#b8aedc", "--brown": "#e8dfff", "--brown2": "#b8aedc", "--card2": "#453d66", "--line": "rgba(255,255,255,.14)" };
   function applyTheme() {
     const k = THEMES[S.settings.theme] ? S.settings.theme : "cream";
@@ -2481,6 +2561,7 @@
     ${row("hints", "\u{1F9ED}", "Ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc", S.settings.hints ? "T\u1EF1 \u0111\u1ED9ng" : "T\u1EAFt")}
     ${row("shiftMin", "\u23F1\uFE0F", "Th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y", `${S.settings.shiftMinNext} ph\xFAt \xB7 \xE1p d\u1EE5ng t\u1EEB ng\xE0y sau`)}
     ${row("theme", "\u{1F3A8}", "M\xE0u giao di\u1EC7n", THEMES[S.settings.theme].name)}
+    ${row("haptic", "\u{1F4F3}", "Rung", HAPTIC_NAMES[S.settings.haptic ?? 2])}
     <div class="box">${sliderRow("Nh\u1EA1c n\u1EC1n qu\xE1n", "music", "\u{1F3B5}")}${sliderRow("\xC2m thanh pha ch\u1EBF & SFX", "sfx", "\u{1F9CB}")}</div>
     ${row("style", "\u{1F3BC}", "Nh\u1EA1c n\u1EC1n & M\xF9a", S.settings.style === "lofi" ? "Lofi Chill Qu\xE1n Cafe" : S.settings.style === "vui" ? "Vui nh\u1ED9n" : "T\u1EAFt nh\u1EA1c")}
     ${row("export", "\u{1F4E6}", "Sao l\u01B0u ti\u1EBFn tr\xECnh", S.savedAt ? "\u0110\xE3 l\u01B0u" : "Ch\u01B0a sao l\u01B0u")}
@@ -2513,6 +2594,12 @@
         S.settings.shiftMinNext = v;
         requestSave();
         setVal("shiftMin", `${v} ph\xFAt \xB7 \xE1p d\u1EE5ng t\u1EEB ng\xE0y sau`);
+      }),
+      haptic: () => openChoice("\u{1F4F3} Rung khi thao t\xE1c & ch\u01A1i game", HAPTIC_NAMES.map((n, i) => [i, n]), S.settings.haptic ?? 2, (v) => {
+        S.settings.haptic = v;
+        requestSave();
+        setVal("haptic", HAPTIC_NAMES[v]);
+        buzz([30, 40, 30]);
       }),
       theme: () => openThemePicker(() => setVal("theme", THEMES[S.settings.theme].name)),
       style: () => openChoice("\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a", [["lofi", "Lofi Chill Qu\xE1n Cafe"], ["vui", "Vui nh\u1ED9n"], ["off", "T\u1EAFt nh\u1EA1c"]], S.settings.style, (v) => {
@@ -2582,28 +2669,66 @@
     });
   }
   function openGuide() {
-    const step = (ico, title, body) => `<div class="g-step"><div class="g-ico">${ico}</div><div class="g-txt"><b>${title}</b><p>${body}</p></div></div>`;
+    const li = (ico, body) => `<li><span>${ico}</span><div>${body}</div></li>`;
+    const sec = (ico, title, items, open) => `<details class="g-det"${open ? " open" : ""}><summary>${ico} ${title}</summary><ul class="g-list">${items.map((x) => li(x[0], x[1])).join("")}</ul></details>`;
     const m = openModal({ id: "guide", cls: "settings", html: `<h2 class="set-title">\u{1F4D6} H\u01B0\u1EDBng d\u1EABn ch\u01A1i</h2>
     <div class="guide rich">
-    <div class="g-sec"><h4>\u{1F3E0} 1. Chu\u1EA9n b\u1ECB m\u1ED7i ng\xE0y</h4>
-      ${step("\u{1F4E6}", "V\xE0o Kho", "Ch\u1ECDn s\u1ED1 l\u01B0\u1EE3ng <b>Tr\xE0 \u{1FAD6}</b>, <b>Topping \u{1F9CB}</b> v\xE0 <b>D\u1EE5ng c\u1EE5 \u{1F964}</b> (ly, \u0111\xE1, \u0111\u01B0\u1EDDng) c\u1EA7n d\xF9ng cho ng\xE0y h\xF4m nay.")}
-      ${step("\u{1F6D2}", "N\u1EA5u & nh\u1EADp", "B\u1EA5m n\xFAt h\u1ED3ng <b>N\u1EA5u & nh\u1EADp</b> \u1EDF \u0111\xE1y m\xE0n h\xECnh \u0111\u1EC3 tr\u1EA3 ti\u1EC1n nh\u1EADp h\xE0ng. N\xFAt \u0111\u1ECF \u26A0\uFE0F ngh\u0129a l\xE0 c\xF2n thi\u1EBFu nguy\xEAn li\u1EC7u.")}
-      ${step("\u{1F3EE}", "M\u1EDF c\u1EEDa", "\u0110\u1EE7 nguy\xEAn li\u1EC7u th\xEC b\u1EA5m <b>M\u1EDF c\u1EEDa</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng.")}</div>
-    <div class="g-sec"><h4>\u{1F9CB} 2. Pha ly khi b\xE1n h\xE0ng</h4>
-      ${step("\u{1F464}", "\u0110\u1ECDc \u0111\u01A1n", "Kh\xE1ch hi\u1EC7n bong b\xF3ng tho\u1EA1i: size, lo\u1EA1i tr\xE0, h\u01B0\u01A1ng, topping. V\xF2ng xanh quanh avatar l\xE0 <b>\u0111\u1ED9 ki\xEAn nh\u1EABn</b>.")}
-      ${step("\u{1F964}", "L\u1EA5y ly", "Ch\u1EA1m \u0111\xFAng <b>ch\u1ED3ng ly M ho\u1EB7c L</b> tr\xEAn qu\u1EA7y tr\xE0.")}
-      ${step("\u{1FAD6}", "R\xF3t tr\xE0", "Ch\u1EA1m <b>b\xECnh tr\xE0</b> \u0111\u1EC3 r\xF3t, ch\u1EA1m l\u1EA7n n\u1EEFa \u0111\u1EC3 d\u1EEBng khi thanh t\u1EDBi <b>v\xF9ng v\xE0ng</b>.")}
-      ${step("\u{1F36F}", "H\u01B0\u01A1ng & topping", "Ch\u1EA1m <b>chai h\u01B0\u01A1ng</b> (n\u1EBFu c\xF3) r\u1ED3i ch\u1EA1m c\xE1c khay <b>topping</b> kh\xE1ch y\xEAu c\u1EA7u.")}
-      ${step("\u{1F512}", "\u0110\xF3ng n\u1EAFp", "Ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b> b\xEAn ph\u1EA3i, ch\u1EDD \u0111\xE8n READY.")}
-      ${step("\u{1F91D}", "Giao kh\xE1ch", "Ch\u1EA1m <b>ly ho\xE0n thi\u1EC7n</b> tr\xEAn th\u1EDBt \u0111\u1EC3 giao. \u0110\xFAng + nhanh = nhi\u1EC1u sao v\xE0 ti\u1EC1n boa!")}</div>
-    <div class="g-sec"><h4>\u{1F4A1} 3. M\u1EB9o hay</h4>
-      ${step("\u{1F446}", "\u0110\u1ED5i kh\xE1ch", "Ch\u1EA1m avatar tr\xEAn m\xE1i hi\xEAn \u0111\u1EC3 ph\u1EE5c v\u1EE5 kh\xE1ch \u01B0u ti\xEAn (ng\u01B0\u1EDDi s\u1EAFp h\u1EBFt ki\xEAn nh\u1EABn).")}
-      ${step("\u{1F5D1}\uFE0F", "L\xE0m sai?", "Ch\u1EA1m <b>th\xF9ng r\xE1c</b> \u0111\u1EC3 \u0111\u1ED5 ly r\u1ED3i pha l\u1EA1i.")}
-      ${step("\u2B50", "\u0110\xE1nh gi\xE1", "Sao cao th\xEC kh\xE1ch \u0111\xF4ng h\u01A1n. B\xE0n b\u1EA9n \u1EDF S\u1EA3nh nh\u1EDB d\u1ECDn \u0111\u1EC3 c\xF3 th\xEAm kh\xE1ch ng\u1ED3i.")}</div>
-    <div class="g-sec"><h4>\u{1F680} 4. L\u1EDBn d\u1EA7n</h4>
-      ${step("\u{1F6E0}\uFE0F", "N\xE2ng c\u1EA5p & nh\xE2n s\u1EF1", "N\xE2ng c\u1EA5p qu\u1EA7y, <b>thu\xEA nh\xE2n vi\xEAn</b> \u2013 kh\xE1ch s\u1EBD \u0111\u1EBFn nhanh v\xE0 \u0111\xF4ng h\u01A1n khi qu\xE1n c\xF3 ti\u1EC1n v\xE0 \u0111\u1ED9i ng\u0169.")}
-      ${step("\u{1F5FA}\uFE0F", "Kh\u1EDFi nghi\u1EC7p & chi nh\xE1nh", "M\u1EDF chi nh\xE1nh, kh\u1EDFi nghi\u1EC7p xuy\xEAn Vi\u1EC7t, ch\u1EA1y qu\u1EA3ng c\xE1o, nu\xF4i th\xFA c\u01B0ng, \u0111\xF3ng thu\u1EBF nh\u1EADn buff, g\u1EEDi ti\u1EBFt ki\u1EC7m.")}
-      ${step("\u{1F4B5}", "Gi\xE1 b\xE1n", "\u0110\u1EEBng \u0111\u1EA9y gi\xE1 qu\xE1 cao \u2014 tr\xE0 tr\xEAn 50k, topping tr\xEAn 20k s\u1EBD l\xE0m kh\xE1ch b\u1ECF \u0111i (tr\u1EEB khi c\xF3 Qu\u1EA3n l\xFD t\u1EADp s\u1EF1).")}</div>
+    ${sec("\u{1F3E0}", "M\xE0n chu\u1EA9n b\u1ECB", [
+      ["\u{1FAA7}", "<b>Bi\u1EC3n hi\u1EC7u</b>: ch\u1EA1m logo ho\u1EB7c t\xEAn ti\u1EC7m \u0111\u1EC3 \u0111\u1ED5i. Hai nh\xE3n nh\u1ECF d\u1EABn nhanh t\u1EDBi <b>Kh\u1EDFi nghi\u1EC7p</b> (\u0111\u1ECBa \u0111i\u1EC3m) v\xE0 <b>S\u1EA3nh Tr\xE0</b>."],
+      ["\u{1F964}", "<b>Menu h\xF4m nay</b>: c\xE1c m\xF3n \u0111ang b\xE1n k\xE8m gi\xE1, size L ph\u1EE5 thu th\xEAm. D\xF2ng s\u1EF1 ki\u1EC7n v\xE0 <b>\u{1F465} kh\xE1ch d\u1EF1 ki\u1EBFn</b> + th\u1EDDi ti\u1EBFt n\u1EB1m ngay b\xEAn d\u01B0\u1EDBi."],
+      ["\u{1F9ED}", "<b>Thanh d\u01B0\u1EDBi c\xF9ng</b> c\xF3 5 nh\xF3m: \u{1F3EA} Ti\u1EC7m \xB7 \u{1F4E6} Kho \xB7 \u{1F4C8} Ph\xE1t tri\u1EC3n \xB7 \u{1F465} X\xE3 h\u1ED9i \xB7 \u{1F380} Th\xEAm. Ch\u1ECDn nh\xF3m r\u1ED3i ch\u1EA1m \xF4 ch\u1EE9c n\u0103ng b\xEAn trong."],
+      ["\u2630", "N\xFAt <b>\u2261</b> g\xF3c tr\xE1i tr\xEAn l\xE0 C\xE0i \u0111\u1EB7t, n\xFAt \u{1F4D6} l\xE0 m\u1EDF l\u1EA1i H\u01B0\u1EDBng d\u1EABn, \u26C5 \u0111\u1EC3 xem d\u1EF1 b\xE1o th\u1EDDi ti\u1EBFt v\xE0 s\u1EF1 ki\u1EC7n."],
+      ["\u{1F3EE}", "N\xFAt h\u1ED3ng \u0111\xE1y m\xE0n h\xECnh \u0111\u1ED5i theo t\xECnh tr\u1EA1ng: <b>N\u1EA5u & nh\u1EADp</b> \u2192 <b>\u26A0\uFE0F Ch\u01B0a n\u1EA5u\u2026</b> (\u0111\u1ECF, thi\u1EBFu m\xF3n) \u2192 <b>M\u1EDF c\u1EEDa</b>."]
+    ], true)}
+    ${sec("\u{1F4E6}", "Kho & nh\u1EADp h\xE0ng", [
+      ["\u{1FAD6}", "C\xE1c tab: <b>Tr\xE0</b>, <b>Topping</b>, <b>D\u1EE5ng c\u1EE5</b> (ly, \u0111\xE1, \u0111\u01B0\u1EDDng\u2026) v\xE0 <b>\u{1F353} H\u01B0\u01A1ng</b> (khi \u0111\xE3 m\u1EDF kh\xF3a)."],
+      ["\u{1F522}", "M\u1ED7i m\xF3n c\xF3 \xF4 s\u1ED1: g\xF5 th\u1EB3ng s\u1ED1 l\u01B0\u1EE3ng ho\u1EB7c b\u1EA5m <b>\u2212 / +</b> (m\u1ED7i l\u1EA7n 1). D\xF2ng xanh <b>+N</b> l\xE0 l\u01B0\u1EE3ng s\u1EBD nh\u1EADp, k\xE8m ti\u1EC1n v\u1ED1n."],
+      ["\u23F3", "<b>\u23F3 N ng\xE0y</b> l\xE0 h\u1EA1n d\xF9ng; <b>\u26A0\uFE0F</b> b\xE1o m\xF3n h\u1EBFt h\u1EA1n h\xF4m nay. Chai h\u01B0\u01A1ng = nhi\u1EC1u ly, d\xF9ng \u0111\u01B0\u1EE3c 7 ng\xE0y."],
+      ["\u{1F6D2}", "Xong th\xEC b\u1EA5m <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n. Thi\u1EBFu Tr\xE0 ho\u1EB7c D\u1EE5ng c\u1EE5 th\xEC ch\u01B0a m\u1EDF c\u1EEDa \u0111\u01B0\u1EE3c."],
+      ["\u{1FAB4}", "Nh\xF3m Kho c\xF2n c\xF3 <b>V\u01B0\u1EDDn c\xE2y</b> (tr\u1ED3ng nguy\xEAn li\u1EC7u) v\xE0 <b>Th\xFA c\u01B0ng</b> (\u{1F512} \u0111\u1EBFn khi nh\u1EADn nu\xF4i)."]
+    ])}
+    ${sec("\u{1F9CB}", "M\xE0n b\xE1n h\xE0ng \u2013 t\u1EEBng b\u01B0\u1EDBc pha 1 ly", [
+      ["1\uFE0F\u20E3", "<b>\u0110\u1ECDc \u0111\u01A1n</b>: h\xE0ng \u0111\u1EE3i kh\xE1ch \u1EDF tr\xEAn c\xF9ng, kh\xE1ch \u0111ang ph\u1EE5c v\u1EE5 hi\u1EC7n <b>bong b\xF3ng</b> ghi size, tr\xE0, h\u01B0\u01A1ng, topping. V\xF2ng quanh avatar l\xE0 <b>ki\xEAn nh\u1EABn</b>, c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i. Ch\u1EA1m avatar kh\xE1c \u0111\u1EC3 \u0111\u1ED5i kh\xE1ch."],
+      ["2\uFE0F\u20E3", "<b>L\u1EA5y ly</b>: \u1EDF <b>QU\u1EA6Y TR\xC0</b>, ch\u1EA1m ch\u1ED3ng ly <b>M</b> ho\u1EB7c <b>L</b> \u0111\xFAng size (m\u1ED7i size c\xF3 s\u1ED1 l\u01B0\u1EE3ng ri\xEAng)."],
+      ["3\uFE0F\u20E3", "<b>R\xF3t tr\xE0</b>: ch\u1EA1m \u0111\xFAng <b>b\xECnh tr\xE0</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u r\xF3t, ch\u1EA1m l\u1EA1i \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>. Ly l\u01B0ng ho\u1EB7c tr\xE0n b\u1ECB tr\u1EEB sao."],
+      ["4\uFE0F\u20E3", "<b>H\u01B0\u01A1ng</b>: n\u1EBFu kh\xE1ch g\u1ECDi, ch\u1EA1m chai \u1EDF h\xE0ng <b>H\u01AF\u01A0NG</b> d\u01B0\u1EDBi b\xECnh tr\xE0."],
+      ["5\uFE0F\u20E3", "<b>Topping</b>: ch\u1EA1m c\xE1c khay topping kh\xE1ch y\xEAu c\u1EA7u, kh\xF4ng th\xEAm th\u1EEBa."],
+      ["6\uFE0F\u20E3", "<b>\u0110\xF3ng n\u1EAFp</b>: ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b>, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly tr\xEAn th\u1EDBt</b> (khu PHA LY)."],
+      ["7\uFE0F\u20E3", "<b>Giao kh\xE1ch</b>: ly xong s\u1EBD giao cho kh\xE1ch. \u0110\xFAng \u0111\u01A1n v\xE0 nhanh th\xEC 5 sao, kh\xE1ch h\xE0i l\xF2ng c\xF2n boa."],
+      ["\u{1F4F1}", "<b>\u0110i\u1EC7n tho\u1EA1i</b>: \u0111\u01A1n online (s\u1ED1 \u0111\u1ECF l\xE0 s\u1ED1 \u0111\u01A1n ch\u1EDD). Nh\u1EADn \u0111\u01A1n r\u1ED3i pha nh\u01B0 b\xECnh th\u01B0\u1EDDng."],
+      ["\u{1F5D1}\uFE0F", "<b>Th\xF9ng r\xE1c</b>: \u0111\u1ED5 ly b\u1ECB sai \u0111\u1EC3 pha l\u1EA1i."],
+      ["\u2B50", "Ch\u1EA5m sao: sai tr\xE0 \u22123, sai size \u22122, thi\u1EBFu/th\u1EEBa h\u01B0\u01A1ng \u22121, sai topping \u22121~2, ly l\u01B0ng \u22121, tr\xE0n \u22121, ch\u1EDD qu\xE1 l\xE2u \u22121."],
+      ["\u23F8\uFE0F", "N\xFAt <b>\u23F8</b> tr\xEAn c\xF9ng l\xE0 t\u1EA1m d\u1EEBng; n\xFAt b\xE1nh r\u0103ng b\xEAn ph\u1EA3i l\xE0 C\xE0i \u0111\u1EB7t."]
+    ], true)}
+    ${sec("\u{1FA91}", "S\u1EA3nh & b\xE0n", [
+      ["\u27A1\uFE0F", "N\xFAt <b>Ra s\u1EA3nh</b> d\u01B0\u1EDBi c\xF9ng (k\xE8m s\u1ED1 b\xE0n) chuy\u1EC3n sang S\u1EA3nh Tr\xE0; quay l\u1EA1i qu\u1EA7y b\u1EB1ng n\xFAt t\u01B0\u01A1ng \u1EE9ng."],
+      ["\u{1F9F9}", "Kh\xE1ch \u0103n xong \u0111\u1EC3 l\u1EA1i b\xE0n b\u1EA9n, d\u1ECDn b\xE0n \u0111\u1EC3 c\xF3 ch\u1ED7 cho kh\xE1ch m\u1EDBi. Kh\xE1ch ng\u1ED3i h\xE0i l\xF2ng c\xF3 th\u1EC3 boa th\xEAm."]
+    ])}
+    ${sec("\u{1F4CA}", "Cu\u1ED1i ng\xE0y & t\u1ED5ng k\u1EBFt", [
+      ["\u{1F514}", "H\u1EBFt gi\u1EDD ca, b\u1EA3ng <b>T\u1ED5ng k\u1EBFt ng\xE0y</b> cho doanh thu, boa, s\u1ED1 kh\xE1ch ph\u1EE5c v\u1EE5/b\u1ECF v\u1EC1 v\xE0 sao nh\u1EADn \u0111\u01B0\u1EE3c."],
+      ["\u2B50", "Tab <b>\u0110\xE1nh gi\xE1</b> (nh\xF3m Ti\u1EC7m) xem nh\u1EADn x\xE9t. Sao c\xE0ng cao th\xEC kh\xE1ch c\xE0ng \u0111\xF4ng."],
+      ["\u{1F4CA}", "Tab <b>T\u1ED5ng k\u1EBFt</b> xem l\u1EA1i s\u1ED1 li\u1EC7u c\xE1c ng\xE0y. Game t\u1EF1 l\u01B0u cu\u1ED1i m\u1ED7i ng\xE0y."]
+    ])}
+    ${sec("\u{1F4C8}", "Ph\xE1t tri\u1EC3n (n\xE2ng c\u1EA5p, nh\xE2n s\u1EF1, chi nh\xE1nh, kh\u1EDFi nghi\u1EC7p)", [
+      ["\u{1F4B5}", "<b>Gi\xE1 b\xE1n</b> (nh\xF3m Ti\u1EC7m): ch\u1EC9nh gi\xE1 Tr\xE0, H\u01B0\u01A1ng, Topping, Size. Tr\xE0 tr\xEAn 50k, topping tr\xEAn 20k d\u1EC5 l\xE0m kh\xE1ch b\u1ECF \u0111i."],
+      ["\u{1F6E0}\uFE0F", "<b>N\xE2ng c\u1EA5p</b>: m\u1EDF kh\xF3a tr\xE0/topping, c\u1EA3i thi\u1EC7n qu\u1EA7y, th\xEAm ti\u1EC7n \xEDch."],
+      ["\u{1F3C6}", "<b>Qu\u1EA3n l\xFD nh\xE2n s\u1EF1</b>: thu\xEA nh\xE2n vi\xEAn t\u1EF1 pha, qu\u1EA3n l\xFD h\u1ED7 tr\u1EE3 topping."],
+      ["\u{1F3E2}", "<b>Chi nh\xE1nh</b>: m\u1EDF th\xEAm ti\u1EC7m \u0111\u1EC3 c\xF3 thu nh\u1EADp. <b>\u{1F5FA}\uFE0F Kh\u1EDFi nghi\u1EC7p</b>: \u0111\u1ED5i \u0111\u1ECBa \u0111i\u1EC3m, m\u1EDF r\u1ED9ng xuy\xEAn Vi\u1EC7t."],
+      ["\u{1F4DC}", "<b>Thu\u1EBF & Bank</b> (nh\xF3m Th\xEAm): \u0111\xF3ng thu\u1EBF nh\u1EADn buff, g\u1EEDi ti\u1EBFt ki\u1EC7m."]
+    ])}
+    ${sec("\u{1F465}", "X\xE3 h\u1ED9i", [
+      ["\u{1F4F1}", "<b>M\u1EA1ng X\xE3 H\u1ED9i</b>: \u0111\u0103ng b\xE0i, ch\u1EA1y qu\u1EA3ng c\xE1o \u0111\u1EC3 k\xE9o th\xEAm kh\xE1ch."],
+      ["\u{1F465}", "<b>B\u1EA1n b\xE8</b>: k\u1EBFt n\u1ED1i v\xE0 so s\xE1nh v\u1EDBi b\u1EA1n b\xE8."],
+      ["\u{1F3B4}", "<b>S\u01B0u t\u1EA7m</b> (nh\xF3m Th\xEAm) c\u0169ng m\u1EDF nhanh b\u1EB1ng n\xFAt \u1EDF g\xF3c ph\u1EA3i thanh \u0111\u1EA7u m\xE0n h\xECnh."]
+    ])}
+    ${sec("\u{1F36C}", "Mini game", [
+      ["\u{1F36C}", "<b>Milk Tea Crush</b> (nh\xF3m Th\xEAm): gh\xE9p 3 m\xF3n gi\u1ED1ng nhau \u0111\u1EC3 nh\u1EADn th\u01B0\u1EDFng."]
+    ])}
+    ${sec("\u2699\uFE0F", "C\xE0i \u0111\u1EB7t (m\xE0u, rung, nh\u1EA1c)", [
+      ["\u{1F3A8}", "B\u1EA5m <b>\u2261</b> (m\xE0n chu\u1EA9n b\u1ECB) ho\u1EB7c b\xE1nh r\u0103ng (khi b\xE1n) r\u1ED3i ch\u1ECDn <b>M\xE0u giao di\u1EC7n</b>."],
+      ["\u{1F4F3}", "<b>Rung</b>: ch\u1ECDn m\u1EE9c rung khi thao t\xE1c."],
+      ["\u{1F3B5}", "<b>Nh\u1EA1c n\u1EC1n</b> v\xE0 <b>SFX</b> ch\u1EC9nh \xE2m l\u01B0\u1EE3ng ri\xEAng; <b>\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a</b> \u0111\u1ED5i phong c\xE1ch nh\u1EA1c. C\xF2n c\xF3 \u23F1\uFE0F th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y v\xE0 \u{1F9ED} ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc."]
+    ])}
     </div>
     <button class="btn blue block" data-act="replay">\u{1F393} Xem h\u01B0\u1EDBng d\u1EABn t\u01B0\u01A1ng t\xE1c t\u1EEBng b\u01B0\u1EDBc</button>
     <button class="btn pri block" data-act="x" style="margin-top:6px">\u0110\xE3 hi\u1EC3u</button>` });
@@ -2644,7 +2769,7 @@
   document.addEventListener("fullscreenchange", () => {
     if (document.fullscreenElement) fsDone = true;
   });
-  for (const ev of ["pointerup", "touchend"]) document.addEventListener(ev, () => {
+  for (const ev of ["pointerup", "touchend", "click", "keydown"]) document.addEventListener(ev, () => {
     if (!fsDone) goFullscreen();
   }, { passive: true });
   function showIntro(onPlay) {
@@ -3120,7 +3245,7 @@
       const d = $(`.disp[data-tea="${b.tea}"] .tap`), cup = $("#cupslot");
       if (d && cup && st) {
         const a = d.getBoundingClientRect(), c2 = cup.getBoundingClientRect(), r0 = root.getBoundingClientRect();
-        st.style.cssText = `display:block;left:${a.left + a.width / 2 - 3 - r0.left}px;top:${a.bottom - r0.top}px;height:${Math.max(0, c2.top + c2.height * 0.2 - a.bottom)}px;background:${ITEMS[b.tea].color}`;
+        st.style.cssText = `display:block;left:${a.left + a.width / 2 - 3 - r0.left}px;top:${a.bottom - r0.top}px;height:${Math.max(0, c2.top + c2.height * 0.2 - a.bottom)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
         if (Math.random() < 0.15) sfx("pour");
       }
     } else if (st) st.style.display = "none";
@@ -3902,7 +4027,6 @@
       }
     }
   };
-  var MAP_PATH = "30,5 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,96 38,90 42,84 50,80 52,72 50,64 44,58 40,50 38,42 40,34 34,28 30,22 26,16 24,10";
   function locCard(id) {
     const l = LOCATIONS[id];
     const here = S.location === id;
@@ -3926,34 +4050,89 @@
     hoangSa: [["\u{1F3DD}\uFE0F", 46, 66, 6], ["\u{1F334}", 22, 46, 8], ["\u2693", 82, 34, 6], ["\u{1F6A2}", 66, 36, 34]]
   };
   var sceneHTML = (id) => `<div class="loc-scene" aria-hidden="true">${(SCENES[id] || []).map(([e, x, sz, b]) => `<span style="left:${x}%;font-size:${sz}px;bottom:${b}px">${e}</span>`).join("")}</div>`;
-  var VM_BANDS = [["#f7e7c0", 0, 24], ["#f3e0b4", 24, 44], ["#f9e9c6", 44, 60], ["#f4e2b8", 60, 100]];
-  var vmapSvg = () => `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-  <defs><clipPath id="vnclip"><polygon points="${MAP_PATH}"/></clipPath>
-    <pattern id="vwave" width="6" height="4" patternUnits="userSpaceOnUse"><path d="M0 2 Q1.5 0 3 2 T6 2" fill="none" stroke="#9cc7cf" stroke-width=".25" opacity=".7"/></pattern></defs>
-  <rect width="100" height="100" fill="#eedfb4"/>
-  <rect width="100" height="100" fill="url(#vwave)" opacity="0"/>
-  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" class="sea"/>
-  <polygon points="45,0 45,4 58,10 65,16 62,22 55,26 52,32 56,38 62,44 66,50 68,56 66,62 63,68 66,74 68,80 64,86 58,92 52,96 46,98 40,100 100,100 100,0" fill="url(#vwave)"/>
-  <polygon points="${MAP_PATH}" fill="none" stroke="#b9dde2" stroke-width="2.4" stroke-linejoin="round" opacity=".7"/>
-  <g clip-path="url(#vnclip)">${VM_BANDS.map(([c, y0, y1]) => `<rect x="0" y="${y0}" width="100" height="${y1 - y0}" fill="${c}"/>`).join("")}
-    <path d="M30 20 L40 25 L46 22 M40 25 L42 34 L50 36 M42 34 L40 44 M50 36 L56 40 M44 58 L54 60 M54 60 L60 64 M50 70 L58 72 M52 80 L58 82 M46 90 L54 90" class="prov"/>
-    <path d="M36 18 Q44 26 41 33 T47 39" class="river"/><path d="M46 70 Q52 78 50 86 T56 96" class="river"/>
-  </g>
-  <polygon points="${MAP_PATH}" class="land"/>
-  <g class="isl"><circle cx="86" cy="53" r="1"/><circle cx="83" cy="55" r=".8"/><circle cx="89" cy="56" r=".7"/><circle cx="85" cy="72" r=".9"/><circle cx="89" cy="76" r=".8"/><circle cx="83" cy="78" r=".7"/><circle cx="91" cy="80" r=".9"/><circle cx="34" cy="90" r="1.6"/></g>
-</svg>
-<span class="vm-d vm-lbl" style="left:80%;top:38%">BI\u1EC2N \u0110\xD4NG</span><span class="vm-d vm-lbl dim" style="left:12%;top:6%">TRUNG QU\u1ED0C</span><span class="vm-d vm-lbl dim" style="left:12%;top:46%">L\xC0O</span><span class="vm-d vm-lbl dim" style="left:16%;top:78%">CAMPUCHIA</span><span class="vm-d vm-lbl dim" style="left:16%;top:97%">V\u1ECANH TH\xC1I LAN</span>
-<span class="vm-d" style="left:20%;top:11%;font-size:26px">\u26F0\uFE0F</span><span class="vm-d" style="left:12%;top:20%;font-size:20px">\u{1F332}</span><span class="vm-d" style="left:30%;top:32%;font-size:22px">\u{1F33F}</span><span class="vm-d" style="left:34%;top:60%;font-size:22px">\u{1F333}</span>
-<span class="vm-d vm-boat" style="left:82%;top:24%">\u26F5</span><span class="vm-d vm-boat" style="left:76%;top:62%;animation-delay:-1.5s">\u{1F6A2}</span><span class="vm-d vm-boat" style="left:72%;top:92%;animation-delay:-3s">\u{1F6F6}</span>
-<span class="vm-d" style="left:88%;top:8%;font-size:26px">\u{1F9ED}</span><span class="vm-d" style="left:74%;top:47%;font-size:16px">\u{1F41A}</span><span class="vm-d" style="left:90%;top:90%;font-size:22px">\u{1F419}</span>
-<div class="vm-legend"><span>\u{1F4CD} Qu\xE1n tr\xE0</span><span>\u{1F3DD}\uFE0F \u0110\u1EA3o</span></div>`;
+  var VM_H = 136;
+  var vmXY = ([lo, la]) => [(lo - 102) * 8, (24 - la) * 8];
+  var vmF = (n) => +n.toFixed(1);
+  var vmPt = (p) => {
+    const [x, y] = vmXY(p);
+    return vmF(x) + " " + vmF(y);
+  };
+  function vmCurve(pts, tn = 1) {
+    const q = pts.map(vmXY);
+    let d = "";
+    for (let i = 0; i < q.length - 1; i++) {
+      const a = q[i - 1] || q[i], b = q[i], c = q[i + 1], e = q[i + 2] || c, k = tn / 6;
+      d += `C${vmF(b[0] + (c[0] - a[0]) * k)} ${vmF(b[1] + (c[1] - a[1]) * k)} ${vmF(c[0] - (e[0] - b[0]) * k)} ${vmF(c[1] - (e[1] - b[1]) * k)} ${vmF(c[0])} ${vmF(c[1])}`;
+    }
+    return d;
+  }
+  var vmLine = (pts, tn) => `M${vmPt(pts[0])}${vmCurve(pts, tn)}`;
+  var vmLoop = (pts, tn) => `${vmLine([...pts, pts[0]], tn)}Z`;
+  var VM_N = [[102.15, 22.4], [102.45, 22.75], [102.9, 22.5], [103.3, 22.75], [103.6, 22.6], [103.95, 22.5], [104.3, 22.82], [104.7, 23], [105, 23.25], [105.32, 23.37], [105.6, 23.1], [105.95, 23], [106.4, 22.9], [106.7, 22.85], [106.6, 22.45], [106.75, 22], [107.15, 21.95], [107.45, 21.65], [107.95, 21.55], [108.05, 21.5]];
+  var VM_C = [[108.05, 21.5], [107.75, 21.3], [107.5, 21.1], [107.3, 21], [107, 20.85], [106.8, 20.75], [106.6, 20.55], [106.5, 20.3], [106.2, 20.1], [105.95, 19.9], [105.85, 19.6], [105.8, 19.25], [105.8, 18.7], [106.1, 18.35], [106.4, 18], [106.65, 17.55], [107.1, 17], [107.5, 16.6], [107.9, 16.35], [108.2, 16.12], [108.35, 15.9], [108.65, 15.55], [108.9, 15.15], [109.05, 14.6], [109.2, 14], [109.3, 13.5], [109.4, 13], [109.3, 12.5], [109.2, 12], [109.1, 11.6], [108.9, 11.3], [108.5, 11], [108.1, 10.9], [107.6, 10.55], [107.1, 10.35], [106.85, 10.4], [106.75, 10.3], [106.6, 9.95], [106.4, 9.55], [106, 9.3], [105.7, 9], [105.35, 8.75], [104.85, 8.6], [104.8, 8.8], [104.95, 9.3], [105.05, 9.8], [105.05, 10], [104.8, 10.2], [104.5, 10.42]];
+  var VM_W = [[104.5, 10.42], [104.85, 10.9], [105.35, 10.85], [105.8, 11.05], [106.1, 11.35], [106.4, 11.7], [106.9, 11.95], [107.3, 12.15], [107.5, 12.4], [107.4, 13], [107.5, 13.5], [107.4, 14.1], [107.55, 14.6], [107.4, 15.15], [107.55, 15.6], [107.2, 15.9], [107.1, 16.2], [106.7, 16.55], [106.55, 17], [106.4, 17], [105.95, 17.4], [105.6, 17.75], [105.15, 18.3], [104.7, 18.75], [104, 19.2], [104, 19.7], [104.6, 20.4], [104.1, 20.85], [103.7, 20.65], [103.35, 20.95], [103, 21.5], [102.7, 21.7], [102.2, 22.05], [102.15, 22.4]];
+  var VM_GULF = [[104.5, 10.42], [104.2, 10.55], [103.6, 10.6], [103.2, 11], [102.9, 11.6], [102.5, 12.1], [102, 12.4]];
+  var VM_CHINA = [[114.5, 22.6], [113.6, 22.1], [112.3, 21.7], [111, 21.5], [110.5, 21.1], [110.4, 20.4], [110.2, 20.25], [109.95, 20.9], [109.7, 21.45], [109.1, 21.5], [108.05, 21.5]];
+  var VM_HAINAN = [[108.65, 19.35], [108.8, 19.8], [109.3, 20.05], [110.1, 20.1], [110.6, 19.9], [111, 19.6], [110.8, 19], [110.4, 18.7], [109.7, 18.3], [109.1, 18.25], [108.65, 18.5], [108.6, 19]];
+  var VM_PQ = [[103.98, 10.45], [104.05, 10.3], [104, 10.1], [103.92, 9.95], [103.85, 10.1], [103.88, 10.3]];
+  var VM_CD = [[106.55, 8.78], [106.65, 8.72], [106.7, 8.65], [106.6, 8.62], [106.52, 8.7]];
+  var VM_LAND = `M${vmPt(VM_N[0])}${vmCurve(VM_N)}${vmCurve(VM_C)}${vmCurve(VM_W)}Z`;
+  var VM_SEA = `${vmLine(VM_C)}${vmCurve(VM_GULF)}L${vmPt([102, 7])}L${vmPt([114.5, 7])}L${vmPt(VM_CHINA[0])}${vmCurve(VM_CHINA)}Z`;
+  var VM_RIVERS = [
+    [[103.97, 22.5], [104.5, 22], [104.95, 21.65], [105.4, 21.3], [105.85, 21.03], [106.2, 20.65], [106.55, 20.25]],
+    // sông Hồng
+    [[104.9, 11.6], [105.1, 11.15], [105.25, 10.8], [105.8, 10.35], [106.3, 10.1], [106.75, 9.95]],
+    // Mê Kông - sông Tiền
+    [[105.3, 10.75], [105.6, 10.2], [105.9, 9.8], [106.2, 9.45]],
+    // sông Hậu
+    [[104.2, 14.2], [104.9, 12.8], [104.9, 11.6]]
+    // Mê Kông thượng
+  ];
+  var VM_MTS = [[103.8, 22.25], [104.25, 22.05], [104.6, 21.6], [103.3, 21.5], [105.6, 18.4], [106.2, 17.6], [106.8, 16.8], [107.1, 15.9], [107.25, 15.2], [108.3, 13.9], [108.4, 13], [108.5, 12], [105, 22]];
+  var VM_ISL = [[111.2, 16.45], [111.6, 16.55], [111.75, 16.2], [112.3, 16.05], [111.5, 16.85]];
+  var VM_TS = [[114, 10.3], [113.4, 9], [112.9, 9.8], [112.3, 8.9], [111.9, 9.9], [113.9, 9.2], [112.6, 10]];
+  var vmTxt = (lo, la, t, cls, rot) => {
+    const [x, y] = vmXY([lo, la]);
+    return `<text x="${vmF(x)}" y="${vmF(y)}" class="vt ${cls}"${rot ? ` transform="rotate(${rot} ${vmF(x)} ${vmF(y)})"` : ""}>${t}</text>`;
+  };
+  var vmMt = (p) => {
+    const [x, y] = vmXY(p);
+    return `M${vmF(x - 1.3)} ${vmF(y + 0.9)}L${vmF(x - 0.2)} ${vmF(y - 1)}L${vmF(x + 0.5)} ${vmF(y + 0.1)}L${vmF(x + 0.9)} ${vmF(y - 0.5)}L${vmF(x + 1.5)} ${vmF(y + 0.9)}Z`;
+  };
+  var vmDot = (p, r) => {
+    const [x, y] = vmXY(p);
+    return `<circle cx="${vmF(x)}" cy="${vmF(y)}" r="${r}"/>`;
+  };
+  var VM_PIN_LBL = { goc: ["Ti\u1EC7m g\u1ED1c", "r"], hanoi: ["H\xE0 N\u1ED9i", "l"], sapa: ["Sa Pa", "r"], halong: ["H\u1EA1 Long", "r"], hue: ["Hu\u1EBF", "l"], danang: ["\u0110\xE0 N\u1EB5ng", "r"], bmt: ["Bu\xF4n Ma Thu\u1ED9t", "r"], hcm: ["TP.HCM", "r"], canTho: ["C\u1EA7n Th\u01A1", "l"], caMau: ["C\xE0 Mau", "r"], hoangSa: ["Ho\xE0ng Sa", "r"] };
+  var vmapSvg = () => `<svg viewBox="0 0 100 ${VM_H}" role="img" aria-label="B\u1EA3n \u0111\u1ED3 Vi\u1EC7t Nam">
+  <defs><pattern id="vwave" width="7" height="5" patternUnits="userSpaceOnUse"><path d="M0 1.6Q1.75 0 3.5 1.6T7 1.6M-3.5 4.1Q-1.75 2.5 0 4.1T3.5 4.1T7 4.1" class="vwv"/></pattern></defs>
+  <rect width="100" height="${VM_H}" class="vnb"/>
+  ${vmTxt(103.6, 23.3, "TRUNG QU\u1ED0C", "nb")}${vmTxt(105.3, 17.6, "L\xC0O", "nb", -62)}${vmTxt(102.95, 15.2, "TH\xC1I LAN", "nb", -90)}${vmTxt(105, 12.2, "CAMPUCHIA", "nb")}
+  <path d="${VM_SEA}" class="vsea"/><path d="${VM_SEA}" fill="url(#vwave)"/>
+  <path d="${vmLoop(VM_HAINAN)}" class="vnb2"/>${vmTxt(109.7, 19.1, "H\u1EA3i Nam", "nb s")}
+  ${vmTxt(112.3, 13.6, "BI\u1EC2N \u0110\xD4NG", "sea")}${vmTxt(107.35, 18.9, "V\u1ECBnh B\u1EAFc B\u1ED9", "sea s")}${vmTxt(103.2, 9.2, "V\u1ECBnh Th\xE1i Lan", "sea s")}
+  <path d="${VM_LAND}" class="vglow"/>
+  <path d="${VM_LAND}" class="land"/>
+  <path d="${vmLoop(VM_PQ)}" class="land isl-l"/><path d="${vmLoop(VM_CD)}" class="land isl-l"/>
+  ${VM_RIVERS.map((r, i) => `<path d="${vmLine(r)}" class="river${i === 3 ? " dim" : ""}"/>`).join("")}
+  <path d="${VM_MTS.map(vmMt).join("")}" class="mts"/>
+  <g class="isl">${VM_ISL.map((p) => vmDot(p, 0.55)).join("")}</g><g class="isl">${VM_TS.map((p) => vmDot(p, 0.55)).join("")}</g>
+  ${vmTxt(111.5, 15.3, "Q.\u0111 Ho\xE0ng Sa", "sea s")}${vmTxt(112.7, 8.55, "Q.\u0111 Tr\u01B0\u1EDDng Sa", "sea s")}
+  ${vmTxt(103.3, 21.55, "Ho\xE0ng Li\xEAn S\u01A1n", "mt s", 0)}${vmTxt(107.2, 14.35, "Tr\u01B0\u1EDDng S\u01A1n", "mt s", -72)}${vmTxt(106.1, 21.7, "S. H\u1ED3ng", "rv s", -38)}${vmTxt(104.75, 11.15, "S. M\xEA K\xF4ng", "rv s", 0)}${vmTxt(103.6, 10.85, "Ph\xFA Qu\u1ED1c", "nb s")}
+  <g class="cmp" transform="translate(89 13)"><circle r="6.2" class="cmp-r"/><path d="M0 -6L1.5 0L0 6L-1.5 0Z" class="cmp-n"/><path d="M-6 0L0 -1.5L6 0L0 1.5Z" class="cmp-e"/><text y="-8" class="vt cmp-t">B</text></g>
+  <g class="scl" transform="translate(36 131)"><path d="M0 0H14.4M0 -1V1M7.2 -.7V.7M14.4 -1V1"/><text x="7.2" y="-2" class="vt s">200 km</text></g>
+</svg>`;
+  var VM_LEGEND = '<div class="vm-legend"><span><i class="lg-dot"></i>Qu\xE1n tr\xE0</span><span><i class="lg-isl"></i>\u0110\u1EA3o</span><span><i class="lg-rv"></i>S\xF4ng</span><span><i class="lg-mt"></i>N\xFAi</span></div>';
   var khoinghiep = {
     html() {
-      const pins = Object.entries(LOCATIONS).map(([id, l]) => `<button class="pin ${S.location === id ? "on" : ""}" style="left:${l.map[0]}%;top:${l.map[1]}%" data-act="pin" data-id="${id}" aria-label="${esc(l.name)}"><span>${l.icon}</span><small>${esc(l.name)}</small></button>`).join("");
+      const pins = Object.entries(LOCATIONS).map(([id, l]) => {
+        const [lb, sd] = VM_PIN_LBL[id] || [l.short || l.name, "r"];
+        return `<button class="pin pin-${sd} ${S.location === id ? "on" : ""}" style="left:${l.map[0]}%;top:${l.map[1]}%" data-act="pin" data-id="${id}" aria-label="${esc(l.name)}"><span>${l.icon}</span><small>${esc(lb)}</small></button>`;
+      }).join("");
       const cur2 = LOCATIONS[S.location];
       return `<div class="cur-loc"><span class="chip y">\u{1F3E0} TI\u1EC6M TR\xC0 G\u1ED0C (BAN \u0110\u1EA6U)</span><span class="chip green">\u2B50 \u0110ANG KINH DOANH</span><h4>${cur2.icon} ${esc(cur2.name)}</h4><i>"${esc(cur2.slogan)}"</i><p>${esc(cur2.desc)}</p></div>
       <h4 class="subh">B\u1EA3n \u0110\u1ED3 Kh\u1EDFi Nghi\u1EC7p Xuy\xEAn Vi\u1EC7t</h4><p class="muted">Ch\u1EA1m v\xE0o c\xE1c bi\u1EC3u t\u01B0\u1EE3ng ghim tr\xEAn b\u1EA3n \u0111\u1ED3 ho\u1EB7c danh s\xE1ch b\xEAn d\u01B0\u1EDBi \u0111\u1EC3 ch\u1ECDn \u0111\u1ECBa \u0111i\u1EC3m m\u1EDF qu\xE1n. M\u1ED7i t\u1EC9nh th\xE0nh mang l\u1EA1i l\u1EE3i th\u1EBF doanh thu v\xE0 th\u1EED th\xE1ch v\u1EADn h\xE0nh \u0111\u1ED9c b\u1EA3n!</p>
-      <div class="vmap">${vmapSvg()}${pins}</div>
+      <div class="vmap">${vmapSvg()}${pins}${VM_LEGEND}</div>
       <h4 class="subh">Danh S\xE1ch \u0110\u1ECBa \u0110i\u1EC3m Kinh Doanh</h4>${Object.keys(LOCATIONS).map(locCard).join("")}`;
     },
     acts: {
@@ -4552,18 +4731,23 @@
     }, swap, N, open: openCrush };
   }
   var PN = 6;
-  var PCOL = 5;
   var PDUR = 30;
   var PGOAL = 120;
-  var PEARL = ["\u26AB", "\u{1FA77}", "\u{1F49A}", "\u{1F49B}", "\u{1F499}"];
+  var PCOMBO_MS = 1200;
+  var PIDS = ["tcDen", "tcVang", "tcNo", "cuNang", "fUbe"];
+  var PCOL = PIDS.length;
   var P2 = null;
-  function pearlBurst(el) {
+  function pearlBurst(el, color, big) {
     const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
-    for (let i = 0; i < 5; i++) {
-      const a = rand(0, Math.PI * 2), d = rand(20, 46);
-      const f = h(`<span class="mfx-fix" style="left:${x}px;top:${y}px">${i % 2 ? "\u2728" : "\u{1F4A5}"}</span>`);
+    const ring = h(`<span class="pfx-ring" style="left:${x}px;top:${y}px;border-color:${color}"></span>`);
+    document.body.appendChild(ring);
+    ring.animate([{ transform: "translate(-50%,-50%) scale(.3)", opacity: 0.9 }, { transform: "translate(-50%,-50%) scale(1.9)", opacity: 0 }], { duration: 420, easing: "ease-out" }).onfinish = () => ring.remove();
+    const n = big ? 7 : 5;
+    for (let i = 0; i < n; i++) {
+      const a = i / n * Math.PI * 2 + rand(-0.3, 0.3), d = rand(24, big ? 62 : 48), s = rand(5, 9);
+      const f = h(`<span class="pfx-dot" style="left:${x}px;top:${y}px;width:${s}px;height:${s}px;background:${color}"></span>`);
       document.body.appendChild(f);
-      f.animate([{ transform: "translate(-50%,-50%) scale(.5)", opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.1)`, opacity: 0 }], { duration: 480, easing: "ease-out" }).onfinish = () => f.remove();
+      f.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d + 14}px)) scale(.3)`, opacity: 0 }], { duration: rand(380, 560), easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => f.remove();
     }
   }
   var pRand = () => randInt(0, PCOL - 1);
@@ -4584,32 +4768,76 @@
     return out;
   }
   function pCollapse(b) {
+    const fall = Array.from({ length: PN }, () => Array(PN).fill(0));
     for (let c = 0; c < PN; c++) {
       const col = [];
-      for (let r = PN - 1; r >= 0; r--) if (b[r][c] >= 0) col.push(b[r][c]);
+      for (let r = PN - 1; r >= 0; r--) if (b[r][c] >= 0) col.push({ v: b[r][c], r });
+      const nNew = PN - col.length;
       for (let r = PN - 1; r >= 0; r--) {
         const i = PN - 1 - r;
-        b[r][c] = i < col.length ? col[i] : pRand();
+        if (i < col.length) {
+          b[r][c] = col[i].v;
+          fall[r][c] = r - col[i].r;
+        } else {
+          b[r][c] = pRand();
+          fall[r][c] = r + (nNew - (i - col.length));
+        }
       }
     }
+    return fall;
   }
   var pHas = (b) => b.some((row, r) => row.some((_, c) => pGroup(b, r, c).length >= 2));
-  function pRender() {
+  function pRender(fall) {
     const el = $("#pBoard");
     if (!el || !P2) return;
-    el.innerHTML = P2.b.map((row, r) => row.map((v, c) => `<button class="pc p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="Tr\xE2n ch\xE2u">${PEARL[v]}</button>`).join("")).join("");
+    el.innerHTML = P2.b.map((row, r) => row.map((v, c) => `<button class="pc" data-act="pop" data-r="${r}" data-c="${c}" aria-label="${esc(ITEMS[PIDS[v]].name)}"><i class="pb" style="--pc:${ITEMS[PIDS[v]].color}"></i></button>`).join("")).join("");
+    const balls = $$("#pBoard .pb");
+    const step = el.firstElementChild ? el.firstElementChild.offsetHeight + 5 : 50;
+    let maxFall = 0;
+    balls.forEach((b, i) => {
+      const d = fall ? fall[Math.floor(i / PN)][i % PN] : 0;
+      if (fall && d > 0) {
+        maxFall = Math.max(maxFall, d);
+        b.animate([{ transform: `translateY(${-d * step}px)` }, { transform: "translateY(0)" }], { duration: 170 + d * 60, easing: "cubic-bezier(.35,.9,.45,1.25)" });
+      } else if (!fall) {
+        b.animate([{ transform: "scale(0)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }], { duration: 300, delay: i * 6, easing: "ease-out", fill: "backwards" });
+      }
+    });
+    if (maxFall) {
+      sfx("swoosh");
+      setTimeout(() => P2 && !P2.over && sfx("bounce"), 170 + maxFall * 60);
+    }
+    pStats();
+  }
+  function pStats() {
     $("#pScore").textContent = P2.score;
     $("#pTime").textContent = Math.ceil(P2.t) + "s";
     $("#pBar").style.width = `${P2.t / PDUR * 100}%`;
+  }
+  function pComboFx(mul) {
+    const e = $("#pCombo");
+    if (!e) return;
+    e.textContent = mul > 1 ? `COMBO x${mul}` : "";
+    if (mul < 2) return;
+    const s = 1.3 + Math.min(mul, 6) * 0.1;
+    e.animate([{ transform: `scale(${s + 0.5}) rotate(-6deg)` }, { transform: `scale(${s}) rotate(5deg)` }, { transform: "scale(1) rotate(-3deg)" }, { transform: "scale(1) rotate(0)" }], { duration: 380, easing: "ease-out" });
+    const b = $("#pBoard");
+    if (mul >= 3 && b) b.animate([{ transform: "translateX(0)" }, { transform: "translateX(-3px)" }, { transform: "translateX(3px)" }, { transform: "translateX(-2px)" }, { transform: "translateX(0)" }], { duration: 220 });
   }
   function pEnd() {
     if (!P2 || P2.over) return;
     P2.over = true;
     clearInterval(P2.timer);
     const win = P2.score >= PGOAL;
-    const money = P2.score * 60, pearls = Math.floor(P2.score / 40);
+    const money = P2.score * 60;
+    const rewards = [];
+    PIDS.forEach((id, i) => {
+      const q = Math.floor(P2.cnt[i] / 4);
+      if (q > 0) rewards.push([id, q]);
+    });
+    if (!rewards.length && P2.score >= 40) rewards.push(["tcDen", Math.floor(P2.score / 40)]);
     S.money += money;
-    addStock("tcDen", pearls);
+    for (const [id, q] of rewards) addStock(id, q);
     S.pearl.best = Math.max(S.pearl.best, P2.score);
     let extra = "";
     if (win && chance(0.3)) {
@@ -4618,22 +4846,24 @@
     }
     markDirty("hud", "panel");
     requestSave();
-    sfx(win ? "level" : "sad");
-    $("#pBody").innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F642}"}</div><h3>${win ? "TH\xC0NH C\xD4NG!" : "C\u1ED1 l\xEAn l\u1EA7n sau!"}</h3><p>\u0110i\u1EC3m: <b>${P2.score}</b> (k\u1EF7 l\u1EE5c ${S.pearl.best})</p><p>Ti\u1EC1n th\u01B0\u1EDFng: <b class="money">+${fmtK(money)}</b> \xB7 Tr\xE2n ch\xE2u \u0111en: <b>+${pearls}</b></p>${extra}<button class="btn pri block" data-act="x">Nh\u1EADn th\u01B0\u1EDFng \u{1F381}</button></div>`;
+    sfx(win ? "win" : "lose");
+    const rw = rewards.length ? rewards.map(([id, q]) => `<span class="prw"><i class="pb sm" style="--pc:${ITEMS[id].color}"></i>+${q} ${esc(ITEMS[id].name)}</span>`).join("") : '<span class="muted">Ch\u01B0a \u0111\u1EE7 vi\xEAn \u0111\u1EC3 nh\u1EADn tr\xE2n ch\xE2u</span>';
+    $("#pBody").innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F642}"}</div><h3>${win ? "TH\xC0NH C\xD4NG!" : "C\u1ED1 l\xEAn l\u1EA7n sau!"}</h3><p>\u0110i\u1EC3m: <b>${P2.score}</b> \xB7 Combo cao nh\u1EA5t: <b>x${P2.maxMul}</b> (k\u1EF7 l\u1EE5c ${S.pearl.best})</p><p>Ti\u1EC1n th\u01B0\u1EDFng: <b class="money">+${fmtK(money)}</b></p><div class="prws">${rw}</div>${extra}<button class="btn pri block" data-act="x">Nh\u1EADn th\u01B0\u1EDFng \u{1F381}</button></div>`;
   }
   function openPearl() {
     if (S.pearl.playsDay >= 3) return toast("H\xF4m nay b\u1EA1n \u0111\xE3 ch\u01A1i \u0111\u1EE7 3 l\u01B0\u1EE3t Tr\xE2n Ch\xE2u N\u1ED5", "err");
     const m = openModal({ id: "pearl", cls: "small", onClose: () => {
       if (P2?.timer) clearInterval(P2.timer);
       P2 = null;
-    }, html: `<div id="pBody"><h3 class="m-title">\u26AB Tr\xE2n Ch\xE2u N\u1ED5</h3><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Combo li\xEAn ti\u1EBFp = nh\xE2n \u0111i\u1EC3m! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>` });
+    }, html: `<div id="pBody"><h3 class="m-title">\u26AB Tr\xE2n Ch\xE2u N\u1ED5</h3><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Nh\xF3m c\xE0ng l\u1EDBn \u0111i\u1EC3m c\xE0ng cao, n\u1ED5 li\xEAn ti\u1EBFp trong ${PCOMBO_MS / 1e3}s = nh\xE2n combo! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y. Cu\u1ED1i v\xE1n nh\u1EADn th\xEAm tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u cho kho.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>` });
     bindActions(m.body, {
       x: () => m.close(),
       start: () => {
         S.pearl.playsDay++;
-        P2 = { b: pNew(), score: 0, combo: 0, t: PDUR, over: false, timer: null };
-        $("#pBody").innerHTML = `<div class="pg"><div class="mg-head"><span>\u2B50 <b id="pScore">0</b></span><span id="pCombo" class="pcombo"></span><span>\u23F1 <b id="pTime">30s</b></span></div><div class="bar"><i id="pBar"></i></div><div class="pboard" id="pBoard"></div><p class="m-text center muted">Ch\u1EA1m nh\xF3m \u22652 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau. Combo li\xEAn ti\u1EBFp = nh\xE2n \u0111i\u1EC3m! M\u1EE5c ti\xEAu ${PGOAL} \u0111i\u1EC3m.</p></div>`;
+        P2 = { b: pNew(), score: 0, combo: 0, maxMul: 1, lastPop: 0, cnt: Array(PCOL).fill(0), t: PDUR, over: false, timer: null };
+        $("#pBody").innerHTML = `<div class="pg"><div class="mg-head"><span>\u2B50 <b id="pScore">0</b></span><span id="pCombo" class="pcombo"></span><span>\u23F1 <b id="pTime">30s</b></span></div><div class="bar"><i id="pBar"></i></div><div class="pboard" id="pBoard"></div><p class="m-text center muted">M\u1EE5c ti\xEAu ${PGOAL} \u0111i\u1EC3m \xB7 K\u1EF7 l\u1EE5c: <b>${S.pearl.best}</b></p></div>`;
         pRender();
+        sfx("fly");
         let last2 = performance.now();
         P2.timer = setInterval(() => {
           const now = performance.now();
@@ -4643,6 +4873,11 @@
             P2.t = 0;
             pEnd();
             return;
+          }
+          if (P2.combo && now - P2.lastPop > PCOMBO_MS) {
+            P2.combo = 0;
+            const e = $("#pCombo");
+            if (e) e.textContent = "";
           }
           const tm = $("#pTime");
           if (tm) {
@@ -4656,26 +4891,37 @@
         const r = +t.dataset.r, c = +t.dataset.c, g = pGroup(P2.b, r, c);
         if (g.length < 2) {
           P2.combo = 0;
-          $("#pCombo").textContent = "";
+          pComboFx(0);
           sfx("pop");
+          t.animate([{ transform: "translateX(-3px)" }, { transform: "translateX(3px)" }, { transform: "translateX(0)" }], { duration: 160 });
           return;
         }
-        P2.combo++;
-        const mul = P2.combo >= 5 ? 5 : P2.combo >= 3 ? 3 : P2.combo >= 2 ? 2 : 1;
-        const gain = g.length * g.length * mul;
+        const now = performance.now();
+        P2.combo = now - P2.lastPop <= PCOMBO_MS && P2.combo ? P2.combo + 1 : 1;
+        P2.lastPop = now;
+        const mul = Math.min(P2.combo, 6);
+        P2.maxMul = Math.max(P2.maxMul, mul);
+        const gain = g.length * g.length * mul, col = P2.b[r][c], color = ITEMS[PIDS[col]].color, big = g.length >= 5;
         P2.score += gain;
-        for (const [y, x] of g) P2.b[y][x] = -1;
-        $("#pCombo").textContent = mul > 1 ? `Combo x${mul}!` : "";
-        fxText(`+${gain}`, t, "g");
+        P2.cnt[col] += g.length;
         for (const [y, x] of g) {
           const cell = $(`.pc[data-r="${y}"][data-c="${x}"]`);
-          if (cell) pearlBurst(cell);
+          if (cell) {
+            pearlBurst(cell, color, big);
+            cell.firstElementChild.style.visibility = "hidden";
+          }
+          P2.b[y][x] = -1;
         }
-        if (mul >= 3) fxSpark(t, 8);
-        sfx(g.length >= 5 ? "level" : "match");
-        pCollapse(P2.b);
-        if (!pHas(P2.b)) P2.b = pNew();
-        pRender();
+        fxText(`+${gain}`, t, big ? "g big" : "g");
+        if (big || mul >= 3) fxSpark(t, big ? 10 : 6);
+        sfx(g.length >= 6 ? "pearlBoom" : g.length >= 4 ? "pearlPop2" : "pearlPop");
+        if (mul >= 2) setTimeout(() => sfx("combo" + mul), 90);
+        pComboFx(mul);
+        const fall = pCollapse(P2.b);
+        if (!pHas(P2.b)) {
+          P2.b = pNew();
+          pRender();
+        } else pRender(fall);
       }
     });
   }
@@ -4687,7 +4933,7 @@
       <div class="mg-info"><div><small>Buff hi\u1EC7n c\xF3</small><b>+${(S.crush.perm * 100).toFixed(0)}% doanh thu</b></div><div><small>M\xE0n cao nh\u1EA5t</small><b>${S.crush.best || 0}</b></div></div>
       <div class="rules"><b>\u{1F4D6} Lu\u1EADt ch\u01A1i & Th\u1EED th\xE1ch t\u0103ng d\u1EA7n:</b><p>\u2022 M\xE0n c\xE0ng cao \u0111\u1ED9 kh\xF3 c\xE0ng t\u0103ng: m\u1EE5c ti\xEAu \u0111i\u1EC3m cao h\u01A1n, l\u01B0\u1EE3t \u0111i \xEDt h\u01A1n, nhi\u1EC1u lo\u1EA1i topping tr\xE0 s\u1EEFa v\xE0 th\u1EDDi gian \u0111\u1EBFm ng\u01B0\u1EE3c suy ngh\u0129 m\u1ED7i l\u01B0\u1EE3t nhanh d\u1EA7n.</p><p>\u2022 <b>Combo k\u1EB9o \u0111\u1EB7c bi\u1EC7t:</b></p><p>- Gh\xE9p 4: \u26A1 Ly S\u1ECDc qu\xE9t s\u1EA1ch 1 h\xE0ng/c\u1ED9t.</p><p>- Gh\xE9p 2x2: \u{1F41F} Con C\xE1 Bay t\u1EF1 b\u01A1i \u0111\u1EBFn n\u1ED5 \xF4 ng\u1EABu nhi\xEAn.</p><p>- Gh\xE9p L / T: \u{1F366} Kem Cheese n\u1ED5 lan 3x3.</p><p>- Gh\xE9p 5: \u{1F308} C\u1EA7u V\u1ED3ng qu\xE9t s\u1EA1ch to\xE0n b\u1ED9 1 lo\u1EA1i k\u1EB9o.</p></div>
       <button class="btn grad block" data-act="crush">\u{1F3AE} V\xC0O CH\u01A0I MILK TEA CRUSH NGAY</button></div>
-      <div class="mgcard"><h4>\u26AB TR\xC2N CH\xC2U N\u1ED4</h4><p>Ch\u1EA1m nh\xF3m tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5 trong 30 gi\xE2y. Nh\u1EADn ti\u1EC1n & tr\xE2n ch\xE2u \u0111en. H\xF4m nay c\xF2n <b>${3 - S.pearl.playsDay}</b> l\u01B0\u1EE3t.</p><button class="btn pri block" data-act="pearl">\u25B6 Ch\u01A1i Tr\xE2n Ch\xE2u N\u1ED5</button></div>`;
+      <div class="mgcard"><h4>\u26AB TR\xC2N CH\xC2U N\u1ED4</h4><p>Ch\u1EA1m nh\xF3m tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5 trong 30 gi\xE2y. Nh\u1EADn ti\u1EC1n & nhi\u1EC1u lo\u1EA1i tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u. H\xF4m nay c\xF2n <b>${3 - S.pearl.playsDay}</b> l\u01B0\u1EE3t.</p><button class="btn pri block" data-act="pearl">\u25B6 Ch\u01A1i Tr\xE2n Ch\xE2u N\u1ED5</button></div>`;
     },
     acts: { crush: () => openCrush(), pearl: () => openPearl() }
   };
@@ -4991,12 +5237,21 @@
     ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row(ITEMS[t].name, "+" + fmtK(priceOf(t)))).join("")}</div>` : ""}
     <div class="sz">Size L +${fmtK(priceOf("sizeL"))}</div>`;
   }
+  var tabScroll = {};
   function renderPanel() {
     const el = $("#panel");
     if (!el) return;
     const P3 = PANELS[S.tab] || PANELS.kho;
     el.innerHTML = `<div class="panel-in" data-tab="${S.tab}">${P3.html()}</div>`;
     P3.bind?.(el);
+    const row = el.querySelector(".tabs.scroll");
+    if (row) {
+      const on2 = row.querySelector(".tab.on");
+      if (on2) row.scrollLeft = Math.max(0, on2.offsetLeft - (row.clientWidth - on2.offsetWidth) / 2);
+      row.addEventListener("scroll", () => {
+        tabScroll[S.tab] = row.scrollLeft;
+      }, { passive: true });
+    }
     renderEvent();
   }
   function renderCta() {
@@ -5090,19 +5345,38 @@
   }
 
   // js/tutorial.js
+  var goNav = (g) => () => document.querySelector(`.nav-i[data-group="${g}"]`)?.click();
+  var goKho = (tab) => () => {
+    goNav("kho")();
+    setTimeout(() => document.querySelector(`.tab[data-v="${tab}"]`)?.click(), 60);
+  };
   var STEPS = {
     home: [
-      { sel: '.nav-i[data-group="kho"], .tile[data-tab="kho"]', ico: "\u{1F4E6}", t: "B\u01B0\u1EDBc 1 \xB7 Ch\u1ECDn nguy\xEAn li\u1EC7u", d: "M\u1EDF <b>Kho</b>, ch\u1ECDn s\u1ED1 l\u01B0\u1EE3ng <b>Tr\xE0</b>, <b>Topping</b> v\xE0 <b>D\u1EE5ng c\u1EE5</b> b\u1EA1n mu\u1ED1n d\xF9ng h\xF4m nay b\u1EB1ng n\xFAt \u2212 / +." },
-      { sel: "#cta .cta-btn", ico: "\u{1F6D2}", t: "B\u01B0\u1EDBc 2 \xB7 Nh\u1EADp nguy\xEAn li\u1EC7u", d: "B\u1EA5m n\xFAt <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n v\xE0 \u0111\u01B0a nguy\xEAn li\u1EC7u v\xE0o kho. N\xFAt \u0111\u1ECF \u26A0\uFE0F ngh\u0129a l\xE0 b\u1EA1n c\xF2n thi\u1EBFu m\xF3n b\u1EAFt bu\u1ED9c." },
-      { sel: "#cta .cta-btn", ico: "\u{1F3EE}", t: "B\u01B0\u1EDBc 3 \xB7 M\u1EDF c\u1EEDa", d: "Khi \u0111\u1EE7 nguy\xEAn li\u1EC7u, n\xFAt \u0111\u1ED5i th\xE0nh <b>M\u1EDF c\u1EEDa</b>. B\u1EA5m \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng!" }
+      { sel: ".shopcard", ico: "\u{1FAA7}", t: "Ti\u1EC7m c\u1EE7a b\u1EA1n", d: "\u0110\xE2y l\xE0 <b>bi\u1EC3n hi\u1EC7u</b>. Ch\u1EA1m logo ho\u1EB7c t\xEAn \u0111\u1EC3 \u0111\u1ED5i; hai nh\xE3n nh\u1ECF d\u1EABn t\u1EDBi <b>Kh\u1EDFi nghi\u1EC7p</b> v\xE0 <b>S\u1EA3nh Tr\xE0</b>." },
+      { sel: "#board", ico: "\u{1F964}", t: "Menu h\xF4m nay", d: "B\u1EA3ng ph\u1EA5n li\u1EC7t k\xEA m\xF3n \u0111ang b\xE1n v\xE0 gi\xE1. Size L \u0111\u01B0\u1EE3c c\u1ED9ng th\xEAm ti\u1EC1n. M\xF3n n\xE0o kh\xF4ng c\xF3 nguy\xEAn li\u1EC7u s\u1EBD kh\xF4ng b\xE1n \u0111\u01B0\u1EE3c." },
+      { sel: "#nav", ico: "\u{1F9ED}", t: "Thanh nh\xF3m d\u01B0\u1EDBi c\xF9ng", d: "5 nh\xF3m: <b>\u{1F3EA} Ti\u1EC7m \xB7 \u{1F4E6} Kho \xB7 \u{1F4C8} Ph\xE1t tri\u1EC3n \xB7 \u{1F465} X\xE3 h\u1ED9i \xB7 \u{1F380} Th\xEAm</b>. Ch\u1ECDn nh\xF3m r\u1ED3i ch\u1EA1m \xF4 ch\u1EE9c n\u0103ng ngay b\xEAn tr\xEAn." },
+      { sel: '.nav-i[data-group="tiem"]', pre: goNav("tiem"), ico: "\u{1F4B5}", t: "Nh\xF3m Ti\u1EC7m \xB7 Gi\xE1 b\xE1n", d: "V\xE0o <b>Gi\xE1 b\xE1n</b> ch\u1EC9nh gi\xE1 Tr\xE0, H\u01B0\u01A1ng, Topping, Size. Gi\xE1 qu\xE1 cao khi\u1EBFn kh\xE1ch b\u1ECF \u0111i. C\xF9ng nh\xF3m c\xF3 S\u1EA3nh, T\u1ED5ng k\u1EBFt, \u0110\xE1nh gi\xE1." },
+      { sel: '.nav-i[data-group="pt"]', pre: goNav("pt"), ico: "\u{1F6E0}\uFE0F", t: "Nh\xF3m Ph\xE1t tri\u1EC3n \xB7 N\xE2ng c\u1EA5p", d: "\xD4 <b>N\xE2ng c\u1EA5p</b> m\u1EDF kh\xF3a tr\xE0, topping v\xE0 ti\u1EC7n \xEDch. C\xF3 th\u1EC3 l\xE0m sau khi c\xF3 ti\u1EC1n; c\xF9ng nh\xF3m c\xF3 Nh\xE2n s\u1EF1, Chi nh\xE1nh, Kh\u1EDFi nghi\u1EC7p." },
+      { sel: '.nav-i[data-group="kho"]', pre: goNav("kho"), ico: "\u{1F4E6}", t: "V\xE0o Kho", d: "M\u1EDF nh\xF3m <b>Kho</b> \u0111\u1EC3 ch\u1ECDn nguy\xEAn li\u1EC7u cho h\xF4m nay. M\u1ED7i ng\xE0y b\u1EA1n nh\u1EADp h\xE0ng \u1EDF \u0111\xE2y tr\u01B0\u1EDBc khi m\u1EDF c\u1EEDa." },
+      { sel: '.tab[data-v="tra"]', pre: goKho("tra"), ico: "\u{1FAD6}", t: "Tab Tr\xE0", d: "Ch\u1ECDn lo\u1EA1i <b>Tr\xE0</b> s\u1EBD b\xE1n. M\u1ED7i d\xF2ng cho bi\u1EBFt t\u1ED3n kho, v\u1ED1n v\xE0 h\u1EA1n d\xF9ng \u23F3." },
+      { sel: '.tab[data-v="top"]', pre: goKho("top"), ico: "\u{1F9CB}", t: "Tab Topping", d: "Ch\u1ECDn <b>Topping</b> kh\xE1ch hay g\u1ECDi: tr\xE2n ch\xE2u, th\u1EA1ch, kem... Kh\xF4ng c\u1EA7n nh\u1EADp h\u1EBFt, ch\u1EC9 nh\u1EADp m\xF3n b\u1EA1n mu\u1ED1n b\xE1n." },
+      { sel: '.tab[data-v="dc"]', pre: goKho("dc"), ico: "\u{1F964}", t: "Tab D\u1EE5ng c\u1EE5", d: "<b>Ly M, ly L</b>, \u0111\xE1, \u0111\u01B0\u1EDDng... Thi\u1EBFu ly th\xEC kh\xF4ng pha \u0111\u01B0\u1EE3c, nh\u1EDB nh\u1EADp c\u1EA3 hai size." },
+      { sel: ".krow .stepper", pre: goKho("dc"), ico: "\u{1F522}", t: "\xD4 nh\u1EADp s\u1ED1 l\u01B0\u1EE3ng", d: "G\xF5 th\u1EB3ng s\u1ED1 v\xE0o \xF4 gi\u1EEFa, ho\u1EB7c b\u1EA5m <b>\u2212 / +</b> (m\u1ED7i l\u1EA7n 1). D\xF2ng xanh <b>+N</b> l\xE0 l\u01B0\u1EE3ng s\u1EAFp nh\u1EADp." },
+      { sel: "#cta .cta-btn", ico: "\u{1F6D2}", t: "N\u1EA5u & nh\u1EADp", d: "B\u1EA5m <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n, nguy\xEAn li\u1EC7u v\xE0o kho. N\xFAt \u0111\u1ECF \u26A0\uFE0F ngh\u0129a l\xE0 c\xF2n thi\u1EBFu m\xF3n b\u1EAFt bu\u1ED9c." },
+      { sel: "#cta .cta-btn", ico: "\u{1F3EE}", t: "M\u1EDF c\u1EEDa", d: "\u0110\u1EE7 nguy\xEAn li\u1EC7u th\xEC n\xFAt \u0111\u1ED5i th\xE0nh <b>M\u1EDF c\u1EEDa</b>. B\u1EA5m \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng!" }
     ],
     sell: [
-      { sel: ".cust-zone", ico: "\u{1F464}", t: "B\u01B0\u1EDBc 4 \xB7 Kh\xE1ch g\u1ECDi m\xF3n", d: "Kh\xE1ch hi\u1EC7n <b>bong b\xF3ng tho\u1EA1i</b> cho bi\u1EBFt size, lo\u1EA1i tr\xE0, h\u01B0\u01A1ng v\xE0 topping. Thanh <b>Ki\xEAn nh\u1EABn</b> c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i." },
-      { sel: ".stacks", ico: "\u{1F964}", t: "L\u1EA5y ly", d: "Ch\u1EA1m \u0111\xFAng <b>ch\u1ED3ng ly M ho\u1EB7c L</b> m\xE0 kh\xE1ch y\xEAu c\u1EA7u." },
-      { sel: "#disps", ico: "\u{1FAD6}", t: "R\xF3t tr\xE0", d: "Ch\u1EA1m <b>b\xECnh tr\xE0</b> \u0111\u1EC3 r\xF3t, ch\u1EA1m l\u1EA7n n\u1EEFa \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>." },
-      { sel: "#trays", ico: "\u{1F9CB}", t: "Th\xEAm topping", d: "Ch\u1EA1m c\xE1c <b>khay topping</b> kh\xE1ch mu\u1ED1n (v\xE0 chai h\u01B0\u01A1ng n\u1EBFu c\xF3)." },
-      { sel: "#sealer", ico: "\u{1F512}", t: "\u0110\xF3ng n\u1EAFp", d: "Ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b>, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly ho\xE0n thi\u1EC7n</b> tr\xEAn th\u1EDBt \u0111\u1EC3 giao kh\xE1ch." },
-      { sel: "#lobbyGo", ico: "\u{1FA91}", t: "Ra s\u1EA3nh", d: "S\u1EA3nh c\xF3 b\xE0n gh\u1EBF: d\u1ECDn b\xE0n b\u1EA9n \u0111\u1EC3 kh\xE1ch ng\u1ED3i t\u1EA1i qu\xE1n v\xE0 boa th\xEAm. Ch\xFAc b\u1EA1n m\u1ED9t ng\xE0y b\xE1n \u0111\u1EAFt h\xE0ng! \u{1F389}" }
+      { sel: "#qrow", ico: "\u{1F465}", t: "H\xE0ng \u0111\u1EE3i kh\xE1ch", d: "Kh\xE1ch x\u1EBFp h\xE0ng \u1EDF \u0111\xE2y. Ch\u1EA1m avatar \u0111\u1EC3 ph\u1EE5c v\u1EE5 ng\u01B0\u1EDDi kh\xE1c tr\u01B0\u1EDBc, \u01B0u ti\xEAn ai s\u1EAFp h\u1EBFt <b>ki\xEAn nh\u1EABn</b>." },
+      { sel: ".cust-zone", ico: "\u{1F464}", t: "Bong b\xF3ng order", d: "Bong b\xF3ng ghi <b>size, lo\u1EA1i tr\xE0, h\u01B0\u01A1ng, topping</b>. V\xF2ng quanh avatar l\xE0 ki\xEAn nh\u1EABn; c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i." },
+      { sel: ".stacks", ico: "\u{1F964}", t: "L\u1EA5y ly", d: "Ch\u1EA1m \u0111\xFAng ch\u1ED3ng ly <b>M</b> ho\u1EB7c <b>L</b> kh\xE1ch g\u1ECDi. M\u1ED7i size c\xF3 s\u1ED1 l\u01B0\u1EE3ng ri\xEAng, h\u1EBFt ly ph\u1EA3i nh\u1EADp th\xEAm." },
+      { sel: "#disps", ico: "\u{1FAD6}", t: "R\xF3t tr\xE0", d: "Ch\u1EA1m <b>b\xECnh tr\xE0</b> \u0111\xFAng lo\u1EA1i \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u r\xF3t, ch\u1EA1m l\u1EA1i \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>." },
+      { sel: "#trays", ico: "\u{1F9CB}", t: "Topping & h\u01B0\u01A1ng", d: "Ch\u1EA1m c\xE1c <b>khay topping</b> kh\xE1ch mu\u1ED1n; n\u1EBFu c\xF3 h\u01B0\u01A1ng, ch\u1EA1m chai \u1EDF h\xE0ng <b>H\u01AF\u01A0NG</b> d\u01B0\u1EDBi b\xECnh tr\xE0. \u0110\u1EEBng th\xEAm th\u1EEBa." },
+      { sel: "#sealer", ico: "\u{1F512}", t: "\u0110\xF3ng n\u1EAFp", d: "Ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b> tr\u01B0\u1EDBc, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly tr\xEAn th\u1EDBt</b> \u0111\u1EC3 d\u1EADp n\u1EAFp." },
+      { sel: "#wboard", ico: "\u{1F91D}", t: "Giao kh\xE1ch", d: "Ly \u0111\xE3 c\xF3 n\u1EAFp n\u1EB1m tr\xEAn th\u1EDBt <b>PHA LY</b>: ch\u1EA1m \u0111\u1EC3 giao cho kh\xE1ch. \u0110\xFAng \u0111\u01A1n v\xE0 nhanh th\xEC 5 sao, c\xF3 th\u1EC3 \u0111\u01B0\u1EE3c boa." },
+      { sel: ".trash", ico: "\u{1F5D1}\uFE0F", t: "Th\xF9ng r\xE1c", d: "Pha nh\u1EA7m th\xEC ch\u1EA1m <b>th\xF9ng r\xE1c</b> \u0111\u1EC3 \u0111\u1ED5 ly r\u1ED3i l\xE0m l\u1EA1i." },
+      { sel: ".phone", ico: "\u{1F4F1}", t: "\u0110\u01A1n online", d: "S\u1ED1 \u0111\u1ECF tr\xEAn <b>\u0111i\u1EC7n tho\u1EA1i</b> l\xE0 s\u1ED1 \u0111\u01A1n online \u0111ang ch\u1EDD. Ch\u1EA1m \u0111\u1EC3 xem v\xE0 nh\u1EADn \u0111\u01A1n." },
+      { sel: "#lobbyGo", ico: "\u{1FA91}", t: "Ra s\u1EA3nh", d: "S\u1EA3nh c\xF3 b\xE0n gh\u1EBF: d\u1ECDn b\xE0n b\u1EA9n \u0111\u1EC3 kh\xE1ch ng\u1ED3i t\u1EA1i qu\xE1n v\xE0 boa th\xEAm." },
+      { sel: "#hud .hbtn.pause", ico: "\u23F8\uFE0F", t: "T\u1EA1m d\u1EEBng & c\xE0i \u0111\u1EB7t", d: "N\xFAt <b>\u23F8</b> t\u1EA1m d\u1EEBng ca; b\xE1nh r\u0103ng b\xEAn ph\u1EA3i m\u1EDF C\xE0i \u0111\u1EB7t (m\xE0u, rung, nh\u1EA1c). Ch\xFAc b\u1EA1n b\xE1n \u0111\u1EAFt h\xE0ng! \u{1F389}" }
     ]
   };
   var cur = null;
@@ -5137,7 +5411,14 @@
     const el = ensureUi(), card = el.querySelector(".coach-card");
     const steps = STEPS[cur.phase], st = steps[cur.i], last2 = cur.i === steps.length - 1;
     el.hidden = false;
-    card.innerHTML = `<div class="coach-h"><span class="coach-ico">${st.ico}</span><div><small>H\u01AF\u1EDANG D\u1EAAN ${cur.i + 1}/${steps.length}</small><b>${esc(st.t)}</b></div></div>
+    if (st.pre && cur.pre !== cur.i) {
+      cur.pre = cur.i;
+      try {
+        st.pre();
+      } catch (e) {
+      }
+    }
+    card.innerHTML = `<div class="coach-h"><span class="coach-ico">${st.ico}</span><div><small>B\u01B0\u1EDBc ${cur.i + 1}/${steps.length}</small><b>${esc(st.t)}</b></div></div>
     <p>${st.d}</p>
     <div class="coach-dots">${steps.map((_, k) => `<i class="${k === cur.i ? "on" : k < cur.i ? "done" : ""}"></i>`).join("")}</div>
     <div class="coach-btns"><button class="btn ghost sm" data-c="skip">B\u1ECF qua h\u01B0\u1EDBng d\u1EABn</button><button class="btn pri sm" data-c="next">${last2 ? "Xong \u2713" : "Ti\u1EBFp \u2192"}</button></div>`;

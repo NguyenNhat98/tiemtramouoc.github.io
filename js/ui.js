@@ -3,7 +3,7 @@
  */
 import { ITEMS, LOCATIONS, SEASONS, WEATHERS, THEMES, SHIFT_MINUTES, CHANGELOG, VERSION, SHIFT_START_H } from './config.js';
 import {
-  S, on, emit, markDirty, requestSave, saveGame, setPaused, isPaused, applyVolumes, restartMusic, listBackups, restoreBackup, exportCode, importCode,
+  S, on, emit, markDirty, requestSave, buzz, saveGame, setPaused, isPaused, applyVolumes, restartMusic, listBackups, restoreBackup, exportCode, importCode,
   wipeSave, $, $$, h, esc, fmt, fmtK, fmtClock, rand, sum, wait, sfx, replaceState, newState, clamp,
 } from './core.js';
 import * as E from './econ.js';
@@ -114,6 +114,7 @@ export function logoHTML(size = 56, cls = '') {
   const inner = l.img ? `<img src="${l.img}" alt="Logo quán" />` : `<span>${l.emoji}</span>`;
   return `<span class="logo-c ${cls}" style="--sz:${size}px">${inner}</span>`;
 }
+const HAPTIC_NAMES = ['Tắt', 'Nhẹ', 'Vừa', 'Mạnh'];
 const THEME_DARK = { '--text': '#f1ebff', '--muted': '#b8aedc', '--brown': '#e8dfff', '--brown2': '#b8aedc', '--card2': '#453d66', '--line': 'rgba(255,255,255,.14)' };
 export function applyTheme() {
   const k = THEMES[S.settings.theme] ? S.settings.theme : 'cream';
@@ -305,6 +306,7 @@ export function openSettings() {
     ${row('hints', '🧭', 'Chỉ dẫn từng bước', S.settings.hints ? 'Tự động' : 'Tắt')}
     ${row('shiftMin', '⏱️', 'Thời gian bán mỗi ngày', `${S.settings.shiftMinNext} phút · áp dụng từ ngày sau`)}
     ${row('theme', '🎨', 'Màu giao diện', THEMES[S.settings.theme].name)}
+    ${row('haptic', '📳', 'Rung', HAPTIC_NAMES[S.settings.haptic ?? 2])}
     <div class="box">${sliderRow('Nhạc nền quán', 'music', '🎵')}${sliderRow('Âm thanh pha chế & SFX', 'sfx', '🧋')}</div>
     ${row('style', '🎼', 'Nhạc nền & Mùa', S.settings.style === 'lofi' ? 'Lofi Chill Quán Cafe' : S.settings.style === 'vui' ? 'Vui nhộn' : 'Tắt nhạc')}
     ${row('export', '📦', 'Sao lưu tiến trình', S.savedAt ? 'Đã lưu' : 'Chưa sao lưu')}
@@ -320,6 +322,7 @@ export function openSettings() {
     update: () => confirmBox('Cập nhật bản mới', 'Lưu game và tải lại trang để lấy bản mới nhất?', () => { saveGame(); location.reload(); }),
     hints: () => openChoice('🧭 Chỉ dẫn từng bước', [[true, 'Tự động'], [false, 'Tắt']], S.settings.hints, (v) => { S.settings.hints = v; requestSave(); setVal('hints', v ? 'Tự động' : 'Tắt'); }),
     shiftMin: () => openChoice('⏱️ Thời gian bán mỗi ngày', SHIFT_MINUTES.map((n) => [n, `${n} phút`]), S.settings.shiftMinNext, (v) => { S.settings.shiftMinNext = v; requestSave(); setVal('shiftMin', `${v} phút · áp dụng từ ngày sau`); }),
+    haptic: () => openChoice('📳 Rung khi thao tác & chơi game', HAPTIC_NAMES.map((n, i) => [i, n]), S.settings.haptic ?? 2, (v) => { S.settings.haptic = v; requestSave(); setVal('haptic', HAPTIC_NAMES[v]); buzz([30, 40, 30]); }),
     theme: () => openThemePicker(() => setVal('theme', THEMES[S.settings.theme].name)),
     style: () => openChoice('🎼 Nhạc nền & Mùa', [['lofi', 'Lofi Chill Quán Cafe'], ['vui', 'Vui nhộn'], ['off', 'Tắt nhạc']], S.settings.style, (v) => { S.settings.style = v; restartMusic(); requestSave(); setVal('style', styleName()); }),
     export: () => openExport(), import: () => openImport(), backups: () => openBackups(),
@@ -355,28 +358,66 @@ function openBackups() {
 
 /* ===== Hướng dẫn ===== */
 export function openGuide() {
-  const step = (ico, title, body) => `<div class="g-step"><div class="g-ico">${ico}</div><div class="g-txt"><b>${title}</b><p>${body}</p></div></div>`;
+  const li = (ico, body) => `<li><span>${ico}</span><div>${body}</div></li>`;
+  const sec = (ico, title, items, open) => `<details class="g-det"${open ? ' open' : ''}><summary>${ico} ${title}</summary><ul class="g-list">${items.map((x) => li(x[0], x[1])).join('')}</ul></details>`;
   const m = openModal({ id: 'guide', cls: 'settings', html: `<h2 class="set-title">📖 Hướng dẫn chơi</h2>
     <div class="guide rich">
-    <div class="g-sec"><h4>🏠 1. Chuẩn bị mỗi ngày</h4>
-      ${step('📦', 'Vào Kho', 'Chọn số lượng <b>Trà 🫖</b>, <b>Topping 🧋</b> và <b>Dụng cụ 🥤</b> (ly, đá, đường) cần dùng cho ngày hôm nay.')}
-      ${step('🛒', 'Nấu & nhập', 'Bấm nút hồng <b>Nấu & nhập</b> ở đáy màn hình để trả tiền nhập hàng. Nút đỏ ⚠️ nghĩa là còn thiếu nguyên liệu.')}
-      ${step('🏮', 'Mở cửa', 'Đủ nguyên liệu thì bấm <b>Mở cửa</b> để bắt đầu ca bán hàng.')}</div>
-    <div class="g-sec"><h4>🧋 2. Pha ly khi bán hàng</h4>
-      ${step('👤', 'Đọc đơn', 'Khách hiện bong bóng thoại: size, loại trà, hương, topping. Vòng xanh quanh avatar là <b>độ kiên nhẫn</b>.')}
-      ${step('🥤', 'Lấy ly', 'Chạm đúng <b>chồng ly M hoặc L</b> trên quầy trà.')}
-      ${step('🫖', 'Rót trà', 'Chạm <b>bình trà</b> để rót, chạm lần nữa để dừng khi thanh tới <b>vùng vàng</b>.')}
-      ${step('🍯', 'Hương & topping', 'Chạm <b>chai hương</b> (nếu có) rồi chạm các khay <b>topping</b> khách yêu cầu.')}
-      ${step('🔒', 'Đóng nắp', 'Chạm <b>máy đóng nắp</b> bên phải, chờ đèn READY.')}
-      ${step('🤝', 'Giao khách', 'Chạm <b>ly hoàn thiện</b> trên thớt để giao. Đúng + nhanh = nhiều sao và tiền boa!')}</div>
-    <div class="g-sec"><h4>💡 3. Mẹo hay</h4>
-      ${step('👆', 'Đổi khách', 'Chạm avatar trên mái hiên để phục vụ khách ưu tiên (người sắp hết kiên nhẫn).')}
-      ${step('🗑️', 'Làm sai?', 'Chạm <b>thùng rác</b> để đổ ly rồi pha lại.')}
-      ${step('⭐', 'Đánh giá', 'Sao cao thì khách đông hơn. Bàn bẩn ở Sảnh nhớ dọn để có thêm khách ngồi.')}</div>
-    <div class="g-sec"><h4>🚀 4. Lớn dần</h4>
-      ${step('🛠️', 'Nâng cấp & nhân sự', 'Nâng cấp quầy, <b>thuê nhân viên</b> – khách sẽ đến nhanh và đông hơn khi quán có tiền và đội ngũ.')}
-      ${step('🗺️', 'Khởi nghiệp & chi nhánh', 'Mở chi nhánh, khởi nghiệp xuyên Việt, chạy quảng cáo, nuôi thú cưng, đóng thuế nhận buff, gửi tiết kiệm.')}
-      ${step('💵', 'Giá bán', 'Đừng đẩy giá quá cao — trà trên 50k, topping trên 20k sẽ làm khách bỏ đi (trừ khi có Quản lý tập sự).')}</div>
+    ${sec('🏠', 'Màn chuẩn bị', [
+      ['🪧', '<b>Biển hiệu</b>: chạm logo hoặc tên tiệm để đổi. Hai nhãn nhỏ dẫn nhanh tới <b>Khởi nghiệp</b> (địa điểm) và <b>Sảnh Trà</b>.'],
+      ['🥤', '<b>Menu hôm nay</b>: các món đang bán kèm giá, size L phụ thu thêm. Dòng sự kiện và <b>👥 khách dự kiến</b> + thời tiết nằm ngay bên dưới.'],
+      ['🧭', '<b>Thanh dưới cùng</b> có 5 nhóm: 🏪 Tiệm · 📦 Kho · 📈 Phát triển · 👥 Xã hội · 🎀 Thêm. Chọn nhóm rồi chạm ô chức năng bên trong.'],
+      ['☰', 'Nút <b>≡</b> góc trái trên là Cài đặt, nút 📖 là mở lại Hướng dẫn, ⛅ để xem dự báo thời tiết và sự kiện.'],
+      ['🏮', 'Nút hồng đáy màn hình đổi theo tình trạng: <b>Nấu & nhập</b> → <b>⚠️ Chưa nấu…</b> (đỏ, thiếu món) → <b>Mở cửa</b>.'],
+    ], true)}
+    ${sec('📦', 'Kho & nhập hàng', [
+      ['🫖', 'Các tab: <b>Trà</b>, <b>Topping</b>, <b>Dụng cụ</b> (ly, đá, đường…) và <b>🍓 Hương</b> (khi đã mở khóa).'],
+      ['🔢', 'Mỗi món có ô số: gõ thẳng số lượng hoặc bấm <b>− / +</b> (mỗi lần 1). Dòng xanh <b>+N</b> là lượng sẽ nhập, kèm tiền vốn.'],
+      ['⏳', '<b>⏳ N ngày</b> là hạn dùng; <b>⚠️</b> báo món hết hạn hôm nay. Chai hương = nhiều ly, dùng được 7 ngày.'],
+      ['🛒', 'Xong thì bấm <b>Nấu & nhập</b> để trả tiền. Thiếu Trà hoặc Dụng cụ thì chưa mở cửa được.'],
+      ['🪴', 'Nhóm Kho còn có <b>Vườn cây</b> (trồng nguyên liệu) và <b>Thú cưng</b> (🔒 đến khi nhận nuôi).'],
+    ])}
+    ${sec('🧋', 'Màn bán hàng – từng bước pha 1 ly', [
+      ['1️⃣', '<b>Đọc đơn</b>: hàng đợi khách ở trên cùng, khách đang phục vụ hiện <b>bong bóng</b> ghi size, trà, hương, topping. Vòng quanh avatar là <b>kiên nhẫn</b>, cạn là khách bỏ đi. Chạm avatar khác để đổi khách.'],
+      ['2️⃣', '<b>Lấy ly</b>: ở <b>QUẦY TRÀ</b>, chạm chồng ly <b>M</b> hoặc <b>L</b> đúng size (mỗi size có số lượng riêng).'],
+      ['3️⃣', '<b>Rót trà</b>: chạm đúng <b>bình trà</b> để bắt đầu rót, chạm lại để dừng khi thanh chạy tới <b>vùng vàng</b>. Ly lưng hoặc tràn bị trừ sao.'],
+      ['4️⃣', '<b>Hương</b>: nếu khách gọi, chạm chai ở hàng <b>HƯƠNG</b> dưới bình trà.'],
+      ['5️⃣', '<b>Topping</b>: chạm các khay topping khách yêu cầu, không thêm thừa.'],
+      ['6️⃣', '<b>Đóng nắp</b>: chạm <b>máy đóng nắp</b>, chờ đèn READY rồi chạm <b>ly trên thớt</b> (khu PHA LY).'],
+      ['7️⃣', '<b>Giao khách</b>: ly xong sẽ giao cho khách. Đúng đơn và nhanh thì 5 sao, khách hài lòng còn boa.'],
+      ['📱', '<b>Điện thoại</b>: đơn online (số đỏ là số đơn chờ). Nhận đơn rồi pha như bình thường.'],
+      ['🗑️', '<b>Thùng rác</b>: đổ ly bị sai để pha lại.'],
+      ['⭐', 'Chấm sao: sai trà −3, sai size −2, thiếu/thừa hương −1, sai topping −1~2, ly lưng −1, tràn −1, chờ quá lâu −1.'],
+      ['⏸️', 'Nút <b>⏸</b> trên cùng là tạm dừng; nút bánh răng bên phải là Cài đặt.'],
+    ], true)}
+    ${sec('🪑', 'Sảnh & bàn', [
+      ['➡️', 'Nút <b>Ra sảnh</b> dưới cùng (kèm số bàn) chuyển sang Sảnh Trà; quay lại quầy bằng nút tương ứng.'],
+      ['🧹', 'Khách ăn xong để lại bàn bẩn, dọn bàn để có chỗ cho khách mới. Khách ngồi hài lòng có thể boa thêm.'],
+    ])}
+    ${sec('📊', 'Cuối ngày & tổng kết', [
+      ['🔔', 'Hết giờ ca, bảng <b>Tổng kết ngày</b> cho doanh thu, boa, số khách phục vụ/bỏ về và sao nhận được.'],
+      ['⭐', 'Tab <b>Đánh giá</b> (nhóm Tiệm) xem nhận xét. Sao càng cao thì khách càng đông.'],
+      ['📊', 'Tab <b>Tổng kết</b> xem lại số liệu các ngày. Game tự lưu cuối mỗi ngày.'],
+    ])}
+    ${sec('📈', 'Phát triển (nâng cấp, nhân sự, chi nhánh, khởi nghiệp)', [
+      ['💵', '<b>Giá bán</b> (nhóm Tiệm): chỉnh giá Trà, Hương, Topping, Size. Trà trên 50k, topping trên 20k dễ làm khách bỏ đi.'],
+      ['🛠️', '<b>Nâng cấp</b>: mở khóa trà/topping, cải thiện quầy, thêm tiện ích.'],
+      ['🏆', '<b>Quản lý nhân sự</b>: thuê nhân viên tự pha, quản lý hỗ trợ topping.'],
+      ['🏢', '<b>Chi nhánh</b>: mở thêm tiệm để có thu nhập. <b>🗺️ Khởi nghiệp</b>: đổi địa điểm, mở rộng xuyên Việt.'],
+      ['📜', '<b>Thuế & Bank</b> (nhóm Thêm): đóng thuế nhận buff, gửi tiết kiệm.'],
+    ])}
+    ${sec('👥', 'Xã hội', [
+      ['📱', '<b>Mạng Xã Hội</b>: đăng bài, chạy quảng cáo để kéo thêm khách.'],
+      ['👥', '<b>Bạn bè</b>: kết nối và so sánh với bạn bè.'],
+      ['🎴', '<b>Sưu tầm</b> (nhóm Thêm) cũng mở nhanh bằng nút ở góc phải thanh đầu màn hình.'],
+    ])}
+    ${sec('🍬', 'Mini game', [
+      ['🍬', '<b>Milk Tea Crush</b> (nhóm Thêm): ghép 3 món giống nhau để nhận thưởng.'],
+    ])}
+    ${sec('⚙️', 'Cài đặt (màu, rung, nhạc)', [
+      ['🎨', 'Bấm <b>≡</b> (màn chuẩn bị) hoặc bánh răng (khi bán) rồi chọn <b>Màu giao diện</b>.'],
+      ['📳', '<b>Rung</b>: chọn mức rung khi thao tác.'],
+      ['🎵', '<b>Nhạc nền</b> và <b>SFX</b> chỉnh âm lượng riêng; <b>🎼 Nhạc nền & Mùa</b> đổi phong cách nhạc. Còn có ⏱️ thời gian bán mỗi ngày và 🧭 chỉ dẫn từng bước.'],
+    ])}
     </div>
     <button class="btn blue block" data-act="replay">🎓 Xem hướng dẫn tương tác từng bước</button>
     <button class="btn pri block" data-act="x" style="margin-top:6px">Đã hiểu</button>` });
@@ -408,7 +449,7 @@ export function goFullscreen() {
 /** Thử vào toàn màn hình ở các lần chạm đầu; đã vào được một lần thì thôi, không làm phiền (và không bật lại thông báo của Chrome). */
 let fsDone = false;
 document.addEventListener('fullscreenchange', () => { if (document.fullscreenElement) fsDone = true; });
-for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, () => { if (!fsDone) goFullscreen(); }, { passive: true });
+for (const ev of ['pointerup', 'touchend', 'click', 'keydown']) document.addEventListener(ev, () => { if (!fsDone) goFullscreen(); }, { passive: true });
 
 /* ===== Intro ===== */
 export function showIntro(onPlay) {

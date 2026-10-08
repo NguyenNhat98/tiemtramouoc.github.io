@@ -111,12 +111,20 @@ export function renderBoard() {
     ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row(ITEMS[t].name, '+' + fmtK(E.priceOf(t)))).join('')}</div>` : ''}
     <div class="sz">Size L +${fmtK(E.priceOf('sizeL'))}</div>`;
 }
+const tabScroll = {};
 export function renderPanel() {
   const el = $('#panel');
   if (!el) return;
   const P = PANELS[S.tab] || PANELS.kho;
   el.innerHTML = `<div class="panel-in" data-tab="${S.tab}">${P.html()}</div>`;
   P.bind?.(el);
+  // giữ tab đang chọn trong tầm nhìn khi hàng tab cuộn ngang (không bị kéo về đầu)
+  const row = el.querySelector('.tabs.scroll');
+  if (row) {
+    const on = row.querySelector('.tab.on');
+    if (on) row.scrollLeft = Math.max(0, on.offsetLeft - (row.clientWidth - on.offsetWidth) / 2);
+    row.addEventListener('scroll', () => { tabScroll[S.tab] = row.scrollLeft; }, { passive: true });
+  }
   renderEvent();
 }
 export function renderCta() {

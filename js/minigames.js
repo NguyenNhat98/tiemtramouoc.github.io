@@ -352,17 +352,23 @@ export function crushDebug() {
 }
 
 /* ======================= TRÂN CHÂU NỔ ======================= */
-const PN = 6, PCOL = 5, PDUR = 30, PGOAL = 120;
-const PEARL = ['⚫', '🩷', '💚', '💛', '💙'];
+const PN = 6, PDUR = 30, PGOAL = 120, PCOMBO_MS = 1200;
+// Các loại viên lấy màu từ ITEMS trong khay bán hàng (trân châu đen, hoàng kim, nổ hồng, thạch củ năng, foam ube)
+const PIDS = ['tcDen', 'tcVang', 'tcNo', 'cuNang', 'fUbe'];
+const PCOL = PIDS.length;
 let P = null;
-/** Nổ tung hạt trân châu (bay ra từ nút). */
-function pearlBurst(el) {
+/** Nổ tung: vòng sóng + hạt trân châu cùng màu bay ra từ ô. */
+function pearlBurst(el, color, big) {
   const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
-  for (let i = 0; i < 5; i++) {
-    const a = rand(0, Math.PI * 2), d = rand(20, 46);
-    const f = h(`<span class="mfx-fix" style="left:${x}px;top:${y}px">${i % 2 ? '✨' : '💥'}</span>`);
+  const ring = h(`<span class="pfx-ring" style="left:${x}px;top:${y}px;border-color:${color}"></span>`);
+  document.body.appendChild(ring);
+  ring.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: .9 }, { transform: 'translate(-50%,-50%) scale(1.9)', opacity: 0 }], { duration: 420, easing: 'ease-out' }).onfinish = () => ring.remove();
+  const n = big ? 7 : 5;
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + rand(-0.3, 0.3), d = rand(24, big ? 62 : 48), s = rand(5, 9);
+    const f = h(`<span class="pfx-dot" style="left:${x}px;top:${y}px;width:${s}px;height:${s}px;background:${color}"></span>`);
     document.body.appendChild(f);
-    f.animate([{ transform: 'translate(-50%,-50%) scale(.5)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.1)`, opacity: 0 }], { duration: 480, easing: 'ease-out' }).onfinish = () => f.remove();
+    f.animate([{ transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d + 14}px)) scale(.3)`, opacity: 0 }], { duration: rand(380, 560), easing: 'cubic-bezier(.2,.7,.4,1)' }).onfinish = () => f.remove();
   }
 }
 const pRand = () => randInt(0, PCOL - 1);
@@ -378,69 +384,115 @@ function pGroup(b, r, c) {
   }
   return out;
 }
+/** Dồn viên xuống, sinh viên mới ở trên; trả ma trận khoảng rơi (số ô) để làm animation. */
 function pCollapse(b) {
+  const fall = Array.from({ length: PN }, () => Array(PN).fill(0));
   for (let c = 0; c < PN; c++) {
     const col = [];
-    for (let r = PN - 1; r >= 0; r--) if (b[r][c] >= 0) col.push(b[r][c]);
-    for (let r = PN - 1; r >= 0; r--) { const i = PN - 1 - r; b[r][c] = i < col.length ? col[i] : pRand(); }
+    for (let r = PN - 1; r >= 0; r--) if (b[r][c] >= 0) col.push({ v: b[r][c], r });
+    const nNew = PN - col.length;
+    for (let r = PN - 1; r >= 0; r--) {
+      const i = PN - 1 - r;
+      if (i < col.length) { b[r][c] = col[i].v; fall[r][c] = r - col[i].r; }
+      else { b[r][c] = pRand(); fall[r][c] = r + (nNew - (i - col.length)); }
+    }
   }
+  return fall;
 }
 const pHas = (b) => b.some((row, r) => row.some((_, c) => pGroup(b, r, c).length >= 2));
-function pRender() {
+/** Vẽ lưới; `fall` (nếu có) làm viên rơi mượt vào chỗ trống, không có thì viên nảy hiện ra. */
+function pRender(fall) {
   const el = $('#pBoard');
   if (!el || !P) return;
-  el.innerHTML = P.b.map((row, r) => row.map((v, c) => `<button class="pc p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="Trân châu">${PEARL[v]}</button>`).join('')).join('');
+  el.innerHTML = P.b.map((row, r) => row.map((v, c) => `<button class="pc" data-act="pop" data-r="${r}" data-c="${c}" aria-label="${esc(ITEMS[PIDS[v]].name)}"><i class="pb" style="--pc:${ITEMS[PIDS[v]].color}"></i></button>`).join('')).join('');
+  const balls = $$('#pBoard .pb');
+  const step = el.firstElementChild ? el.firstElementChild.offsetHeight + 5 : 50;
+  let maxFall = 0;
+  balls.forEach((b, i) => {
+    const d = fall ? fall[Math.floor(i / PN)][i % PN] : 0;
+    if (fall && d > 0) {
+      maxFall = Math.max(maxFall, d);
+      b.animate([{ transform: `translateY(${-d * step}px)` }, { transform: 'translateY(0)' }], { duration: 170 + d * 60, easing: 'cubic-bezier(.35,.9,.45,1.25)' });
+    } else if (!fall) {
+      b.animate([{ transform: 'scale(0)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }], { duration: 300, delay: i * 6, easing: 'ease-out', fill: 'backwards' });
+    }
+  });
+  if (maxFall) { sfx('swoosh'); setTimeout(() => P && !P.over && sfx('bounce'), 170 + maxFall * 60); }
+  pStats();
+}
+function pStats() {
   $('#pScore').textContent = P.score;
   $('#pTime').textContent = Math.ceil(P.t) + 's';
   $('#pBar').style.width = `${P.t / PDUR * 100}%`;
+}
+/** Chữ COMBO phóng to + rung nhẹ. */
+function pComboFx(mul) {
+  const e = $('#pCombo');
+  if (!e) return;
+  e.textContent = mul > 1 ? `COMBO x${mul}` : '';
+  if (mul < 2) return;
+  const s = 1.3 + Math.min(mul, 6) * 0.1;
+  e.animate([{ transform: `scale(${s + 0.5}) rotate(-6deg)` }, { transform: `scale(${s}) rotate(5deg)` }, { transform: 'scale(1) rotate(-3deg)' }, { transform: 'scale(1) rotate(0)' }], { duration: 380, easing: 'ease-out' });
+  const b = $('#pBoard');
+  if (mul >= 3 && b) b.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(-2px)' }, { transform: 'translateX(0)' }], { duration: 220 });
 }
 function pEnd() {
   if (!P || P.over) return;
   P.over = true; clearInterval(P.timer);
   const win = P.score >= PGOAL;
-  const money = P.score * 60, pearls = Math.floor(P.score / 40);
-  S.money += money; E.addStock('tcDen', pearls);
+  const money = P.score * 60;
+  // trân châu thưởng theo số viên mỗi loại đã nổ (tối thiểu theo điểm để ván điểm cao luôn có thưởng)
+  const rewards = [];
+  PIDS.forEach((id, i) => { const q = Math.floor(P.cnt[i] / 4); if (q > 0) rewards.push([id, q]); });
+  if (!rewards.length && P.score >= 40) rewards.push(['tcDen', Math.floor(P.score / 40)]);
+  S.money += money;
+  for (const [id, q] of rewards) E.addStock(id, q);
   S.pearl.best = Math.max(S.pearl.best, P.score);
   let extra = '';
   if (win && chance(0.3)) { S.collection.packs++; extra = '<p>🎁 +1 túi quà sưu tầm!</p>'; }
   markDirty('hud', 'panel'); requestSave();
-  sfx(win ? 'level' : 'sad');
-  $('#pBody').innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? '🏆' : '🙂'}</div><h3>${win ? 'THÀNH CÔNG!' : 'Cố lên lần sau!'}</h3><p>Điểm: <b>${P.score}</b> (kỷ lục ${S.pearl.best})</p><p>Tiền thưởng: <b class="money">+${fmtK(money)}</b> · Trân châu đen: <b>+${pearls}</b></p>${extra}<button class="btn pri block" data-act="x">Nhận thưởng 🎁</button></div>`;
+  sfx(win ? 'win' : 'lose');
+  const rw = rewards.length ? rewards.map(([id, q]) => `<span class="prw"><i class="pb sm" style="--pc:${ITEMS[id].color}"></i>+${q} ${esc(ITEMS[id].name)}</span>`).join('') : '<span class="muted">Chưa đủ viên để nhận trân châu</span>';
+  $('#pBody').innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? '🏆' : '🙂'}</div><h3>${win ? 'THÀNH CÔNG!' : 'Cố lên lần sau!'}</h3><p>Điểm: <b>${P.score}</b> · Combo cao nhất: <b>x${P.maxMul}</b> (kỷ lục ${S.pearl.best})</p><p>Tiền thưởng: <b class="money">+${fmtK(money)}</b></p><div class="prws">${rw}</div>${extra}<button class="btn pri block" data-act="x">Nhận thưởng 🎁</button></div>`;
 }
 export function openPearl() {
   if (S.pearl.playsDay >= 3) return toast('Hôm nay bạn đã chơi đủ 3 lượt Trân Châu Nổ', 'err');
-  const m = openModal({ id: 'pearl', cls: 'small', onClose: () => { if (P?.timer) clearInterval(P.timer); P = null; }, html: `<div id="pBody"><h3 class="m-title">⚫ Trân Châu Nổ</h3><p class="m-text center">Chạm nhóm ≥ 2 trân châu cùng màu kề nhau để làm nổ. Combo liên tiếp = nhân điểm! Mục tiêu <b>${PGOAL}</b> điểm trong ${PDUR} giây.</p><p class="m-text center muted">Lượt hôm nay: ${S.pearl.playsDay}/3 · Kỷ lục: ${S.pearl.best}</p><button class="btn pri block" data-act="start">▶ Bắt đầu</button></div>` });
+  const m = openModal({ id: 'pearl', cls: 'small', onClose: () => { if (P?.timer) clearInterval(P.timer); P = null; }, html: `<div id="pBody"><h3 class="m-title">⚫ Trân Châu Nổ</h3><p class="m-text center">Chạm nhóm ≥ 2 trân châu cùng màu kề nhau để làm nổ. Nhóm càng lớn điểm càng cao, nổ liên tiếp trong ${PCOMBO_MS / 1000}s = nhân combo! Mục tiêu <b>${PGOAL}</b> điểm trong ${PDUR} giây. Cuối ván nhận thêm trân châu nguyên liệu cho kho.</p><p class="m-text center muted">Lượt hôm nay: ${S.pearl.playsDay}/3 · Kỷ lục: ${S.pearl.best}</p><button class="btn pri block" data-act="start">▶ Bắt đầu</button></div>` });
   bindActions(m.body, {
     x: () => m.close(),
     start: () => {
       S.pearl.playsDay++;
-      P = { b: pNew(), score: 0, combo: 0, t: PDUR, over: false, timer: null };
-      $('#pBody').innerHTML = `<div class="pg"><div class="mg-head"><span>⭐ <b id="pScore">0</b></span><span id="pCombo" class="pcombo"></span><span>⏱ <b id="pTime">30s</b></span></div><div class="bar"><i id="pBar"></i></div><div class="pboard" id="pBoard"></div><p class="m-text center muted">Chạm nhóm ≥2 trân châu cùng màu kề nhau. Combo liên tiếp = nhân điểm! Mục tiêu ${PGOAL} điểm.</p></div>`;
+      P = { b: pNew(), score: 0, combo: 0, maxMul: 1, lastPop: 0, cnt: Array(PCOL).fill(0), t: PDUR, over: false, timer: null };
+      $('#pBody').innerHTML = `<div class="pg"><div class="mg-head"><span>⭐ <b id="pScore">0</b></span><span id="pCombo" class="pcombo"></span><span>⏱ <b id="pTime">30s</b></span></div><div class="bar"><i id="pBar"></i></div><div class="pboard" id="pBoard"></div><p class="m-text center muted">Mục tiêu ${PGOAL} điểm · Kỷ lục: <b>${S.pearl.best}</b></p></div>`;
       pRender();
+      sfx('fly');
       let last = performance.now();
       P.timer = setInterval(() => {
         const now = performance.now(); P.t -= (now - last) / 1000; last = now;
         if (P.t <= 0) { P.t = 0; pEnd(); return; }
+        if (P.combo && now - P.lastPop > PCOMBO_MS) { P.combo = 0; const e = $('#pCombo'); if (e) e.textContent = ''; }
         const tm = $('#pTime'); if (tm) { tm.textContent = Math.ceil(P.t) + 's'; $('#pBar').style.width = `${P.t / PDUR * 100}%`; }
       }, 120);
     },
     pop: (t) => {
       if (!P || P.over) return;
       const r = +t.dataset.r, c = +t.dataset.c, g = pGroup(P.b, r, c);
-      if (g.length < 2) { P.combo = 0; $('#pCombo').textContent = ''; sfx('pop'); return; }
-      P.combo++;
-      const mul = P.combo >= 5 ? 5 : P.combo >= 3 ? 3 : P.combo >= 2 ? 2 : 1;
-      const gain = g.length * g.length * mul;
-      P.score += gain;
-      for (const [y, x] of g) P.b[y][x] = -1;
-      $('#pCombo').textContent = mul > 1 ? `Combo x${mul}!` : '';
-      fxText(`+${gain}`, t, 'g');
-      for (const [y, x] of g) { const cell = $(`.pc[data-r="${y}"][data-c="${x}"]`); if (cell) pearlBurst(cell); }
-      if (mul >= 3) fxSpark(t, 8);
-      sfx(g.length >= 5 ? 'level' : 'match');
-      pCollapse(P.b);
-      if (!pHas(P.b)) P.b = pNew();
-      pRender();
+      if (g.length < 2) { P.combo = 0; pComboFx(0); sfx('pop'); t.animate([{ transform: 'translateX(-3px)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(0)' }], { duration: 160 }); return; }
+      const now = performance.now();
+      P.combo = now - P.lastPop <= PCOMBO_MS && P.combo ? P.combo + 1 : 1;
+      P.lastPop = now;
+      const mul = Math.min(P.combo, 6);
+      P.maxMul = Math.max(P.maxMul, mul);
+      const gain = g.length * g.length * mul, col = P.b[r][c], color = ITEMS[PIDS[col]].color, big = g.length >= 5;
+      P.score += gain; P.cnt[col] += g.length;
+      for (const [y, x] of g) { const cell = $(`.pc[data-r="${y}"][data-c="${x}"]`); if (cell) { pearlBurst(cell, color, big); cell.firstElementChild.style.visibility = 'hidden'; } P.b[y][x] = -1; }
+      fxText(`+${gain}`, t, big ? 'g big' : 'g');
+      if (big || mul >= 3) fxSpark(t, big ? 10 : 6);
+      sfx(g.length >= 6 ? 'pearlBoom' : g.length >= 4 ? 'pearlPop2' : 'pearlPop');
+      if (mul >= 2) setTimeout(() => sfx('combo' + mul), 90);
+      pComboFx(mul);
+      const fall = pCollapse(P.b);
+      if (!pHas(P.b)) { P.b = pNew(); pRender(); } else pRender(fall);
     },
   });
 }
@@ -454,7 +506,7 @@ export const crush = {
       <div class="mg-info"><div><small>Buff hiện có</small><b>+${(S.crush.perm * 100).toFixed(0)}% doanh thu</b></div><div><small>Màn cao nhất</small><b>${S.crush.best || 0}</b></div></div>
       <div class="rules"><b>📖 Luật chơi & Thử thách tăng dần:</b><p>• Màn càng cao độ khó càng tăng: mục tiêu điểm cao hơn, lượt đi ít hơn, nhiều loại topping trà sữa và thời gian đếm ngược suy nghĩ mỗi lượt nhanh dần.</p><p>• <b>Combo kẹo đặc biệt:</b></p><p>- Ghép 4: ⚡ Ly Sọc quét sạch 1 hàng/cột.</p><p>- Ghép 2x2: 🐟 Con Cá Bay tự bơi đến nổ ô ngẫu nhiên.</p><p>- Ghép L / T: 🍦 Kem Cheese nổ lan 3x3.</p><p>- Ghép 5: 🌈 Cầu Vồng quét sạch toàn bộ 1 loại kẹo.</p></div>
       <button class="btn grad block" data-act="crush">🎮 VÀO CHƠI MILK TEA CRUSH NGAY</button></div>
-      <div class="mgcard"><h4>⚫ TRÂN CHÂU NỔ</h4><p>Chạm nhóm trân châu cùng màu kề nhau để làm nổ trong 30 giây. Nhận tiền & trân châu đen. Hôm nay còn <b>${3 - S.pearl.playsDay}</b> lượt.</p><button class="btn pri block" data-act="pearl">▶ Chơi Trân Châu Nổ</button></div>`;
+      <div class="mgcard"><h4>⚫ TRÂN CHÂU NỔ</h4><p>Chạm nhóm trân châu cùng màu kề nhau để làm nổ trong 30 giây. Nhận tiền & nhiều loại trân châu nguyên liệu. Hôm nay còn <b>${3 - S.pearl.playsDay}</b> lượt.</p><button class="btn pri block" data-act="pearl">▶ Chơi Trân Châu Nổ</button></div>`;
   },
   acts: { crush: () => openCrush(), pearl: () => openPearl() },
 };

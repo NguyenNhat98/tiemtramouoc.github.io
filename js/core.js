@@ -89,7 +89,7 @@ export function newState() {
     friends: { code: 'TTN-' + Math.random().toString(36).slice(2, 7).toUpperCase(), list: [], gifted: {} },
     crush: { level: 1, best: 0, perm: 0, gifts: 0 },
     pearl: { best: 0, playsDay: 0 },
-    settings: { music: 0.7, sfx: 0.8, style: 'lofi', hints: true, shiftMin: 4, shiftMinNext: 4, theme: 'cream', tutorialDone: false },
+    settings: { music: 0.7, sfx: 0.8, style: 'lofi', haptic: 2, hints: true, shiftMin: 4, shiftMinNext: 4, theme: 'cream', tutorialDone: false },
     firstRun: true, started: false,
     savedAt: Date.now(),
   };
@@ -270,8 +270,39 @@ const SFX = {
   bell: () => { tone(1760, 0.3, 'sine', 0.4); tone(2217, 0.4, 'sine', 0.25, 0.02); },
   match: () => { tone(600 + Math.random() * 300, 0.1, 'triangle', 0.5); },
   boom: () => { tone(120, 0.25, 'sawtooth', 0.5); tone(80, 0.3, 'square', 0.35, 0.05); },
+  /* --- Trân Châu Nổ --- */
+  // nổ lách tách nhỏ (nhóm 2-3 viên), tông ngẫu nhiên nhẹ
+  pearlPop: () => { const f = 700 + Math.random() * 200; tone(f, 0.05, 'square', 0.22); tone(f * 1.5, 0.07, 'triangle', 0.3, 0.03); tone(f * 2, 0.05, 'sine', 0.2, 0.06); },
+  // nổ vừa (4-5 viên): tông cao hơn, 4 nốt tách liên tiếp
+  pearlPop2: () => [880, 1100, 1320, 1760].forEach((f, i) => tone(f * (1 + Math.random() * 0.03), 0.06, i % 2 ? 'triangle' : 'square', 0.28, i * 0.035)),
+  // nổ lớn (≥6 viên)
+  pearlBoom: () => { tone(110, 0.22, 'sawtooth', 0.45); tone(70, 0.3, 'square', 0.3, 0.03); [1046, 1318, 1568, 2093].forEach((f, i) => tone(f, 0.12, 'triangle', 0.35, 0.05 + i * 0.045)); },
+  fly: () => { [400, 520, 680].forEach((f, i) => tone(f, 0.07, 'sine', 0.16, i * 0.03)); },
+  swoosh: () => { [900, 700, 520, 380].forEach((f, i) => tone(f, 0.06, 'sine', 0.14, i * 0.025)); },
+  bounce: () => { tone(220, 0.07, 'sine', 0.35); tone(330, 0.05, 'triangle', 0.18, 0.05); },
+  // arpeggio combo tăng dần theo cấp: gọi sfx('combo2') ... sfx('combo6')
+  combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, 'triangle', 0.4, i * 0.06)),
+  ...Object.fromEntries([2, 3, 4, 5, 6].map((l) => ['combo' + l, () => { const b = 523 * Math.pow(1.122, l * 2); [1, 1.25, 1.5, 2, 2.5].slice(0, l + 1).forEach((m, i) => tone(b * m, 0.12, 'triangle', 0.42, i * 0.055)); }])),
+  collect: () => { tone(1200, 0.06, 'sine', 0.3); tone(1600, 0.1, 'sine', 0.3, 0.06); },
+  win: () => { [523, 659, 784, 1046, 784, 1046, 1318].forEach((f, i) => tone(f, 0.18, 'triangle', 0.55, i * 0.09)); tone(1568, 0.5, 'sine', 0.3, 0.65); },
+  lose: () => { [440, 392, 330, 262].forEach((f, i) => tone(f, 0.2, 'sine', 0.5, i * 0.13)); },
 };
-export const sfx = (n) => { if (unlocked && S.settings.sfx > 0) SFX[n]?.(); };
+/* ===== Rung (haptics): mức 0 tắt · 1 nhẹ · 2 vừa · 3 mạnh ===== */
+const HAPTIC_MUL = [0, 0.6, 1, 1.7];
+const HAPTIC = {
+  click: 8, pop: 10, cup: 14, drop: 10, seal: [20, 30, 40], ding: 22, coin: 12, success: [15, 40, 25], error: [40, 30, 40], sad: 30,
+  sparkle: 8, unlock: [20, 30, 20], level: [15, 30, 15, 30, 30], bell: 16, match: 12, boom: [40, 20, 60],
+  pour: 0, combo: [14, 24, 20], bounce: 8, fly: 6, swoosh: 8, collect: [10, 20, 10],
+};
+/** Rung theo mức đã chọn. `pattern` là số ms hoặc mảng [rung, nghỉ, rung...]. */
+export function buzz(pattern = 10) {
+  const m = HAPTIC_MUL[S.settings.haptic ?? 2] || 0;
+  if (pattern === 0) return;
+  if (!m || !navigator.vibrate) return;
+  const arr = Array.isArray(pattern) ? pattern : [pattern];
+  try { navigator.vibrate(arr.map((v, i) => (i % 2 === 0 ? Math.max(4, Math.round(v * m)) : v))); } catch (e) { /* thiết bị không hỗ trợ */ }
+}
+export const sfx = (n) => { buzz(HAPTIC[n] ?? 8); if (unlocked && S.settings.sfx > 0) SFX[n]?.(); };
 const STYLES = {
   lofi: { ms: 420, mel: [523, 0, 659, 0, 587, 0, 523, 0, 440, 0, 523, 659, 587, 0, 0, 0], bass: [131, 0, 0, 0, 175, 0, 0, 0, 147, 0, 0, 0, 196, 0, 0, 0], type: 'sine' },
   vui: { ms: 260, mel: [659, 784, 880, 784, 659, 523, 587, 659, 698, 880, 784, 698, 659, 587, 523, 0], bass: [262, 0, 262, 0, 349, 0, 349, 0, 294, 0, 294, 0, 392, 0, 392, 0], type: 'triangle' },
