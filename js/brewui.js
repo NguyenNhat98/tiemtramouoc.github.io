@@ -211,16 +211,19 @@ function flyCupIn(size) {
   const stack = $(`.stack[data-size="${size}"]`);
   if (!cupEl || !stack) return;
   const a = stack.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
-  // ly nhấc khỏi chồng, vẽ cung nhẹ rồi đáp xuống thớt
-  const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height * 0.25 - (b.top + b.height / 2);
-  const STEPS = 14, lift = 26, frames = [];
+  // bản sao bay từ chồng ly sang thớt (ly thật ẩn đến khi bản sao đáp xuống) nên không bị chớp
+  const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height * 0.3 - (b.top + b.height / 2);
+  const clone = cupEl.cloneNode(true);
+  clone.style.cssText = `position:fixed;left:${b.left}px;top:${b.top}px;width:${b.width}px;height:${b.height}px;margin:0;z-index:90;pointer-events:none;transition:none;will-change:transform`;
+  cupEl.style.visibility = 'hidden';
+  document.body.appendChild(clone);
+  const STEPS = 16, lift = 30, frames = [];
   for (let i = 0; i <= STEPS; i++) {
     const t = i / STEPS, e = 1 - Math.pow(1 - t, 3);
-    frames.push({ transform: `translate(${(dx * (1 - e)).toFixed(1)}px,${(dy * (1 - e) - lift * 4 * t * (1 - t)).toFixed(1)}px) scale(${(0.72 + 0.28 * e).toFixed(3)})`, opacity: Math.min(1, 0.25 + t * 4), offset: t });
+    frames.push({ transform: `translate(${(dx * (1 - e)).toFixed(1)}px,${(dy * (1 - e) - lift * 4 * t * (1 - t)).toFixed(1)}px) scale(${(0.7 + 0.3 * e).toFixed(3)})`, offset: t });
   }
-  frames.push({ transform: 'translate(0,0) scale(1.06,.93)', opacity: 1, offset: 0.93 }, { transform: 'translate(0,0) scale(1)', opacity: 1, offset: 1 });
-  frames.sort((x, y) => x.offset - y.offset);
-  cupEl.animate(frames, { duration: 560, easing: 'linear' });
+  const done = () => { clone.remove(); cupEl.style.visibility = ''; cupEl.animate([{ transform: 'scale(1.05,.94)' }, { transform: 'none' }], { duration: 220, easing: 'ease-out' }); };
+  clone.animate(frames, { duration: 520, easing: 'linear', fill: 'forwards' }).onfinish = done;
 }
 function sealAnim() {
   const cupEl = $('#cupslot .cup'), sealer = $('#sealer');
@@ -351,30 +354,30 @@ export function frameSell(dt, force) {
   const hint = $('#hint');
   if (hint) { const t = hintText(); if (hint.textContent !== t) hint.textContent = t; hint.style.display = t ? '' : 'none'; }
   updateBoard(false);
-  // vòi rót + dòng chảy: ly trượt ra đứng đúng dưới vòi, trà rơi thẳng vào miệng ly
+  // vòi rót + dòng chảy: khung đặt ly trượt ra đứng đúng dưới vòi, trà rơi thẳng vào miệng ly
   const st = $('#stream');
   const b = SH.board;
-  const cupEl = $('#cupslot .cup');
+  const slotEl = $('#cupslot');
+  const cupEl = slotEl?.querySelector('.cup');
   if (b?.pouring && b.tea && cupEl) {
     const d = $(`.disp[data-tea="${b.tea}"] .tap`);
     if (d && st) {
       const a = d.getBoundingClientRect(), r0 = root.getBoundingClientRect();
-      const cr = cupEl.getBoundingClientRect(), sh = cupEl._shift || { x: 0, y: 0 };
-      const baseCx = cr.left + cr.width / 2 - sh.x, baseTop = cr.top - sh.y;
-      const gap = 30;
-      const nx = a.left + a.width / 2 - baseCx, ny = a.bottom + gap - baseTop;
-      if (!cupEl._shift || Math.abs(sh.x - nx) > 0.5 || Math.abs(sh.y - ny) > 0.5) {
-        cupEl._shift = { x: nx, y: ny };
-        cupEl.style.transform = `translate(${nx.toFixed(1)}px,${ny.toFixed(1)}px)`;
-        cupEl.classList.add('under-tap');
-      }
-      const mouthY = baseTop + ny + 4;
-      st.style.cssText = `display:block;left:${a.left + a.width / 2 - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.max(0, mouthY - a.bottom + 2)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+      // vị trí gốc của khung ly, không phụ thuộc transform đang chạy
+      const board = slotEl.offsetParent, br = board.getBoundingClientRect();
+      const baseL = br.left + board.clientLeft + slotEl.offsetLeft, baseT = br.top + board.clientTop + slotEl.offsetTop;
+      const cupTop = baseT + slotEl.offsetHeight - 6 - cupEl.offsetHeight;
+      const tapX = a.left + a.width / 2;
+      const nx = Math.round(tapX - (baseL + slotEl.offsetWidth / 2)), ny = Math.round(a.bottom + 30 - cupTop);
+      const key = `${nx},${ny}`;
+      if (slotEl._shiftKey !== key) { slotEl._shiftKey = key; slotEl.style.transform = `translate(${nx}px,${ny}px)`; slotEl.classList.add('under-tap'); }
+      const mouthY = cupTop + ny + 4;
+      st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.max(0, mouthY - a.bottom + 2)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
       if (Math.random() < 0.15) sfx('pour');
     }
   } else {
     if (st) st.style.display = 'none';
-    if (cupEl && cupEl._shift) { cupEl._shift = null; cupEl.style.transform = ''; cupEl.classList.remove('under-tap'); }
+    if (slotEl && slotEl._shiftKey) { slotEl._shiftKey = null; slotEl.style.transform = ''; slotEl.classList.remove('under-tap'); }
   }
   if (cntT <= 0 || force) {
     cntT = 0.25;

@@ -447,3 +447,8 @@ body { background: color-mix(in srgb, var(--bg) 85%, #7a5a3a); }
 .cup .c-tops { bottom: 3px; }
 .cup .c-lid { left: -5%; right: -5%; top: -7px; height: 11px; border-radius: 8px 8px 3px 3px; background: linear-gradient(#fffdf8, #e4d6c3); border: 1px solid #cdbda7; box-shadow: 0 2px 3px rgba(0,0,0,.2); }
 .cup .c-straw { left: 55%; top: -26px; width: 6px; height: 58px; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+
+/* khung ly (không bị vẽ lại) mới là phần trượt dưới vòi: chuyển động mượt */
+.cupslot { position: relative; z-index: 6; transition: transform .4s cubic-bezier(.25, .9, .35, 1); will-change: transform; }
+.cupslot .cup { transition: none; }
+.cupslot.under-tap { pointer-events: none; }
