@@ -376,8 +376,10 @@ export function goFullscreen() {
     screen.orientation?.lock?.('portrait').catch(() => {});
   } catch (e) { /* trình duyệt không cho: bỏ qua */ }
 }
-/** Mỗi lần chạm, nếu chưa (hoặc đã thoát) toàn màn hình thì vào lại. */
-for (const ev of ['pointerup', 'touchend', 'click']) document.addEventListener(ev, () => goFullscreen(), { passive: true });
+/** Thử vào toàn màn hình ở các lần chạm đầu; đã vào được một lần thì thôi, không làm phiền (và không bật lại thông báo của Chrome). */
+let fsDone = false;
+document.addEventListener('fullscreenchange', () => { if (document.fullscreenElement) fsDone = true; });
+for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, () => { if (!fsDone) goFullscreen(); }, { passive: true });
 
 /* ===== Intro ===== */
 export function showIntro(onPlay) {

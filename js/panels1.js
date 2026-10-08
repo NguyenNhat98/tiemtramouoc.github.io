@@ -71,12 +71,12 @@ const giaban = {
     else if (t === 'huong') { const l = FLAVORS.filter((i) => S.unlocked[i]); body = l.length ? l.map(giaRow).join('') : '<div class="lockbox">🔒🛠️<br/>Mở khóa Hương trong Nâng cấp › Hương</div>'; }
     else if (t === 'top') { const l = TOPS.filter((i) => S.unlocked[i]); body = TOP_GROUPS.map((g) => { const x = l.filter((i) => ITEMS[i].group === g); return x.length ? `<h5 class="grp">${g}</h5>${x.map(giaRow).join('')}` : ''; }).join(''); }
     else body = `<div class="grow-row"><span class="k-ico">⬆️</span><div class="k-main"><b>Size L</b><small>💡 ${fmtK(E.priceOf('sizeL'))} · phụ thu so với size M</small></div><div class="pinput"><input type="number" inputmode="decimal" min="0" max="${SIZE_L_CAP / 1000}" step="0.5" value="${E.priceOf('sizeL') / 1000}" data-price="sizeL" aria-label="Giá size L"><span>k</span></div></div>`;
-    return `<div class="warnbox"><b>⚠️ CƠ CHẾ GIÁ TIỆM TRÀ NHỎ ${E.safePrice() ? '(ĐÃ CÓ QUẢN GIA)' : '(CHƯA CÓ QUẢN GIA)'}:</b>
+    return `<details class="warnbox"><summary>⚠️ Quy tắc giá bán <small>${E.safePrice() ? '· đã có Quản Gia' : '· chưa có Quản Gia'}</small></summary>
       <p>• Món nào (trà, hương, topping) trên <b>50k</b>: Khách chê mắc, quán vắng <b>80% khách</b>.</p>
       <p>• Một ly trên <b>120k</b>: <b>60% khách bỏ đi</b> và đánh giá 1★-2★.</p>
       <p>• Size L trên <b>20k</b> là đắt (90% khách né), size L tối đa <b>50k</b> (để đúng mức này không ai chọn và quán vắng 80%).</p>
       <p>• Hương & Topping trên <b>20k</b>: 80% khách không gọi; trên <b>30k</b>: không ai gọi.</p>
-      <p class="tip">💡 Chỉ được tăng giá an toàn không bị phạt khi sở hữu <b>Quản Gia</b> (mục Nhân sự › Quản lý tập sự)!</p></div>
+      <p class="tip">💡 Chỉ được tăng giá an toàn không bị phạt khi sở hữu <b>Quản Gia</b> (mục Nhân sự › Quản lý tập sự)!</p></details>
       ${tabs('gia', GIA_TABS(), 'tra')}${body}`;
   },
   acts: {

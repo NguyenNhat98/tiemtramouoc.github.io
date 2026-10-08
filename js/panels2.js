@@ -184,13 +184,18 @@ const mxh = {
     return `<div class="profile"><div class="pf-h">${logoHTML(60)}<div><h4>${esc(S.shopName)} ${verified ? '✔️' : ''}</h4><small class="${verified ? 'green' : 'grayish'}">${verified ? '🌱 Đã tích xanh' : '🌱 Đang Xây Dựng Thương Hiệu (Cần 50K Followers & 4.5★ để mở Tích Xanh)'}</small><p class="muted">Kênh truyền thông & Đánh giá ẩm thực chính thức.</p></div></div>
       <div class="pf-s"><div><b>${S.followers.toLocaleString('vi-VN')}</b><small>Người theo dõi (Followers)</small></div><div><b>${S.rating.toFixed(1)} ★</b><small>Uy tín (${S.ratingCount} đánh giá)</small></div><div><b>+${traffic}%</b><small>Buff khách từ Ads</small></div></div></div>
       <div class="adbox"><h4>📣 CHẠY QUẢNG CÁO TĂNG KHÁCH TOÀN CHUỖI</h4><p class="sub">Đang chạy: ${ad ? 1 : 0}/1 chiến dịch (Chỉ được chạy 1 trong ${ADS.length})${ad ? ` · còn ${S.social.ad.endsDay - S.day + 1} ngày` : ''}</p>
-      ${ADS.map((a) => `<div class="adcard ${ad?.id === a.id ? 'run' : ''}"><div class="ad-t"><span>${a.icon}</span><b>${a.name}</b></div><p>${a.desc}</p><div class="ad-f"><b>${fmtK(a.cost)}</b><button class="btn pri sm" data-act="ad" data-id="${a.id}" ${ad ? 'disabled' : ''}>${ad?.id === a.id ? 'Đang chạy' : `Kích hoạt (${a.days} ngày)`}</button></div></div>`).join('')}</div>
+      ${ADS.map((a) => `<div class="adcard ${ad?.id === a.id ? 'run' : ''}" data-act="adinfo" data-id="${a.id}"><div class="ad-t"><span>${a.icon}</span><b>${a.name}</b><i class="ad-i" aria-hidden="true">ⓘ</i></div><p class="ad-s">+${Math.round(a.traffic * 100)}% khách · ${a.days} ngày</p><div class="ad-f"><b>${fmtK(a.cost)}</b><button class="btn pri sm" data-act="ad" data-id="${a.id}" ${ad ? 'disabled' : ''}>${ad?.id === a.id ? 'Đang chạy' : `Kích hoạt (${a.days} ngày)`}</button></div></div>`).join('')}</div>
       <div class="vidbox"><h4>🎬 Đăng Video Quảng Bá Quán (TikTok / Reels)</h4><p>Tỉ lệ Viral: <b>25%</b> · Mỗi lần quay nhận ngẫu nhiên % buff khách. Số lượt quay hôm nay dựa vào chiến dịch ads (${used}/${quota} lượt/ngày).</p>
       <button class="btn ${used < quota ? 'pri' : 'ghost'} block" data-act="video" ${used < quota ? '' : 'disabled'}>${used < quota ? '🎥 Quay & đăng video' : '🔒 Cần chạy chiến dịch Ads để quay video'}</button></div>
       <h4 class="feedh">📱 TRÀ SỮA FEED (DÒNG BẢNG TIN) <small>Định dạng kịch bản hội thoại TikTok mới</small></h4>
       ${S.social.posts.length ? S.social.posts.map(postHTML).join('') : '<div class="emptybox">📱<b>Chưa có bài đăng nào</b><p>Chạy quảng cáo hoặc quay video để các reviewer đăng bài về quán bạn.</p></div>'}`;
   },
   acts: {
+    adinfo: (t) => {
+      const a = ADS.find((x) => x.id === t.dataset.id);
+      const m = openModal({ cls: 'small', html: `<h3 class="m-title">${a.icon} ${esc(a.name)}</h3><p class="m-text">${a.desc}</p><p class="m-text center"><b>${fmtK(a.cost)}</b> · ${a.days} ngày</p><button class="btn pri block" data-act="x">Đóng</button>` });
+      bindActions(m.body, { x: () => m.close() });
+    },
     ad: (t) => {
       const a = ADS.find((x) => x.id === t.dataset.id);
       if (S.money < a.cost) { toast('Không đủ tiền chạy quảng cáo', 'err'); sfx('error'); return; }

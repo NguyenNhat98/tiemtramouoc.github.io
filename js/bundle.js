@@ -2603,7 +2603,13 @@
     } catch (e) {
     }
   }
-  for (const ev of ["pointerup", "touchend", "click"]) document.addEventListener(ev, () => goFullscreen(), { passive: true });
+  var fsDone = false;
+  document.addEventListener("fullscreenchange", () => {
+    if (document.fullscreenElement) fsDone = true;
+  });
+  for (const ev of ["pointerup", "touchend"]) document.addEventListener(ev, () => {
+    if (!fsDone) goFullscreen();
+  }, { passive: true });
   function showIntro(onPlay) {
     const el = $("#intro");
     el.hidden = false;
@@ -3186,12 +3192,12 @@
           return x.length ? `<h5 class="grp">${g}</h5>${x.map(giaRow).join("")}` : "";
         }).join("");
       } else body = `<div class="grow-row"><span class="k-ico">\u2B06\uFE0F</span><div class="k-main"><b>Size L</b><small>\u{1F4A1} ${fmtK(priceOf("sizeL"))} \xB7 ph\u1EE5 thu so v\u1EDBi size M</small></div><div class="pinput"><input type="number" inputmode="decimal" min="0" max="${SIZE_L_CAP / 1e3}" step="0.5" value="${priceOf("sizeL") / 1e3}" data-price="sizeL" aria-label="Gi\xE1 size L"><span>k</span></div></div>`;
-      return `<div class="warnbox"><b>\u26A0\uFE0F C\u01A0 CH\u1EBE GI\xC1 TI\u1EC6M TR\xC0 NH\u1ECE ${safePrice() ? "(\u0110\xC3 C\xD3 QU\u1EA2N GIA)" : "(CH\u01AFA C\xD3 QU\u1EA2N GIA)"}:</b>
+      return `<details class="warnbox"><summary>\u26A0\uFE0F Quy t\u1EAFc gi\xE1 b\xE1n <small>${safePrice() ? "\xB7 \u0111\xE3 c\xF3 Qu\u1EA3n Gia" : "\xB7 ch\u01B0a c\xF3 Qu\u1EA3n Gia"}</small></summary>
       <p>\u2022 M\xF3n n\xE0o (tr\xE0, h\u01B0\u01A1ng, topping) tr\xEAn <b>50k</b>: Kh\xE1ch ch\xEA m\u1EAFc, qu\xE1n v\u1EAFng <b>80% kh\xE1ch</b>.</p>
       <p>\u2022 M\u1ED9t ly tr\xEAn <b>120k</b>: <b>60% kh\xE1ch b\u1ECF \u0111i</b> v\xE0 \u0111\xE1nh gi\xE1 1\u2605-2\u2605.</p>
       <p>\u2022 Size L tr\xEAn <b>20k</b> l\xE0 \u0111\u1EAFt (90% kh\xE1ch n\xE9), size L t\u1ED1i \u0111a <b>50k</b> (\u0111\u1EC3 \u0111\xFAng m\u1EE9c n\xE0y kh\xF4ng ai ch\u1ECDn v\xE0 qu\xE1n v\u1EAFng 80%).</p>
       <p>\u2022 H\u01B0\u01A1ng & Topping tr\xEAn <b>20k</b>: 80% kh\xE1ch kh\xF4ng g\u1ECDi; tr\xEAn <b>30k</b>: kh\xF4ng ai g\u1ECDi.</p>
-      <p class="tip">\u{1F4A1} Ch\u1EC9 \u0111\u01B0\u1EE3c t\u0103ng gi\xE1 an to\xE0n kh\xF4ng b\u1ECB ph\u1EA1t khi s\u1EDF h\u1EEFu <b>Qu\u1EA3n Gia</b> (m\u1EE5c Nh\xE2n s\u1EF1 \u203A Qu\u1EA3n l\xFD t\u1EADp s\u1EF1)!</p></div>
+      <p class="tip">\u{1F4A1} Ch\u1EC9 \u0111\u01B0\u1EE3c t\u0103ng gi\xE1 an to\xE0n kh\xF4ng b\u1ECB ph\u1EA1t khi s\u1EDF h\u1EEFu <b>Qu\u1EA3n Gia</b> (m\u1EE5c Nh\xE2n s\u1EF1 \u203A Qu\u1EA3n l\xFD t\u1EADp s\u1EF1)!</p></details>
       ${tabs("gia", GIA_TABS(), "tra")}${body}`;
     },
     acts: {
@@ -3553,13 +3559,18 @@
       return `<div class="profile"><div class="pf-h">${logoHTML(60)}<div><h4>${esc(S.shopName)} ${verified ? "\u2714\uFE0F" : ""}</h4><small class="${verified ? "green" : "grayish"}">${verified ? "\u{1F331} \u0110\xE3 t\xEDch xanh" : "\u{1F331} \u0110ang X\xE2y D\u1EF1ng Th\u01B0\u01A1ng Hi\u1EC7u (C\u1EA7n 50K Followers & 4.5\u2605 \u0111\u1EC3 m\u1EDF T\xEDch Xanh)"}</small><p class="muted">K\xEAnh truy\u1EC1n th\xF4ng & \u0110\xE1nh gi\xE1 \u1EA9m th\u1EF1c ch\xEDnh th\u1EE9c.</p></div></div>
       <div class="pf-s"><div><b>${S.followers.toLocaleString("vi-VN")}</b><small>Ng\u01B0\u1EDDi theo d\xF5i (Followers)</small></div><div><b>${S.rating.toFixed(1)} \u2605</b><small>Uy t\xEDn (${S.ratingCount} \u0111\xE1nh gi\xE1)</small></div><div><b>+${traffic}%</b><small>Buff kh\xE1ch t\u1EEB Ads</small></div></div></div>
       <div class="adbox"><h4>\u{1F4E3} CH\u1EA0Y QU\u1EA2NG C\xC1O T\u0102NG KH\xC1CH TO\xC0N CHU\u1ED6I</h4><p class="sub">\u0110ang ch\u1EA1y: ${ad ? 1 : 0}/1 chi\u1EBFn d\u1ECBch (Ch\u1EC9 \u0111\u01B0\u1EE3c ch\u1EA1y 1 trong ${ADS.length})${ad ? ` \xB7 c\xF2n ${S.social.ad.endsDay - S.day + 1} ng\xE0y` : ""}</p>
-      ${ADS.map((a) => `<div class="adcard ${ad?.id === a.id ? "run" : ""}"><div class="ad-t"><span>${a.icon}</span><b>${a.name}</b></div><p>${a.desc}</p><div class="ad-f"><b>${fmtK(a.cost)}</b><button class="btn pri sm" data-act="ad" data-id="${a.id}" ${ad ? "disabled" : ""}>${ad?.id === a.id ? "\u0110ang ch\u1EA1y" : `K\xEDch ho\u1EA1t (${a.days} ng\xE0y)`}</button></div></div>`).join("")}</div>
+      ${ADS.map((a) => `<div class="adcard ${ad?.id === a.id ? "run" : ""}" data-act="adinfo" data-id="${a.id}"><div class="ad-t"><span>${a.icon}</span><b>${a.name}</b><i class="ad-i" aria-hidden="true">\u24D8</i></div><p class="ad-s">+${Math.round(a.traffic * 100)}% kh\xE1ch \xB7 ${a.days} ng\xE0y</p><div class="ad-f"><b>${fmtK(a.cost)}</b><button class="btn pri sm" data-act="ad" data-id="${a.id}" ${ad ? "disabled" : ""}>${ad?.id === a.id ? "\u0110ang ch\u1EA1y" : `K\xEDch ho\u1EA1t (${a.days} ng\xE0y)`}</button></div></div>`).join("")}</div>
       <div class="vidbox"><h4>\u{1F3AC} \u0110\u0103ng Video Qu\u1EA3ng B\xE1 Qu\xE1n (TikTok / Reels)</h4><p>T\u1EC9 l\u1EC7 Viral: <b>25%</b> \xB7 M\u1ED7i l\u1EA7n quay nh\u1EADn ng\u1EABu nhi\xEAn % buff kh\xE1ch. S\u1ED1 l\u01B0\u1EE3t quay h\xF4m nay d\u1EF1a v\xE0o chi\u1EBFn d\u1ECBch ads (${used}/${quota} l\u01B0\u1EE3t/ng\xE0y).</p>
       <button class="btn ${used < quota ? "pri" : "ghost"} block" data-act="video" ${used < quota ? "" : "disabled"}>${used < quota ? "\u{1F3A5} Quay & \u0111\u0103ng video" : "\u{1F512} C\u1EA7n ch\u1EA1y chi\u1EBFn d\u1ECBch Ads \u0111\u1EC3 quay video"}</button></div>
       <h4 class="feedh">\u{1F4F1} TR\xC0 S\u1EEEA FEED (D\xD2NG B\u1EA2NG TIN) <small>\u0110\u1ECBnh d\u1EA1ng k\u1ECBch b\u1EA3n h\u1ED9i tho\u1EA1i TikTok m\u1EDBi</small></h4>
       ${S.social.posts.length ? S.social.posts.map(postHTML).join("") : '<div class="emptybox">\u{1F4F1}<b>Ch\u01B0a c\xF3 b\xE0i \u0111\u0103ng n\xE0o</b><p>Ch\u1EA1y qu\u1EA3ng c\xE1o ho\u1EB7c quay video \u0111\u1EC3 c\xE1c reviewer \u0111\u0103ng b\xE0i v\u1EC1 qu\xE1n b\u1EA1n.</p></div>'}`;
     },
     acts: {
+      adinfo: (t) => {
+        const a = ADS.find((x) => x.id === t.dataset.id);
+        const m = openModal({ cls: "small", html: `<h3 class="m-title">${a.icon} ${esc(a.name)}</h3><p class="m-text">${a.desc}</p><p class="m-text center"><b>${fmtK(a.cost)}</b> \xB7 ${a.days} ng\xE0y</p><button class="btn pri block" data-act="x">\u0110\xF3ng</button>` });
+        bindActions(m.body, { x: () => m.close() });
+      },
       ad: (t) => {
         const a = ADS.find((x) => x.id === t.dataset.id);
         if (S.money < a.cost) {

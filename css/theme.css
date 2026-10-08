@@ -252,3 +252,19 @@ body { background: #F2DFC8; }
 .nav-i.on .nav-e { background: var(--pink-soft); filter: none; transform: translateY(-2px) scale(1.08); box-shadow: 0 2px 0 rgba(238, 122, 150, .35); }
 .nav-i:active .nav-e { transform: scale(.9); }
 
+/* HUD: hiện cả điểm và số đánh giá */
+.hud-r { grid-template-columns: auto; grid-template-areas: 'm' 'r' 'b'; justify-items: end; gap: 3px; }
+.hud-rate { flex-direction: row; align-items: center; gap: 5px; }
+.hud-rate small { display: inline; font-size: 11px; font-weight: 600; color: var(--brown2); }
+.hud-r-btns { justify-content: flex-end; }
+/* hộp quy tắc gọn, bấm mới mở */
+.warnbox { padding: 0; }
+.warnbox summary { list-style: none; cursor: pointer; padding: 8px 12px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.warnbox summary::-webkit-details-marker { display: none; }
+.warnbox summary small { font-weight: 500; color: var(--muted); font-size: 12px; }
+.warnbox summary::after { content: '▾'; margin-left: auto; color: var(--muted); transition: transform .15s; }
+.warnbox[open] summary::after { transform: rotate(180deg); }
+.warnbox[open] > :not(summary) { margin-left: 12px; margin-right: 12px; } .warnbox[open] > :last-child { margin-bottom: 10px; }
+.adcard { cursor: pointer; } .adcard .ad-i { margin-left: auto; color: var(--muted); font-style: normal; font-size: 16px; }
+.adcard .ad-s { font-size: 12.5px; color: var(--brown2); font-weight: 500; margin: 2px 0 0; }
+
