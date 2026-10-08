@@ -146,6 +146,12 @@ function normalize(raw) {
     if (d[k] && typeof d[k] === 'object' && !Array.isArray(d[k])) s[k] = { ...d[k], ...(raw[k] || {}) };
   }
   for (const k of ['stock', 'unlocked', 'onMenu', 'prices']) s[k] = { ...d[k], ...(raw[k] || {}) };
+  // bản cũ dùng chung một kho "ly": chia đôi cho size M và L
+  if (raw.stock && Array.isArray(raw.stock.ly) && !raw.stock.lyM && !raw.stock.lyL) {
+    const lots = raw.stock.ly.filter((l) => l && l.q > 0);
+    s.stock.lyM = lots.map((l) => ({ ...l, q: Math.ceil(l.q / 2) }));
+    s.stock.lyL = lots.map((l) => ({ ...l, q: Math.floor(l.q / 2) })).filter((l) => l.q > 0);
+  }
   for (const id of IDS) if (!Array.isArray(s.stock[id])) s.stock[id] = [];
   s.stock = Object.fromEntries(IDS.map((id) => [id, s.stock[id].filter((l) => l && l.q > 0)]));
   if (!Array.isArray(s.garden.plots) || s.garden.plots.length < PLOTS) s.garden.plots = d.garden.plots;

@@ -275,7 +275,7 @@ export function openMissing() {
   const miss = [];
   const teaOk = TEAS.some((t) => S.onMenu[t] && stockQty(t) > 0);
   const topOk = TOPS.some((t) => S.onMenu[t] && stockQty(t) > 0);
-  const supOk = stockQty('ly') > 0 && stockQty('da') > 0 && stockQty('duong') > 0;
+  const supOk = (stockQty('lyM') > 0 || stockQty('lyL') > 0) && stockQty('da') > 0 && stockQty('duong') > 0;
   if (!teaOk) miss.push('Trà');
   if (!topOk) miss.push('Topping');
   if (!supOk) miss.push('Dụng cụ');

@@ -157,8 +157,9 @@ function pushReview(c, stars, text) {
 export function pickCup(size) {
   if (!SH.on) return 'Chưa mở cửa';
   if (SH.board) return 'Đang có ly trên thớt';
-  if (E.stockQty('ly') < 1) return 'Hết ly rồi!';
-  E.take('ly', 1);
+  const cupId = size === 'L' ? 'lyL' : 'lyM';
+  if (E.stockQty(cupId) < 1) return `Hết ly size ${size === 'L' ? 'L' : 'M'} rồi!`;
+  E.take(cupId, 1);
   SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: 'cup', sealT: 0, pouring: false, spill: 0, auto: null };
   const staffPour = STAFF.filter((s) => S.staff[s.id] && (s.kind === 'pour' || s.kind === 'manager'));
   if (staffPour.length) {
@@ -359,7 +360,7 @@ function staffStep(dt) {
       SH.buyT += dt;
       if (SH.buyT >= 4) {
         SH.buyT = 0;
-        const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), 'ly', 'da', 'duong'];
+        const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), 'lyM', 'lyL', 'da', 'duong'];
         for (const id of want) {
           if (E.stockQty(id) === 0) {
             const q = 8, cost = Math.round(E.unitCost(id) * q * 1.1);
@@ -370,7 +371,7 @@ function staffStep(dt) {
     }
   }
 }
-const needs = (o) => [['ly', 1], [o.tea, 1], ...(o.flavor ? [[o.flavor, 1]] : []), ...o.tops.map((t) => [t, 1]), ['da', 1], ['duong', 1]];
+const needs = (o) => [[o.size === 'L' ? 'lyL' : 'lyM', 1], [o.tea, 1], ...(o.flavor ? [[o.flavor, 1]] : []), ...o.tops.map((t) => [t, 1]), ['da', 1], ['duong', 1]];
 const canTake = (list) => list.every(([id, n]) => E.stockQty(id) >= n);
 function finishJob(job, st, b) {
   const c = SH.queue.find((x) => x.id === job.cid);

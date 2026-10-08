@@ -48,9 +48,8 @@ export function renderSell() {
       <div class="tag-w">QUẦY TRÀ</div>
       <div class="shelf-row">
         <div class="stacks">
-          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b></button>
-          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b></button>
-          <span class="cnt cupcnt" data-cnt="ly" title="Số ly còn lại (dùng chung M và L)">0</span>
+          <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
+          <button class="stack big" data-act="cup" data-size="L" aria-label="Lấy ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="lyL">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join('')}</div>
       </div>
@@ -162,29 +161,39 @@ function doServe() {
 /* ===== Hiệu ứng bước ===== */
 function dropFx(fromEl, color) {
   sfx('drop');
-  const cup = $('#cupslot');
-  if (!fromEl || !cup) return;
-  const a = fromEl.getBoundingClientRect(), b = cup.getBoundingClientRect();
-  const n = 5, STEPS = 18;
+  const slot = $('#cupslot');
+  if (!fromEl || !slot) return;
+  const cupEl = $('.cup', slot) || slot;
+  const a = fromEl.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
+  const n = 5, STEPS = 22, SPLIT = 0.62;
   for (let k = 0; k < n; k++) {
     const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
     const ball = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color}"></div>`);
     document.body.appendChild(ball);
-    const dx = b.left + b.width / 2 + rand(-10, 10) - sx, dy = b.top + b.height * 0.5 - sy;
-    const rise = 34 + rand(0, 22), sway = rand(-6, 6);
-    // quỹ đạo parabol: bay lên rồi rơi theo trọng lực, đáp nhẹ vào ly
+    // đích 1: bay vòng lên trên miệng ly · đích 2: rơi thẳng xuống lòng ly
+    const rx = b.left + b.width / 2 + rand(-b.width * 0.18, b.width * 0.18) - sx, ry = b.top - 16 - sy;
+    const dy2 = b.top + b.height * 0.58 - (sy + ry);
+    const rise = Math.max(40, Math.min(90, Math.abs(ry) * 0.35 + 36));
     const frames = [];
     for (let i = 0; i <= STEPS; i++) {
-      const t = i / STEPS, ex = 1 - (1 - t) * (1 - t);
-      const x = dx * ex + sway * Math.sin(t * Math.PI);
-      const y = dy * t * t * (3 - 2 * t) * 0.35 + dy * t * 0.65 - rise * 4 * t * (1 - t);
-      const sc = 1 + 0.18 * Math.sin(t * Math.PI) - (t > 0.85 ? (t - 0.85) * 1.6 : 0);
-      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(2)})`, opacity: t > 0.92 ? 1 - (t - 0.92) * 8 : 1, offset: t });
+      const t = i / STEPS;
+      let x, y, sc = 1, op = 1;
+      if (t <= SPLIT) {
+        const u = t / SPLIT;
+        x = rx * (1 - Math.pow(1 - u, 2));
+        y = ry * u - rise * 4 * u * (1 - u);
+        sc = 1 + 0.15 * Math.sin(u * Math.PI);
+      } else {
+        const u = (t - SPLIT) / (1 - SPLIT);
+        x = rx; y = ry + dy2 * u * u;
+        sc = 1 - 0.25 * u; op = u > 0.85 ? 1 - (u - 0.85) / 0.15 : 1;
+      }
+      frames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(2)})`, opacity: op, offset: t });
     }
-    ball.animate(frames, { duration: 680, delay: k * 85, easing: 'linear', fill: 'backwards' }).onfinish = () => {
+    ball.animate(frames, { duration: 820, delay: k * 95, easing: 'linear', fill: 'backwards' }).onfinish = () => {
       ball.remove();
-      if (k === 0) { cup.classList.remove('plop'); void cup.offsetWidth; cup.classList.add('plop'); }
-      if (k === n - 1) splash(cup, color);
+      if (k === 0) { slot.classList.remove('plop'); void slot.offsetWidth; slot.classList.add('plop'); }
+      if (k === n - 1) splash(slot, color);
     };
   }
 }

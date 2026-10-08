@@ -294,7 +294,7 @@ function finish(q, win) {
     reward = `+1% doanh thu vĩnh viễn · +${fmtK(money)}`;
     if (L % 5 === 0) {
       S.collection.packs++;
-      const ids = ['tcDen', 'traSua', 'ly'];
+      const ids = ['tcDen', 'traSua', 'lyM'];
       for (const id of ids) E.addStock(id, 3);
       reward += ' · 🎁 +1 túi quà & 3 nguyên liệu';
     }

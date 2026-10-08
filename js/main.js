@@ -67,7 +67,7 @@ function exposeDebug() {
     S, E, G, SH,
     addMoney: (n = 1e6) => { S.money += n; markDirty('hud', 'cta'); },
     fillStock: (q = 30) => { for (const id of Object.keys(S.stock)) if (S.unlocked[id]) E.addStock(id, q); markDirty('panel', 'cta'); },
-    unlockAll: () => { for (const id of Object.keys(S.unlocked)) { S.unlocked[id] = true; S.onMenu[id] = !['ly', 'da', 'duong'].includes(id); } markDirty('view', 'panel', 'board'); },
+    unlockAll: () => { for (const id of Object.keys(S.unlocked)) { S.unlocked[id] = true; S.onMenu[id] = !['lyM', 'lyL', 'da', 'duong'].includes(id); } markDirty('view', 'panel', 'board'); },
     setDay: (d) => { S.day = d; E.ensureForecast(); markDirty('hud', 'view'); },
     skipTime: (sec) => { if (SH.on) SH.t = Math.min(SH.total, SH.t + sec); },
     speed: (v) => setSpeed(v),

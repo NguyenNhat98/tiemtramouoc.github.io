@@ -55,7 +55,8 @@ export const ITEMS = {
   pmTuoi: { name: 'Phô mai tươi', kind: 'top', group: 'Phô mai', icon: '⬜', color: '#fff1c2', cost: 5000, life: 3, price: 12000, unlock: 400000 },
   thachPm: { name: 'Thạch phô mai', kind: 'top', group: 'Phô mai', icon: '🔶', color: '#f5e3a0', cost: 3000, life: 3, price: 9000, unlock: 300000 },
 
-  ly: { name: 'Ly + ống hút', kind: 'supply', icon: '🥤', color: '#dcd5c8', cost: 1500, life: 0, unlock: 0 },
+  lyM: { name: 'Ly size M + ống hút', kind: 'supply', icon: '🥤', color: '#dcd5c8', cost: 1500, life: 0, unlock: 0 },
+  lyL: { name: 'Ly size L + ống hút', kind: 'supply', icon: '🥤', color: '#dcd5c8', cost: 1500, life: 0, unlock: 0 },
   da: { name: 'Đá viên', kind: 'supply', icon: '🧊', color: '#cfe8f5', cost: 1000, life: 2, unlock: 0 },
   duong: { name: 'Nước đường', kind: 'supply', icon: '🍯', color: '#e8c25a', cost: 500, life: 7, unlock: 0 },
 };

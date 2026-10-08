@@ -196,17 +196,24 @@ export function plHTML(a, label) {
   const soldPerDay = a.cups / Math.max(1, a.days);
   const cogsCls = a.rev > 0 && cogsPct >= 28 && cogsPct <= 32 ? 'good' : 'warn';
   const wageCls = a.rev > 0 && wagePct >= 15 && wagePct <= 20 ? 'good' : a.wage === 0 ? 'neutral' : 'warn';
-  return `<section class="pl">
-    <div class="pl-head"><div><small class="pl-k">📊 BÁO CÁO P&L CHUẨN F&B</small><h4>Phân Tích Lỗ Lãi & Điểm Hòa Vốn</h4></div><span class="pl-chip">${esc(label)}</span></div>
-    <div class="pl-line"><span>Cơ cấu doanh thu (${fmtK(a.rev)})</span><b class="${loss ? 'neg' : 'pos'}">${loss ? 'Lỗ' : 'Lãi'}: ${fmtK(a.profit)} (${pct(Math.abs(a.profit), Math.max(1, a.rev)).toFixed(1)}%)</b></div>
+  const row = (c, n, v, p) => `<div class="pl2-r"><i style="background:${c}"></i><span>${n}</span><em>${p}</em><b>${v}</b></div>`;
+  const gap = Math.max(0, be - Math.round(soldPerDay));
+  return `<section class="pl2">
+    <div class="pl2-hero ${loss ? 'neg' : 'pos'}"><small>${esc(label)} · ${loss ? 'Lỗ' : 'Lãi'}</small><b>${loss ? '−' : '+'}${fmtK(Math.abs(a.profit))}</b><span>Doanh thu ${fmtK(a.rev)} · Chi phí ${fmtK(cost)}</span></div>
     <div class="pl-bar"><i style="width:${cg}%;background:#ff8a3d"></i><i style="width:${pe}%;background:#3d9bff"></i><i style="width:${ma}%;background:#8b5cf6"></i><i style="width:${lossPct}%;background:#ef4444"></i></div>
-    <div class="pl-legend"><span><i style="background:#ff8a3d"></i> Nguyên liệu: ${cogsPct.toFixed(1)}% (${fmtK(a.cogs)})</span><span><i style="background:#3d9bff"></i> Nhân sự: ${wagePct.toFixed(1)}% (${fmtK(a.wage)})</span><span><i style="background:#8b5cf6"></i> Mặt bằng: ${pct(a.rent + a.util, a.rev).toFixed(1)}% (${fmtK(a.rent + a.util)})</span><span><i style="background:#ef4444"></i> Lỗ: ${loss ? pct(-a.profit, a.rev).toFixed(1) : '0.0'}%</span></div>
-    <div class="pl-cards">
-      <div class="pl-card ${cogsCls}"><small>📦 COGS Nguyên liệu</small><em>Chuẩn: 28% – 32%</em><b>${cogsPct.toFixed(1)}%</b><span>${fmtK(a.cogs)}</span><p>${cogsCls === 'good' ? '🟢 Chuẩn vàng F&B (28–32%)' : '🟠 Lệch chuẩn F&B'}</p></div>
-      <div class="pl-card ${wageCls}"><small>👥 Chi phí nhân sự</small><em>Chuẩn: 15% – 20%</em><b>${wagePct.toFixed(1)}%</b><span>${fmtK(a.wage)}</span><p>${a.wage === 0 ? '⚪ Chưa phát sinh' : wageCls === 'good' ? '🟢 Chuẩn' : '🟠 Lệch chuẩn'}</p></div>
-      <div class="pl-card ${soldPerDay >= be ? 'good' : 'bad'}"><small>🎯 Điểm hòa vốn</small><em>Chi phí cố định/ngày</em><b>${be} ly</b><span>Đã bán: ${Math.round(soldPerDay)} ly</span><p>${soldPerDay >= be ? '🟢 Đã vượt hòa vốn' : `🔴 Chưa hòa vốn (Thiếu ${Math.max(0, be - Math.round(soldPerDay))} ly)`}</p></div>
+    <div class="pl2-list">
+      ${row('#ff8a3d', 'Nguyên liệu', fmtK(a.cogs), cogsPct.toFixed(0) + '%')}
+      ${row('#3d9bff', 'Nhân sự', fmtK(a.wage), wagePct.toFixed(0) + '%')}
+      ${row('#8b5cf6', 'Mặt bằng & điện nước', fmtK(a.rent + a.util), pct(a.rent + a.util, a.rev).toFixed(0) + '%')}
     </div>
-    <div class="pl-diag ${loss ? 'bad' : 'good'}"><b>🩺 Bác sĩ F&B chẩn đoán:</b><p>${loss ? `Tổng chi phí (${fmtK(cost)}) vượt doanh thu (${fmtK(a.rev)}). Quán thiếu ${Math.max(0, be - Math.round(soldPerDay))} ly để đạt điểm hòa vốn.` : `Quán đang có lãi ${fmtK(a.profit)}. Hãy giữ COGS trong khoảng 28–32% và duy trì rating cao để tăng khách.`}</p></div>
+    <details class="pl2-more"><summary>Phân tích F&B chi tiết</summary>
+      <div class="pl-cards">
+        <div class="pl-card ${cogsCls}"><small>Nguyên liệu</small><em>Chuẩn 28–32%</em><b>${cogsPct.toFixed(1)}%</b><p>${cogsCls === 'good' ? '🟢 Đạt chuẩn' : '🟠 Lệch chuẩn'}</p></div>
+        <div class="pl-card ${wageCls}"><small>Nhân sự</small><em>Chuẩn 15–20%</em><b>${wagePct.toFixed(1)}%</b><p>${a.wage === 0 ? '⚪ Chưa có' : wageCls === 'good' ? '🟢 Đạt chuẩn' : '🟠 Lệch chuẩn'}</p></div>
+        <div class="pl-card ${soldPerDay >= be ? 'good' : 'bad'}"><small>Hòa vốn</small><em>${be} ly/ngày</em><b>${Math.round(soldPerDay)} ly</b><p>${soldPerDay >= be ? '🟢 Đã vượt' : `🔴 Thiếu ${gap} ly`}</p></div>
+      </div>
+      <p class="pl2-diag">${loss ? `Chi phí (${fmtK(cost)}) vượt doanh thu (${fmtK(a.rev)}). Cần bán thêm ${gap} ly để hòa vốn.` : `Quán đang có lãi ${fmtK(a.profit)}. Giữ nguyên liệu 28–32% và rating cao để tăng khách.`}</p>
+    </details>
   </section>`;
 }
 export function dayLines(T) {
@@ -237,9 +244,9 @@ export function openDaySummary() {
     cls: 'day', closable: false, id: 'day', html: `
     <div class="day-moon">🌙<small>⭐</small></div>
     <h2 class="day-title">Hết ngày ${S.day}</h2>
-    <div class="day-stats"><div><b>${T.cups}</b><span>🧋</span></div><div><b>${T.left}</b><span>😶</span></div><div><b>${T.avgStars ? T.avgStars.toFixed(1) : '–'}</b><span>⭐</span></div></div>
+    <div class="day-stats"><div><b>${T.cups}</b><span>ly bán</span></div><div><b>${T.left}</b><span>khách bỏ về</span></div><div><b>${T.avgStars ? T.avgStars.toFixed(1) + '★' : '–'}</b><span>đánh giá</span></div></div>
     ${plHTML(agg, 'Ngày ' + S.day)}
-    <div class="dls">${dayLines(T)}</div>
+    <div class="day-cash"><span>🗄️ Số dư két</span><b>${fmtK(S.money)}</b></div>
     <div class="tomorrow">📅 <b>Ngày mai:</b> ${esc(tw.tip)}</div>
     <button class="btn ghost block" data-act="sum">📊 Tổng kết</button>
     <button class="btn pri block" data-act="next">Ngày ${S.day + 1} ➜</button>`,

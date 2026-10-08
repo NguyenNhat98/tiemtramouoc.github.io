@@ -53,7 +53,8 @@
     pmVien: { name: "Ph\xF4 mai vi\xEAn", kind: "top", group: "Ph\xF4 mai", icon: "\u{1F7E8}", color: "#f7d56b", cost: 4e3, life: 3, price: 1e4, unlock: 35e4 },
     pmTuoi: { name: "Ph\xF4 mai t\u01B0\u01A1i", kind: "top", group: "Ph\xF4 mai", icon: "\u2B1C", color: "#fff1c2", cost: 5e3, life: 3, price: 12e3, unlock: 4e5 },
     thachPm: { name: "Th\u1EA1ch ph\xF4 mai", kind: "top", group: "Ph\xF4 mai", icon: "\u{1F536}", color: "#f5e3a0", cost: 3e3, life: 3, price: 9e3, unlock: 3e5 },
-    ly: { name: "Ly + \u1ED1ng h\xFAt", kind: "supply", icon: "\u{1F964}", color: "#dcd5c8", cost: 1500, life: 0, unlock: 0 },
+    lyM: { name: "Ly size M + \u1ED1ng h\xFAt", kind: "supply", icon: "\u{1F964}", color: "#dcd5c8", cost: 1500, life: 0, unlock: 0 },
+    lyL: { name: "Ly size L + \u1ED1ng h\xFAt", kind: "supply", icon: "\u{1F964}", color: "#dcd5c8", cost: 1500, life: 0, unlock: 0 },
     da: { name: "\u0110\xE1 vi\xEAn", kind: "supply", icon: "\u{1F9CA}", color: "#cfe8f5", cost: 1e3, life: 2, unlock: 0 },
     duong: { name: "N\u01B0\u1EDBc \u0111\u01B0\u1EDDng", kind: "supply", icon: "\u{1F36F}", color: "#e8c25a", cost: 500, life: 7, unlock: 0 }
   };
@@ -679,6 +680,11 @@
       if (d[k] && typeof d[k] === "object" && !Array.isArray(d[k])) s[k] = { ...d[k], ...raw[k] || {} };
     }
     for (const k of ["stock", "unlocked", "onMenu", "prices"]) s[k] = { ...d[k], ...raw[k] || {} };
+    if (raw.stock && Array.isArray(raw.stock.ly) && !raw.stock.lyM && !raw.stock.lyL) {
+      const lots = raw.stock.ly.filter((l) => l && l.q > 0);
+      s.stock.lyM = lots.map((l) => ({ ...l, q: Math.ceil(l.q / 2) }));
+      s.stock.lyL = lots.map((l) => ({ ...l, q: Math.floor(l.q / 2) })).filter((l) => l.q > 0);
+    }
     for (const id of IDS) if (!Array.isArray(s.stock[id])) s.stock[id] = [];
     s.stock = Object.fromEntries(IDS.map((id) => [id, s.stock[id].filter((l) => l && l.q > 0)]));
     if (!Array.isArray(s.garden.plots) || s.garden.plots.length < PLOTS) s.garden.plots = d.garden.plots;
@@ -1291,7 +1297,7 @@
     const miss = [];
     const teaOk = TEAS.some((t) => S.onMenu[t] && stockQty(t) > 0);
     const topOk = TOPS.some((t) => S.onMenu[t] && stockQty(t) > 0);
-    const supOk = stockQty("ly") > 0 && stockQty("da") > 0 && stockQty("duong") > 0;
+    const supOk = (stockQty("lyM") > 0 || stockQty("lyL") > 0) && stockQty("da") > 0 && stockQty("duong") > 0;
     if (!teaOk) miss.push("Tr\xE0");
     if (!topOk) miss.push("Topping");
     if (!supOk) miss.push("D\u1EE5ng c\u1EE5");
@@ -1613,8 +1619,9 @@
   function pickCup(size) {
     if (!SH.on) return "Ch\u01B0a m\u1EDF c\u1EEDa";
     if (SH.board) return "\u0110ang c\xF3 ly tr\xEAn th\u1EDBt";
-    if (stockQty("ly") < 1) return "H\u1EBFt ly r\u1ED3i!";
-    take("ly", 1);
+    const cupId = size === "L" ? "lyL" : "lyM";
+    if (stockQty(cupId) < 1) return `H\u1EBFt ly size ${size === "L" ? "L" : "M"} r\u1ED3i!`;
+    take(cupId, 1);
     SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: "cup", sealT: 0, pouring: false, spill: 0, auto: null };
     const staffPour = STAFF.filter((s) => S.staff[s.id] && (s.kind === "pour" || s.kind === "manager"));
     if (staffPour.length) {
@@ -1854,7 +1861,7 @@
         SH.buyT += dt;
         if (SH.buyT >= 4) {
           SH.buyT = 0;
-          const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), "ly", "da", "duong"];
+          const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), "lyM", "lyL", "da", "duong"];
           for (const id of want) {
             if (stockQty(id) === 0) {
               const q = 8, cost = Math.round(unitCost(id) * q * 1.1);
@@ -1872,7 +1879,7 @@
       }
     }
   }
-  var needs = (o) => [["ly", 1], [o.tea, 1], ...o.flavor ? [[o.flavor, 1]] : [], ...o.tops.map((t) => [t, 1]), ["da", 1], ["duong", 1]];
+  var needs = (o) => [[o.size === "L" ? "lyL" : "lyM", 1], [o.tea, 1], ...o.flavor ? [[o.flavor, 1]] : [], ...o.tops.map((t) => [t, 1]), ["da", 1], ["duong", 1]];
   var canTake = (list) => list.every(([id, n]) => stockQty(id) >= n);
   function finishJob(job, st, b) {
     const c = SH.queue.find((x) => x.id === job.cid);
@@ -2354,34 +2361,25 @@
     const soldPerDay = a.cups / Math.max(1, a.days);
     const cogsCls = a.rev > 0 && cogsPct >= 28 && cogsPct <= 32 ? "good" : "warn";
     const wageCls = a.rev > 0 && wagePct >= 15 && wagePct <= 20 ? "good" : a.wage === 0 ? "neutral" : "warn";
-    return `<section class="pl">
-    <div class="pl-head"><div><small class="pl-k">\u{1F4CA} B\xC1O C\xC1O P&L CHU\u1EA8N F&B</small><h4>Ph\xE2n T\xEDch L\u1ED7 L\xE3i & \u0110i\u1EC3m H\xF2a V\u1ED1n</h4></div><span class="pl-chip">${esc(label)}</span></div>
-    <div class="pl-line"><span>C\u01A1 c\u1EA5u doanh thu (${fmtK(a.rev)})</span><b class="${loss ? "neg" : "pos"}">${loss ? "L\u1ED7" : "L\xE3i"}: ${fmtK(a.profit)} (${pct(Math.abs(a.profit), Math.max(1, a.rev)).toFixed(1)}%)</b></div>
+    const row = (c, n, v, p) => `<div class="pl2-r"><i style="background:${c}"></i><span>${n}</span><em>${p}</em><b>${v}</b></div>`;
+    const gap = Math.max(0, be - Math.round(soldPerDay));
+    return `<section class="pl2">
+    <div class="pl2-hero ${loss ? "neg" : "pos"}"><small>${esc(label)} \xB7 ${loss ? "L\u1ED7" : "L\xE3i"}</small><b>${loss ? "\u2212" : "+"}${fmtK(Math.abs(a.profit))}</b><span>Doanh thu ${fmtK(a.rev)} \xB7 Chi ph\xED ${fmtK(cost)}</span></div>
     <div class="pl-bar"><i style="width:${cg}%;background:#ff8a3d"></i><i style="width:${pe}%;background:#3d9bff"></i><i style="width:${ma}%;background:#8b5cf6"></i><i style="width:${lossPct}%;background:#ef4444"></i></div>
-    <div class="pl-legend"><span><i style="background:#ff8a3d"></i> Nguy\xEAn li\u1EC7u: ${cogsPct.toFixed(1)}% (${fmtK(a.cogs)})</span><span><i style="background:#3d9bff"></i> Nh\xE2n s\u1EF1: ${wagePct.toFixed(1)}% (${fmtK(a.wage)})</span><span><i style="background:#8b5cf6"></i> M\u1EB7t b\u1EB1ng: ${pct(a.rent + a.util, a.rev).toFixed(1)}% (${fmtK(a.rent + a.util)})</span><span><i style="background:#ef4444"></i> L\u1ED7: ${loss ? pct(-a.profit, a.rev).toFixed(1) : "0.0"}%</span></div>
-    <div class="pl-cards">
-      <div class="pl-card ${cogsCls}"><small>\u{1F4E6} COGS Nguy\xEAn li\u1EC7u</small><em>Chu\u1EA9n: 28% \u2013 32%</em><b>${cogsPct.toFixed(1)}%</b><span>${fmtK(a.cogs)}</span><p>${cogsCls === "good" ? "\u{1F7E2} Chu\u1EA9n v\xE0ng F&B (28\u201332%)" : "\u{1F7E0} L\u1EC7ch chu\u1EA9n F&B"}</p></div>
-      <div class="pl-card ${wageCls}"><small>\u{1F465} Chi ph\xED nh\xE2n s\u1EF1</small><em>Chu\u1EA9n: 15% \u2013 20%</em><b>${wagePct.toFixed(1)}%</b><span>${fmtK(a.wage)}</span><p>${a.wage === 0 ? "\u26AA Ch\u01B0a ph\xE1t sinh" : wageCls === "good" ? "\u{1F7E2} Chu\u1EA9n" : "\u{1F7E0} L\u1EC7ch chu\u1EA9n"}</p></div>
-      <div class="pl-card ${soldPerDay >= be ? "good" : "bad"}"><small>\u{1F3AF} \u0110i\u1EC3m h\xF2a v\u1ED1n</small><em>Chi ph\xED c\u1ED1 \u0111\u1ECBnh/ng\xE0y</em><b>${be} ly</b><span>\u0110\xE3 b\xE1n: ${Math.round(soldPerDay)} ly</span><p>${soldPerDay >= be ? "\u{1F7E2} \u0110\xE3 v\u01B0\u1EE3t h\xF2a v\u1ED1n" : `\u{1F534} Ch\u01B0a h\xF2a v\u1ED1n (Thi\u1EBFu ${Math.max(0, be - Math.round(soldPerDay))} ly)`}</p></div>
+    <div class="pl2-list">
+      ${row("#ff8a3d", "Nguy\xEAn li\u1EC7u", fmtK(a.cogs), cogsPct.toFixed(0) + "%")}
+      ${row("#3d9bff", "Nh\xE2n s\u1EF1", fmtK(a.wage), wagePct.toFixed(0) + "%")}
+      ${row("#8b5cf6", "M\u1EB7t b\u1EB1ng & \u0111i\u1EC7n n\u01B0\u1EDBc", fmtK(a.rent + a.util), pct(a.rent + a.util, a.rev).toFixed(0) + "%")}
     </div>
-    <div class="pl-diag ${loss ? "bad" : "good"}"><b>\u{1FA7A} B\xE1c s\u0129 F&B ch\u1EA9n \u0111o\xE1n:</b><p>${loss ? `T\u1ED5ng chi ph\xED (${fmtK(cost)}) v\u01B0\u1EE3t doanh thu (${fmtK(a.rev)}). Qu\xE1n thi\u1EBFu ${Math.max(0, be - Math.round(soldPerDay))} ly \u0111\u1EC3 \u0111\u1EA1t \u0111i\u1EC3m h\xF2a v\u1ED1n.` : `Qu\xE1n \u0111ang c\xF3 l\xE3i ${fmtK(a.profit)}. H\xE3y gi\u1EEF COGS trong kho\u1EA3ng 28\u201332% v\xE0 duy tr\xEC rating cao \u0111\u1EC3 t\u0103ng kh\xE1ch.`}</p></div>
+    <details class="pl2-more"><summary>Ph\xE2n t\xEDch F&B chi ti\u1EBFt</summary>
+      <div class="pl-cards">
+        <div class="pl-card ${cogsCls}"><small>Nguy\xEAn li\u1EC7u</small><em>Chu\u1EA9n 28\u201332%</em><b>${cogsPct.toFixed(1)}%</b><p>${cogsCls === "good" ? "\u{1F7E2} \u0110\u1EA1t chu\u1EA9n" : "\u{1F7E0} L\u1EC7ch chu\u1EA9n"}</p></div>
+        <div class="pl-card ${wageCls}"><small>Nh\xE2n s\u1EF1</small><em>Chu\u1EA9n 15\u201320%</em><b>${wagePct.toFixed(1)}%</b><p>${a.wage === 0 ? "\u26AA Ch\u01B0a c\xF3" : wageCls === "good" ? "\u{1F7E2} \u0110\u1EA1t chu\u1EA9n" : "\u{1F7E0} L\u1EC7ch chu\u1EA9n"}</p></div>
+        <div class="pl-card ${soldPerDay >= be ? "good" : "bad"}"><small>H\xF2a v\u1ED1n</small><em>${be} ly/ng\xE0y</em><b>${Math.round(soldPerDay)} ly</b><p>${soldPerDay >= be ? "\u{1F7E2} \u0110\xE3 v\u01B0\u1EE3t" : `\u{1F534} Thi\u1EBFu ${gap} ly`}</p></div>
+      </div>
+      <p class="pl2-diag">${loss ? `Chi ph\xED (${fmtK(cost)}) v\u01B0\u1EE3t doanh thu (${fmtK(a.rev)}). C\u1EA7n b\xE1n th\xEAm ${gap} ly \u0111\u1EC3 h\xF2a v\u1ED1n.` : `Qu\xE1n \u0111ang c\xF3 l\xE3i ${fmtK(a.profit)}. Gi\u1EEF nguy\xEAn li\u1EC7u 28\u201332% v\xE0 rating cao \u0111\u1EC3 t\u0103ng kh\xE1ch.`}</p>
+    </details>
   </section>`;
-  }
-  function dayLines(T) {
-    const rows = [
-      ["\u{1F4B5} Doanh thu qu\xE1n ch\xEDnh", "+" + fmtK(T.rev + T.tips), "pos"],
-      ["\u{1F9FE} Chi ph\xED qu\xE1n ch\xEDnh", "\u2212" + fmtK(T.cogs + T.rent + T.util + T.wage + (T.tax || 0)), "neg"],
-      ["\u{1F4E6} Ti\u1EC1n nh\u1EADp nguy\xEAn li\u1EC7u", "\u2212" + fmtK(T.purchase), "sub"],
-      ["\u{1F3E0} M\u1EB7t b\u1EB1ng", "\u2212" + fmtK(T.rent), "sub"],
-      ["\u26A1 \u0110i\u1EC7n n\u01B0\u1EDBc", "\u2212" + fmtK(T.util), "sub"]
-    ];
-    if (T.wage) rows.push(["\u{1F465} L\u01B0\u01A1ng nh\xE2n vi\xEAn", "\u2212" + fmtK(T.wage), "sub"]);
-    if (T.branch) rows.push(["\u{1F3EA} Chi nh\xE1nh (r\xF2ng)", (T.branch >= 0 ? "+" : "\u2212") + fmtK(Math.abs(T.branch)), T.branch >= 0 ? "pos" : "neg"]);
-    if (T.fran) rows.push(["\u{1F91D} Nh\u01B0\u1EE3ng quy\u1EC1n (royalty)", "+" + fmtK(T.fran), "pos"]);
-    if (T.interest) rows.push(["\u{1F3E6} L\xE3i ng\xE2n h\xE0ng", "+" + fmtK(T.interest), "pos"]);
-    rows.push(["\u{1F4C8} L\xE3i", (T.profit >= 0 ? "+" : "\u2212") + fmtK(Math.abs(T.profit)), T.profit >= 0 ? "pos big" : "neg big"]);
-    rows.push(["\u{1F5C4}\uFE0F K\xE9t", fmtK(S.money), "big"]);
-    return rows.map(([l, v, c]) => `<div class="dl ${c}"><span>${l}</span><b>${v}</b></div>`).join("");
   }
   function openDaySummary() {
     const T = S.today;
@@ -2397,9 +2395,9 @@
       html: `
     <div class="day-moon">\u{1F319}<small>\u2B50</small></div>
     <h2 class="day-title">H\u1EBFt ng\xE0y ${S.day}</h2>
-    <div class="day-stats"><div><b>${T.cups}</b><span>\u{1F9CB}</span></div><div><b>${T.left}</b><span>\u{1F636}</span></div><div><b>${T.avgStars ? T.avgStars.toFixed(1) : "\u2013"}</b><span>\u2B50</span></div></div>
+    <div class="day-stats"><div><b>${T.cups}</b><span>ly b\xE1n</span></div><div><b>${T.left}</b><span>kh\xE1ch b\u1ECF v\u1EC1</span></div><div><b>${T.avgStars ? T.avgStars.toFixed(1) + "\u2605" : "\u2013"}</b><span>\u0111\xE1nh gi\xE1</span></div></div>
     ${plHTML(agg, "Ng\xE0y " + S.day)}
-    <div class="dls">${dayLines(T)}</div>
+    <div class="day-cash"><span>\u{1F5C4}\uFE0F S\u1ED1 d\u01B0 k\xE9t</span><b>${fmtK(S.money)}</b></div>
     <div class="tomorrow">\u{1F4C5} <b>Ng\xE0y mai:</b> ${esc(tw.tip)}</div>
     <button class="btn ghost block" data-act="sum">\u{1F4CA} T\u1ED5ng k\u1EBFt</button>
     <button class="btn pri block" data-act="next">Ng\xE0y ${S.day + 1} \u279C</button>`
@@ -2713,9 +2711,8 @@
       <div class="tag-w">QU\u1EA6Y TR\xC0</div>
       <div class="shelf-row">
         <div class="stacks">
-          <button class="stack" data-act="cup" data-size="M" aria-label="L\u1EA5y ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b></button>
-          <button class="stack big" data-act="cup" data-size="L" aria-label="L\u1EA5y ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b></button>
-          <span class="cnt cupcnt" data-cnt="ly" title="S\u1ED1 ly c\xF2n l\u1EA1i (d\xF9ng chung M v\xE0 L)">0</span>
+          <button class="stack" data-act="cup" data-size="M" aria-label="L\u1EA5y ly size M"><div class="cupstack m"><i class="rim"></i></div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
+          <button class="stack big" data-act="cup" data-size="L" aria-label="L\u1EA5y ly size L"><div class="cupstack l"><i class="rim"></i></div><b>L</b><span class="cnt" data-cnt="lyL">0</span></button>
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join("")}</div>
       </div>
@@ -2868,32 +2865,44 @@
   }
   function dropFx(fromEl, color) {
     sfx("drop");
-    const cup = $("#cupslot");
-    if (!fromEl || !cup) return;
-    const a = fromEl.getBoundingClientRect(), b = cup.getBoundingClientRect();
-    const n = 5, STEPS2 = 18;
+    const slot = $("#cupslot");
+    if (!fromEl || !slot) return;
+    const cupEl = $(".cup", slot) || slot;
+    const a = fromEl.getBoundingClientRect(), b = cupEl.getBoundingClientRect();
+    const n = 5, STEPS2 = 22, SPLIT = 0.62;
     for (let k = 0; k < n; k++) {
       const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
       const ball = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color}"></div>`);
       document.body.appendChild(ball);
-      const dx = b.left + b.width / 2 + rand(-10, 10) - sx, dy = b.top + b.height * 0.5 - sy;
-      const rise = 34 + rand(0, 22), sway = rand(-6, 6);
+      const rx = b.left + b.width / 2 + rand(-b.width * 0.18, b.width * 0.18) - sx, ry = b.top - 16 - sy;
+      const dy2 = b.top + b.height * 0.58 - (sy + ry);
+      const rise = Math.max(40, Math.min(90, Math.abs(ry) * 0.35 + 36));
       const frames2 = [];
       for (let i = 0; i <= STEPS2; i++) {
-        const t = i / STEPS2, ex = 1 - (1 - t) * (1 - t);
-        const x = dx * ex + sway * Math.sin(t * Math.PI);
-        const y = dy * t * t * (3 - 2 * t) * 0.35 + dy * t * 0.65 - rise * 4 * t * (1 - t);
-        const sc = 1 + 0.18 * Math.sin(t * Math.PI) - (t > 0.85 ? (t - 0.85) * 1.6 : 0);
-        frames2.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(2)})`, opacity: t > 0.92 ? 1 - (t - 0.92) * 8 : 1, offset: t });
+        const t = i / STEPS2;
+        let x, y, sc = 1, op = 1;
+        if (t <= SPLIT) {
+          const u = t / SPLIT;
+          x = rx * (1 - Math.pow(1 - u, 2));
+          y = ry * u - rise * 4 * u * (1 - u);
+          sc = 1 + 0.15 * Math.sin(u * Math.PI);
+        } else {
+          const u = (t - SPLIT) / (1 - SPLIT);
+          x = rx;
+          y = ry + dy2 * u * u;
+          sc = 1 - 0.25 * u;
+          op = u > 0.85 ? 1 - (u - 0.85) / 0.15 : 1;
+        }
+        frames2.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(2)})`, opacity: op, offset: t });
       }
-      ball.animate(frames2, { duration: 680, delay: k * 85, easing: "linear", fill: "backwards" }).onfinish = () => {
+      ball.animate(frames2, { duration: 820, delay: k * 95, easing: "linear", fill: "backwards" }).onfinish = () => {
         ball.remove();
         if (k === 0) {
-          cup.classList.remove("plop");
-          void cup.offsetWidth;
-          cup.classList.add("plop");
+          slot.classList.remove("plop");
+          void slot.offsetWidth;
+          slot.classList.add("plop");
         }
-        if (k === n - 1) splash(cup, color);
+        if (k === n - 1) splash(slot, color);
       };
     }
   }
@@ -4454,7 +4463,7 @@
       reward = `+1% doanh thu v\u0129nh vi\u1EC5n \xB7 +${fmtK(money)}`;
       if (L % 5 === 0) {
         S.collection.packs++;
-        const ids = ["tcDen", "traSua", "ly"];
+        const ids = ["tcDen", "traSua", "lyM"];
         for (const id of ids) addStock(id, 3);
         reward += " \xB7 \u{1F381} +1 t\xFAi qu\xE0 & 3 nguy\xEAn li\u1EC7u";
       }
@@ -5267,7 +5276,7 @@
       unlockAll: () => {
         for (const id of Object.keys(S.unlocked)) {
           S.unlocked[id] = true;
-          S.onMenu[id] = !["ly", "da", "duong"].includes(id);
+          S.onMenu[id] = !["lyM", "lyL", "da", "duong"].includes(id);
         }
         markDirty("view", "panel", "board");
       },
