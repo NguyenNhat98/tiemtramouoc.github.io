@@ -67,7 +67,7 @@ const vuon = {
     water: () => {
       const g = S.garden;
       if (!g.plots.some((p) => p.seed)) return toast('Chưa có cây nào để tưới', 'err');
-      g.watered = true; sfx('pour'); toast('💧 Đã tưới nước! Cây sẽ lớn thêm khi sang ngày mới.', 'ok'); markDirty('panel');
+      g.watered = true; sfx('pour'); toast('💧 Đã tưới nước! Cây sẽ lớn thêm khi sang ngày mới.', 'ok'); markDirty('panel'); requestSave();
     },
     replant: () => {
       const id = S.subtab.seed || SEEDS[0].id;
@@ -78,7 +78,7 @@ const vuon = {
     },
     punlock: () => {
       const g = S.garden, cost = plotCost(g.unlocked + 1);
-      confirmBox('Mở thêm mảnh đất?', `Mở ô số ${g.unlocked + 1} với giá ${fmtK(cost)}.`, () => { if (S.money < cost) return toast('Không đủ tiền', 'err'); S.money -= cost; g.unlocked++; sfx('unlock'); markDirty('hud', 'panel'); requestSave(); }, 'Mở khóa');
+      confirmBox('Mở thêm mảnh đất?', `Mở ô số ${g.unlocked + 1} với giá ${fmtK(cost)}.`, () => { const error = E.unlockPlot(); if (error) return toast(error, 'err'); sfx('unlock'); }, 'Mở khóa');
     },
     shop: () => {
       const m = openModal({ id: 'seedshop', cls: 'small', html: `<h3 class="m-title">🛒 Cửa hàng hạt giống</h3>${SEEDS.map((s) => `<div class="nrow"><span class="k-ico">${s.icon}</span><div class="k-main"><b>${s.name}</b><small>Lớn trong ${s.days} ngày · thu ${s.yield[0]}-${s.yield[1]} phần ${ITEMS[s.gives].name}</small></div><button class="btn gold sm" data-act="buy" data-id="${s.id}">${fmtK(s.price)}</button></div>`).join('')}<button class="btn ghost block" data-act="x">Đóng</button>` });
@@ -104,7 +104,7 @@ const thucung = {
         <div class="pstats">${[['hunger', '🍖 No'], ['joy', '💗 Vui vẻ'], ['clean', '🛁 Sạch sẽ'], ['energy', '😴 Khỏe']].map(([k, l]) => `<div class="ps"><span>${l}</span>${bar(p[k])}<b>${Math.round(p[k])}</b></div>`).join('')}</div>
         <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ''}</button>`).join('')}</div>
         <div class="buffs">${info.buffs.map((b) => `<p>${b}</p>`).join('')}</div>
-        <p class="muted">Decor đã mua: ${Object.keys(S.petDecor).length}/${PET_DECOR.length} · mua thêm ở Nâng cấp › Decor Thú Cưng.</p></div>
+        <p class="muted">Decor đã mua: ${Object.keys(S.petDecor).length}/${PET_DECOR.length} · mua thêm ở Nâng cấp › Decor Thú Cưng.</p><div class="petrow">${['shiba', 'meo'].filter(k => k !== p.kind).map(k => `<button class="btn soft" data-act="adopt" data-k="${k}">Đổi sang ${PETS[k].icon} ${PETS[k].name} · ${fmtK(PETS[k].adopt)}</button>`).join('')}</div></div>
         ${S.pet2 ? `<div class="petcard owned"><div class="pet-big">🦫</div><h4>${PETS.capybara.name} <span class="chip green">Nuôi chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join('')}</div>` : ''}
         ${!S.pet2 && E.secretCount() >= 7 ? '<button class="btn pri block" data-act="capy">🦫 Nhận nuôi Cáp Bi (miễn phí)</button>' : ''}`;
     }
@@ -127,16 +127,13 @@ const thucung = {
     adopt: (t) => {
       const k = t.dataset.k, p = PETS[k];
       if (S.money < p.adopt) return toast('Không đủ tiền nhận nuôi', 'err');
-      confirmBox('Nhận nuôi ' + p.name + '?', `Phí ${fmtK(p.adopt)}. Bé sẽ đồng hành cùng quán.`, () => { S.money -= p.adopt; S.pet = { kind: k, hunger: 80, joy: 80, clean: 80, energy: 80 }; sfx('level'); markDirty('hud', 'panel', 'tiles'); requestSave(); toast('🐾 Chào mừng thành viên mới!', 'gold'); }, 'Nhận nuôi');
+      confirmBox('Nhận nuôi ' + p.name + '?', `Phí ${fmtK(p.adopt)}. Chỉ số chăm sóc bé chính trở về 80; Cáp Bi nuôi chung được giữ lại.`, () => { const error = E.adoptPet(k); if (error) return toast(error, 'err'); sfx('level'); toast('🐾 Chào mừng thành viên mới!', 'gold'); }, 'Nhận nuôi');
     },
-    capy: () => { if (E.secretCount() < 7) return; S.pet2 = { kind: 'capybara' }; S.pet = S.pet || { kind: 'capybara', hunger: 80, joy: 80, clean: 80, energy: 80 }; sfx('level'); markDirty('panel', 'tiles'); requestSave(); toast('🦫 Cáp Bi đã về quán!', 'gold'); },
+    capy: () => { const error = E.adoptPet('capybara'); if (error) return toast(error, 'err'); sfx('level'); toast('🦫 Cáp Bi đã về quán!', 'gold'); },
     care: (t) => {
       const c = PET_CARE.find((x) => x.id === t.dataset.id);
-      if (S.money < c.cost) return toast('Không đủ tiền', 'err');
-      S.money -= c.cost;
-      const boost = S.petDecor.app ? 1.3 : 1;
-      S.pet[c.stat] = clamp(S.pet[c.stat] + c.gain * boost, 0, 100);
-      sfx('pop'); fxText('+' + c.name, t, 'g'); markDirty('hud', 'panel'); requestSave();
+      const error = E.carePet(t.dataset.id); if (error) return toast(error, 'err');
+      sfx('pop'); fxText('+' + c.name, t, 'g');
     },
   },
 };
@@ -256,8 +253,7 @@ const khoinghiep = {
       const l = LOCATIONS[t.dataset.id];
       if (S.money < LOCATION_COST) return toast('Không đủ tiền khởi nghiệp', 'err');
       confirmBox(`Khởi nghiệp tại ${l.name}?`, `Chi phí ${fmtK(LOCATION_COST)}. Quán chuyển sang vùng mới: đổi thời tiết, lợi thế và thử thách vận hành.`, () => {
-        S.money -= LOCATION_COST; S.location = t.dataset.id; S.forecast = []; E.ensureForecast(); sfx('level');
-        markDirty('hud', 'panel', 'board', 'view'); requestSave(); toast(`🚀 Đã khởi nghiệp tại ${l.name}!`, 'gold');
+        const error = E.moveShop(t.dataset.id); if (error) return toast(error, 'err'); sfx('level'); toast(`🚀 Đã khởi nghiệp tại ${l.name}!`, 'gold');
       }, 'Khởi nghiệp');
     },
   },
@@ -284,7 +280,7 @@ const danhgia = {
     const mx = Math.max(1, ...dist.map((d) => d[1]));
     return `<div class="rvhead"><div class="big-r">${S.rating.toFixed(1).replace('.', ',')}<small>/5</small></div><div><span class="stars lg">${Array.from({ length: 5 }, (_, i) => `<i class="${i < Math.round(S.rating) ? 'on' : ''}">★</i>`).join('')}</span><small>${S.ratingCount} lượt đánh giá · ${rv.length} gần nhất</small></div></div>
       <div class="dist">${dist.map(([s, n]) => `<div class="dr"><span>${s}★</span><div class="bar"><i style="width:${n / mx * 100}%"></i></div><b>${n}</b></div>`).join('')}</div>
-      ${rv.length ? rv.slice(0, 30).map((r) => `<div class="review"><span class="r-av">${r.av}</span><div class="grow"><div class="r-h"><b>${esc(r.name)}</b><span class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span></div><p>${esc(r.text)}</p><small>Ngày ${r.day}</small></div></div>`).join('') : '<div class="emptybox">⭐<b>Chưa có đánh giá</b><p>Mở cửa và phục vụ khách để nhận đánh giá đầu tiên!</p></div>'}`;
+      ${rv.length ? rv.slice(0, 30).map((r) => `<div class="review"><span class="r-av">${r.av}</span><div class="grow"><div class="r-h"><b>${esc(r.name)}</b><span class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span></div><p>${esc(r.text)}</p>${r.reply ? `<p class="muted">Tiệm trả lời: ${esc(r.reply)}</p>` : ''}<small>Ngày ${r.day}</small></div></div>`).join('') : '<div class="emptybox">⭐<b>Chưa có đánh giá</b><p>Mở cửa và phục vụ khách để nhận đánh giá đầu tiên!</p></div>'}`;
   },
   acts: {},
 };
@@ -339,8 +335,7 @@ const banbe = {
       toast('Đã kết bạn!', 'ok'); sfx('success'); markDirty('panel'); requestSave();
     },
     visit: (t) => {
-      const id = t.dataset.id, gift = randInt(5, 20) * 1000;
-      S.friends.gifted[id] = S.day; S.money += gift; S.followers += randInt(10, 80);
+      const gift = E.visitFriend(t.dataset.id); if (typeof gift === 'string') return toast(gift, 'err');
       toast(`🎁 Bạn tặng quà! +${fmtK(gift)}`, 'gold'); sfx('coin'); markDirty('hud', 'panel'); requestSave();
     },
   },
@@ -387,7 +382,7 @@ const suutam = {
       bindActions(m.body, { x: () => m.close() });
       fxSpark($('.gcard', m.body), 10);
     },
-    buypack: () => { if (S.money < GIFT_COST) return toast('Không đủ tiền', 'err'); S.money -= GIFT_COST; S.collection.packs++; sfx('coin'); markDirty('hud', 'panel'); },
+    buypack: () => { if (S.money < GIFT_COST) return toast('Không đủ tiền', 'err'); S.money -= GIFT_COST; S.collection.packs++; sfx('coin'); markDirty('hud', 'panel'); requestSave(); },
   },
 };
 

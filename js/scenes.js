@@ -153,7 +153,7 @@ export function sellSceneHTML(hour = 10) {
   const celestial = tod === 'night' ? '<span class="sc-sun moon">🌙</span>' : tod === 'dusk' ? '<span class="sc-sun dusk">🌅</span>' : '<span class="sc-sun">☀️</span>';
   const rain = wx === 'rain' ? `<div class="sc-rain">${Array.from({ length: 22 }, (_, i) => `<i style="left:${(i * 4.7) % 100}%;animation-delay:${(i % 7) * 0.13}s"></i>`).join('')}</div>` : '';
   return `<div class="sell-scene" id="sellScene" data-loc="${id}" data-tod="${SKY_CLASS[tod]}" data-wx="${wx}" aria-hidden="true">
-    ${celestial}<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice">${SCENES[id]().replace(/(<g class="sc-boat" transform="[^"]*">)/g, '$1<animateTransform attributeName="transform" type="translate" additive="sum" values="-16 0;16 -2;-16 0" dur="12s" repeatCount="indefinite"/>')}</svg>${rain}${deco}
+    ${celestial}<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice">${SCENES[id]().replace(/(<g class="sc-boat" transform="[^"]*">)/g, '$1<animateTransform attributeName="transform" type="translate" additive="sum" values="-24 0;0 -2;24 0" dur="12s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.92;1" dur="12s" repeatCount="indefinite"/>')}</svg>${rain}${deco}
     <span class="sc-clouds"><i>☁️</i><i>☁️</i></span></div>`;
 }
 /** Cập nhật buổi trong ngày theo giờ trong ca (gọi định kỳ). */

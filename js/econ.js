@@ -3,7 +3,7 @@
  */
 import {
   ITEMS, IDS, TEAS, FLAVORS, TOPS, SUPPLIES, FLAVOR_BOTTLE, LOCATIONS, SEASONS, SEASON_ORDER, DAYS_PER_SEASON, WEATHERS, DAY_EVENTS,
-  EQUIP, CATEGORIES, ONLINE_GATE, catCost, STAFF, APPS, PETS, PET_DECOR, ADS, SIZE_L_CAP, QUEUE_BASE, BASE_RENT, BASE_UTILITY, TAX, SECRET_RECIPES,
+  EQUIP, CATEGORIES, ONLINE_GATE, catCost, STAFF, APPS, PETS, PET_CARE, PET_DECOR, ADS, SIZE_L_CAP, QUEUE_BASE, BASE_RENT, BASE_UTILITY, TAX, BANK, BRANCHES, FRANCHISE, LOCATION_COST, PLOTS, plotCost, NPC_FRIENDS, SECRET_RECIPES,
 } from './config.js';
 import { S, emit, markDirty, requestSave, clamp, rand, randInt, pick, wpick, sum } from './core.js';
 
@@ -51,7 +51,7 @@ export const safePrice = () => hasStaff('quanLy');
 export const taxActive = () => Date.now() < S.tax.until;
 export const tabletsOwned = () => equipLevel('tablet');
 export const appsOpen = () => Object.values(S.apps).filter(Boolean).length;
-export const onlineEnabled = () => appsOpen() > 0;
+export const onlineEnabled = () => appsOpen() > 0 && S.rating >= ONLINE_GATE.rating && LOCATIONS[S.location].fx.online !== -1;
 export const secretCount = () => Object.keys(S.collection.secrets).length;
 
 export function petActive() {
@@ -105,6 +105,7 @@ export function bonus() {
   }
   if (taxActive()) { b.traffic += TAX.traffic; b.speedStaff += TAX.speed; b.theft += TAX.theft; b.lucky += TAX.lucky; }
   if (S.social.ad && S.day <= S.social.ad.endsDay) b.traffic += ADS.find((a) => a.id === S.social.ad.id)?.traffic || 0;
+  if (S.social.videoDay === S.day) b.traffic += S.social.videoBuff || 0;
   if (petActive()) {
     const fx = PETS[S.pet.kind]?.fx || {};
     b.bill += fx.bill || 0; b.tip += fx.tip || 0; b.patience += fx.patience || 0; b.branch += fx.branch || 0;
@@ -113,6 +114,9 @@ export function bonus() {
   }
   b.bill += S.crush.perm;
   b.bill += Math.min(0.2, Object.keys(S.collection.owned).length * 0.003);
+  if (S.pet2 && petActive() && S.pet.kind !== 'capybara') add(PETS.capybara.fx);
+  if (S.branches.truong) b.traffic += 0.15;
+  if (S.branches.cnc) b.online += 0.1;
   const active = staffCount();
   b.traffic += Math.min(0.08, active * 0.01);
   return b;
@@ -121,6 +125,7 @@ export function bonus() {
 /* ===== Giá ===== */
 export function priceOf(id) { return S.prices[id] ?? ITEMS[id]?.price ?? 0; }
 export function setPrice(id, v) {
+  if ((id !== 'sizeL' && !ITEMS[id]) || !Number.isFinite(v)) return 'Giá không hợp lệ';
   v = Math.round(v);
   if (id === 'sizeL') v = clamp(v, 0, SIZE_L_CAP);
   else v = clamp(v, 0, 200000);
@@ -136,7 +141,9 @@ export function priceLimit(id) {
 }
 /** Hệ số khách vì giá bán (luật giá: trên ngưỡng → vắng khách). */
 export function priceFactor() {
+  if (safePrice()) return 1;
   let f = 1;
+  if (priceOf('sizeL') >= SIZE_L_CAP || [...TEAS, ...FLAVORS, ...TOPS].some(id => S.onMenu[id] && priceOf(id) > 50000)) f = 0.2;
   const teas = TEAS.filter((t) => S.onMenu[t]);
   for (const t of teas) if (priceOf(t) > priceLimit(t).warn) f = Math.min(f, 0.2);
   const m = safePrice() ? 1.5 : 1;
@@ -151,6 +158,7 @@ export function priceFactor() {
 }
 /** Trọng số chọn món theo giá (hương/topping đắt thì ít ai gọi). */
 export function priceWeight(id) {
+  if (safePrice()) return 1;
   const k = ITEMS[id].kind;
   if (k === 'tea') return priceOf(id) > priceLimit(id).warn ? 0.2 : 1;
   const lim = priceLimit(id);
@@ -162,7 +170,8 @@ export function priceWeight(id) {
 export function sizeLWeight() {
   const p = priceOf('sizeL');
   const lim = priceLimit('sizeL');
-  if (p > lim.hard) return 0;
+  if (p >= lim.hard) return 0;
+  if (safePrice()) return 1;
   return p > lim.warn ? 0.1 : 1;
 }
 
@@ -252,12 +261,14 @@ export function planTotal() {
   return Math.round(sum(Object.entries(S.plan), ([id, n]) => unitCost(id) * n));
 }
 export function setPlan(id, n) {
-  n = clamp(n, 0, 999);
+  if (!ITEMS[id] || !S.unlocked[id] || !Number.isFinite(n)) return 'Nguyên liệu hoặc số lượng không hợp lệ';
+  n = clamp(Math.round(n), 0, 999);
   if (n <= 0) delete S.plan[id]; else S.plan[id] = n;
   markDirty('panel', 'cta');
 }
 /** Nấu & nhập: chi tiền, thêm lô hàng. */
 export function commitPlan() {
+  if (Object.entries(S.plan).some(([id, n]) => !ITEMS[id] || !S.unlocked[id] || !Number.isInteger(n) || n < 0 || n > 999)) return 'Kế hoạch nhập hàng không hợp lệ';
   const total = planTotal();
   if (total <= 0) return 'Chưa chọn gì để nhập';
   if (S.money < total) return 'Không đủ tiền nhập hàng';
@@ -284,8 +295,10 @@ export function openMissing() {
 
 /* ===== Nâng cấp ===== */
 export function buyCategory(key) {
+  if (!CATEGORIES[key]) return 'Hạng mục không hợp lệ';
   const lvl = S.cat[key];
   const cost = catCost(lvl);
+  if (!Number.isFinite(cost)) return 'Đã đạt giới hạn cấp độ';
   if (S.money < cost) return 'Không đủ tiền';
   S.money -= cost;
   S.cat[key]++;
@@ -295,6 +308,7 @@ export function buyCategory(key) {
 }
 export function equipNext(id) {
   const eq = EQUIP.find((e) => e.id === id);
+  if (!eq) return null;
   const lv = equipLevel(id);
   if (lv >= eq.tiers.length) return null;
   return eq.tiers[lv];
@@ -325,7 +339,7 @@ export function buyDecor(id) {
 export function toggleApp(id) {
   const app = APPS.find((a) => a.id === id);
   if (!app) return 'Không có app';
-  if (S.apps[id]) { S.apps[id] = false; markDirty('panel'); return null; }
+  if (S.apps[id]) { S.apps[id] = false; markDirty('panel'); requestSave(); return null; }
   const pr = onlineProgress();
   if (pr.profit < ONLINE_GATE.profit || pr.orders < ONLINE_GATE.orders) return 'Chưa đạt điều kiện mở bán online (lợi nhuận & số đơn)';
   if (S.rating < 4.0) return 'Cần đánh giá từ 4,0★ trở lên';
@@ -339,6 +353,7 @@ export function toggleApp(id) {
 /* ===== Nhân sự ===== */
 export function hireBlock(id) {
   const st = STAFF.find((s) => s.id === id);
+  if (!st) return 'Nhân viên không hợp lệ';
   if (S.staff[id]) return 'Đã thuê';
   for (const ex of st.excl || []) if (S.staff[ex]) return `Không thể thuê cùng ${STAFF.find((s) => s.id === ex).role}`;
   for (const o of STAFF) if ((o.excl || []).includes(id) && S.staff[o.id]) return `Không thể thuê cùng ${o.role}`;
@@ -363,6 +378,7 @@ export function hire(id) {
 }
 export function fire(id) {
   delete S.staff[id];
+  emit('fire', id);
   markDirty('panel');
   requestSave();
 }
@@ -377,14 +393,113 @@ export function expectedCustomers() {
   const b = bonus();
   const rating = 0.8 + clamp(S.rating, 1, 5) * 0.05;
   // Khởi đầu ít khách; tăng dần theo ngày, tiền tích lũy và số nhân viên thuê.
-  const base = 14 + 0.8 * Math.min(S.day, 60) + b.extraCust * 0.5;
+  const base = 14 + 0.8 * Math.min(S.day, 60);
   const wealth = 1 + clamp(Math.log10(Math.max(S.money, 1000) / 1000) * 0.12, 0, 0.6);
   const staffBoost = 1 + Math.min(0.9, staffCount() * 0.15);
-  return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating * wealth * staffBoost));
+  return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating * wealth * staffBoost) + b.extraCust);
 }
 
 /** Tiến độ mở khóa bán online: lợi nhuận tích lũy, tổng đơn, đánh giá. */
 export function onlineProgress() {
-  return { profit: sum(S.history, (x) => x.profit) + (S.today.profit || 0), orders: sum(S.history, (x) => x.cups) + S.today.cups, rating: S.rating };
+  const recorded = S.history.some(x => x.day === S.day);
+  return { profit: sum(S.history, (x) => x.profit) + (recorded ? 0 : S.today.profit || 0), orders: sum(S.history, (x) => x.cups) + (recorded ? 0 : S.today.cups), rating: S.rating };
 }
 export const MAX_SECRET = SECRET_RECIPES.length;
+
+// Transactions validate current state at execution, including confirmation callbacks.
+function commitMenuChange() { markDirty('hud', 'panel', 'board', 'cta', 'tiles'); requestSave(); }
+export function openBranch(id) {
+  const b = BRANCHES.find(x => x.id === id);
+  if (!b) return 'Chi nhánh không hợp lệ';
+  if (S.branches[id]) return 'Chi nhánh đã mở';
+  if (S.money < b.cost) return 'Không đủ tiền';
+  S.money -= b.cost; S.branches[id] = {staff: 0, rev: 0, days: 0}; commitMenuChange(); return null;
+}
+export function setBranchStaff(id, n) {
+  if (!S.branches[id] || !Number.isFinite(n)) return 'Chi nhánh hoặc số lượng không hợp lệ';
+  S.branches[id].staff = clamp(Math.round(n), 0, 3); commitMenuChange(); return null;
+}
+export function sellFranchise() {
+  if (S.franchise.count >= FRANCHISE.max) return 'Đã đạt số điểm nhượng quyền tối đa';
+  if (S.rating < FRANCHISE.needRating || S.followers < FRANCHISE.needFollowers) return 'Chưa đủ uy tín hoặc người theo dõi';
+  S.money += FRANCHISE.fee; S.franchise.count++; commitMenuChange(); return null;
+}
+export function moveShop(id) {
+  if (!LOCATIONS[id]) return 'Địa điểm không hợp lệ';
+  if (S.phase === 'sell') return 'Hãy kết thúc ca trước khi chuyển quán';
+  if (S.location === id) return 'Quán đang ở địa điểm này';
+  if (S.money < LOCATION_COST) return 'Không đủ tiền khởi nghiệp';
+  S.money -= LOCATION_COST; S.location = id; S.forecast = []; ensureForecast();
+  commitMenuChange(); markDirty('view'); return null;
+}
+export function startAd(id) {
+  const ad = ADS.find(x => x.id === id);
+  if (!ad) return 'Chiến dịch không hợp lệ';
+  if (S.social.ad && S.day <= S.social.ad.endsDay) return 'Đang có một chiến dịch hoạt động';
+  if (S.money < ad.cost) return 'Không đủ tiền chạy quảng cáo';
+  S.money -= ad.cost; S.social.ad = {id, endsDay: S.day + ad.days - 1}; S.followers += ad.followers;
+  commitMenuChange(); return null;
+}
+export function recordVideo() {
+  const ad = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find(x => x.id === S.social.ad.id) : null;
+  if (S.social.videosToday >= (ad ? ad.videos : 1)) return 'Đã hết lượt quay video hôm nay';
+  S.social.videosToday++; S.social.videoDay = S.day;
+  S.social.videoBuff = Math.max(S.social.videoBuff || 0, rand(0.02, 0.15)); commitMenuChange(); return null;
+}
+export function visitFriend(id) {
+  if (![...NPC_FRIENDS, ...S.friends.list].some(x => x.id === id)) return 'Bạn bè không hợp lệ';
+  if (S.friends.gifted[id] === S.day) return 'Đã thăm bạn này hôm nay';
+  const gift = randInt(5, 20) * 1000;
+  S.friends.gifted[id] = S.day; S.money += gift; S.followers += randInt(10, 80); commitMenuChange(); return gift;
+}
+export function unlockPlot() {
+  const g = S.garden;
+  if (g.unlocked >= PLOTS) return 'Đã mở toàn bộ mảnh đất';
+  const cost = plotCost(g.unlocked + 1);
+  if (S.money < cost) return 'Không đủ tiền';
+  S.money -= cost; g.unlocked++; commitMenuChange(); return null;
+}
+export function adoptPet(kind) {
+  const p = PETS[kind];
+  if (!p) return 'Thú cưng không hợp lệ';
+  if (kind === 'capybara' && secretCount() < p.secret) return 'Chưa đủ công thức độc bản';
+  if ((kind === 'capybara' && (S.pet2 || (S.pet && S.pet.kind === kind))) || (S.pet && S.pet.kind === kind)) return 'Đã nhận nuôi bé này';
+  if (S.money < p.adopt) return 'Không đủ tiền nhận nuôi';
+  S.money -= p.adopt;
+  if (kind === 'capybara' && S.pet) S.pet2 = {kind};
+  else { if (S.pet && S.pet.kind === 'capybara') S.pet2 = {kind: 'capybara'}; S.pet = {kind, hunger: 80, joy: 80, clean: 80, energy: 80}; }
+  commitMenuChange(); return null;
+}
+export function carePet(id) {
+  const c = PET_CARE.find(x => x.id === id), p = S.pet;
+  if (!p || !c) return 'Chưa có thú cưng hoặc thao tác không hợp lệ';
+  if (S.money < c.cost) return 'Không đủ tiền';
+  S.money -= c.cost; p[c.stat] = clamp(p[c.stat] + c.gain * (S.petDecor.app ? 1.3 : 1), 0, 100);
+  if (id === 'feed' && S.petDecor.bat) { p.hunger = clamp(p.hunger + 20, 0, 100); p.joy = clamp(p.joy + 10, 0, 100); }
+  if (id === 'bath' && S.petDecor.voi) { p.clean = clamp(p.clean + 30, 0, 100); p.joy = clamp(p.joy + 10, 0, 100); }
+  if (id === 'play' && S.petDecor.kim) p.exp = (p.exp || 0) + 10;
+  commitMenuChange(); return null;
+}
+export function payTax() {
+  if (taxActive()) return 'Thuế vẫn còn hiệu lực';
+  S.tax.rate = clamp(Number(S.tax.rate) || TAX.minRate, TAX.minRate, TAX.maxRate);
+  const amount = Math.round(S.money * S.tax.rate);
+  if (amount <= 0) return 'Két trống, chưa có gì để nộp thuế';
+  S.money -= amount; S.tax.paid += amount; S.today.tax += amount;
+  S.tax.last = Date.now(); S.tax.until = S.tax.last + TAX.hours * 3600000;
+  commitMenuChange(); return amount;
+}
+export function depositBank(fraction) {
+  if (![0.1, 0.5, 1].includes(fraction)) return 'Mức gửi không hợp lệ';
+  const amount = Math.min(Math.floor(S.money * fraction), Math.max(0, BANK.max - S.bank.balance));
+  if (amount <= 0) return 'Không còn hạn mức hoặc tiền để gửi';
+  S.money -= amount; S.bank.balance += amount; S.bank.principal = (S.bank.principal || 0) + amount;
+  // New money cannot inherit the maturity of a previous deposit.
+  S.bank.shifts = 0; commitMenuChange(); return amount;
+}
+export function withdrawBank() {
+  const b = S.bank;
+  if (b.balance <= 0) return 'Không có tiền gửi';
+  const amount = b.shifts < BANK.lockShifts ? b.principal || 0 : b.balance;
+  S.money += amount; b.balance = 0; b.principal = 0; b.shifts = 0; commitMenuChange(); return amount;
+}

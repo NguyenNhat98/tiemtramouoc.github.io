@@ -150,7 +150,7 @@ export function bindCta() {
   ctaBound = true;
   bindActions($('#cta'), {
     plan: () => { const e = E.commitPlan(); if (e) { toast(e, 'err'); sfx('error'); } else { sfx('coin'); toast('Đã nấu & nhập nguyên liệu!', 'ok'); } },
-    tokho: () => { goTab('kho'); toast('Vào Kho chọn Trà, Topping, Dụng cụ rồi bấm Nấu & nhập', ''); },
+    tokho: () => { const missing = E.openMissing().miss; S.subtab.kho = missing.includes('Trà') ? 'tra' : missing.includes('Dụng cụ') ? 'dc' : 'top'; goTab('kho'); toast('Vào Kho chọn Trà, Topping, Dụng cụ rồi bấm Nấu & nhập', ''); },
     open: () => {
       S.settings.shiftMin = S.settings.shiftMinNext;
       const e = G.startShift();

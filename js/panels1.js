@@ -9,7 +9,7 @@ import * as E from './econ.js';
 import { toast, fxSpark } from './ui.js';
 
 const subtab = (k, d) => S.subtab[k] || d;
-const tabs = (key, list, def) => `<div class="tabs">${list.map(([id, label]) => `<button class="tab ${subtab(key, def) === id ? 'on' : ''}" data-act="sub" data-k="${key}" data-v="${id}">${label}</button>`).join('')}</div>`;
+const tabs = (key, list, def) => `<div class="tabs scroll">${list.map(([id, label]) => `<button class="tab ${subtab(key, def) === id ? 'on' : ''}" data-act="sub" data-k="${key}" data-v="${id}">${label}</button>`).join('')}</div>`;
 const setSub = (t) => { S.subtab[t.dataset.k] = t.dataset.v; markDirty('panel'); };
 
 /* ===== KHO ===== */
@@ -52,7 +52,6 @@ const kho = {
   },
   bind(root) {
     for (const inp of root.querySelectorAll('[data-plan]')) {
-      inp.addEventListener('focus', () => inp.select());
       inp.addEventListener('change', () => E.setPlan(inp.dataset.plan, Math.round(+inp.value || 0)));
     }
   },
@@ -137,7 +136,7 @@ const nangcap = {
 function equipRow(eq) {
   const lv = E.equipLevel(eq.id), next = E.equipNext(eq.id);
   const cur = lv > 0 ? eq.tiers[lv - 1] : null;
-  return `<div class="erow"><span class="k-ico big">${eq.icon}</span><div class="k-main"><div class="k-t"><b>${eq.name}</b><span class="tier">C${Math.max(lv, 1)}</span></div>
+  return `<div class="erow"><span class="k-ico big">${eq.icon}</span><div class="k-main"><div class="k-t"><b>${eq.name}</b><span class="tier">${lv ? `C${lv}` : 'Chưa mua'}</span></div>
     <small>${cur ? `${cur.n}: ${cur.d}` : 'Chưa sở hữu'}</small>
     <div class="pips">${eq.tiers.map((_, i) => `<i class="${i < lv ? 'on' : ''}"></i>`).join('')}</div>
     ${next ? `<button class="btn sm gold full" data-act="equip" data-id="${eq.id}">Lên C${lv + 1} · ${next.n} · ${fmtK(next.c)}</button>` : '<button class="btn sm ghost full" disabled>Đã đạt cấp tối đa</button>'}</div></div>`;
@@ -145,7 +144,7 @@ function equipRow(eq) {
 function onlineHTML() {
   const pr = E.onlineProgress();
   const bar = (l, v, t, f) => `<div class="gate"><span>${l}</span><div class="bar"><i style="width:${Math.min(100, v / t * 100)}%"></i></div><b>${f(v)}/${f(t)}</b></div>`;
-  const ok = pr.profit >= ONLINE_GATE.profit && pr.orders >= ONLINE_GATE.orders;
+  const ok = pr.profit >= ONLINE_GATE.profit && pr.orders >= ONLINE_GATE.orders && pr.rating >= ONLINE_GATE.rating;
   return `${catCard('online')}
     <div class="catcard col"><h4>📲 Mở bán Online (${APPS.map((a) => a.name).join(', ')})</h4>
       ${bar('💰 lợi nhuận', pr.profit, ONLINE_GATE.profit, (x) => fmtK(Math.max(0, x)))}${bar('🧋 đơn', pr.orders, ONLINE_GATE.orders, (x) => x)}${bar('⭐ đánh giá', pr.rating, ONLINE_GATE.rating, (x) => x.toFixed(1))}

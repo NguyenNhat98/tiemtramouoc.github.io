@@ -11,6 +11,7 @@ import * as E from './econ.js';
 import * as EV from './events.js';
 
 export const SH = { on: false };
+on('fire', id => { if (SH.jobs) SH.jobs = SH.jobs.filter(job => job.by !== id); if (SH.board && SH.board.auto && SH.board.auto.st.id === id) { SH.board.pouring = false; SH.board.auto = null; SH.board.autoDone = true; } });
 registerSaveHook(() => {
   S.shiftRuntime = S.phase === 'sell' && SH.on ? JSON.parse(JSON.stringify(SH)) : null;
 });
@@ -103,7 +104,7 @@ function newCustomer(opts = {}) {
   const maxP = (62 * a.patience * (1 + b.patience)) * (opts.online ? 1.2 : 1);
   return {
     id: cid++, key, tag: a.tag, avatar: pick(a.avatars), order, text: orderText(a, order),
-    p: maxP, maxP, online: !!opts.online, app: opts.app || null, hard: a.hard + b.hardCust - b.badRev, born: SH.t,
+    p: maxP, maxP, online: !!opts.online, app: opts.app || null, hard: clamp(a.hard + b.hardCust - b.badRev + (S.location === 'hcm' && SH.hour >= 20 ? 0.1 : 0), 0, 1), born: SH.t,
   };
 }
 
@@ -180,9 +181,11 @@ const REV_TEXT = {
   1: ['Sai hẳn món mình gọi, buồn ghê.', 'Chờ mãi không tới lượt, mình về đây.', 'Trải nghiệm tệ, mong quán rút kinh nghiệm.'],
 };
 export function pushReview(c, stars, text) {
+  const reply = S.staff.meKetTinh ? 'Cảm ơn bạn đã ghé quán! Tiệm đã ghi nhận góp ý và mong được phục vụ bạn tốt hơn.' : null;
+  if (reply) stars = Math.min(5, stars + 1);
   const weight = c.key === 'reviewer' ? 3 : 1;
   for (let i = 0; i < weight; i++) {
-    S.reviews.unshift({ stars, name: c.tag, av: c.avatar, text: text || pick(REV_TEXT[stars]), day: S.day });
+    S.reviews.unshift({ stars, name: c.tag, av: c.avatar, text: text || pick(REV_TEXT[stars]), reply, day: S.day });
   }
   if (S.reviews.length > 200) S.reviews.length = 200;
   S.ratingCount += 1;
@@ -255,9 +258,10 @@ export function sealCup() {
   if (!b || b.phase !== 'cup') return 'Chưa có ly để đóng nắp';
   if (!b.tea || b.fill < 0.2) return 'Ly chưa có trà';
   const blk = EV.blocked('seal'); if (blk) return blk;
+  if (b.auto) return 'Nhân viên đang pha, hãy đợi hoàn tất';
   if (b.pouring) stopPour();
-  if (E.stockQty('da') > 0) E.take('da', 1);
-  if (E.stockQty('duong') > 0) E.take('duong', 1);
+  if (!b.iceAdded && E.stockQty('da') > 0) { E.take('da', 1); b.iceAdded = true; }
+  if (!b.sugarAdded && E.stockQty('duong') > 0) { E.take('duong', 1); b.sugarAdded = true; }
   b.phase = 'sealing';
   b.sealT = 1.2 * (1 - E.bonus().seal);
   b.sealMax = b.sealT;
@@ -321,7 +325,8 @@ function settle(c, board, stars, issues, byStaff, discount = false) {
   const bn = E.bonus();
   const unit = E.priceOf(board.tea) + (board.flavor ? E.priceOf(board.flavor) : 0) + sum(board.tops, (t) => E.priceOf(t)) + (board.size === 'L' ? E.priceOf('sizeL') : 0);
   const arch = ARCHETYPES[c.key];
-  let bill = unit * PAY[stars] * arch.bill * (1 + bn.bill + (bn.billTeas[board.tea] || 0));
+  const localBill = bn.billTeas[board.tea] || (S.location === 'bmt' && board.tops.some(id => id === 'fCheese' || id === 'tcDen') ? 0.2 : 0);
+  let bill = unit * PAY[stars] * arch.bill * (1 + bn.bill + localBill);
   if (SH.hour >= 20) bill *= 1 + bn.lateBill;
   if (c.online) bill *= 1.15;
   if (discount) bill *= 0.7; // bán rẻ vì ly sai order
@@ -331,7 +336,7 @@ function settle(c, board, stars, issues, byStaff, discount = false) {
   if (stars >= 4) {
     const coldPen = ITEMS[board.tea].temp === 'cold' ? bn.coldTip : 0;
     tip = bill * 0.12 * arch.tip * (stars === 5 ? 1.5 : 1) * Math.max(0, 1 + bn.tip + coldPen);
-    if (byStaff) tip *= 0.5;
+    if (byStaff && board.by === 'phaChe') tip = 0; // This employee keeps the tip, as stated on the hiring card.
   }
   let pay = Math.round(bill);
   tip = Math.round(tip);
@@ -350,7 +355,7 @@ function settle(c, board, stars, issues, byStaff, discount = false) {
   removeCust(c);
   // Ngồi sảnh
   let seat = null;
-  if (!c.online && !byStaff && chance(0.4)) {
+  if (!c.online && !byStaff && chance(0.4 + Math.max(0, E.equipLevel('banGhe') - 1) * 0.1)) {
     const free = SH.tables.findIndex((t) => t.s === 'free');
     if (free >= 0) { SH.tables[free] = { s: 'busy', t: rand(16, 28), av: c.avatar }; seat = free; const extra = Math.round(bill * 0.1); S.money += extra; S.today.rev += extra; SH.rev += extra; }
   }
@@ -396,8 +401,19 @@ function staffStep(dt) {
   const speedMul = 1 / (1 + b.speedStaff) * (S.staff.meKetTinh ? 0.8 : 1);
   for (const st of STAFF) {
     if (!S.staff[st.id]) continue;
-    if (st.kind === 'auto' || st.kind === 'online') {
+    if (st.kind === 'marketing') {
+      if (!E.taxActive() && S.money > 0) E.payTax();
+      SH.staffT[st.id] = (SH.staffT[st.id] || 0) - dt;
+      if (SH.staffT[st.id] <= 0) {
+        SH.staffT[st.id] = 20;
+        if (!E.recordVideo()) { S.followers += randInt(1500, 6000); S.social.posts.unshift(genPost()); S.social.posts = S.social.posts.slice(0, 10); markDirty('panel', 'hud'); requestSave(); }
+      }
+    } else if (st.kind === 'auto' || st.kind === 'online' || st.kind === 'night') {
       const key = st.id;
+      if (st.kind === 'online' && E.onlineEnabled() && SH.onlineQ.length) acceptOnline(SH.onlineQ[0].id);
+      const runtime = SH.staffT[key] || (SH.staffT[key] = {done: 0, sulk: 0});
+      if (runtime.sulk > 0) { runtime.sulk -= dt; if (runtime.sulk <= 0) { E.fire(key); emit('staff:quit', st); } continue; }
+      if (st.kind === 'night' && !(SH.hour >= 22 || SH.hour < 6)) continue;
       const busy = SH.jobs.find((j) => j.by === key);
       if (busy) {
         busy.t -= dt;
@@ -412,14 +428,14 @@ function staffStep(dt) {
       if (cand) {
         const need = needs(cand.order);
         if (!canTake(need)) continue;
-        SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul });
+        SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 0.005)) });
         for (const [id, n] of need) E.take(id, n);
       }
     } else if (st.kind === 'buyer') {
       SH.buyT += dt;
       if (SH.buyT >= 4) {
         SH.buyT = 0;
-        const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), 'lyM', 'lyL', 'da', 'duong'];
+        const want = [...TEAS.filter((t) => S.onMenu[t]), ...FLAVORS.filter((t) => S.onMenu[t] && S.unlocked[t]), ...TOPS.filter((t) => S.onMenu[t]), 'lyM', 'lyL', 'da', 'duong'];
         for (const id of want) {
           if (E.stockQty(id) === 0) {
             const q = 8, cost = Math.round(E.unitCost(id) * q * 1.1);
@@ -438,19 +454,85 @@ function finishJob(job, st, b) {
   const err = clamp(st.err * (1 - b.errReduce), 0, 1);
   const board = { tea: c.order.tea, size: c.order.size, flavor: c.order.flavor, tops: [...c.order.tops], fill: 1, spill: 0, phase: 'ready' };
   let forceStars = null;
-  if (chance(err)) { board.size = board.size === 'M' ? 'L' : 'M'; forceStars = 3; }
-  serveStaff(c, board, forceStars);
+  if (st.kind === 'online' && chance(err)) {
+    // Ingredients were consumed when the job started. Retry only after a new set is available.
+    emit('staff:retry', st); return;
+  }
+  if (st.kind !== 'online' && chance(err)) { board.size = board.size === 'M' ? 'L' : 'M'; forceStars = 3; }
+  const result = serveStaff(c, board, forceStars, st);
+  const runtime = SH.staffT[st.id];
+  if (runtime && typeof runtime === 'object') { runtime.done++; if (st.id === 'genZ' && runtime.done % 100 === 0) runtime.sulk = 10; }
+  if (st.id === 'genZ' && !S.staff.chuBa && runtime && !runtime.billTaken) {
+    runtime.billTaken = true; runtime.hiddenBill = result.pay;
+    S.money -= result.pay; S.today.rev -= result.pay; SH.rev -= result.pay;
+    emit('staff:bill', st); markDirty('hud'); requestSave();
+  }
 }
-function serveStaff(c, board, forceStars) {
+function serveStaff(c, board, forceStars, st) {
+  board.by = st.id;
   const ev = evaluate(board, c);
-  settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
+  return settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
+}
+
+// The counter assistant works on this cup's customer, never the next selected order.
+function advanceCounterStaff(bd, dt, bonus) {
+  if (bd.phase !== 'cup') { bd.auto = null; return; }
+  if (!bd.auto && !bd.autoDone) {
+    const st = STAFF.find(s => S.staff[s.id] && (s.kind === 'manager' || s.kind === 'pour'));
+    const c = frontCustomer();
+    if (st && c) bd.auto = { cid: c.id, t: 0.6, st, topsLeft: st.kind === 'manager' ? [...c.order.tops] : [] };
+  }
+  const a = bd.auto;
+  if (!a) return;
+  const c = SH.queue.find(c => c.id === a.cid);
+  if (!c || !S.staff[a.st.id]) { if (bd.pouring) stopPour(); bd.auto = null; bd.autoDone = true; return; }
+  a.stage = a.stage || 'tea';
+  if (a.stage === 'tea' && EV.blocked('pump')) { bd.pouring = false; return; }
+  a.t -= dt;
+  if (a.stage === 'pour') {
+    if (EV.blocked('pump')) { bd.pouring = false; return; }
+    if (bd.fill < a.target) { bd.pouring = true; return; }
+    stopPour(); a.stage = 'flavor'; a.t = 0.45;
+  }
+  if (a.t > 0) return;
+  const takeOnce = (id, flag) => {
+    if (bd[flag]) return true;
+    if (E.stockQty(id) < 1) { a.waiting = ITEMS[id].name; return false; }
+    E.take(id, 1); bd[flag] = true; a.waiting = null; return true;
+  };
+  if (a.stage === 'tea') {
+    if (!bd.tea) { const err = startPour(c.order.tea); if (err) { a.waiting = err; return; } }
+    a.target = chance(a.st.err * (1 - bonus.errReduce)) ? 0.6 : 0.95;
+    a.stage = 'pour'; bd.pouring = true; a.waiting = null;
+  } else if (a.stage === 'flavor') {
+    if (c.order.flavor && !bd.flavor) { const err = addFlavor(c.order.flavor); if (err) { a.waiting = err; return; } }
+    a.stage = 'sugar'; a.t = 0.45;
+  } else if (a.stage === 'sugar') {
+    if (!takeOnce('duong', 'sugarAdded')) return;
+    emit('staff:ingredient', 'duong'); a.stage = 'ice'; a.t = 0.45;
+  } else if (a.stage === 'ice') {
+    if (!takeOnce('da', 'iceAdded')) return;
+    emit('staff:ingredient', 'da'); a.stage = 'topping'; a.t = 0.45;
+  } else if (a.stage === 'topping') {
+    const id = a.topsLeft[0];
+    if (id) {
+      if (!bd.tops.includes(id)) { const err = addTop(id); if (err) { a.waiting = err; return; } }
+      a.topsLeft.shift(); a.t = 0.45;
+    } else { bd.auto = null; bd.autoDone = true; emit('auto:pour'); }
+  }
+}
+export function comfortStaff(id) {
+  const runtime = SH.staffT[id];
+  if (!runtime || typeof runtime !== 'object' || (!(runtime.sulk > 0) && !(runtime.hiddenBill > 0))) return false;
+  if (runtime.hiddenBill > 0) { S.money += runtime.hiddenBill; S.today.rev += runtime.hiddenBill; SH.rev += runtime.hiddenBill; runtime.hiddenBill = 0; markDirty('hud'); requestSave(); }
+  runtime.sulk = 0; emit('staff:comfort', id); return true;
 }
 
 /* ===== Cập nhật mỗi frame ===== */
 export function updateShift(dt) {
   if (!SH.on || S.phase !== 'sell') return;
   SH.t += dt;
-  SH.hour = SHIFT_START_H + (Math.min(SH.t, SH.total) / SH.total) * (SHIFT_END_H - SHIFT_START_H);
+  SH.hour = SH.t <= SH.total ? SHIFT_START_H + SH.t / SH.total * (SHIFT_END_H - SHIFT_START_H) : (22 + Math.min(8, (SH.t - SH.total) / 22 * 8)) % 24;
   EV.update(dt);
   const b = E.bonus();
   const maxQ = b.queue;
@@ -483,36 +565,17 @@ export function updateShift(dt) {
   // thớt
   const bd = SH.board;
   if (bd) {
-    if (bd.pouring) {
+    if (bd.pouring && !EV.blocked('pump')) {
       const rate = 0.55 * (1 + b.pour + b.speedStaff);
       bd.fill += rate * dt;
-      if (bd.fill > 1.0) { bd.spill += (bd.fill - 1.0) * 0.5; }
+      if (bd.fill > 1.0) { bd.spill += (bd.fill - 1.0) * 0.5 * (E.equipLevel('binhRot') >= 3 ? 0.5 : 1); }
       if (bd.fill >= 1.25) { bd.fill = 1.25; bd.pouring = false; emit('pour:stop'); }
     }
     if (bd.phase === 'sealing' && !EV.blocked('seal')) {
       bd.sealT -= dt;
       if (bd.sealT <= 0) { bd.phase = 'ready'; emit('seal:done'); }
     }
-    if (bd.auto && !EV.blocked('pump')) {
-      const a = bd.auto;
-      a.t -= dt;
-      const c = SH.queue.find((x) => x.id === a.cid);
-      if (!c) bd.auto = null;
-      else if (a.t <= 0) {
-        if (!bd.tea && E.stockQty(c.order.tea) > 0) {
-          E.take(c.order.tea, 1); bd.tea = c.order.tea;
-          const error = chance(a.st.err * (1 - b.errReduce));
-          bd.fill = error ? 0.6 : 0.95;
-          if (c.order.flavor && E.stockQty(c.order.flavor) > 0 && !bd.flavor) { E.take(c.order.flavor, 1); bd.flavor = c.order.flavor; }
-          emit('auto:pour');
-          a.t = 0.7;
-        } else if (a.topsLeft.length) {
-          const t = a.topsLeft.shift();
-          if (E.stockQty(t) > 0 && !bd.tops.includes(t)) { E.take(t, 1); bd.tops.push(t); emit('top', t); }
-          a.t = 0.5;
-        } else bd.auto = null;
-      }
-    }
+    advanceCounterStaff(bd, dt, b);
   }
   // bàn
   for (let i = 0; i < SH.tables.length; i++) {
@@ -554,31 +617,35 @@ function franchiseDaily() {
   const n = S.franchise.count;
   if (!n) return 0;
   const bn = E.bonus();
-  return Math.round(sum(Array.from({ length: n }), () => rand(FRANCHISE.revRange[0], FRANCHISE.revRange[1]) * FRANCHISE.royalty * (1 + bn.branch)));
+  const ad = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find(a => a.id === S.social.ad.id) : null;
+  return Math.round(sum(Array.from({ length: n }), () => rand(FRANCHISE.revRange[0], FRANCHISE.revRange[1]) * FRANCHISE.royalty * (1 + bn.branch + (ad ? ad.branch : 0))));
 }
 function finishShift(early) {
   if (SH.fin) return;
   SH.fin = true;
   SH.on = false;
   const T = S.today;
-  // Nhân viên ca đêm xử lý nốt: bỏ qua
   const ex = E.expireStock();
   T.rent = E.rentToday();
   T.util = E.utilityToday();
-  T.wage = E.staffWagePerDay() + (S.staff.chuBa ? Math.round(T.rev * 0.01) : 0);
+  const nightWorked = SH.staffT.svDem && SH.staffT.svDem.done > 0;
+  T.wage = E.staffWagePerDay() - (S.staff.svDem && !nightWorked ? STAFF.find(s => s.id === 'svDem').wage : 0) + (S.staff.chuBa ? Math.round(T.rev * 0.01) : 0) + (S.staff.phaChe ? Math.round(Math.min(8, SH.over / 22 * 8) * 40000) : 0);
+  S.kpi.payable = (S.kpi.payable || 0) + T.wage;
   const br = branchDaily();
   T.branch = Math.round(br.net);
   T.fran = franchiseDaily();
   let interest = 0;
-  if (S.bank.balance > 0) { interest = Math.round(S.bank.balance * BANK.interest * (S.rating >= 4.5 ? 1 + BANK.starBonus : 1)); S.bank.balance = Math.min(BANK.max, S.bank.balance + interest); S.bank.shifts++; }
+  if (S.bank.balance > 0) { const rate = BANK.interest * (1 + (S.rating >= 4.5 ? BANK.starBonus : 0) + (S.bank.balance > 1e9 ? BANK.bigBonus : 0)); interest = Math.min(BANK.max - S.bank.balance, Math.round(S.bank.balance * rate)); S.bank.balance += interest; S.bank.shifts++; }
   T.interest = interest;
-  S.money = Math.max(0, S.money - T.rent - T.util - T.wage + T.branch + T.fran);
+  T.payrollCash = S.kpi.shifts + 1 >= 7 ? Math.min(Math.max(0, S.money + T.branch + T.fran - T.rent - T.util), S.kpi.payable) : 0;
+  S.kpi.payable -= T.payrollCash;
+  S.money = Math.max(0, S.money - T.rent - T.util - T.payrollCash + T.branch + T.fran);
   T.profit = T.rev + T.tips - T.cogs - T.rent - T.util - T.wage - T.tax - (T.fine || 0) + T.branch + T.fran + T.interest;
   T.avgStars = T.stars.length ? sum(T.stars) / T.stars.length : 0;
   T.expired = ex.list; T.expiredCost = Math.round(ex.waste);
   T.cash = S.money;
   T.event = S.eventId; T.weather = S.weather;
-  S.history.push({ day: S.day, rev: T.rev + T.tips, cogs: T.cogs, rent: T.rent, util: T.util, wage: T.wage, tax: T.tax, branch: T.branch, fran: T.fran, interest, profit: T.profit, cups: T.cups, left: T.left, stars: T.avgStars, online: T.online, event: S.eventId });
+  S.history.push({ day: S.day, rev: T.rev + T.tips, cogs: T.cogs, rent: T.rent, util: T.util, wage: T.wage, payrollCash: T.payrollCash, fine: T.fine || 0, tax: T.tax, branch: T.branch, fran: T.fran, interest, profit: T.profit, cups: T.cups, left: T.left, stars: T.avgStars, online: T.online, event: S.eventId });
   if (S.history.length > 400) S.history.shift();
   S.kpi.shifts++;
   for (const k of Object.keys(S.staff)) S.staff[k].shifts = (S.staff[k].shifts || 0) + 1;
@@ -598,6 +665,9 @@ export function nextDay() {
   S.today = freshToday();
   S.lastUsed = {};
   S.social.videosToday = 0;
+  S.social.videoBuff = 0; S.social.videoDay = S.day;
+  const ad = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find(a => a.id === S.social.ad.id) : null;
+  if (ad) { for (let i = 0; i < ad.posts; i++) S.social.posts.unshift(genPost()); S.social.posts = S.social.posts.slice(0, 10); }
   S.pearl.playsDay = 0;
   S.crush.playedToday = false;
   // vườn

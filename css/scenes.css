@@ -66,7 +66,27 @@
 /* dải cảnh nhìn rõ: chừa khoảng trống dưới hàng khách chờ để thấy địa danh, bong bóng order hơi trong suốt */
 .sell-scene { height: 168px; }
 .sell-scene svg { height: 168px; }
-.sell > .queue-row { margin-bottom: 74px; }
+.sell > .queue-row { margin-bottom: 44px; }
 .sell .bubble { background: rgba(255, 252, 246, .9); }
-@media (max-height: 800px) { .sell-scene, .sell-scene svg { height: 140px; } .sell > .queue-row { margin-bottom: 48px; } }
-@media (max-height: 690px) { .sell-scene, .sell-scene svg { height: 110px; } .sell > .queue-row { margin-bottom: 22px; } }
+@media (max-height: 800px) { .sell-scene, .sell-scene svg { height: 140px; } .sell > .queue-row { margin-bottom: 28px; } }
+@media (max-height: 690px) { .sell-scene, .sell-scene svg { height: 110px; } .sell > .queue-row { margin-bottom: 12px; } }
+/* Keep the counter scrollable on short phones and respect directional sprites. */
+.sell { height: auto; min-height: 100%; overflow: visible; padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+.sell > .foot { flex: none; padding: 4px 0 8px; }
+.shelf-row { grid-template-columns: auto minmax(0, 1fr); gap: 3px; margin-top: 0; padding: 0; }
+.shelf-row::after { margin-top: -4px; }
+.shelf .stacks { gap: 3px; }
+
+.sc-eq.moto { left: auto; right: -12%; animation: scMotoForward 14s linear infinite; }
+@keyframes scMotoForward { to { transform: translateX(-120vw); } }
+.sc-clouds { position: absolute; inset: 0; }
+.sc-clouds i { animation-name: scCloudForward; }
+@keyframes scCloudForward { from { transform: translateX(0); } to { transform: translateX(650px); } }
+.sell-scene::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 80% 10%, #fff8 0, transparent 52%); animation: sceneGlow 8s ease-in-out infinite; }
+@keyframes sceneGlow { 50% { opacity: .45; } }
+.staff-strip .staff-sprite { width: 26px; height: 26px; border-radius: 50%; }
+.sc-av { width: 54px; height: 54px; flex: none; padding: 3px; border-radius: 16px; background: linear-gradient(135deg,#ffe2c9,#ffe7f0); overflow: hidden; }
+.sc-av .sale-art { width: 100%; height: 100%; }
+@media (prefers-reduced-motion: reduce) { .sc-eq.moto, .sc-clouds i, .sell-scene::before { animation: none; } }
+.app[data-phase="sell"] .view { overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+.sell > .foot { position: sticky; bottom: 0; z-index: 8; background: #D8BC96; border-radius: 10px; }

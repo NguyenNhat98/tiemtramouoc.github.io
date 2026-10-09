@@ -1,3 +1,4 @@
+import { staffArt } from './sell-art.js';
 /**
  * Màn hình bán hàng: khách + bong bóng thoại, quầy trà, thớt pha ly, khay topping, máy đóng nắp,
  * sảnh bàn ghế. Mọi bước đều có hiệu ứng (lấy ly, rót trà, bỏ topping, đóng nắp, giao ly).
@@ -95,7 +96,7 @@ export function renderSell() {
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra sảnh → <span id="lobbyCnt">0/0</span></button></div>
-    <div class="stream" id="stream"><i class="st-gloss"></i><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></div>
+    <div class="stream" id="stream" aria-hidden="true"><span class="st-jet"><i class="st-gloss"></i></span><span class="st-impact"><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></span></div>
   </div>`;
   root = $('#sell');
   fillTrays();
@@ -103,15 +104,18 @@ export function renderSell() {
   refreshQueue();
   refreshCustomer();
   bindActions(root, sellActs);
-  $('#staffStrip')?.addEventListener('click', (e) => { const b = e.target.closest('.stf'); if (!b) return; sfx('click'); b.classList.add('tip'); clearTimeout(b._tm); b._tm = setTimeout(() => b.classList.remove('tip'), 1800); });
+  $('#staffStrip')?.addEventListener('click', (e) => { const b = e.target.closest('.stf'); if (!b) return; if (G.comfortStaff(b.dataset.stf)) sfx('success'); else sfx('click'); b.classList.add('tip'); clearTimeout(b._tm); b._tm = setTimeout(() => b.classList.remove('tip'), 1800); });
   frameSell(0, true);
 }
 /* ===== Nhân viên đã thuê hiện ngay trên quầy: đang pha (vòng tiến độ) hay đang rảnh ===== */
 const STAFF_ICON = { thuViec: '🦊', phaChe: '🐰', online: '🐼', quanLy: '🐻', genZ: '🦄', svDem: '🦉', meKetTinh: '🦋', diCho: '🧺', chuBa: '👮' };
-const staffStripHTML = () => STAFF.filter((st) => S.staff[st.id]).map((st) => `<button class="stf idle" data-stf="${st.id}" data-tip="${esc(st.name)}" aria-label="${esc(st.name)}">${STAFF_ICON[st.id] || st.icon}<b></b></button>`).join('');
+const staffStripHTML = () => STAFF.filter((st) => S.staff[st.id]).map((st) => `<button class="stf idle" data-stf="${st.id}" data-tip="${esc(st.name)}" aria-label="${esc(st.name)}">${staffArt(st.id)}<b></b></button>`).join('');
 function staffStatus(st) {
+  const auto = SH.board && SH.board.auto; if (auto && auto.st.id === st.id) return {cls:"work",p:60,txt:`${st.name}: ${auto.waiting || auto.stage || "chuẩn bị pha"}`};
+  const mood = SH.staffT[st.id]; if (mood && (mood.sulk > 0 || mood.hiddenBill > 0)) return {cls:"sulk",p:0,txt:`${st.name}: ${mood.hiddenBill > 0 ? 'đang giữ bill, chạm để thu lại' : 'đang dỗi, chạm để dỗ trước khi nghỉ việc'}`};
   const job = SH.jobs.find((j) => j.by === st.id);
   if (job) return { cls: 'work', p: clamp((1 - job.t / Math.max(0.5, st.sec)) * 100, 4, 100), txt: `${st.name}: đang pha món cho khách` };
+  if (st.kind === 'night') return {cls: 'idle', p: 0, txt: `${st.name}: chỉ làm sau 22h đến 6h`};
   if (st.kind === 'auto' || st.kind === 'online') return { cls: 'idle', p: 0, txt: `${st.name}: ${st.kind === 'online' ? 'chờ đơn online' : 'đang rảnh, chờ khách'}` };
   if (st.kind === 'buyer') return { cls: 'idle', p: 0, txt: `${st.name}: canh kho, hết hàng sẽ đi chợ` };
   if (st.id === 'chuBa') return { cls: 'idle', p: 0, txt: `${st.name}: đang canh gác quán` };
@@ -123,7 +127,7 @@ function updateStaffStrip() {
     const st = STAFF.find((x) => x.id === el.dataset.stf);
     if (!st) continue;
     const s = staffStatus(st);
-    el.classList.toggle('work', s.cls === 'work'); el.classList.toggle('idle', s.cls !== 'work');
+    el.classList.toggle('sulk', s.cls === 'sulk'); el.classList.toggle('work', s.cls === 'work'); el.classList.toggle('idle', s.cls !== 'work');
     el.style.setProperty('--p', s.p.toFixed(0));
     el.dataset.tip = s.txt;
   }
@@ -375,6 +379,7 @@ on('seal:start', () => { updateBoard(true); sealAnim(); });
 on('seal:done', () => { sfx('ding'); updateBoard(true); const cs = $('#cupslot'); if (cs) { fxSpark({ x: cs.getBoundingClientRect().left + cs.offsetWidth / 2, y: cs.getBoundingClientRect().top + cs.offsetHeight * 0.35 }, 6); cs.classList.remove('plop'); void cs.offsetWidth; cs.classList.add('plop'); } const s = $('#sealer'); s?.classList.add('ding'); setTimeout(() => s?.classList.remove('ding'), 600); });
 on('top', () => updateBoard(true));
 on('flavor', () => updateBoard(true));
+on("staff:ingredient", (id) => { dropFx(document.querySelector("#staffStrip .stf.work") || document.querySelector("#sealer"), ITEMS[id].color); sfx("plop"); });
 on('auto:pour', () => updateBoard(true));
 on('trash', () => updateBoard(true));
 on('queue', () => { if (SH.on && S.phase === 'sell' && SH.view === 'counter') { refreshQueue(); refreshCustomer(); } });
@@ -407,7 +412,7 @@ function refreshCustomer() {
   av.classList.remove('enter'); bub.classList.remove('enter'); void av.offsetWidth; av.classList.add('enter'); bub.classList.add('enter');
   const o = c.order;
   av.innerHTML = `<span class="face">${c.online ? c.avatar : customerArt(c.key) || c.avatar}</span>`;
-  bub.innerHTML = `<button class="rej" data-act="reject" aria-label="Từ chối đơn">✖ Từ chối</button><div class="b-row">${orderCup(o)}<div><span class="atag">${esc(c.tag)}</span><div class="btxt">${esc(c.text)}</div></div></div>
+  bub.innerHTML = `<div class="order-head"><span class="atag">${esc(c.tag)}</span><button class="rej" data-act="reject" aria-label="Từ chối đơn của ${esc(c.tag)}">✖ Từ chối</button></div><div class="b-row">${orderCup(o)}<div><div class="btxt" tabindex="0" aria-label="Nội dung đơn hàng">${esc(c.text)}</div></div></div>
     <div class="pat"><span>KIÊN NHẪN</span><div class="bar" id="patBar"><i style="width:${(c.p / c.maxP * 100).toFixed(0)}%"></i></div></div>`;
 }
 function updateBoard(force) {
@@ -441,6 +446,8 @@ function updateLobbyBtn() {
   $('#lobbyGo')?.classList.toggle('alert', dirty > 0);
 }
 function hintText() {
+  const auto = SH.board && SH.board.auto; if (auto) { const labels = {tea:"chọn trà",pour:"rót trà",flavor:"thêm hương",sugar:"thêm đường",ice:"thêm đá",topping:"thêm topping"}; return `${auto.st.name}: ${auto.waiting || labels[auto.stage] || "chuẩn bị pha"}`; }
+
   if (!S.settings.hints) return '';
   const c = G.frontCustomer();
   if (!c) return 'Chờ khách ghé quầy...';
@@ -479,8 +486,9 @@ export function frameSell(dt, force) {
   const st = $('#stream');
   const b = SH.board;
   const slot = $('#cupslot');
-  slot?.classList.toggle('pouring-art', !!b?.pouring);
-  if (b?.pouring && b.tea && slot) {
+  const pouring = !!b?.pouring && canShowBrewFx();
+  slot?.classList.toggle('pouring-art', pouring);
+  if (pouring && b.tea && slot) {
     const d = $(`.disp[data-tea="${b.tea}"] .tap`);
     if (d && st) {
       const a = d.getBoundingClientRect(), r0 = root.getBoundingClientRect();
@@ -492,8 +500,7 @@ export function frameSell(dt, force) {
         const cupEl = slot.querySelector('.cup');
         const cupW = cupEl ? cupEl.offsetWidth : 60, cupH = cupEl ? cupEl.offsetHeight : 80;
         const cupTop = baseT + slot.offsetHeight - 6 - cupH;
-        const vw = document.documentElement.clientWidth;
-        const cx = clamp(tapX, br.left + cupW / 2 + 8, br.right - cupW / 2 - 8);
+        const cx = clamp(tapX, r0.left + cupW / 2 + 8, r0.right - cupW / 2 - 8);
         const nx = Math.round(cx - (baseL + slot.offsetWidth / 2)), ny = 0;
         slot.style.transform = `translate(${nx}px,${ny}px)`;
         slot.classList.add('under-tap');
@@ -511,7 +518,8 @@ export function frameSell(dt, force) {
         const dx = mouth.left + mouth.width / 2 - tapX, dy = Math.max(10, surfaceY - a.bottom);
         const len = Math.hypot(dx, dy);
         const rim = clamp((rimY - a.bottom) / dy, 0, 1) * 100;
-        st.style.cssText = `display:block;left:${tapX - 3.5 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${len}px;--rim:${rim.toFixed(1)}%;transform-origin:50% 0;transform:rotate(${-Math.atan2(dx, dy) * 180 / Math.PI}deg);background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+        const angle = -Math.atan2(dx, dy) * 180 / Math.PI;
+        st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - r0.top}px;height:${len}px;--rim:${rim.toFixed(1)}%;--tea:${ITEMS[b.tea].color};--impact-angle:${-angle}deg;transform-origin:50% 0;transform:rotate(${angle}deg);color:${ITEMS[b.tea].color}`;
         if (performance.now() - P.lastSfx > 1100) { P.lastSfx = performance.now(); sfx('pour'); }
       } else st.style.display = 'none';
     }

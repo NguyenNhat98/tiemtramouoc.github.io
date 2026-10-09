@@ -393,7 +393,7 @@
     { id: "xeMay", icon: "\u{1F6F5}", name: "Xe m\xE1y giao h\xE0ng", tiers: [{ n: "Xe m\xE1y c\u0169", c: 8e5, d: "\u0110\u01A1n online +10%" }, { n: "Xe m\xE1y \u0111i\u1EC7n", c: 6e6, d: "\u0110\u01A1n online +20%" }, { n: "\u0110\u1ED9i xe giao 3 ng\u01B0\u1EDDi", c: 25e6, d: "\u0110\u01A1n online +35%" }], key: "online", vals: [0.1, 0.2, 0.35] },
     { id: "qcMxh", icon: "\u{1F4F2}", name: "Qu\u1EA3ng c\xE1o m\u1EA1ng x\xE3 h\u1ED9i", tiers: [{ n: "Fanpage c\u01A1 b\u1EA3n", c: 5e5, d: "Kh\xE1ch +3%, follower t\u0103ng \u0111\u1EC1u" }, { n: "K\xEAnh TikTok chuy\xEAn nghi\u1EC7p", c: 5e6, d: "Kh\xE1ch +6%, follower nhanh h\u01A1n" }, { n: "Agency ch\u0103m s\xF3c k\xEAnh", c: 22e6, d: "Kh\xE1ch +10%, follower r\u1EA5t nhanh" }], key: "traffic", vals: [0.03, 0.06, 0.1] },
     { id: "quay", icon: "\u{1F4D0}", name: "M\u1EDF r\u1ED9ng qu\u1EA7y", tiers: [{ n: "Qu\u1EA7y d\xE0i th\xEAm 1m", c: 5e5, d: "H\xE0ng ch\u1EDD t\u1ED1i \u0111a 6 kh\xE1ch" }, { n: "Qu\u1EA7y ch\u1EEF L", c: 45e5, d: "H\xE0ng ch\u1EDD t\u1ED1i \u0111a 7 kh\xE1ch" }, { n: "Qu\u1EA7y m\u1EDF 2 m\u1EB7t", c: 18e6, d: "H\xE0ng ch\u1EDD t\u1ED1i \u0111a 8 kh\xE1ch" }], key: "queue", vals: [1, 2, 3] },
-    { id: "tang", icon: "\u{1F3EC}", name: "N\xE2ng t\u1EA7ng", tiers: [{ n: "T\u1EA7ng l\u1EEDng", c: 2e6, d: "Ph\u1EE5c v\u1EE5 c\xF9ng l\xFAc +10 kh\xE1ch/ng\xE0y" }, { n: "T\u1EA7ng 2 r\u1ED9ng r\xE3i", c: 15e6, d: "Th\xEAm 20 kh\xE1ch/ng\xE0y d\u1EF1 ki\u1EBFn" }, { n: "S\xE2n th\u01B0\u1EE3ng chill", c: 5e7, d: "Th\xEAm 35 kh\xE1ch/ng\xE0y d\u1EF1 ki\u1EBFn" }], key: "extraCust", vals: [4, 8, 14] },
+    { id: "tang", icon: "\u{1F3EC}", name: "N\xE2ng t\u1EA7ng", tiers: [{ n: "T\u1EA7ng l\u1EEDng", c: 2e6, d: "Ph\u1EE5c v\u1EE5 c\xF9ng l\xFAc +10 kh\xE1ch/ng\xE0y" }, { n: "T\u1EA7ng 2 r\u1ED9ng r\xE3i", c: 15e6, d: "Th\xEAm 20 kh\xE1ch/ng\xE0y d\u1EF1 ki\u1EBFn" }, { n: "S\xE2n th\u01B0\u1EE3ng chill", c: 5e7, d: "Th\xEAm 35 kh\xE1ch/ng\xE0y d\u1EF1 ki\u1EBFn" }], key: "extraCust", vals: [10, 20, 35] },
     { id: "mayLanh", icon: "\u{1F9CA}", name: "M\xE1y l\u1EA1nh", tiers: [{ n: "Qu\u1EA1t tr\u1EA7n h\u01A1i n\u01B0\u1EDBc", c: 1e6, d: "Kh\xE1ch ki\xEAn nh\u1EABn h\u01A1n 8%" }, { n: "M\xE1y l\u1EA1nh treo t\u01B0\u1EDDng", c: 8e6, d: "Ki\xEAn nh\u1EABn +15%" }, { n: "H\u1EC7 th\u1ED1ng \u0111i\u1EC1u h\xF2a trung t\xE2m", c: 3e7, d: "Ki\xEAn nh\u1EABn +25%" }], key: "patience", vals: [0.08, 0.15, 0.25], util: [0.05, 0.1, 0.2] },
     { id: "nhanDien", icon: "\u{1F3F7}\uFE0F", name: "B\u1ED9 nh\u1EADn di\u1EC7n th\u01B0\u01A1ng hi\u1EC7u", tiers: [{ n: "Tem ly & menu th\u01B0\u01A1ng hi\u1EC7u", c: 7e5, d: "Ti\u1EC1n boa +5%, tem ly in logo" }, { n: "\u0110\u1ED3ng ph\u1EE5c & t\xFAi gi\u1EA5y", c: 6e6, d: "Ti\u1EC1n boa +10%, kh\xE1ch +3%" }, { n: "Th\u01B0\u01A1ng hi\u1EC7u chu\u1ED7i", c: 25e6, d: "Ti\u1EC1n boa +15%, kh\xE1ch +6%" }], key: "brand", vals: [0.05, 0.1, 0.15] },
     { id: "tablet", icon: "\u{1F4DF}", name: "Tablet nh\u1EADn \u0111\u01A1n online", tiers: [{ n: "Tablet #1", c: 3e5, d: "M\u1EDF 1 app giao h\xE0ng" }, { n: "Tablet #2", c: 6e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }, { n: "Tablet #3", c: 12e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }, { n: "Tablet #4", c: 24e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }], key: "tablets", vals: [1, 2, 3, 4] },
@@ -455,10 +455,10 @@
   ];
   var STAFF = [
     { id: "thuViec", name: "L\xE2m Ph\u01B0\u1EDBc", role: "Th\u1EED vi\u1EC7c ch\xEDnh th\u1EE9c", icon: "\u{1F98A}", hire: 5e5, wage: 165e3, sec: 6.5, err: 0.1, desc: "Nh\xE2n vi\xEAn r\xF3t tr\xE0, h\u01B0\u01A1ng, \u0111\u01B0\u1EDDng, \u0111\xE1. B\u1EA1n l\u1EA5y ly, b\u1ECF topping v\xE0 d\xE1n n\u1EAFp. 10% sai bill, h\u1ECFng th\xEC \u0111\u1ED5 b\u1ECF l\xE0m l\u1EA1i. Kh\xF4ng th\u1EC3 thu\xEA c\xF9ng Qu\u1EA3n l\xFD t\u1EADp s\u1EF1, Gen Z v\xE0 SV ca \u0111\xEAm. L\u01B0\u01A1ng 165k/ng\xE0y.", excl: ["quanLy", "genZ", "svDem"], kind: "pour" },
-    { id: "phaChe", name: "L\xFD Gia Huy", role: "Nh\xE2n vi\xEAn pha ch\u1EBF", icon: "\u{1F98A}", hire: 2e6, wage: 2e5, sec: 4.2, err: 0.08, desc: "Nh\u1EADn tr\u1ECDn \u0111\u01A1n c\u1EE7a kh\xE1ch ch\u1EDD l\xE2u nh\u1EA5t v\xE0 pha h\u1EBFt c\xE1c ly khi qu\u1EA7y c\xF3 t\u1EEB 2 kh\xE1ch tr\u1EDF l\xEAn. H\u01B0\u1EDFng to\xE0n b\u1ED9 ti\u1EC1n tip khi k\xEDch ho\u1EA1t. L\u01B0\u01A1ng 200k/ng\xE0y + 40k/h sau 22h. T\u1ED1c \u0111\u1ED9: 1500ms/ly.", need: { day: 30 }, kind: "auto", minQueue: 2 },
-    { id: "online", name: "Ho\xE0ng Minh", role: "Nh\xE2n vi\xEAn \u0111\u01A1n online", icon: "\u{1F98A}", hire: 15e5, wage: 25e4, sec: 3.4, err: 0.05, desc: "Ch\u1EC9 l\xE0m \u0111\u01A1n online: nh\u1EADn tr\u1ECDn \u0111\u01A1n v\xE0 pha h\u1EBFt c\xE1c ly. \u0110\xF4i khi l\xE0m h\u1ECFng ly 1%, h\u1ECFng th\xEC \u0111\u1ED5 b\u1ECF l\xE0m l\u1EA1i. L\u01B0\u01A1ng 250k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 1000ms/ly.", need: { online: true }, kind: "online" },
-    { id: "quanLy", name: "\u0110inh Nh\xE2n", role: "Qu\u1EA3n l\xFD t\u1EADp s\u1EF1 (Qu\u1EA3n gia)", icon: "\u{1F98A}", hire: 75e4, wage: 2e5, sec: 5.5, err: 0.06, desc: "Nh\xE2n vi\xEAn r\xF3t tr\xE0, h\u01B0\u01A1ng, \u0111\u01B0\u1EDDng, \u0111\xE1, m\xFAc topping. B\u1EA1n ch\u1EC9 l\u1EA5y ly v\xE0 d\xE1n n\u1EAFp. 5% sai bill h\u1ECFng \u0111\u1ED5 b\u1ECF. \u0110\xF4i khi r\xF3t tr\xE0 kh\xF4ng \u0111\u1EA7y, ch\u1EE7 ti\u1EC7m ph\u1EA3i r\xF3t b\xF9. Gi\xFAp t\u0103ng gi\xE1 an to\xE0n (Qu\u1EA3n Gia). L\u01B0\u01A1ng 200k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 280ms.", excl: ["thuViec"], kind: "manager", safePrice: true },
-    { id: "genZ", name: "Nh\xE2n vi\xEAn Gen Z", role: "Nh\xE2n vi\xEAn Gen Z", icon: "\u{1F98A}", hire: 1e6, wage: 275e3, sec: 3, err: 0.12, desc: "Pha ch\u1EBF si\xEAu t\u1ED1c t\u1EEB A-Z. M\u1ED7i khi l\xE0m 100 ly s\u1EBD d\u1ED7i 10s, ch\u1EE7 ti\u1EC7m ph\u1EA3i d\u1ED7 d\xE0nh n\u1EBFu kh\xF4ng s\u1EBD ngh\u1EC9 vi\u1EC7c. M\u1ED7i ng\xE0y \u0111\xE1 bill 1 l\u1EA7n, n\u1EBFu b\u1EAFt \u0111\u01B0\u1EE3c s\u1EBD tr\u1EA3 l\u1EA1i ti\u1EC1n bill. L\u01B0\u01A1ng 275k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 200ms.", excl: ["thuViec"], kind: "auto", minQueue: 1 },
+    { id: "phaChe", name: "L\xFD Gia Huy", role: "Nh\xE2n vi\xEAn pha ch\u1EBF", icon: "\u{1F98A}", hire: 2e6, wage: 2e5, sec: 1.5, err: 0.08, desc: "Nh\u1EADn tr\u1ECDn \u0111\u01A1n c\u1EE7a kh\xE1ch ch\u1EDD l\xE2u nh\u1EA5t v\xE0 pha h\u1EBFt c\xE1c ly khi qu\u1EA7y c\xF3 t\u1EEB 2 kh\xE1ch tr\u1EDF l\xEAn. H\u01B0\u1EDFng to\xE0n b\u1ED9 ti\u1EC1n tip khi k\xEDch ho\u1EA1t. L\u01B0\u01A1ng 200k/ng\xE0y + 40k/h sau 22h. T\u1ED1c \u0111\u1ED9: 1500ms/ly.", need: { day: 30 }, kind: "auto", minQueue: 2 },
+    { id: "online", name: "Ho\xE0ng Minh", role: "Nh\xE2n vi\xEAn \u0111\u01A1n online", icon: "\u{1F98A}", hire: 15e5, wage: 25e4, sec: 1, err: 0.01, desc: "Ch\u1EC9 l\xE0m \u0111\u01A1n online: nh\u1EADn tr\u1ECDn \u0111\u01A1n v\xE0 pha h\u1EBFt c\xE1c ly. \u0110\xF4i khi l\xE0m h\u1ECFng ly 1%, h\u1ECFng th\xEC \u0111\u1ED5 b\u1ECF l\xE0m l\u1EA1i. L\u01B0\u01A1ng 250k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 1000ms/ly.", need: { online: true }, kind: "online" },
+    { id: "quanLy", name: "\u0110inh Nh\xE2n", role: "Qu\u1EA3n l\xFD t\u1EADp s\u1EF1 (Qu\u1EA3n gia)", icon: "\u{1F98A}", hire: 75e4, wage: 2e5, sec: 5.5, err: 0.05, desc: "Nh\xE2n vi\xEAn r\xF3t tr\xE0, h\u01B0\u01A1ng, \u0111\u01B0\u1EDDng, \u0111\xE1, m\xFAc topping. B\u1EA1n ch\u1EC9 l\u1EA5y ly v\xE0 d\xE1n n\u1EAFp. 5% sai bill h\u1ECFng \u0111\u1ED5 b\u1ECF. \u0110\xF4i khi r\xF3t tr\xE0 kh\xF4ng \u0111\u1EA7y, ch\u1EE7 ti\u1EC7m ph\u1EA3i r\xF3t b\xF9. Gi\xFAp t\u0103ng gi\xE1 an to\xE0n (Qu\u1EA3n Gia). L\u01B0\u01A1ng 200k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 280ms.", excl: ["thuViec"], kind: "manager", safePrice: true },
+    { id: "genZ", name: "Nh\xE2n vi\xEAn Gen Z", role: "Nh\xE2n vi\xEAn Gen Z", icon: "\u{1F98A}", hire: 1e6, wage: 275e3, sec: 0.2, err: 0.12, desc: "Pha ch\u1EBF si\xEAu t\u1ED1c t\u1EEB A-Z. M\u1ED7i khi l\xE0m 100 ly s\u1EBD d\u1ED7i 10s, ch\u1EE7 ti\u1EC7m ph\u1EA3i d\u1ED7 d\xE0nh n\u1EBFu kh\xF4ng s\u1EBD ngh\u1EC9 vi\u1EC7c. M\u1ED7i ng\xE0y \u0111\xE1 bill 1 l\u1EA7n, n\u1EBFu b\u1EAFt \u0111\u01B0\u1EE3c s\u1EBD tr\u1EA3 l\u1EA1i ti\u1EC1n bill. L\u01B0\u01A1ng 275k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 200ms.", excl: ["thuViec"], kind: "auto", minQueue: 1 },
     { id: "diCho", name: "Nh\xE2n vi\xEAn \u0111i ch\u1EE3", role: "Nh\xE2n vi\xEAn \u0111i ch\u1EE3", icon: "\u{1F9FA}", hire: 18e5, wage: 18e4, sec: 99, err: 0, desc: "Khi h\u1EBFt nguy\xEAn li\u1EC7u (tr\xE0 s\u1EEFa, topping, ly, \u0111\xE1\u2026), t\u1EF1 ch\u1EA1y \u0111i ch\u1EE3 mua v\u1EC1 b\xE1n ngay trong ca. N\u1EBFu \u0111i ch\u1EE3 nhi\u1EC1u l\u1EA7n trong ng\xE0y c\xF3 th\u1EC3 khai gian h\xF3a \u0111\u01A1n \u0111\xFAt t\xFAi ri\xEAng, ho\u1EB7c mua tr\xFAng \u0111\u1ED3 h\u1EBFt h\u1EA1n g\xE2y ng\u1ED9 \u0111\u1ED9c. L\u01B0\u01A1ng 180k/ng\xE0y.", need: { full: true }, kind: "buyer" },
     { id: "svDem", name: "Sinh vi\xEAn cu\u1ED1i th\xE1ng", role: "Sinh vi\xEAn cu\u1ED1i th\xE1ng", icon: "\u{1F98A}", hire: 8e5, wage: 3e5, sec: 3.6, err: 0.1, desc: "Ch\u1EC9 l\xE0m ca \u0111\xEAm 22h\u20136h: nh\u1EADn tr\u1ECDn \u0111\u01A1n v\xE0 pha h\u1EBFt c\xE1c ly \u0111ang ch\u1EDD. C\xF3 th\u1EC3 nh\u1EA7m size. Sau 2h s\xE1ng t\xFAng ti\u1EC1n mu\u1ED1n b\xE1n trang b\u1ECB c\u1EA7n ch\u1EE7 ti\u1EC7m ng\u0103n c\u1EA3n. L\u01B0\u01A1ng 300k/ch\u1EC9 l\xE0m ca \u0111\xEAm.", excl: ["thuViec"], kind: "night" },
     { id: "meKetTinh", name: "Nh\xE2n vi\xEAn Me k\u1EBFt tinh", role: "Marketing", icon: "\u{1F98A}", hire: 15e5, wage: 35e4, sec: 99, err: 0, desc: "T\u1EF1 \u0111\u1ED9ng quay & \u0111\u0103ng video TikTok viral li\xEAn t\u1EE5c cho qu\xE1n thay v\xEC ch\u1EE7 qu\xE1n ph\u1EA3i t\u1EF1 quay, thu h\xFAt followers v\xE0 buff m\u1EA1nh l\u01B0\u1EE3ng kh\xE1ch gh\xE9 qu\xE1n (+45%). Gi\u1EA3m 20% th\u1EDDi gian pha c\u1EE7a to\xE0n b\u1ED9 nh\xE2n vi\xEAn. T\u1EF1 \u0111\u1ED9ng ph\u1EA3n h\u1ED3i m\u1ECDi \u0111\xE1nh gi\xE1 & n\xE2ng sao. T\u1EF1 \u0111\u1ED9ng \u0111\xF3ng thu\u1EBF duy tr\xEC buff 72h li\xEAn t\u1EE5c. L\u01B0\u01A1ng 350k/ng\xE0y.", kind: "marketing", fxTraffic: 0.45 },
@@ -1295,13 +1295,16 @@
   __export(econ_exports, {
     MAX_SECRET: () => MAX_SECRET,
     addStock: () => addStock,
+    adoptPet: () => adoptPet,
     appsOpen: () => appsOpen,
     bonus: () => bonus,
     buyCategory: () => buyCategory,
     buyDecor: () => buyDecor,
     buyEquip: () => buyEquip,
+    carePet: () => carePet,
     commitPlan: () => commitPlan,
     costOf: () => costOf,
+    depositBank: () => depositBank,
     ensureForecast: () => ensureForecast,
     equipLevel: () => equipLevel,
     equipNext: () => equipNext,
@@ -1315,10 +1318,13 @@
     hireBlock: () => hireBlock,
     lifeBonus: () => lifeBonus,
     lifeDays: () => lifeDays,
+    moveShop: () => moveShop,
     nearestExpiry: () => nearestExpiry,
     onlineEnabled: () => onlineEnabled,
     onlineProgress: () => onlineProgress,
+    openBranch: () => openBranch,
     openMissing: () => openMissing,
+    payTax: () => payTax,
     petActive: () => petActive,
     pickEvent: () => pickEvent,
     planTotal: () => planTotal,
@@ -1326,16 +1332,20 @@
     priceLimit: () => priceLimit,
     priceOf: () => priceOf,
     priceWeight: () => priceWeight,
+    recordVideo: () => recordVideo,
     rentToday: () => rentToday,
     rollWeatherFor: () => rollWeatherFor,
     safePrice: () => safePrice,
     seasonOf: () => seasonOf,
     secretCount: () => secretCount,
+    sellFranchise: () => sellFranchise,
+    setBranchStaff: () => setBranchStaff,
     setPlan: () => setPlan,
     setPrice: () => setPrice,
     sizeLWeight: () => sizeLWeight,
     staffCount: () => staffCount,
     staffWagePerDay: () => staffWagePerDay,
+    startAd: () => startAd,
     stockQty: () => stockQty,
     tabletsOwned: () => tabletsOwned,
     take: () => take,
@@ -1345,8 +1355,11 @@
     unitCost: () => unitCost,
     unitSize: () => unitSize,
     unlockItem: () => unlockItem,
+    unlockPlot: () => unlockPlot,
     utilityToday: () => utilityToday,
-    weatherOf: () => weatherOf
+    visitFriend: () => visitFriend,
+    weatherOf: () => weatherOf,
+    withdrawBank: () => withdrawBank
   });
   var seasonOf = (day) => SEASON_ORDER[Math.floor((day - 1) / DAYS_PER_SEASON) % 4];
   function rollWeatherFor(day) {
@@ -1392,7 +1405,7 @@
   var taxActive = () => Date.now() < S.tax.until;
   var tabletsOwned = () => equipLevel("tablet");
   var appsOpen = () => Object.values(S.apps).filter(Boolean).length;
-  var onlineEnabled = () => appsOpen() > 0;
+  var onlineEnabled = () => appsOpen() > 0 && S.rating >= ONLINE_GATE.rating && LOCATIONS[S.location].fx.online !== -1;
   var secretCount = () => Object.keys(S.collection.secrets).length;
   function petActive() {
     const p = S.pet;
@@ -1484,6 +1497,7 @@
       b.lucky += TAX.lucky;
     }
     if (S.social.ad && S.day <= S.social.ad.endsDay) b.traffic += ((_b = ADS.find((a) => a.id === S.social.ad.id)) == null ? void 0 : _b.traffic) || 0;
+    if (S.social.videoDay === S.day) b.traffic += S.social.videoBuff || 0;
     if (petActive()) {
       const fx = ((_c = PETS[S.pet.kind]) == null ? void 0 : _c.fx) || {};
       b.bill += fx.bill || 0;
@@ -1498,6 +1512,9 @@
     }
     b.bill += S.crush.perm;
     b.bill += Math.min(0.2, Object.keys(S.collection.owned).length * 3e-3);
+    if (S.pet2 && petActive() && S.pet.kind !== "capybara") add(PETS.capybara.fx);
+    if (S.branches.truong) b.traffic += 0.15;
+    if (S.branches.cnc) b.online += 0.1;
     const active = staffCount();
     b.traffic += Math.min(0.08, active * 0.01);
     return b;
@@ -1507,6 +1524,7 @@
     return (_c = (_b = S.prices[id]) != null ? _b : (_a = ITEMS[id]) == null ? void 0 : _a.price) != null ? _c : 0;
   }
   function setPrice(id, v) {
+    if (id !== "sizeL" && !ITEMS[id] || !Number.isFinite(v)) return "Gi\xE1 kh\xF4ng h\u1EE3p l\u1EC7";
     v = Math.round(v);
     if (id === "sizeL") v = clamp(v, 0, SIZE_L_CAP);
     else v = clamp(v, 0, 2e5);
@@ -1521,7 +1539,9 @@
     return { warn: 2e4 * m, hard: 3e4 * m };
   }
   function priceFactor() {
+    if (safePrice()) return 1;
     let f = 1;
+    if (priceOf("sizeL") >= SIZE_L_CAP || [...TEAS, ...FLAVORS, ...TOPS].some((id) => S.onMenu[id] && priceOf(id) > 5e4)) f = 0.2;
     const teas = TEAS.filter((t) => S.onMenu[t]);
     for (const t of teas) if (priceOf(t) > priceLimit(t).warn) f = Math.min(f, 0.2);
     const m = safePrice() ? 1.5 : 1;
@@ -1535,6 +1555,7 @@
     return f;
   }
   function priceWeight(id) {
+    if (safePrice()) return 1;
     const k = ITEMS[id].kind;
     if (k === "tea") return priceOf(id) > priceLimit(id).warn ? 0.2 : 1;
     const lim = priceLimit(id);
@@ -1546,7 +1567,8 @@
   function sizeLWeight() {
     const p = priceOf("sizeL");
     const lim = priceLimit("sizeL");
-    if (p > lim.hard) return 0;
+    if (p >= lim.hard) return 0;
+    if (safePrice()) return 1;
     return p > lim.warn ? 0.1 : 1;
   }
   var lifeBonus = () => bonus().life;
@@ -1635,12 +1657,14 @@
     return Math.round(sum(Object.entries(S.plan), ([id, n]) => unitCost(id) * n));
   }
   function setPlan(id, n) {
-    n = clamp(n, 0, 999);
+    if (!ITEMS[id] || !S.unlocked[id] || !Number.isFinite(n)) return "Nguy\xEAn li\u1EC7u ho\u1EB7c s\u1ED1 l\u01B0\u1EE3ng kh\xF4ng h\u1EE3p l\u1EC7";
+    n = clamp(Math.round(n), 0, 999);
     if (n <= 0) delete S.plan[id];
     else S.plan[id] = n;
     markDirty("panel", "cta");
   }
   function commitPlan() {
+    if (Object.entries(S.plan).some(([id, n]) => !ITEMS[id] || !S.unlocked[id] || !Number.isInteger(n) || n < 0 || n > 999)) return "K\u1EBF ho\u1EA1ch nh\u1EADp h\xE0ng kh\xF4ng h\u1EE3p l\u1EC7";
     const total = planTotal();
     if (total <= 0) return "Ch\u01B0a ch\u1ECDn g\xEC \u0111\u1EC3 nh\u1EADp";
     if (S.money < total) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n nh\u1EADp h\xE0ng";
@@ -1664,8 +1688,10 @@
     return { miss, canOpen: teaOk && supOk };
   }
   function buyCategory(key) {
+    if (!CATEGORIES[key]) return "H\u1EA1ng m\u1EE5c kh\xF4ng h\u1EE3p l\u1EC7";
     const lvl = S.cat[key];
     const cost = catCost(lvl);
+    if (!Number.isFinite(cost)) return "\u0110\xE3 \u0111\u1EA1t gi\u1EDBi h\u1EA1n c\u1EA5p \u0111\u1ED9";
     if (S.money < cost) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n";
     S.money -= cost;
     S.cat[key]++;
@@ -1675,6 +1701,7 @@
   }
   function equipNext(id) {
     const eq = EQUIP.find((e) => e.id === id);
+    if (!eq) return null;
     const lv = equipLevel(id);
     if (lv >= eq.tiers.length) return null;
     return eq.tiers[lv];
@@ -1708,6 +1735,7 @@
     if (S.apps[id]) {
       S.apps[id] = false;
       markDirty("panel");
+      requestSave();
       return null;
     }
     const pr = onlineProgress();
@@ -1721,6 +1749,7 @@
   }
   function hireBlock(id) {
     const st = STAFF.find((s) => s.id === id);
+    if (!st) return "Nh\xE2n vi\xEAn kh\xF4ng h\u1EE3p l\u1EC7";
     if (S.staff[id]) return "\u0110\xE3 thu\xEA";
     for (const ex of st.excl || []) if (S.staff[ex]) return `Kh\xF4ng th\u1EC3 thu\xEA c\xF9ng ${STAFF.find((s) => s.id === ex).role}`;
     for (const o of STAFF) if ((o.excl || []).includes(id) && S.staff[o.id]) return `Kh\xF4ng th\u1EC3 thu\xEA c\xF9ng ${o.role}`;
@@ -1745,6 +1774,7 @@
   }
   function fire(id) {
     delete S.staff[id];
+    emit("fire", id);
     markDirty("panel");
     requestSave();
   }
@@ -1758,15 +1788,165 @@
   function expectedCustomers() {
     const b = bonus();
     const rating = 0.8 + clamp(S.rating, 1, 5) * 0.05;
-    const base = 14 + 0.8 * Math.min(S.day, 60) + b.extraCust * 0.5;
+    const base = 14 + 0.8 * Math.min(S.day, 60);
     const wealth = 1 + clamp(Math.log10(Math.max(S.money, 1e3) / 1e3) * 0.12, 0, 0.6);
     const staffBoost = 1 + Math.min(0.9, staffCount() * 0.15);
-    return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating * wealth * staffBoost));
+    return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating * wealth * staffBoost) + b.extraCust);
   }
   function onlineProgress() {
-    return { profit: sum(S.history, (x) => x.profit) + (S.today.profit || 0), orders: sum(S.history, (x) => x.cups) + S.today.cups, rating: S.rating };
+    const recorded = S.history.some((x) => x.day === S.day);
+    return { profit: sum(S.history, (x) => x.profit) + (recorded ? 0 : S.today.profit || 0), orders: sum(S.history, (x) => x.cups) + (recorded ? 0 : S.today.cups), rating: S.rating };
   }
   var MAX_SECRET = SECRET_RECIPES.length;
+  function commitMenuChange() {
+    markDirty("hud", "panel", "board", "cta", "tiles");
+    requestSave();
+  }
+  function openBranch(id) {
+    const b = BRANCHES.find((x) => x.id === id);
+    if (!b) return "Chi nh\xE1nh kh\xF4ng h\u1EE3p l\u1EC7";
+    if (S.branches[id]) return "Chi nh\xE1nh \u0111\xE3 m\u1EDF";
+    if (S.money < b.cost) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n";
+    S.money -= b.cost;
+    S.branches[id] = { staff: 0, rev: 0, days: 0 };
+    commitMenuChange();
+    return null;
+  }
+  function setBranchStaff(id, n) {
+    if (!S.branches[id] || !Number.isFinite(n)) return "Chi nh\xE1nh ho\u1EB7c s\u1ED1 l\u01B0\u1EE3ng kh\xF4ng h\u1EE3p l\u1EC7";
+    S.branches[id].staff = clamp(Math.round(n), 0, 3);
+    commitMenuChange();
+    return null;
+  }
+  function sellFranchise() {
+    if (S.franchise.count >= FRANCHISE.max) return "\u0110\xE3 \u0111\u1EA1t s\u1ED1 \u0111i\u1EC3m nh\u01B0\u1EE3ng quy\u1EC1n t\u1ED1i \u0111a";
+    if (S.rating < FRANCHISE.needRating || S.followers < FRANCHISE.needFollowers) return "Ch\u01B0a \u0111\u1EE7 uy t\xEDn ho\u1EB7c ng\u01B0\u1EDDi theo d\xF5i";
+    S.money += FRANCHISE.fee;
+    S.franchise.count++;
+    commitMenuChange();
+    return null;
+  }
+  function moveShop(id) {
+    if (!LOCATIONS[id]) return "\u0110\u1ECBa \u0111i\u1EC3m kh\xF4ng h\u1EE3p l\u1EC7";
+    if (S.phase === "sell") return "H\xE3y k\u1EBFt th\xFAc ca tr\u01B0\u1EDBc khi chuy\u1EC3n qu\xE1n";
+    if (S.location === id) return "Qu\xE1n \u0111ang \u1EDF \u0111\u1ECBa \u0111i\u1EC3m n\xE0y";
+    if (S.money < LOCATION_COST) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n kh\u1EDFi nghi\u1EC7p";
+    S.money -= LOCATION_COST;
+    S.location = id;
+    S.forecast = [];
+    ensureForecast();
+    commitMenuChange();
+    markDirty("view");
+    return null;
+  }
+  function startAd(id) {
+    const ad = ADS.find((x) => x.id === id);
+    if (!ad) return "Chi\u1EBFn d\u1ECBch kh\xF4ng h\u1EE3p l\u1EC7";
+    if (S.social.ad && S.day <= S.social.ad.endsDay) return "\u0110ang c\xF3 m\u1ED9t chi\u1EBFn d\u1ECBch ho\u1EA1t \u0111\u1ED9ng";
+    if (S.money < ad.cost) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n ch\u1EA1y qu\u1EA3ng c\xE1o";
+    S.money -= ad.cost;
+    S.social.ad = { id, endsDay: S.day + ad.days - 1 };
+    S.followers += ad.followers;
+    commitMenuChange();
+    return null;
+  }
+  function recordVideo() {
+    const ad = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find((x) => x.id === S.social.ad.id) : null;
+    if (S.social.videosToday >= (ad ? ad.videos : 1)) return "\u0110\xE3 h\u1EBFt l\u01B0\u1EE3t quay video h\xF4m nay";
+    S.social.videosToday++;
+    S.social.videoDay = S.day;
+    S.social.videoBuff = Math.max(S.social.videoBuff || 0, rand(0.02, 0.15));
+    commitMenuChange();
+    return null;
+  }
+  function visitFriend(id) {
+    if (![...NPC_FRIENDS, ...S.friends.list].some((x) => x.id === id)) return "B\u1EA1n b\xE8 kh\xF4ng h\u1EE3p l\u1EC7";
+    if (S.friends.gifted[id] === S.day) return "\u0110\xE3 th\u0103m b\u1EA1n n\xE0y h\xF4m nay";
+    const gift = randInt(5, 20) * 1e3;
+    S.friends.gifted[id] = S.day;
+    S.money += gift;
+    S.followers += randInt(10, 80);
+    commitMenuChange();
+    return gift;
+  }
+  function unlockPlot() {
+    const g = S.garden;
+    if (g.unlocked >= PLOTS) return "\u0110\xE3 m\u1EDF to\xE0n b\u1ED9 m\u1EA3nh \u0111\u1EA5t";
+    const cost = plotCost(g.unlocked + 1);
+    if (S.money < cost) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n";
+    S.money -= cost;
+    g.unlocked++;
+    commitMenuChange();
+    return null;
+  }
+  function adoptPet(kind) {
+    const p = PETS[kind];
+    if (!p) return "Th\xFA c\u01B0ng kh\xF4ng h\u1EE3p l\u1EC7";
+    if (kind === "capybara" && secretCount() < p.secret) return "Ch\u01B0a \u0111\u1EE7 c\xF4ng th\u1EE9c \u0111\u1ED9c b\u1EA3n";
+    if (kind === "capybara" && (S.pet2 || S.pet && S.pet.kind === kind) || S.pet && S.pet.kind === kind) return "\u0110\xE3 nh\u1EADn nu\xF4i b\xE9 n\xE0y";
+    if (S.money < p.adopt) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n nh\u1EADn nu\xF4i";
+    S.money -= p.adopt;
+    if (kind === "capybara" && S.pet) S.pet2 = { kind };
+    else {
+      if (S.pet && S.pet.kind === "capybara") S.pet2 = { kind: "capybara" };
+      S.pet = { kind, hunger: 80, joy: 80, clean: 80, energy: 80 };
+    }
+    commitMenuChange();
+    return null;
+  }
+  function carePet(id) {
+    const c = PET_CARE.find((x) => x.id === id), p = S.pet;
+    if (!p || !c) return "Ch\u01B0a c\xF3 th\xFA c\u01B0ng ho\u1EB7c thao t\xE1c kh\xF4ng h\u1EE3p l\u1EC7";
+    if (S.money < c.cost) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n";
+    S.money -= c.cost;
+    p[c.stat] = clamp(p[c.stat] + c.gain * (S.petDecor.app ? 1.3 : 1), 0, 100);
+    if (id === "feed" && S.petDecor.bat) {
+      p.hunger = clamp(p.hunger + 20, 0, 100);
+      p.joy = clamp(p.joy + 10, 0, 100);
+    }
+    if (id === "bath" && S.petDecor.voi) {
+      p.clean = clamp(p.clean + 30, 0, 100);
+      p.joy = clamp(p.joy + 10, 0, 100);
+    }
+    if (id === "play" && S.petDecor.kim) p.exp = (p.exp || 0) + 10;
+    commitMenuChange();
+    return null;
+  }
+  function payTax() {
+    if (taxActive()) return "Thu\u1EBF v\u1EABn c\xF2n hi\u1EC7u l\u1EF1c";
+    S.tax.rate = clamp(Number(S.tax.rate) || TAX.minRate, TAX.minRate, TAX.maxRate);
+    const amount = Math.round(S.money * S.tax.rate);
+    if (amount <= 0) return "K\xE9t tr\u1ED1ng, ch\u01B0a c\xF3 g\xEC \u0111\u1EC3 n\u1ED9p thu\u1EBF";
+    S.money -= amount;
+    S.tax.paid += amount;
+    S.today.tax += amount;
+    S.tax.last = Date.now();
+    S.tax.until = S.tax.last + TAX.hours * 36e5;
+    commitMenuChange();
+    return amount;
+  }
+  function depositBank(fraction) {
+    if (![0.1, 0.5, 1].includes(fraction)) return "M\u1EE9c g\u1EEDi kh\xF4ng h\u1EE3p l\u1EC7";
+    const amount = Math.min(Math.floor(S.money * fraction), Math.max(0, BANK.max - S.bank.balance));
+    if (amount <= 0) return "Kh\xF4ng c\xF2n h\u1EA1n m\u1EE9c ho\u1EB7c ti\u1EC1n \u0111\u1EC3 g\u1EEDi";
+    S.money -= amount;
+    S.bank.balance += amount;
+    S.bank.principal = (S.bank.principal || 0) + amount;
+    S.bank.shifts = 0;
+    commitMenuChange();
+    return amount;
+  }
+  function withdrawBank() {
+    const b = S.bank;
+    if (b.balance <= 0) return "Kh\xF4ng c\xF3 ti\u1EC1n g\u1EEDi";
+    const amount = b.shifts < BANK.lockShifts ? b.principal || 0 : b.balance;
+    S.money += amount;
+    b.balance = 0;
+    b.principal = 0;
+    b.shifts = 0;
+    commitMenuChange();
+    return amount;
+  }
 
   // js/sell.js
   var sell_exports = {};
@@ -1777,6 +1957,7 @@
     addTop: () => addTop,
     cleanTable: () => cleanTable,
     closeNow: () => closeNow,
+    comfortStaff: () => comfortStaff,
     evaluate: () => evaluate,
     frontCustomer: () => frontCustomer,
     genPost: () => genPost,
@@ -1845,6 +2026,202 @@
       if (active && active.focus) active.focus();
     }
     return copied;
+  }
+
+  // js/sell-art.js
+  var DIR = "assets/sell/sprites/";
+  var img = (name, cls = "") => `<img class="sale-art ${cls}" src="${DIR}${name}.png" alt="" draggable="false" decoding="async">`;
+  var customerCells = {
+    sinhVien: 1,
+    vanPhong: 2,
+    genZ: 0,
+    bac: 4,
+    vip: 8,
+    macCa: 9,
+    reviewer: 2,
+    be: 6,
+    idol: 3,
+    gamer: 5,
+    congNhan: 7,
+    shipper: 1,
+    giaoVien: 8
+  };
+  var TEAS2 = ["traSua", "matcha", "hongTra", "lucTra", "olong", "traThai"];
+  var TOPS2 = ["tcDen", "tcTrang", "tcVang", "tcSoi", "tcNo", "cuNang", "thachTc", "suongSao", "thachCf", "fCheese", "fMatcha", "fMuoi", "fUbe", "pmVien", "thachPm"];
+  var TOP_ALIAS = { pmTuoi: "pmVien" };
+  function customerArt(key) {
+    if (!Object.prototype.hasOwnProperty.call(customerCells, key)) return "";
+    return img(`customer-${customerCells[key]}`, "customer-sprite");
+  }
+  function teaArt(id) {
+    return img(`tea-${TEAS2.includes(id) ? id : "traSua"}`);
+  }
+  function toppingArt(id) {
+    const k = TOP_ALIAS[id] || id;
+    return img(`top-${TOPS2.includes(k) ? k : "tcDen"}`);
+  }
+  function stackArt(size) {
+    const L = size === "L";
+    const rims = L ? [46, 52, 58, 64, 70, 76, 82] : [48, 54, 60, 66, 72, 78];
+    const wl = (y) => 6.5 + 6.5 * (y - 34) / 60;
+    const lines = rims.map((y) => `<path d="M${wl(y).toFixed(1)} ${y} Q30 ${y + 3.4} ${(60 - wl(y)).toFixed(1)} ${y}" fill="none" stroke="rgba(122,90,62,.5)" stroke-width="1.1"/>`).join("");
+    const id = `stk${cupUid++}`;
+    return `<svg class="sale-art stack-svg" viewBox="0 26 60 78" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
+    <defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#e6cfa8"/><stop offset=".35" stop-color="#fbf0dc"/><stop offset=".7" stop-color="#f1dfc0"/><stop offset="1" stop-color="#d9bf94"/></linearGradient></defs>
+    <ellipse cx="30" cy="99" rx="21" ry="3.6" fill="rgba(60,35,10,.2)"/>
+    <path d="M6.5 34 L13 93 Q30 98.5 47 93 L53.5 34 Z" fill="url(#${id})" stroke="#7a5a3e" stroke-width="1.8" stroke-linejoin="round"/>
+    ${lines}
+    <path d="M6.5 34 Q30 26 53.5 34" fill="none" stroke="#7a5a3e" stroke-width="1.8"/>
+    <ellipse cx="30" cy="34" rx="23.5" ry="6.4" fill="#fffaf0" stroke="#7a5a3e" stroke-width="1.8"/>
+    <ellipse cx="30" cy="35.2" rx="19.5" ry="4.2" fill="#e4cda6"/>
+    <path d="M12 44 L16.5 86" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
+  </svg>`;
+  }
+  function sealerArt() {
+    return img("sealer");
+  }
+  var cupUid = 0;
+  var BODY_IN = "M7.6 13 L17.4 95.5 Q39 101 60.6 95.5 L70.4 13 Z";
+  var Y_TOP = 14;
+  var Y_BOT = 97;
+  var wallL = (y) => 6 + 10 * (y - 12) / 84;
+  var wallR = (y) => 72 - 10 * (y - 12) / 84;
+  var surfaceOf = (fill) => Y_BOT - (Y_BOT - Y_TOP) * Math.min(1, Math.max(0, fill) * 0.86);
+  var teaTone = (hex, amount) => /^#[0-9a-f]{6}$/i.test(hex || "") ? "#" + [1, 3, 5].map((p) => Math.round(Math.max(0, Math.min(255, parseInt(hex.slice(p, p + 2), 16) + amount))).toString(16).padStart(2, "0")).join("") : hex || "#fff";
+  function setCupFill(cupEl, fill) {
+    const liq = cupEl && cupEl.querySelector(".c-liq");
+    if (!liq) return;
+    const y = surfaceOf(fill);
+    liq.setAttribute("y", y.toFixed(1));
+    liq.setAttribute("height", (110 - y).toFixed(1));
+    const top = cupEl.querySelector(".c-liq-top");
+    if (top) top.setAttribute("y", y.toFixed(1));
+    const surf = cupEl.querySelector(".c-surf");
+    if (surf) {
+      surf.setAttribute("cy", y.toFixed(1));
+      surf.style.opacity = fill > 0.02 ? 1 : 0;
+    }
+    const bubbles = cupEl.querySelector(".c-pour-bubbles");
+    if (bubbles) bubbles.setAttribute("transform", `translate(0 ${y.toFixed(1)})`);
+  }
+  function cupSvg(opts) {
+    var _a;
+    const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = "", straw = false } = opts;
+    const id = `cup${cupUid++}`;
+    const y = surfaceOf(tea ? fill : 0);
+    const balls = [];
+    let n = 0;
+    for (let ti = 0; ti < tops.length; ti++) {
+      const c = tops[ti], cnt = (_a = shown[ti]) != null ? _a : 3;
+      for (let k = 0; k < cnt; k++, n++) {
+        const row2 = Math.floor(n / 5), col = n % 5;
+        const yy = 91 - row2 * 6.6;
+        const xx = Math.max(wallL(yy) + 4.2, Math.min(wallR(yy) - 4.2, 39 + (col - 2) * 8.2 + (row2 % 2 ? 4.1 : 0)));
+        balls.push(`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="3.7" fill="${c}"/><circle cx="${(xx - 1.2).toFixed(1)}" cy="${(yy - 1.3).toFixed(1)}" r="1.1" fill="#fff" opacity=".55"/>`);
+      }
+    }
+    const liquid = tea ? `<rect class="c-liq" x="0" y="${y.toFixed(1)}" width="78" height="${(110 - y).toFixed(1)}" fill="url(#${id}tea)"/>
+      <rect class="c-liq-top" x="0" y="${y.toFixed(1)}" width="78" height="14" fill="url(#${id}g)"/>
+      ${flavor ? `<rect class="c-flav" x="0" y="64" width="78" height="40" fill="${flavor}" opacity=".5"/>` : ""}
+      <ellipse class="c-surf" cx="39" cy="${y.toFixed(1)}" rx="31.5" ry="3.1" fill="#fff" fill-opacity=".38" style="opacity:${fill > 0.02 ? 1 : 0}"/>
+      <g class="c-pour-bubbles" transform="translate(0 ${y.toFixed(1)})"><circle class="tea-bubble" cx="33" cy="5" r="1.8"/><circle class="tea-bubble" cx="45" cy="9" r="1.2"/><circle class="tea-bubble" cx="39" cy="15" r="1.5"/></g>` : "";
+    const lidSvg = lid ? `<g class="c-lidg ${lid === "drop" ? "drop" : ""}">
+      <path d="M7.5 9.8 Q39 -8.5 70.5 9.8 Z" fill="rgba(255,255,255,.72)" stroke="#cdbda7" stroke-width="1.1"/>
+      <path d="M16 8 Q26 0 36 -0.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+      <path d="M3.4 10 Q3.4 7.6 6 7.6 H72 Q74.6 7.6 74.6 10 L72.7 17.4 Q72.5 18.5 71.4 18.5 H6.6 Q5.5 18.5 5.3 17.4 Z" fill="#fffdf8" stroke="#cdbda7" stroke-width="1.2"/>
+      <path d="M6.2 12.4 H71.8" stroke="#e3d6c1" stroke-width="1"/>
+    </g>` : "";
+    const strawSvg = straw ? '<g class="c-strawg"><line x1="41" y1="92" x2="54" y2="-22" stroke="#ff7fa0" stroke-width="5" stroke-linecap="round"/><line x1="41" y1="92" x2="54" y2="-22" stroke="#fff" stroke-width="5" stroke-dasharray="4 5" opacity=".9"/></g>' : "";
+    return `<svg class="cup-svg" viewBox="0 0 78 104" width="100%" height="100%" overflow="visible" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
+    <defs><clipPath id="${id}c"><path d="${BODY_IN}"/></clipPath>
+      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${id}tea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${teaTone(tea, 15)}"/><stop offset=".35" stop-color="${tea || "#fff"}"/><stop offset="1" stop-color="${teaTone(tea, -28)}"/></linearGradient></defs>
+    <ellipse cx="39" cy="100" rx="25" ry="3.2" fill="rgba(60,35,10,.16)"/>
+    <g clip-path="url(#${id}c)">${liquid}${balls.join("")}</g>
+    ${strawSvg}
+    <path d="M6 12 L16 96 Q39 103 62 96 L72 12" fill="rgba(235,245,252,.2)" stroke="rgba(121,88,64,.9)" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M12.5 20 L19 82" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".55"/>
+    <path d="M66 24 L61 62" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".4"/>
+    <ellipse cx="39" cy="12" rx="33" ry="4.6" fill="rgba(255,255,255,.28)" stroke="rgba(121,88,64,.9)" stroke-width="1.6"/>
+    ${lidSvg}
+  </svg>`;
+  }
+  function staffArt(id) {
+    const cells = { thuViec: 2, phaChe: 1, online: 5, quanLy: 4, genZ: 3, diCho: 6, svDem: 9, meKetTinh: 8, chuBa: 7 };
+    return img(`customer-${cells[id] || 0}`, "staff-sprite");
+  }
+
+  // js/guide-content.js
+  var cup = () => cupSvg({ fill: 0.95, tea: ITEMS.traSua.color, tops: [ITEMS.tcDen.color], lid: "on", straw: true });
+  function guideSections() {
+    return [
+      { id: "prepare", ico: "\u{1F3EA}", title: "M\xE0n chu\u1EA9n b\u1ECB", open: true, rows: [
+        ["\u{1FAA7}", "<b>Bi\u1EC3n hi\u1EC7u</b>: ch\u1EA1m logo \u0111\u1EC3 \u0111\u1ED5i h\xECnh, ch\u1EA1m t\xEAn \u0111\u1EC3 s\u1EEDa t\xEAn ti\u1EC7m. Nh\xE3n \u0111\u1ECBa \u0111i\u1EC3m m\u1EDF <b>Kh\u1EDFi nghi\u1EC7p</b>; nh\xE3n <b>\u{1F3EE} S\u1EA3nh Tr\xE0</b> m\u1EDF qu\u1EA3n l\xFD b\xE0n gh\u1EBF.", ".shopcard"],
+        ["\u{1F964}", "<b>Menu h\xF4m nay</b>: hi\u1EC3n th\u1ECB tr\xE0 v\xE0 topping \u0111\xE3 m\u1EDF kh\xF3a, \u0111ang b\u1EADt trong menu, k\xE8m gi\xE1 v\xE0 ph\u1EE5 thu size L. S\u1EF1 ki\u1EC7n v\xE0 l\u01B0\u1EE3ng kh\xE1ch d\u1EF1 ki\u1EBFn n\u1EB1m d\u01B0\u1EDBi c\xE1c \xF4 ch\u1EE9c n\u0103ng.", "#board"],
+        ["\u{1F9ED}", "<b>Thanh nh\xF3m</b>: \u{1F3EA} Ti\u1EC7m \xB7 \u{1F4E6} Kho \xB7 \u{1F4C8} Ph\xE1t tri\u1EC3n \xB7 \u{1F465} X\xE3 h\u1ED9i \xB7 \u{1F380} Th\xEAm. Ch\u1ECDn nh\xF3m r\u1ED3i ch\u1ECDn \xF4 ch\u1EE9c n\u0103ng; thanh n\xE0y hi\u1EC7n khi chu\u1EA9n b\u1ECB v\xE0 sau ca.", "#nav"],
+        [icon("menu", 24), "<b>C\xE0i \u0111\u1EB7t</b>: n\xFAt ba g\u1EA1ch \u1EDF g\xF3c tr\xE1i khi chu\u1EA9n b\u1ECB. Trong ca b\xE1n, v\u1ECB tr\xED n\xE0y \u0111\u1ED5i th\xE0nh n\xFAt <b>T\u1EA1m d\u1EEBng</b>.", '#hud [data-act="settings"], #hud [data-act="pause"]'],
+        [icon("book", 24), "<b>H\u01B0\u1EDBng d\u1EABn</b>: n\xFAt s\xE1ch \u1EDF b\xEAn ph\u1EA3i khi chu\u1EA9n b\u1ECB. Trong ca b\xE1n, n\xFAt n\xE0y \u0111\u1ED5i th\xE0nh b\xE1nh r\u0103ng \u0111\u1EC3 m\u1EDF C\xE0i \u0111\u1EB7t; v\xE0o C\xE0i \u0111\u1EB7t \u2192 H\u01B0\u1EDBng d\u1EABn \u0111\u1EC3 \u0111\u1ECDc l\u1EA1i.", '#hud [data-act="guide"]'],
+        ["\u{1F326}\uFE0F", "<b>D\u1EF1 b\xE1o</b>: ch\u1EA1m nh\xE3n th\u1EDDi ti\u1EBFt, m\xF9a v\xE0 nhi\u1EC7t \u0111\u1ED9 ngay d\u01B0\u1EDBi Ng\xE0y \u0111\u1EC3 xem d\u1EF1 b\xE1o c\xE1c ng\xE0y t\u1EDBi c\xF9ng s\u1EF1 ki\u1EC7n h\xF4m nay.", "#hud .wx"],
+        [icon("branch", 24), "<b>Chi nh\xE1nh</b>: n\xFAt h\xECnh ng\xF4i nh\xE0 \u1EDF b\xEAn ph\u1EA3i m\u1EDF qu\u1EA3n l\xFD chi nh\xE1nh. N\xFAt h\xECnh b\u1ED9 th\u1EBB b\xEAn c\u1EA1nh m\u1EDF <b>S\u01B0u t\u1EA7m</b>.", '#hud [data-act="branchTop"]'],
+        ["\u{1F3EE}", "<b>N\xFAt d\u01B0\u1EDBi c\xF9ng</b>: c\xF3 k\u1EBF ho\u1EA1ch mua th\xEC hi\u1EC7n <b>N\u1EA5u & nh\u1EADp</b>; ch\u01B0a \u0111\u1EE7 kho th\xEC hi\u1EC7n <b>\u26A0\uFE0F Ch\u01B0a n\u1EA5u\u2026</b> v\xE0 d\u1EABn v\u1EC1 Kho; \u0111\u1EE7 \u0111i\u1EC1u ki\u1EC7n th\xEC hi\u1EC7n <b>M\u1EDF c\u1EEDa ng\xE0y\u2026</b>. \u0110\xE2y l\xE0 c\xE1c tr\u1EA1ng th\xE1i theo kho v\xE0 k\u1EBF ho\u1EA1ch, kh\xF4ng ph\u1EA3i th\u1EE9 t\u1EF1 b\u1EAFt bu\u1ED9c.", "#cta"]
+      ] },
+      { id: "stock", ico: "\u{1F4E6}", title: "Kho & nh\u1EADp h\xE0ng", rows: [
+        ["\u{1FAD6}", "<b>Kho</b> c\xF3 tab \u{1FAD6} Tr\xE0, \u{1F9CB} Topping, \u{1F964} D\u1EE5ng c\u1EE5 v\xE0 \u{1F353} H\u01B0\u01A1ng khi c\xF3 h\u01B0\u01A1ng \u0111\u01B0\u1EE3c m\u1EDF kh\xF3a. C\xE1c d\xF2ng h\xE0ng hi\u1EC3n th\u1ECB t\xEAn, t\u1ED3n kho, gi\xE1 nh\u1EADp v\xE0 h\u1EA1n d\xF9ng.", '.panel-in[data-tab="kho"]'],
+        ["\u{1F522}", "<b>\xD4 s\u1ED1 0\u2013999</b> l\xE0 l\u01B0\u1EE3ng mu\u1ED1n mua th\xEAm, kh\xF4ng ph\u1EA3i t\u1ED3n kho. G\xF5 s\u1ED1 ho\u1EB7c b\u1EA5m \u2212/+ \u0111\u1EC3 thay \u0111\u1ED5i 1 \u0111\u01A1n v\u1ECB; s\u1ED1 0 b\u1ECF m\xF3n kh\u1ECFi k\u1EBF ho\u1EA1ch. D\xF2ng +N v\xE0 chi ph\xED l\xE0 ph\u1EA7n d\u1EF1 \u0111\u1ECBnh nh\u1EADp.", ".krow .stepper"],
+        ["\u23F3", `<b>H\u1EA1n d\xF9ng</b>: \u23F3 N ng\xE0y l\xE0 s\u1ED1 ng\xE0y d\xF9ng \u0111\u01B0\u1EE3c; \u26A0\uFE0F b\xE1o l\xF4 h\u1EBFt h\u1EA1n h\xF4m nay. H\u01B0\u01A1ng mua theo chai: <b>1 chai pha ${FLAVOR_BOTTLE} ly</b>; h\u1EA1n th\u1EF1c t\u1EBF theo d\xF2ng h\xE0ng v\xE0 c\xE1c n\xE2ng c\u1EA5p b\u1EA3o qu\u1EA3n.`, ".krow .life"],
+        ["\u{1F6D2}", "<b>N\u1EA5u & nh\u1EADp</b> x\xE1c nh\u1EADn to\xE0n b\u1ED9 k\u1EBF ho\u1EA1ch, tr\u1EEB t\u1ED5ng ti\u1EC1n v\xE0 th\xEAm h\xE0ng v\xE0o kho. N\u1EBFu thi\u1EBFu ti\u1EC1n, giao d\u1ECBch kh\xF4ng th\u1EF1c hi\u1EC7n. \u0110\u1ED5i s\u1ED1 l\u01B0\u1EE3ng tr\u01B0\u1EDBc khi x\xE1c nh\u1EADn ch\u01B0a ti\xEAu ti\u1EC1n.", '#cta [data-act="plan"]'],
+        ["\u2705", "<b>\u0110i\u1EC1u ki\u1EC7n m\u1EDF c\u1EEDa</b>: c\xF3 \xEDt nh\u1EA5t m\u1ED9t lo\u1EA1i tr\xE0 \u0111ang b\u1EADt trong menu, ly M ho\u1EB7c ly L, \u0111\xE1 v\xE0 \u0111\u01B0\u1EDDng. <b>Topping kh\xF4ng b\u1EAFt bu\u1ED9c</b>; mu\u1ED1n b\xE1n topping th\xEC c\u1EA7n c\xF3 h\xE0ng v\xE0 b\u1EADt trong menu.", '#cta [data-act="open"]'],
+        ["\u{1FAB4}", "<b>V\u01B0\u1EDDn c\xE2y</b>: m\u1EDF \xF4 \u0111\u1EA5t, ch\u1ECDn c\xE2y, t\u01B0\u1EDBi v\xE0 thu ho\u1EA1ch khi \u0111\u1EE7 ti\u1EBFn \u0111\u1ED9. <b>Th\xFA c\u01B0ng</b>: nh\u1EADn nu\xF4i v\xE0 ch\u0103m s\xF3c b\u1EB1ng c\xE1c n\xFAt trong panel.", '.tile[data-tab="vuon"], .tile[data-tab="thucung"]']
+      ] },
+      { id: "brew", ico: "\u{1F9CB}", title: "B\xE1n h\xE0ng \xB7 t\u1EEB \u0111\u1ECDc \u0111\u01A1n \u0111\u1EBFn giao ly", open: true, rows: [
+        [customerArt("vanPhong"), "<b>1. \u0110\u1ECDc \u0111\u01A1n</b>: ch\u1ECDn kh\xE1ch trong h\xE0ng ch\u1EDD. Khung order ghi y\xEAu c\u1EA7u c\u1EE1 ly, tr\xE0, h\u01B0\u01A1ng v\xE0 topping. V\xF2ng avatar v\xE0 thanh KI\xCAN NH\u1EAAN gi\u1EA3m khi ch\u1EDD; c\u1EA1n th\xEC kh\xE1ch b\u1ECF \u0111i. N\u1ED9i dung d\xE0i c\xF3 th\u1EC3 cu\u1ED9n \u0111\u1ECDc.", "#qrow, #cbub"],
+        ["\u2716", "<b>T\u1EEB ch\u1ED1i</b>: n\xFAt \u0111\u1ECF trong khung order b\u1ECF \u0111\u01A1n c\u1EE7a kh\xE1ch \u0111ang ch\u1ECDn. \u0110\xE2y l\xE0 t\u1EEB ch\u1ED1i ph\u1EE5c v\u1EE5, kh\xF4ng ph\u1EA3i n\xFAt s\u1EEDa ho\u1EB7c \u0111\xF3ng khung order.", '#cbub [data-act="reject"]'],
+        [stackArt("M"), "<b>2. L\u1EA5y ly</b>: ch\u1EA1m ch\u1ED3ng M ho\u1EB7c L \u1EDF QU\u1EA6Y TR\xC0 \u0111\xFAng y\xEAu c\u1EA7u. Tr\u1EEB m\u1ED9t ly kh\u1ECFi kho v\xE0 \u0111\u1EB7t l\xEAn b\xE0n PHA LY; ch\u1EC9 c\xF3 m\u1ED9t ly tr\xEAn b\xE0n t\u1EA1i m\u1ED9t th\u1EDDi \u0111i\u1EC3m.", ".stacks"],
+        [teaArt("traSua"), "<b>3. Ch\u1ECDn tr\xE0 v\xE0 r\xF3t</b>: ch\u1EA1m b\xECnh \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u, ch\u1EA1m l\u1EA1i khi \u0111ang r\xF3t \u0111\u1EC3 d\u1EEBng. Ly \u0111i d\u01B0\u1EDBi v\xF2i; d\xF2ng tr\xE0 v\xE0 m\u1EE9c n\u01B0\u1EDBc t\u0103ng theo thao t\xE1c. Canh thanh r\xF3t t\u1EDBi v\xF9ng v\xE0ng, tr\xE1nh thi\u1EBFu ho\u1EB7c tr\xE0n.", "#disps, #stream, #pourbar"],
+        ["\u{1F353}", "<b>4. Th\xEAm h\u01B0\u01A1ng</b>: n\u1EBFu \u0111\u01A1n c\xF3 y\xEAu c\u1EA7u, ch\u1EA1m n\xFAt h\u01B0\u01A1ng trong h\xE0ng H\u01AF\u01A0NG <b>d\u01B0\u1EDBi khu PHA LY, ph\xEDa tr\xEAn c\xE1c khay topping</b>. M\u1ED7i ly ch\u1ECDn m\u1ED9t h\u01B0\u01A1ng v\xE0 ti\xEAu hao m\u1ED9t ph\u1EA7n nguy\xEAn li\u1EC7u.", "#flavs"],
+        [toppingArt("tcDen"), "<b>5. Th\xEAm topping</b>: ch\u1EA1m khay \u0111\xFAng m\xF3n; h\u1EA1t bay v\xE0o ly v\xE0 kho gi\u1EA3m m\u1ED9t ph\u1EA7n. Kh\xF4ng th\xEAm tr\xF9ng m\u1ED9t lo\u1EA1i, t\u1ED1i \u0111a <b>4 lo\u1EA1i topping</b> m\u1ED7i ly. M\xF3n kh\xF3a ho\u1EB7c t\u1EAFt menu kh\xF4ng d\xF9ng \u0111\u01B0\u1EE3c.", "#trays"],
+        [sealerArt(), "<b>6. \u0110\xF3ng n\u1EAFp</b>: khi ly \u0111\xE3 c\xF3 tr\xE0, ch\u1EA1m m\xE1y \u0111\u1EC3 \xE9p n\u1EAFp. N\u1EBFu \u0111ang r\xF3t, m\xE1y d\u1EEBng r\xF3t tr\u01B0\u1EDBc; ch\u1EDD hi\u1EC7u \u1EE9ng \u0111\xF3ng n\u1EAFp ho\xE0n t\u1EA5t. \u0110\xE1 v\xE0 \u0111\u01B0\u1EDDng \u0111\u01B0\u1EE3c th\xEAm khi \u0111\xF3ng n\u1EAFp n\u1EBFu ch\u01B0a \u0111\u01B0\u1EE3c nh\xE2n vi\xEAn th\xEAm.", "#sealer"],
+        [cup(), "<b>7. Giao kh\xE1ch</b>: ly ho\xE0n th\xE0nh c\xF3 n\u1EAFp v\xE0 \u1ED1ng h\xFAt; <b>ch\u1EA1m ly</b> tr\xEAn PHA LY \u0111\u1EC3 giao kh\xE1ch \u0111ang ch\u1ECDn. Ly bay t\u1EDBi kh\xE1ch, ti\u1EC1n v\xE0 \u0111\xE1nh gi\xE1 c\u1EADp nh\u1EADt theo k\u1EBFt qu\u1EA3. Ly sai c\xF3 th\u1EC3 b\u1ECB t\u1EEB ch\u1ED1i ho\u1EB7c mua gi\xE1 th\u1EA5p.", '#cupslot[data-act="boardTap"]'],
+        ["\u{1F5D1}\uFE0F", "<b>Pha sai</b>: ch\u1EA1m th\xF9ng r\xE1c \u0111\u1EC3 b\u1ECF ly r\u1ED3i l\u1EA5y ly m\u1EDBi. Nguy\xEAn li\u1EC7u \u0111\xE3 d\xF9ng kh\xF4ng \u0111\u01B0\u1EE3c ho\xE0n l\u1EA1i; thao t\xE1c \u0111\u01B0\u1EE3c ghi v\xE0o hao ph\xED.", '[data-act="trash"]'],
+        ["\u{1F4F1}", "<b>Online</b>: s\u1ED1 tr\xEAn \u0111i\u1EC7n tho\u1EA1i l\xE0 s\u1ED1 \u0111\u01A1n ch\u1EDD. Ch\u1EA1m \u0111\u1EC3 xem v\xE0 nh\u1EADn \u0111\u01A1n. Kh\u1EA3 n\u0103ng nh\u1EADn \u0111\u01A1n ph\u1EE5 thu\u1ED9c m\u1EDF kh\xF3a \u1EE9ng d\u1EE5ng, \u0111\xE1nh gi\xE1 v\xE0 \u0111\u1ECBa \u0111i\u1EC3m; nh\xE2n vi\xEAn online ch\u1EC9 x\u1EED l\xFD \u0111\u01A1n online.", '[data-act="phone"]'],
+        ["\u2B50", "<b>Ch\u1EA5m sao</b>: sai tr\xE0 \u22123, sai size \u22122, sai/thi\u1EBFu/th\u1EEBa h\u01B0\u01A1ng \u22121; thi\u1EBFu ho\u1EB7c th\u1EEBa topping tr\u1EEB t\u1ED1i \u0111a 2. R\xF3t d\u01B0\u1EDBi 75%, c\xF3 tr\xE0 tr\xE0n ho\u1EB7c ki\xEAn nh\u1EABn c\xF2n d\u01B0\u1EDBi 20%: m\u1ED7i l\u1ED7i \u22121. Kh\xE1ch kh\xF3 t\xEDnh c\xF3 th\u1EC3 tr\u1EEB th\xEAm; k\u1EBFt qu\u1EA3 gi\u1EDBi h\u1EA1n 1\u20135 sao.", "#patBar, #pbFill"],
+        [icon("pause", 24), "<b>T\u1EA1m d\u1EEBng</b>: n\xFAt hai v\u1EA1ch \u1EDF g\xF3c tr\xE1i t\u1EA1m d\u1EEBng ca. Ch\u01A1i ti\u1EBFp \u0111\u1EC3 quay l\u1EA1i, ho\u1EB7c ch\u1ECDn \u0110\xF3ng c\u1EEDa h\xF4m nay \u0111\u1EC3 k\u1EBFt th\xFAc s\u1EDBm; kh\xE1ch \u0111ang ch\u1EDD s\u1EBD ra v\u1EC1.", '#hud [data-act="pause"]']
+      ] },
+      { id: "lobby", ico: "\u{1F3EE}", title: "S\u1EA3nh & t\u1ED5ng k\u1EBFt", rows: [
+        ["\u{1FA91}", "<b>Ra s\u1EA3nh \u2192</b>: n\xFAt cu\u1ED1i qu\u1EA7y chuy\u1EC3n sang s\u1EA3nh, k\xE8m s\u1ED1 b\xE0n \u0111ang c\xF3 kh\xE1ch/t\u1ED5ng s\u1ED1 b\xE0n. Ch\u1ECDn quay l\u1EA1i qu\u1EA7y \u0111\u1EC3 ti\u1EBFp t\u1EE5c pha.", "#lobbyGo"],
+        ["\u{1F9F9}", "<b>D\u1ECDn b\xE0n</b>: b\xE0n b\u1EA9n c\u1EA7n d\u1ECDn \u0111\u1EC3 ti\u1EBFp kh\xE1ch m\u1EDBi. S\u1ED1 b\xE0n ph\u1EE5 thu\u1ED9c trang b\u1ECB s\u1EA3nh; kh\xE1ch d\xF9ng t\u1EA1i qu\xE1n c\xF3 th\u1EC3 boa th\xEAm.", '.tile[data-tab="sanh"]'],
+        ["\u{1F4CA}", "<b>Cu\u1ED1i ca</b>: xem T\u1ED5ng k\u1EBFt ng\xE0y \u0111\u1EC3 bi\u1EBFt doanh thu, boa, kh\xE1ch v\xE0 chi ph\xED. Trong nh\xF3m Ti\u1EC7m, T\u1ED5ng k\u1EBFt xem l\u1ECBch s\u1EED; \u0110\xE1nh gi\xE1 xem c\xE1c nh\u1EADn x\xE9t \u0111\xE3 ghi nh\u1EADn.", '.tile[data-tab="tongket"], .tile[data-tab="danhgia"]']
+      ] },
+      { id: "development", ico: "\u{1F4C8}", title: "Ph\xE1t tri\u1EC3n", rows: [
+        ["\u{1F6E0}\uFE0F", "<b>N\xE2ng c\u1EA5p</b>: m\u1EDF kh\xF3a nguy\xEAn li\u1EC7u, n\xE2ng trang b\u1ECB v\xE0 decor. M\u1ED7i m\u1EE5c ghi gi\xE1, c\u1EA5p hi\u1EC7n t\u1EA1i v\xE0 t\xE1c d\u1EE5ng; \u0111\u1EA1t c\u1EA5p t\u1ED1i \u0111a th\xEC kh\xF4ng th\u1EC3 mua th\xEAm.", '.tile[data-tab="nangcap"]'],
+        [staffArt("thuViec"), "<b>Nh\xE2n s\u1EF1 h\u1ED7 tr\u1EE3</b>: L\xE2m Ph\u01B0\u1EDBc r\xF3t tr\xE0, th\xEAm h\u01B0\u01A1ng/\u0111\u01B0\u1EDDng/\u0111\xE1; b\u1EA1n l\u1EA5y ly, th\xEAm topping v\xE0 \u0111\xF3ng n\u1EAFp. \u0110inh Nh\xE2n th\xEAm c\u1EA3 topping; b\u1EA1n l\u1EA5y ly v\xE0 \u0111\xF3ng n\u1EAFp. H\xE3y \u0111\u1EE3i nh\xE2n vi\xEAn pha xong r\u1ED3i thao t\xE1c.", '.tile[data-tab="nhansu"]'],
+        [staffArt("online"), "<b>Nh\xE2n s\u1EF1 t\u1EF1 ph\u1EE5c v\u1EE5</b>: nh\xE2n vi\xEAn pha ch\u1EBF, Gen Z v\xE0 ca \u0111\xEAm x\u1EED l\xFD tr\u1ECDn \u0111\u01A1n theo \u0111i\u1EC1u ki\u1EC7n ri\xEAng; nh\xE2n vi\xEAn online ch\u1EC9 l\xE0m \u0111\u01A1n online. \u0110i\u1EC1u ki\u1EC7n thu\xEA, l\u01B0\u01A1ng v\xE0 c\xE1c gi\u1EDBi h\u1EA1n \u0111\u01B0\u1EE3c ghi t\u1EA1i t\u1EEBng th\u1EBB.", '.panel-in[data-tab="nhansu"]'],
+        ["\u{1F3E2}", "<b>Chi nh\xE1nh</b>: thu\xEA m\u1EDF chi nh\xE1nh, \u0111i\u1EC1u ch\u1EC9nh nh\xE2n vi\xEAn v\xE0 xem b\xE1o c\xE1o. Nh\u01B0\u1EE3ng quy\u1EC1n c\xF3 \u0111i\u1EC1u ki\u1EC7n \u0111\xE1nh gi\xE1/followers ri\xEAng. Thu nh\u1EADp v\xE0 chi ph\xED chu\u1ED7i c\u1EADp nh\u1EADt theo ng\xE0y.", '.tile[data-tab="chinhanh"]'],
+        ["\u{1F5FA}\uFE0F", "<b>Kh\u1EDFi nghi\u1EC7p</b>: \u0111\u1ED5i \u0111\u1ECBa \u0111i\u1EC3m khi ch\u01B0a trong ca b\xE1n. M\u1ED7i n\u01A1i c\xF3 gi\xE1 m\u1EDF, l\u01B0\u1EE3ng kh\xE1ch, chi ph\xED v\xE0 t\xE1c \u0111\u1ED9ng kh\xE1c nhau; xem m\xF4 t\u1EA3 tr\u01B0\u1EDBc khi x\xE1c nh\u1EADn.", '.tile[data-tab="khoinghiep"]'],
+        ["\u{1F4B5}", "<b>Gi\xE1 b\xE1n</b> \u1EDF nh\xF3m Ti\u1EC7m: ch\u1EC9nh tr\xE0, h\u01B0\u01A1ng, topping v\xE0 ph\u1EE5 thu L. Gi\xE1 cao c\xF3 th\u1EC3 gi\u1EA3m l\u01B0\u1EE3ng kh\xE1ch; ng\u01B0\u1EE1ng v\xE0 gi\u1EDBi h\u1EA1n ph\u1EE5 thu\u1ED9c lo\u1EA1i m\xF3n v\xE0 nh\xE2n vi\xEAn h\u1ED7 tr\u1EE3 gi\xE1.", '.tile[data-tab="giaban"]']
+      ] },
+      { id: "social", ico: "\u{1F465}", title: "X\xE3 h\u1ED9i & Th\xEAm", rows: [
+        ["\u{1F4F1}", "<b>M\u1EA1ng X\xE3 H\u1ED9i</b>: ch\u1EA1y t\u1ED1i \u0111a m\u1ED9t chi\u1EBFn d\u1ECBch qu\u1EA3ng c\xE1o; quay video theo s\u1ED1 l\u01B0\u1EE3t chi\u1EBFn d\u1ECBch cho ph\xE9p. Theo d\xF5i followers, b\xE0i \u0111\u0103ng v\xE0 th\u01B0\u1EDFng l\u01B0\u1EE3ng kh\xE1ch trong panel.", '.tile[data-tab="mxh"]'],
+        ["\u{1F465}", "<b>B\u1EA1n b\xE8</b>: nh\u1EADp m\xE3 m\u1EDDi, th\u0103m qu\xE1n nh\u1EADn qu\xE0 m\u1ED9t l\u1EA7n/ng\xE0y cho m\u1ED7i b\u1EA1n v\xE0 xem b\u1EA3ng t\xE0i s\u1EA3n. Danh s\xE1ch, t\xEAn v\xE0 s\u1ED1 li\u1EC7u b\u1EA1n b\xE8 hi\u1EC7n \u0111\u01B0\u1EE3c l\u01B0u/m\xF4 ph\u1ECFng trong game, ch\u01B0a \u0111\u1ED3ng b\u1ED9 t\xE0i kho\u1EA3n tr\u1EF1c tuy\u1EBFn.", '.tile[data-tab="banbe"]'],
+        ["\u{1F4DC}", `<b>Thu\u1EBF & Bank</b> trong Th\xEAm: \u0111\xF3ng thu\u1EBF \u0111\u1EC3 k\xEDch ho\u1EA1t th\u01B0\u1EDFng ${TAX.hours} gi\u1EDD, g\u1EEDi ti\u1EBFt ki\u1EC7m v\xE0 r\xFAt ti\u1EC1n. R\xFAt s\u1EDBm ch\u1EC9 nh\u1EADn g\u1ED1c; \u0111\u1EE7 ${BANK.lockShifts} ca b\xE1n theo ti\u1EBFn \u0111\u1ED9 k\u1EF3 h\u1EA1n m\u1EDBi \u0111\u01B0\u1EE3c nh\u1EADn c\u1EA3 l\xE3i.`, '.tile[data-tab="thue"]'],
+        [icon("collect", 24), "<b>S\u01B0u t\u1EA7m</b> trong Th\xEAm ho\u1EB7c n\xFAt b\u1ED9 th\u1EBB tr\xEAn thanh \u0111\u1EA7u m\xE0n h\xECnh: xem b\u1ED9 s\u01B0u t\u1EADp v\xE0 th\u1EF1c hi\u1EC7n c\xE1c thao t\xE1c \u0111ang \u0111\u01B0\u1EE3c m\u1EDF trong panel.", '.tile[data-tab="suutam"], #hud [data-act="collectTop"]']
+      ] },
+      { id: "games", ico: "\u{1F36C}", title: "Th\xEAm \xB7 Tr\xF2 ch\u01A1i", rows: [
+        ["\u{1F36C}", "<b>Milk Tea Crush</b>: v\xE0o Th\xEAm \u2192 Milk Tea Crush, \u0111\u1ED5i ch\u1ED7 hai \xF4 k\u1EC1 nhau \u0111\u1EC3 gh\xE9p \xEDt nh\u1EA5t 3 icon. Ho\xE0n th\xE0nh m\u1EE5c ti\xEAu trong s\u1ED1 l\u01B0\u1EE3t cho ph\xE9p; gh\xE9p \u0111\u1EB7c bi\u1EC7t t\u1EA1o h\xE0ng/c\u1ED9t, c\xE1, bom ho\u1EB7c c\u1EA7u v\u1ED3ng. Qua m\xE0n c\u1ED9ng 1% doanh thu v\u0129nh vi\u1EC5n, t\u1ED1i \u0111a 50%.", '.panel-in [data-act="crush"]'],
+        [toppingArt("tcNo"), "<b>Tr\xE2n Ch\xE2u N\u1ED5</b>: c\xF9ng panel tr\xF2 ch\u01A1i, ch\u1EA1m nh\xF3m t\u1EEB 2 vi\xEAn c\xF9ng m\xE0u k\u1EC1 nhau. M\u1EE5c ti\xEAu 120 \u0111i\u1EC3m trong 30 gi\xE2y; n\u1ED5 ti\u1EBFp trong 1,2 gi\xE2y t\u0103ng combo. \u0110i\u1EC3m = s\u1ED1 vi\xEAn\xB2 \xD7 combo; th\u01B0\u1EDFng ti\u1EC1n v\xE0 nguy\xEAn li\u1EC7u theo k\u1EBFt qu\u1EA3.", '.panel-in [data-act="pearl"]'],
+        ["\u23F1\uFE0F", "<b>L\u01B0\u1EE3t Tr\xE2n Ch\xE2u N\u1ED5</b>: t\u1ED1i \u0111a 3 l\u01B0\u1EE3t/ng\xE0y, t\xEDnh khi b\u1EA5m B\u1EAFt \u0111\u1EA7u. M\u1EDF m\xE0n gi\u1EDBi thi\u1EC7u ch\u01B0a ti\xEAu l\u01B0\u1EE3t. Xem \u0111i\u1EC3m, k\u1EF7 l\u1EE5c, combo v\xE0 ti\u1EBFn \u0111\u1ED9 m\u1EE5c ti\xEAu ngay trong v\xE1n.", '#pBody [data-act="start"]']
+      ] },
+      { id: "settings", ico: icon("settings", 24), title: "C\xE0i \u0111\u1EB7t & l\u01B0u ti\u1EBFn tr\xECnh", rows: [
+        ["\u{1F3A8}", "<b>M\xE0u giao di\u1EC7n v\xE0 rung</b>: ch\u1ECDn trong C\xE0i \u0111\u1EB7t. Rung ph\u1EE5 thu\u1ED9c thi\u1EBFt b\u1ECB v\xE0 quy\u1EC1n rung c\u1EE7a \u1EE9ng d\u1EE5ng b\u1ECDc APK.", '[data-act="theme"], [data-act="haptic"]'],
+        ["\u{1F3B5}", "<b>Nh\u1EA1c v\xE0 SFX</b>: ch\u1EC9nh \xE2m l\u01B0\u1EE3ng ri\xEAng; n\xFAt loa t\u1EAFt/b\u1EADt t\u1EEBng k\xEAnh. Nh\u1EA1c n\u1EC1n & M\xF9a c\xF3 \u{1F3A7} Lofi, \u{1F389} Vui nh\u1ED9n, \u{1F338} Xu\xE2n, \u2600\uFE0F H\u1EA1, \u{1F342} Thu, \u2744\uFE0F \u0110\xF4ng ho\u1EB7c T\u1EAFt nh\u1EA1c.", '[data-act="style"]'],
+        ["\u{1F9ED}", "<b>Ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc</b> b\u1EADt/t\u1EAFt d\xF2ng nh\u1EAFc thao t\xE1c tr\xEAn qu\u1EA7y. H\u01B0\u1EDBng d\u1EABn l\u1EA7n \u0111\u1EA7u l\xE0m s\xE1ng t\u1EEBng v\xF9ng l\xE0 ph\u1EA7n ri\xEAng, g\u1ED3m 15 b\u01B0\u1EDBc chu\u1EA9n b\u1ECB v\xE0 c\xE1c b\u01B0\u1EDBc trong ca b\xE1n.", '[data-act="hints"], #coach'],
+        ["\u23F1\uFE0F", "<b>Th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y</b>: ch\u1ECDn th\u1EDDi l\u01B0\u1EE3ng ca trong C\xE0i \u0111\u1EB7t; thay \u0111\u1ED5i \xE1p d\u1EE5ng khi m\u1EDF ca ti\u1EBFp theo.", '[data-act="shiftMin"]'],
+        ["\u{1F4BE}", "<b>L\u01B0u ti\u1EBFn tr\xECnh</b>: game t\u1EF1 l\u01B0u tr\xEAn thi\u1EBFt b\u1ECB. D\xF9ng xu\u1EA5t/nh\u1EADp m\xE3 sao l\u01B0u ho\u1EB7c kh\xF4i ph\u1EE5c trong C\xE0i \u0111\u1EB7t \u0111\u1EC3 gi\u1EEF ti\u1EBFn tr\xECnh khi \u0111\u1ED5i tr\xECnh duy\u1EC7t hay c\xE0i l\u1EA1i \u1EE9ng d\u1EE5ng.", '[data-act="export"], [data-act="import"]']
+      ] }
+    ];
+  }
+  function guideHTML() {
+    return guideSections().map((s) => `<details class="g-det" data-guide-section="${s.id}"${s.open ? " open" : ""}><summary>${s.ico} ${esc(s.title)}</summary><ul class="g-list">${s.rows.map(([ico, body, target]) => `<li data-guide-target="${esc(target)}"><span class="g-art" aria-hidden="true">${ico}</span><div>${body}</div></li>`).join("")}</ul></details>`).join("");
   }
 
   // js/ui.js
@@ -1971,16 +2348,12 @@
   };
   var isModalOpen = (id) => id ? stack.some((m) => m.id === id) : stack.length > 0;
   function confirmBox(title, msg, onYes, yes = "\u0110\u1ED3ng \xFD", danger = false) {
-    const m = openModal({
-      html: `<h3 class="m-title">${esc(title)}</h3><p class="m-text">${msg}</p>
-    <div class="m-row"><button class="btn ghost" data-act="no">H\u1EE7y</button><button class="btn ${danger ? "danger" : "pri"}" data-act="yes">${esc(yes)}</button></div>`, cls: "small"
-    });
-    bindActions(m.body, {
-      no: () => m.close(), yes: () => {
-        m.close();
-        onYes();
-      }
-    });
+    const m = openModal({ html: `<h3 class="m-title">${esc(title)}</h3><p class="m-text">${msg}</p>
+    <div class="m-row"><button class="btn ghost" data-act="no">H\u1EE7y</button><button class="btn ${danger ? "danger" : "pri"}" data-act="yes">${esc(yes)}</button></div>`, cls: "small" });
+    bindActions(m.body, { no: () => m.close(), yes: () => {
+      m.close();
+      onYes();
+    } });
     return m;
   }
   function alertBox(title, body, btn = "\u0110\xE3 hi\u1EC3u") {
@@ -2015,19 +2388,15 @@
   }
   function openChoice(title, opts, cur2, onPick) {
     const m = openModal({ cls: "small", html: `<h3 class="m-title">${title}</h3><div class="choice-list">${opts.map(([v, label], i) => `<button class="choice ${v === cur2 ? "on" : ""}" data-act="pick" data-i="${i}"><span>${label}</span><i>${v === cur2 ? "\u2713" : ""}</i></button>`).join("")}</div><button class="btn block" data-act="x">\u0110\xF3ng</button>` });
-    bindActions(m.body, {
-      pick: (t) => {
-        onPick(opts[+t.dataset.i][0]);
-        m.close();
-      }, x: () => m.close()
-    });
+    bindActions(m.body, { pick: (t) => {
+      onPick(opts[+t.dataset.i][0]);
+      m.close();
+    }, x: () => m.close() });
   }
   function openThemePicker(onDone) {
     const sw = (id, t) => `<button class="thm-it ${S.settings.theme === id ? "on" : ""}" data-act="pick" data-k="${id}"><i style="background:linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)"></i><b>${t.name}</b></button>`;
-    const m = openModal({
-      cls: "small", html: `<h3 class="m-title">M\xE0u giao di\u1EC7n</h3><p class="m-text center">Ch\u1ECDn m\xE0u b\u1EA1n th\xEDch, \u0111\u1ED5i l\xFAc n\xE0o c\u0169ng \u0111\u01B0\u1EE3c.</p>
-    <div class="thm-grid">${Object.entries(THEMES).map(([id, t]) => sw(id, t)).join("")}</div><button class="btn pri block" data-act="done">Xong</button>`
-    });
+    const m = openModal({ cls: "small", html: `<h3 class="m-title">M\xE0u giao di\u1EC7n</h3><p class="m-text center">Ch\u1ECDn m\xE0u b\u1EA1n th\xEDch, \u0111\u1ED5i l\xFAc n\xE0o c\u0169ng \u0111\u01B0\u1EE3c.</p>
+    <div class="thm-grid">${Object.entries(THEMES).map(([id, t]) => sw(id, t)).join("")}</div><button class="btn pri block" data-act="done">Xong</button>` });
     bindActions(m.body, {
       pick: (t) => {
         S.settings.theme = t.dataset.k;
@@ -2074,9 +2443,9 @@
     bindActions($("#hud"), new Proxy({}, { get: (_, k) => hudActs[k] }));
   }
   function aggregate(entries) {
-    const a = { rev: 0, cogs: 0, rent: 0, util: 0, wage: 0, tax: 0, branch: 0, fran: 0, interest: 0, profit: 0, cups: 0, left: 0, online: 0, stars: [], days: entries.length };
+    const a = { rev: 0, cogs: 0, rent: 0, util: 0, wage: 0, tax: 0, fine: 0, branch: 0, fran: 0, interest: 0, profit: 0, cups: 0, left: 0, online: 0, stars: [], days: entries.length };
     for (const e of entries) {
-      for (const k of ["rev", "cogs", "rent", "util", "wage", "tax", "branch", "fran", "interest", "profit", "cups", "left", "online"]) a[k] += e[k] || 0;
+      for (const k of ["rev", "cogs", "rent", "util", "wage", "tax", "fine", "branch", "fran", "interest", "profit", "cups", "left", "online"]) a[k] += e[k] || 0;
       if (e.stars) a.stars.push(e.stars);
     }
     a.avgStars = a.stars.length ? sum(a.stars) / a.stars.length : 0;
@@ -2085,7 +2454,7 @@
   var pct = (x, t) => t > 0 ? x / t * 100 : 0;
   function plHTML(a, label) {
     const loss = a.profit < 0;
-    const cost = a.cogs + a.rent + a.util + a.wage;
+    const cost = a.cogs + a.rent + a.util + a.wage + a.tax + (a.fine || 0);
     const base = Math.max(a.rev, cost, 1);
     const cg = pct(a.cogs, base), pe = pct(a.wage, base), ma = pct(a.rent + a.util, base);
     const lossPct = loss ? Math.max(0, 100 - cg - pe - ma) : 0;
@@ -2105,6 +2474,8 @@
       ${row2("#ff8a3d", "Nguy\xEAn li\u1EC7u", fmtK(a.cogs), cogsPct.toFixed(0) + "%")}
       ${row2("#3d9bff", "Nh\xE2n s\u1EF1", fmtK(a.wage), wagePct.toFixed(0) + "%")}
       ${row2("#8b5cf6", "M\u1EB7t b\u1EB1ng & \u0111i\u1EC7n n\u01B0\u1EDBc", fmtK(a.rent + a.util), pct(a.rent + a.util, a.rev).toFixed(0) + "%")}
+      ${row2("#d97706", "Thu\u1EBF & ti\u1EC1n ph\u1EA1t", fmtK(a.tax + (a.fine || 0)), pct(a.tax + (a.fine || 0), a.rev).toFixed(0) + "%")}
+      ${row2("#2d8a63", "Chi nh\xE1nh / nh\u01B0\u1EE3ng quy\u1EC1n / l\xE3i g\u1EEDi", fmtK(a.branch + a.fran + a.interest), "")}
     </div>
     <details class="pl2-more"><summary>Ph\xE2n t\xEDch F&B chi ti\u1EBFt</summary>
       <div class="pl-cards">
@@ -2208,8 +2579,8 @@
     });
   }
   var MUSIC_OPTIONS = [
-    ["lofi", "Lofi Chill Qu\xE1n Cafe"],
-    ["vui", "Vui nh\u1ED9n"],
+    ["lofi", "\u{1F3A7} Lofi Chill Qu\xE1n Cafe"],
+    ["vui", "\u{1F389} Vui nh\u1ED9n"],
     ["spring", "\u{1F338} M\xF9a Xu\xE2n"],
     ["summer", "\u2600\uFE0F M\xF9a H\u1EA1"],
     ["autumn", "\u{1F342} M\xF9a Thu"],
@@ -2301,10 +2672,8 @@
   }
   function openExport() {
     const code = exportCode();
-    const m = openModal({
-      cls: "small", html: `<h3 class="m-title">\u{1F4E6} M\xE3 sao l\u01B0u</h3><p class="m-text">Sao ch\xE9p m\xE3 b\xEAn d\u01B0\u1EDBi v\xE0 c\u1EA5t \u1EDF n\u01A1i an to\xE0n. D\xE1n v\xE0o "Kh\xF4i ph\u1EE5c t\u1EEB m\xE3" \u0111\u1EC3 ch\u01A1i ti\u1EBFp tr\xEAn m\xE1y kh\xE1c.</p>
-    <textarea class="code" readonly data-code>${code}</textarea><button class="btn pri block" data-act="copy">\u{1F4CB} Sao ch\xE9p</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>`
-    });
+    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F4E6} M\xE3 sao l\u01B0u</h3><p class="m-text">Sao ch\xE9p m\xE3 b\xEAn d\u01B0\u1EDBi v\xE0 c\u1EA5t \u1EDF n\u01A1i an to\xE0n. D\xE1n v\xE0o "Kh\xF4i ph\u1EE5c t\u1EEB m\xE3" \u0111\u1EC3 ch\u01A1i ti\u1EBFp tr\xEAn m\xE1y kh\xE1c.</p>
+    <textarea class="code" readonly data-code>${code}</textarea><button class="btn pri block" data-act="copy">\u{1F4CB} Sao ch\xE9p</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, {
       copy: async () => {
         if (await copyText(code)) toast("\u0110\xE3 sao ch\xE9p m\xE3!", "ok");
@@ -2320,8 +2689,7 @@
     });
   }
   function openImport() {
-    const m = openModal({
-      cls: "small", html: `<h3 class="m-title">\u{1F511} Kh\xF4i ph\u1EE5c t\u1EEB m\xE3</h3><textarea class="code" data-code placeholder="D\xE1n m\xE3 TTM3.\u2026 v\xE0o \u0111\xE2y"></textarea>
+    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F511} Kh\xF4i ph\u1EE5c t\u1EEB m\xE3</h3><textarea class="code" data-code placeholder="D\xE1n m\xE3 TTM3.\u2026 v\xE0o \u0111\xE2y"></textarea>
     <button class="btn pri block" data-act="go">Kh\xF4i ph\u1EE5c</button><button class="btn ghost block" data-act="x">H\u1EE7y</button>` });
     bindActions(m.body, {
       go: () => {
@@ -2337,8 +2705,7 @@
   }
   function openBackups() {
     const list = listBackups();
-    const m = openModal({
-      cls: "small", html: `<h3 class="m-title">\u{1F5C2}\uFE0F B\u1EA3n t\u1EF1 l\u01B0u</h3>${list.length ? list.map((b) => `<button class="set-row" data-act="rb" data-i="${b.i}"><span class="si">\u{1F4BE}</span><b>Ng\xE0y ${b.day} \xB7 ${fmtK(b.money)}</b><em>${new Date(b.t).toLocaleString("vi-VN")}</em></button>`).join("") : '<p class="m-text center">Ch\u01B0a c\xF3 b\u1EA3n t\u1EF1 l\u01B0u n\xE0o. Game t\u1EF1 l\u01B0u v\xE0o cu\u1ED1i m\u1ED7i ng\xE0y.</p>'}
+    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F5C2}\uFE0F B\u1EA3n t\u1EF1 l\u01B0u</h3>${list.length ? list.map((b) => `<button class="set-row" data-act="rb" data-i="${b.i}"><span class="si">\u{1F4BE}</span><b>Ng\xE0y ${b.day} \xB7 ${fmtK(b.money)}</b><em>${new Date(b.t).toLocaleString("vi-VN")}</em></button>`).join("") : '<p class="m-text center">Ch\u01B0a c\xF3 b\u1EA3n t\u1EF1 l\u01B0u n\xE0o. Game t\u1EF1 l\u01B0u v\xE0o cu\u1ED1i m\u1ED7i ng\xE0y.</p>'}
     <button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, {
       rb: (t) => confirmBox("Kh\xF4i ph\u1EE5c b\u1EA3n n\xE0y?", "Ti\u1EBFn tr\xECnh hi\u1EC7n t\u1EA1i s\u1EBD b\u1ECB thay th\u1EBF.", () => {
@@ -2353,81 +2720,20 @@
     });
   }
   function openGuide() {
-    const li = (ico, body) => `<li><span>${ico}</span><div>${body}</div></li>`;
-    const sec = (ico, title, items, open) => `<details class="g-det"${open ? " open" : ""}><summary>${ico} ${title}</summary><ul class="g-list">${items.map((x) => li(x[0], x[1])).join("")}</ul></details>`;
-    const m = openModal({
-      id: "guide", cls: "settings", html: `<h2 class="set-title">\u{1F4D6} H\u01B0\u1EDBng d\u1EABn ch\u01A1i</h2>
-    <div class="guide rich">
-    ${sec("\u{1F3E0}", "M\xE0n chu\u1EA9n b\u1ECB", [
-        ["\u{1FAA7}", "<b>Bi\u1EC3n hi\u1EC7u</b>: ch\u1EA1m logo ho\u1EB7c t\xEAn ti\u1EC7m \u0111\u1EC3 \u0111\u1ED5i. Hai nh\xE3n nh\u1ECF d\u1EABn nhanh t\u1EDBi <b>Kh\u1EDFi nghi\u1EC7p</b> (\u0111\u1ECBa \u0111i\u1EC3m) v\xE0 <b>S\u1EA3nh Tr\xE0</b>."],
-        ["\u{1F964}", "<b>Menu h\xF4m nay</b>: c\xE1c m\xF3n \u0111ang b\xE1n k\xE8m gi\xE1, size L ph\u1EE5 thu th\xEAm. D\xF2ng s\u1EF1 ki\u1EC7n v\xE0 <b>\u{1F465} kh\xE1ch d\u1EF1 ki\u1EBFn</b> + th\u1EDDi ti\u1EBFt n\u1EB1m ngay b\xEAn d\u01B0\u1EDBi."],
-        ["\u{1F9ED}", "<b>Thanh d\u01B0\u1EDBi c\xF9ng</b> c\xF3 5 nh\xF3m: \u{1F3EA} Ti\u1EC7m \xB7 \u{1F4E6} Kho \xB7 \u{1F4C8} Ph\xE1t tri\u1EC3n \xB7 \u{1F465} X\xE3 h\u1ED9i \xB7 \u{1F380} Th\xEAm. Ch\u1ECDn nh\xF3m r\u1ED3i ch\u1EA1m \xF4 ch\u1EE9c n\u0103ng b\xEAn trong."],
-        ["\u2630", "N\xFAt <b>\u2261</b> g\xF3c tr\xE1i tr\xEAn l\xE0 C\xE0i \u0111\u1EB7t, n\xFAt \u{1F4D6} l\xE0 m\u1EDF l\u1EA1i H\u01B0\u1EDBng d\u1EABn, \u26C5 \u0111\u1EC3 xem d\u1EF1 b\xE1o th\u1EDDi ti\u1EBFt v\xE0 s\u1EF1 ki\u1EC7n."],
-        ["\u{1F3EE}", "N\xFAt h\u1ED3ng \u0111\xE1y m\xE0n h\xECnh \u0111\u1ED5i theo t\xECnh tr\u1EA1ng: <b>N\u1EA5u & nh\u1EADp</b> \u2192 <b>\u26A0\uFE0F Ch\u01B0a n\u1EA5u\u2026</b> (\u0111\u1ECF, thi\u1EBFu m\xF3n) \u2192 <b>M\u1EDF c\u1EEDa</b>."]
-      ], true)}
-    ${sec("\u{1F4E6}", "Kho & nh\u1EADp h\xE0ng", [
-        ["\u{1FAD6}", "C\xE1c tab: <b>Tr\xE0</b>, <b>Topping</b>, <b>D\u1EE5ng c\u1EE5</b> (ly, \u0111\xE1, \u0111\u01B0\u1EDDng\u2026) v\xE0 <b>\u{1F353} H\u01B0\u01A1ng</b> (khi \u0111\xE3 m\u1EDF kh\xF3a)."],
-        ["\u{1F522}", "M\u1ED7i m\xF3n c\xF3 \xF4 s\u1ED1: g\xF5 th\u1EB3ng s\u1ED1 l\u01B0\u1EE3ng ho\u1EB7c b\u1EA5m <b>\u2212 / +</b> (m\u1ED7i l\u1EA7n 1). D\xF2ng xanh <b>+N</b> l\xE0 l\u01B0\u1EE3ng s\u1EBD nh\u1EADp, k\xE8m ti\u1EC1n v\u1ED1n."],
-        ["\u23F3", "<b>\u23F3 N ng\xE0y</b> l\xE0 h\u1EA1n d\xF9ng; <b>\u26A0\uFE0F</b> b\xE1o m\xF3n h\u1EBFt h\u1EA1n h\xF4m nay. Chai h\u01B0\u01A1ng = nhi\u1EC1u ly, d\xF9ng \u0111\u01B0\u1EE3c 7 ng\xE0y."],
-        ["\u{1F6D2}", "Xong th\xEC b\u1EA5m <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n. Thi\u1EBFu Tr\xE0 ho\u1EB7c D\u1EE5ng c\u1EE5 th\xEC ch\u01B0a m\u1EDF c\u1EEDa \u0111\u01B0\u1EE3c."],
-        ["\u{1FAB4}", "Nh\xF3m Kho c\xF2n c\xF3 <b>V\u01B0\u1EDDn c\xE2y</b> (tr\u1ED3ng nguy\xEAn li\u1EC7u) v\xE0 <b>Th\xFA c\u01B0ng</b> (\u{1F512} \u0111\u1EBFn khi nh\u1EADn nu\xF4i)."]
-      ])}
-    ${sec("\u{1F9CB}", "M\xE0n b\xE1n h\xE0ng \u2013 t\u1EEBng b\u01B0\u1EDBc pha 1 ly", [
-        ["1\uFE0F\u20E3", "<b>\u0110\u1ECDc \u0111\u01A1n</b>: h\xE0ng \u0111\u1EE3i kh\xE1ch \u1EDF tr\xEAn c\xF9ng, kh\xE1ch \u0111ang ph\u1EE5c v\u1EE5 hi\u1EC7n <b>bong b\xF3ng</b> ghi size, tr\xE0, h\u01B0\u01A1ng, topping. V\xF2ng quanh avatar l\xE0 <b>ki\xEAn nh\u1EABn</b>, c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i. Ch\u1EA1m avatar kh\xE1c \u0111\u1EC3 \u0111\u1ED5i kh\xE1ch."],
-        ["2\uFE0F\u20E3", "<b>L\u1EA5y ly</b>: \u1EDF <b>QU\u1EA6Y TR\xC0</b>, ch\u1EA1m ch\u1ED3ng ly <b>M</b> ho\u1EB7c <b>L</b> \u0111\xFAng size (m\u1ED7i size c\xF3 s\u1ED1 l\u01B0\u1EE3ng ri\xEAng)."],
-        ["3\uFE0F\u20E3", "<b>R\xF3t tr\xE0</b>: ch\u1EA1m \u0111\xFAng <b>b\xECnh tr\xE0</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u r\xF3t, ch\u1EA1m l\u1EA1i \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>. Ly l\u01B0ng ho\u1EB7c tr\xE0n b\u1ECB tr\u1EEB sao."],
-        ["4\uFE0F\u20E3", "<b>H\u01B0\u01A1ng</b>: n\u1EBFu kh\xE1ch g\u1ECDi, ch\u1EA1m chai \u1EDF h\xE0ng <b>H\u01AF\u01A0NG</b> d\u01B0\u1EDBi b\xECnh tr\xE0."],
-        ["5\uFE0F\u20E3", "<b>Topping</b>: ch\u1EA1m c\xE1c khay topping kh\xE1ch y\xEAu c\u1EA7u, kh\xF4ng th\xEAm th\u1EEBa."],
-        ["6\uFE0F\u20E3", "<b>\u0110\xF3ng n\u1EAFp</b>: ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b>, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly tr\xEAn th\u1EDBt</b> (khu PHA LY)."],
-        ["7\uFE0F\u20E3", "<b>Giao kh\xE1ch</b>: ly xong s\u1EBD giao cho kh\xE1ch. \u0110\xFAng \u0111\u01A1n v\xE0 nhanh th\xEC 5 sao, kh\xE1ch h\xE0i l\xF2ng c\xF2n boa."],
-        ["\u{1F4F1}", "<b>\u0110i\u1EC7n tho\u1EA1i</b>: \u0111\u01A1n online (s\u1ED1 \u0111\u1ECF l\xE0 s\u1ED1 \u0111\u01A1n ch\u1EDD). Nh\u1EADn \u0111\u01A1n r\u1ED3i pha nh\u01B0 b\xECnh th\u01B0\u1EDDng."],
-        ["\u{1F5D1}\uFE0F", "<b>Th\xF9ng r\xE1c</b>: \u0111\u1ED5 ly b\u1ECB sai \u0111\u1EC3 pha l\u1EA1i."],
-        ["\u2B50", "Ch\u1EA5m sao: sai tr\xE0 \u22123, sai size \u22122, thi\u1EBFu/th\u1EEBa h\u01B0\u01A1ng \u22121, sai topping \u22121~2, ly l\u01B0ng \u22121, tr\xE0n \u22121, ch\u1EDD qu\xE1 l\xE2u \u22121."],
-        ["\u23F8\uFE0F", "N\xFAt <b>\u23F8</b> tr\xEAn c\xF9ng l\xE0 t\u1EA1m d\u1EEBng; n\xFAt b\xE1nh r\u0103ng b\xEAn ph\u1EA3i l\xE0 C\xE0i \u0111\u1EB7t."]
-      ], true)}
-    ${sec("\u{1FA91}", "S\u1EA3nh & b\xE0n", [
-        ["\u27A1\uFE0F", "N\xFAt <b>Ra s\u1EA3nh</b> d\u01B0\u1EDBi c\xF9ng (k\xE8m s\u1ED1 b\xE0n) chuy\u1EC3n sang S\u1EA3nh Tr\xE0; quay l\u1EA1i qu\u1EA7y b\u1EB1ng n\xFAt t\u01B0\u01A1ng \u1EE9ng."],
-        ["\u{1F9F9}", "Kh\xE1ch \u0103n xong \u0111\u1EC3 l\u1EA1i b\xE0n b\u1EA9n, d\u1ECDn b\xE0n \u0111\u1EC3 c\xF3 ch\u1ED7 cho kh\xE1ch m\u1EDBi. Kh\xE1ch ng\u1ED3i h\xE0i l\xF2ng c\xF3 th\u1EC3 boa th\xEAm."]
-      ])}
-    ${sec("\u{1F4CA}", "Cu\u1ED1i ng\xE0y & t\u1ED5ng k\u1EBFt", [
-        ["\u{1F514}", "H\u1EBFt gi\u1EDD ca, b\u1EA3ng <b>T\u1ED5ng k\u1EBFt ng\xE0y</b> cho doanh thu, boa, s\u1ED1 kh\xE1ch ph\u1EE5c v\u1EE5/b\u1ECF v\u1EC1 v\xE0 sao nh\u1EADn \u0111\u01B0\u1EE3c."],
-        ["\u2B50", "Tab <b>\u0110\xE1nh gi\xE1</b> (nh\xF3m Ti\u1EC7m) xem nh\u1EADn x\xE9t. Sao c\xE0ng cao th\xEC kh\xE1ch c\xE0ng \u0111\xF4ng."],
-        ["\u{1F4CA}", "Tab <b>T\u1ED5ng k\u1EBFt</b> xem l\u1EA1i s\u1ED1 li\u1EC7u c\xE1c ng\xE0y. Game t\u1EF1 l\u01B0u cu\u1ED1i m\u1ED7i ng\xE0y."]
-      ])}
-    ${sec("\u{1F4C8}", "Ph\xE1t tri\u1EC3n (n\xE2ng c\u1EA5p, nh\xE2n s\u1EF1, chi nh\xE1nh, kh\u1EDFi nghi\u1EC7p)", [
-        ["\u{1F4B5}", "<b>Gi\xE1 b\xE1n</b> (nh\xF3m Ti\u1EC7m): ch\u1EC9nh gi\xE1 Tr\xE0, H\u01B0\u01A1ng, Topping, Size. Tr\xE0 tr\xEAn 50k, topping tr\xEAn 20k d\u1EC5 l\xE0m kh\xE1ch b\u1ECF \u0111i."],
-        ["\u{1F6E0}\uFE0F", "<b>N\xE2ng c\u1EA5p</b>: m\u1EDF kh\xF3a tr\xE0/topping, c\u1EA3i thi\u1EC7n qu\u1EA7y, th\xEAm ti\u1EC7n \xEDch."],
-        ["\u{1F3C6}", "<b>Qu\u1EA3n l\xFD nh\xE2n s\u1EF1</b>: thu\xEA nh\xE2n vi\xEAn t\u1EF1 pha, qu\u1EA3n l\xFD h\u1ED7 tr\u1EE3 topping."],
-        ["\u{1F3E2}", "<b>Chi nh\xE1nh</b>: m\u1EDF th\xEAm ti\u1EC7m \u0111\u1EC3 c\xF3 thu nh\u1EADp. <b>\u{1F5FA}\uFE0F Kh\u1EDFi nghi\u1EC7p</b>: \u0111\u1ED5i \u0111\u1ECBa \u0111i\u1EC3m, m\u1EDF r\u1ED9ng xuy\xEAn Vi\u1EC7t."],
-        ["\u{1F4DC}", "<b>Thu\u1EBF & Bank</b> (nh\xF3m Th\xEAm): \u0111\xF3ng thu\u1EBF nh\u1EADn buff, g\u1EEDi ti\u1EBFt ki\u1EC7m."]
-      ])}
-    ${sec("\u{1F465}", "X\xE3 h\u1ED9i", [
-        ["\u{1F4F1}", "<b>M\u1EA1ng X\xE3 H\u1ED9i</b>: \u0111\u0103ng b\xE0i, ch\u1EA1y qu\u1EA3ng c\xE1o \u0111\u1EC3 k\xE9o th\xEAm kh\xE1ch."],
-        ["\u{1F465}", "<b>B\u1EA1n b\xE8</b>: k\u1EBFt n\u1ED1i v\xE0 so s\xE1nh v\u1EDBi b\u1EA1n b\xE8."],
-        ["\u{1F3B4}", "<b>S\u01B0u t\u1EA7m</b> (nh\xF3m Th\xEAm) c\u0169ng m\u1EDF nhanh b\u1EB1ng n\xFAt \u1EDF g\xF3c ph\u1EA3i thanh \u0111\u1EA7u m\xE0n h\xECnh."]
-      ])}
-    ${sec("\u{1F36C}", "Mini game", [
-        ["\u{1F36C}", "<b>Milk Tea Crush</b> (nh\xF3m Th\xEAm): gh\xE9p 3 m\xF3n gi\u1ED1ng nhau \u0111\u1EC3 nh\u1EADn th\u01B0\u1EDFng."]
-      ])}
-    ${sec("\u2699\uFE0F", "C\xE0i \u0111\u1EB7t (m\xE0u, rung, nh\u1EA1c)", [
-        ["\u{1F3A8}", "B\u1EA5m <b>\u2261</b> (m\xE0n chu\u1EA9n b\u1ECB) ho\u1EB7c b\xE1nh r\u0103ng (khi b\xE1n) r\u1ED3i ch\u1ECDn <b>M\xE0u giao di\u1EC7n</b>."],
-        ["\u{1F4F3}", "<b>Rung</b>: ch\u1ECDn m\u1EE9c rung khi thao t\xE1c."],
-        ["\u{1F3B5}", "<b>Nh\u1EA1c n\u1EC1n</b> v\xE0 <b>SFX</b> ch\u1EC9nh \xE2m l\u01B0\u1EE3ng ri\xEAng; <b>\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a</b> \u0111\u1ED5i phong c\xE1ch nh\u1EA1c. C\xF2n c\xF3 \u23F1\uFE0F th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y v\xE0 \u{1F9ED} ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc."]
-      ])}
-    </div>
+    const m = openModal({ id: "guide", cls: "settings", html: `<h2 class="set-title">${icon("book", 24)} H\u01B0\u1EDBng d\u1EABn ch\u01A1i</h2>
+    <div class="guide rich">${guideHTML()}</div>
     <button class="btn pri block" data-act="x" style="margin-top:6px">\u0110\xE3 hi\u1EC3u</button>` });
     bindActions(m.body, { x: () => m.close() });
   }
   function openForecast() {
     const ev = eventOf();
     const loc = LOCATIONS[S.location];
-    const m = openModal({
-      cls: "small", html: `<h3 class="m-title">\u{1F326}\uFE0F Th\u1EDDi ti\u1EBFt & M\xF9a</h3>
+    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F326}\uFE0F Th\u1EDDi ti\u1EBFt & M\xF9a</h3>
     <p class="m-text center">${loc.icon} ${esc(loc.name)} \xB7 ${SEASONS[S.season].icon} M\xF9a ${SEASONS[S.season].name}</p>
     ${S.forecast.slice(0, 4).map((f, i) => {
-        const w = WEATHERS[f.weather];
-        return `<div class="wx-row"><span class="wi">${w.icon}</span><div><b>${i === 0 ? "H\xF4m nay" : "Ng\xE0y " + f.day} \xB7 ${f.temp}\xB0C \u2014 ${w.name}</b><small>${esc(w.tip)}</small></div></div>`;
-      }).join("")}
+      const w = WEATHERS[f.weather];
+      return `<div class="wx-row"><span class="wi">${w.icon}</span><div><b>${i === 0 ? "H\xF4m nay" : "Ng\xE0y " + f.day} \xB7 ${f.temp}\xB0C \u2014 ${w.name}</b><small>${esc(w.tip)}</small></div></div>`;
+    }).join("")}
     <div class="wx-row ev"><span class="wi">${ev.icon}</span><div><b>S\u1EF1 ki\u1EC7n h\xF4m nay: ${esc(ev.name)}</b><small>${esc(ev.desc)}</small></div></div>
     <button class="btn pri block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, { x: () => m.close() });
@@ -2502,13 +2808,11 @@
     <div class="in-walk" aria-hidden="true"><span class="w1"><em class="stp">\u{1F6B6}\u200D\u2640\uFE0F</em><i>\u{1F9CB}</i></span><span class="w2"><em class="rid">\u{1F6F5}</em></span><span class="w3"><em class="trt">\u{1F415}</em></span></div>
     <span class="in-corner l">\u{1F353}</span><span class="in-corner r">\u{1F343}</span>
     <small class="ver">${VERSION}</small>`;
-    bindActions(el, {
-      play: () => {
-        goFullscreen();
-        el.hidden = true;
-        onPlay();
-      }, guide: () => openGuide()
-    });
+    bindActions(el, { play: () => {
+      goFullscreen();
+      el.hidden = true;
+      onPlay();
+    }, guide: () => openGuide() });
   }
 
   // js/events.js
@@ -2789,6 +3093,14 @@
 
   // js/sell.js
   var SH = { on: false };
+  on("fire", (id) => {
+    if (SH.jobs) SH.jobs = SH.jobs.filter((job) => job.by !== id);
+    if (SH.board && SH.board.auto && SH.board.auto.st.id === id) {
+      SH.board.pouring = false;
+      SH.board.auto = null;
+      SH.board.autoDone = true;
+    }
+  });
   registerSaveHook(() => {
     S.shiftRuntime = S.phase === "sell" && SH.on ? JSON.parse(JSON.stringify(SH)) : null;
   });
@@ -2895,7 +3207,7 @@
       maxP,
       online: !!opts.online,
       app: opts.app || null,
-      hard: a.hard + b.hardCust - b.badRev,
+      hard: clamp(a.hard + b.hardCust - b.badRev + (S.location === "hcm" && SH.hour >= 20 ? 0.1 : 0), 0, 1),
       born: SH.t
     };
   }
@@ -2996,9 +3308,11 @@
     1: ["Sai h\u1EB3n m\xF3n m\xECnh g\u1ECDi, bu\u1ED3n gh\xEA.", "Ch\u1EDD m\xE3i kh\xF4ng t\u1EDBi l\u01B0\u1EE3t, m\xECnh v\u1EC1 \u0111\xE2y.", "Tr\u1EA3i nghi\u1EC7m t\u1EC7, mong qu\xE1n r\xFAt kinh nghi\u1EC7m."]
   };
   function pushReview(c, stars, text) {
+    const reply = S.staff.meKetTinh ? "C\u1EA3m \u01A1n b\u1EA1n \u0111\xE3 gh\xE9 qu\xE1n! Ti\u1EC7m \u0111\xE3 ghi nh\u1EADn g\xF3p \xFD v\xE0 mong \u0111\u01B0\u1EE3c ph\u1EE5c v\u1EE5 b\u1EA1n t\u1ED1t h\u01A1n." : null;
+    if (reply) stars = Math.min(5, stars + 1);
     const weight = c.key === "reviewer" ? 3 : 1;
     for (let i = 0; i < weight; i++) {
-      S.reviews.unshift({ stars, name: c.tag, av: c.avatar, text: text || pick(REV_TEXT[stars]), day: S.day });
+      S.reviews.unshift({ stars, name: c.tag, av: c.avatar, text: text || pick(REV_TEXT[stars]), reply, day: S.day });
     }
     if (S.reviews.length > 200) S.reviews.length = 200;
     S.ratingCount += 1;
@@ -3072,9 +3386,16 @@
     if (!b.tea || b.fill < 0.2) return "Ly ch\u01B0a c\xF3 tr\xE0";
     const blk = blocked("seal");
     if (blk) return blk;
+    if (b.auto) return "Nh\xE2n vi\xEAn \u0111ang pha, h\xE3y \u0111\u1EE3i ho\xE0n t\u1EA5t";
     if (b.pouring) stopPour();
-    if (stockQty("da") > 0) take("da", 1);
-    if (stockQty("duong") > 0) take("duong", 1);
+    if (!b.iceAdded && stockQty("da") > 0) {
+      take("da", 1);
+      b.iceAdded = true;
+    }
+    if (!b.sugarAdded && stockQty("duong") > 0) {
+      take("duong", 1);
+      b.sugarAdded = true;
+    }
     b.phase = "sealing";
     b.sealT = 1.2 * (1 - bonus().seal);
     b.sealMax = b.sealT;
@@ -3164,7 +3485,8 @@
     const bn = bonus();
     const unit = priceOf(board.tea) + (board.flavor ? priceOf(board.flavor) : 0) + sum(board.tops, (t) => priceOf(t)) + (board.size === "L" ? priceOf("sizeL") : 0);
     const arch = ARCHETYPES[c.key];
-    let bill = unit * PAY[stars] * arch.bill * (1 + bn.bill + (bn.billTeas[board.tea] || 0));
+    const localBill = bn.billTeas[board.tea] || (S.location === "bmt" && board.tops.some((id) => id === "fCheese" || id === "tcDen") ? 0.2 : 0);
+    let bill = unit * PAY[stars] * arch.bill * (1 + bn.bill + localBill);
     if (SH.hour >= 20) bill *= 1 + bn.lateBill;
     if (c.online) bill *= 1.15;
     if (discount) bill *= 0.7;
@@ -3177,7 +3499,7 @@
     if (stars >= 4) {
       const coldPen = ITEMS[board.tea].temp === "cold" ? bn.coldTip : 0;
       tip = bill * 0.12 * arch.tip * (stars === 5 ? 1.5 : 1) * Math.max(0, 1 + bn.tip + coldPen);
-      if (byStaff) tip *= 0.5;
+      if (byStaff && board.by === "phaChe") tip = 0;
     }
     let pay = Math.round(bill);
     tip = Math.round(tip);
@@ -3198,7 +3520,7 @@
     S.followers += Math.round((stars >= 4 ? 3 : 0) + equipLevel("qcMxh") * 2);
     removeCust(c);
     let seat = null;
-    if (!c.online && !byStaff && chance(0.4)) {
+    if (!c.online && !byStaff && chance(0.4 + Math.max(0, equipLevel("banGhe") - 1) * 0.1)) {
       const free = SH.tables.findIndex((t) => t.s === "free");
       if (free >= 0) {
         SH.tables[free] = { s: "busy", t: rand(16, 28), av: c.avatar };
@@ -3253,8 +3575,32 @@
     const speedMul = 1 / (1 + b.speedStaff) * (S.staff.meKetTinh ? 0.8 : 1);
     for (const st of STAFF) {
       if (!S.staff[st.id]) continue;
-      if (st.kind === "auto" || st.kind === "online") {
+      if (st.kind === "marketing") {
+        if (!taxActive() && S.money > 0) payTax();
+        SH.staffT[st.id] = (SH.staffT[st.id] || 0) - dt;
+        if (SH.staffT[st.id] <= 0) {
+          SH.staffT[st.id] = 20;
+          if (!recordVideo()) {
+            S.followers += randInt(1500, 6e3);
+            S.social.posts.unshift(genPost());
+            S.social.posts = S.social.posts.slice(0, 10);
+            markDirty("panel", "hud");
+            requestSave();
+          }
+        }
+      } else if (st.kind === "auto" || st.kind === "online" || st.kind === "night") {
         const key = st.id;
+        if (st.kind === "online" && onlineEnabled() && SH.onlineQ.length) acceptOnline(SH.onlineQ[0].id);
+        const runtime = SH.staffT[key] || (SH.staffT[key] = { done: 0, sulk: 0 });
+        if (runtime.sulk > 0) {
+          runtime.sulk -= dt;
+          if (runtime.sulk <= 0) {
+            fire(key);
+            emit("staff:quit", st);
+          }
+          continue;
+        }
+        if (st.kind === "night" && !(SH.hour >= 22 || SH.hour < 6)) continue;
         const busy = SH.jobs.find((j) => j.by === key);
         if (busy) {
           busy.t -= dt;
@@ -3272,14 +3618,14 @@
         if (cand) {
           const need = needs(cand.order);
           if (!canTake(need)) continue;
-          SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul });
+          SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 5e-3)) });
           for (const [id, n] of need) take(id, n);
         }
       } else if (st.kind === "buyer") {
         SH.buyT += dt;
         if (SH.buyT >= 4) {
           SH.buyT = 0;
-          const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), "lyM", "lyL", "da", "duong"];
+          const want = [...TEAS.filter((t) => S.onMenu[t]), ...FLAVORS.filter((t) => S.onMenu[t] && S.unlocked[t]), ...TOPS.filter((t) => S.onMenu[t]), "lyM", "lyL", "da", "duong"];
           for (const id of want) {
             if (stockQty(id) === 0) {
               const q = 8, cost = Math.round(unitCost(id) * q * 1.1);
@@ -3305,20 +3651,156 @@
     const err = clamp(st.err * (1 - b.errReduce), 0, 1);
     const board = { tea: c.order.tea, size: c.order.size, flavor: c.order.flavor, tops: [...c.order.tops], fill: 1, spill: 0, phase: "ready" };
     let forceStars = null;
-    if (chance(err)) {
+    if (st.kind === "online" && chance(err)) {
+      emit("staff:retry", st);
+      return;
+    }
+    if (st.kind !== "online" && chance(err)) {
       board.size = board.size === "M" ? "L" : "M";
       forceStars = 3;
     }
-    serveStaff(c, board, forceStars);
+    const result = serveStaff(c, board, forceStars, st);
+    const runtime = SH.staffT[st.id];
+    if (runtime && typeof runtime === "object") {
+      runtime.done++;
+      if (st.id === "genZ" && runtime.done % 100 === 0) runtime.sulk = 10;
+    }
+    if (st.id === "genZ" && !S.staff.chuBa && runtime && !runtime.billTaken) {
+      runtime.billTaken = true;
+      runtime.hiddenBill = result.pay;
+      S.money -= result.pay;
+      S.today.rev -= result.pay;
+      SH.rev -= result.pay;
+      emit("staff:bill", st);
+      markDirty("hud");
+      requestSave();
+    }
   }
-  function serveStaff(c, board, forceStars) {
+  function serveStaff(c, board, forceStars, st) {
+    board.by = st.id;
     const ev = evaluate(board, c);
-    settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
+    return settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
+  }
+  function advanceCounterStaff(bd, dt, bonus2) {
+    if (bd.phase !== "cup") {
+      bd.auto = null;
+      return;
+    }
+    if (!bd.auto && !bd.autoDone) {
+      const st = STAFF.find((s) => S.staff[s.id] && (s.kind === "manager" || s.kind === "pour"));
+      const c2 = frontCustomer();
+      if (st && c2) bd.auto = { cid: c2.id, t: 0.6, st, topsLeft: st.kind === "manager" ? [...c2.order.tops] : [] };
+    }
+    const a = bd.auto;
+    if (!a) return;
+    const c = SH.queue.find((c2) => c2.id === a.cid);
+    if (!c || !S.staff[a.st.id]) {
+      if (bd.pouring) stopPour();
+      bd.auto = null;
+      bd.autoDone = true;
+      return;
+    }
+    a.stage = a.stage || "tea";
+    if (a.stage === "tea" && blocked("pump")) {
+      bd.pouring = false;
+      return;
+    }
+    a.t -= dt;
+    if (a.stage === "pour") {
+      if (blocked("pump")) {
+        bd.pouring = false;
+        return;
+      }
+      if (bd.fill < a.target) {
+        bd.pouring = true;
+        return;
+      }
+      stopPour();
+      a.stage = "flavor";
+      a.t = 0.45;
+    }
+    if (a.t > 0) return;
+    const takeOnce = (id, flag) => {
+      if (bd[flag]) return true;
+      if (stockQty(id) < 1) {
+        a.waiting = ITEMS[id].name;
+        return false;
+      }
+      take(id, 1);
+      bd[flag] = true;
+      a.waiting = null;
+      return true;
+    };
+    if (a.stage === "tea") {
+      if (!bd.tea) {
+        const err = startPour(c.order.tea);
+        if (err) {
+          a.waiting = err;
+          return;
+        }
+      }
+      a.target = chance(a.st.err * (1 - bonus2.errReduce)) ? 0.6 : 0.95;
+      a.stage = "pour";
+      bd.pouring = true;
+      a.waiting = null;
+    } else if (a.stage === "flavor") {
+      if (c.order.flavor && !bd.flavor) {
+        const err = addFlavor(c.order.flavor);
+        if (err) {
+          a.waiting = err;
+          return;
+        }
+      }
+      a.stage = "sugar";
+      a.t = 0.45;
+    } else if (a.stage === "sugar") {
+      if (!takeOnce("duong", "sugarAdded")) return;
+      emit("staff:ingredient", "duong");
+      a.stage = "ice";
+      a.t = 0.45;
+    } else if (a.stage === "ice") {
+      if (!takeOnce("da", "iceAdded")) return;
+      emit("staff:ingredient", "da");
+      a.stage = "topping";
+      a.t = 0.45;
+    } else if (a.stage === "topping") {
+      const id = a.topsLeft[0];
+      if (id) {
+        if (!bd.tops.includes(id)) {
+          const err = addTop(id);
+          if (err) {
+            a.waiting = err;
+            return;
+          }
+        }
+        a.topsLeft.shift();
+        a.t = 0.45;
+      } else {
+        bd.auto = null;
+        bd.autoDone = true;
+        emit("auto:pour");
+      }
+    }
+  }
+  function comfortStaff(id) {
+    const runtime = SH.staffT[id];
+    if (!runtime || typeof runtime !== "object" || !(runtime.sulk > 0) && !(runtime.hiddenBill > 0)) return false;
+    if (runtime.hiddenBill > 0) {
+      S.money += runtime.hiddenBill;
+      S.today.rev += runtime.hiddenBill;
+      SH.rev += runtime.hiddenBill;
+      runtime.hiddenBill = 0;
+      markDirty("hud");
+      requestSave();
+    }
+    runtime.sulk = 0;
+    emit("staff:comfort", id);
+    return true;
   }
   function updateShift(dt) {
     if (!SH.on || S.phase !== "sell") return;
     SH.t += dt;
-    SH.hour = SHIFT_START_H + Math.min(SH.t, SH.total) / SH.total * (SHIFT_END_H - SHIFT_START_H);
+    SH.hour = SH.t <= SH.total ? SHIFT_START_H + SH.t / SH.total * (SHIFT_END_H - SHIFT_START_H) : (22 + Math.min(8, (SH.t - SH.total) / 22 * 8)) % 24;
     update(dt);
     const b = bonus();
     const maxQ = b.queue;
@@ -3358,11 +3840,11 @@
     }
     const bd = SH.board;
     if (bd) {
-      if (bd.pouring) {
+      if (bd.pouring && !blocked("pump")) {
         const rate = 0.55 * (1 + b.pour + b.speedStaff);
         bd.fill += rate * dt;
         if (bd.fill > 1) {
-          bd.spill += (bd.fill - 1) * 0.5;
+          bd.spill += (bd.fill - 1) * 0.5 * (equipLevel("binhRot") >= 3 ? 0.5 : 1);
         }
         if (bd.fill >= 1.25) {
           bd.fill = 1.25;
@@ -3377,34 +3859,7 @@
           emit("seal:done");
         }
       }
-      if (bd.auto && !blocked("pump")) {
-        const a = bd.auto;
-        a.t -= dt;
-        const c = SH.queue.find((x) => x.id === a.cid);
-        if (!c) bd.auto = null;
-        else if (a.t <= 0) {
-          if (!bd.tea && stockQty(c.order.tea) > 0) {
-            take(c.order.tea, 1);
-            bd.tea = c.order.tea;
-            const error = chance(a.st.err * (1 - b.errReduce));
-            bd.fill = error ? 0.6 : 0.95;
-            if (c.order.flavor && stockQty(c.order.flavor) > 0 && !bd.flavor) {
-              take(c.order.flavor, 1);
-              bd.flavor = c.order.flavor;
-            }
-            emit("auto:pour");
-            a.t = 0.7;
-          } else if (a.topsLeft.length) {
-            const t = a.topsLeft.shift();
-            if (stockQty(t) > 0 && !bd.tops.includes(t)) {
-              take(t, 1);
-              bd.tops.push(t);
-              emit("top", t);
-            }
-            a.t = 0.5;
-          } else bd.auto = null;
-        }
-      }
+      advanceCounterStaff(bd, dt, b);
     }
     for (let i = 0; i < SH.tables.length; i++) {
       const t = SH.tables[i];
@@ -3455,7 +3910,8 @@
     const n = S.franchise.count;
     if (!n) return 0;
     const bn = bonus();
-    return Math.round(sum(Array.from({ length: n }), () => rand(FRANCHISE.revRange[0], FRANCHISE.revRange[1]) * FRANCHISE.royalty * (1 + bn.branch)));
+    const ad = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find((a) => a.id === S.social.ad.id) : null;
+    return Math.round(sum(Array.from({ length: n }), () => rand(FRANCHISE.revRange[0], FRANCHISE.revRange[1]) * FRANCHISE.royalty * (1 + bn.branch + (ad ? ad.branch : 0))));
   }
   function finishShift(early) {
     if (SH.fin) return;
@@ -3465,18 +3921,23 @@
     const ex = expireStock();
     T.rent = rentToday();
     T.util = utilityToday();
-    T.wage = staffWagePerDay() + (S.staff.chuBa ? Math.round(T.rev * 0.01) : 0);
+    const nightWorked = SH.staffT.svDem && SH.staffT.svDem.done > 0;
+    T.wage = staffWagePerDay() - (S.staff.svDem && !nightWorked ? STAFF.find((s) => s.id === "svDem").wage : 0) + (S.staff.chuBa ? Math.round(T.rev * 0.01) : 0) + (S.staff.phaChe ? Math.round(Math.min(8, SH.over / 22 * 8) * 4e4) : 0);
+    S.kpi.payable = (S.kpi.payable || 0) + T.wage;
     const br = branchDaily();
     T.branch = Math.round(br.net);
     T.fran = franchiseDaily();
     let interest = 0;
     if (S.bank.balance > 0) {
-      interest = Math.round(S.bank.balance * BANK.interest * (S.rating >= 4.5 ? 1 + BANK.starBonus : 1));
-      S.bank.balance = Math.min(BANK.max, S.bank.balance + interest);
+      const rate = BANK.interest * (1 + (S.rating >= 4.5 ? BANK.starBonus : 0) + (S.bank.balance > 1e9 ? BANK.bigBonus : 0));
+      interest = Math.min(BANK.max - S.bank.balance, Math.round(S.bank.balance * rate));
+      S.bank.balance += interest;
       S.bank.shifts++;
     }
     T.interest = interest;
-    S.money = Math.max(0, S.money - T.rent - T.util - T.wage + T.branch + T.fran);
+    T.payrollCash = S.kpi.shifts + 1 >= 7 ? Math.min(Math.max(0, S.money + T.branch + T.fran - T.rent - T.util), S.kpi.payable) : 0;
+    S.kpi.payable -= T.payrollCash;
+    S.money = Math.max(0, S.money - T.rent - T.util - T.payrollCash + T.branch + T.fran);
     T.profit = T.rev + T.tips - T.cogs - T.rent - T.util - T.wage - T.tax - (T.fine || 0) + T.branch + T.fran + T.interest;
     T.avgStars = T.stars.length ? sum(T.stars) / T.stars.length : 0;
     T.expired = ex.list;
@@ -3484,7 +3945,7 @@
     T.cash = S.money;
     T.event = S.eventId;
     T.weather = S.weather;
-    S.history.push({ day: S.day, rev: T.rev + T.tips, cogs: T.cogs, rent: T.rent, util: T.util, wage: T.wage, tax: T.tax, branch: T.branch, fran: T.fran, interest, profit: T.profit, cups: T.cups, left: T.left, stars: T.avgStars, online: T.online, event: S.eventId });
+    S.history.push({ day: S.day, rev: T.rev + T.tips, cogs: T.cogs, rent: T.rent, util: T.util, wage: T.wage, payrollCash: T.payrollCash, fine: T.fine || 0, tax: T.tax, branch: T.branch, fran: T.fran, interest, profit: T.profit, cups: T.cups, left: T.left, stars: T.avgStars, online: T.online, event: S.eventId });
     if (S.history.length > 400) S.history.shift();
     S.kpi.shifts++;
     for (const k of Object.keys(S.staff)) S.staff[k].shifts = (S.staff[k].shifts || 0) + 1;
@@ -3502,6 +3963,13 @@
     S.today = freshToday();
     S.lastUsed = {};
     S.social.videosToday = 0;
+    S.social.videoBuff = 0;
+    S.social.videoDay = S.day;
+    const ad = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find((a) => a.id === S.social.ad.id) : null;
+    if (ad) {
+      for (let i = 0; i < ad.posts; i++) S.social.posts.unshift(genPost());
+      S.social.posts = S.social.posts.slice(0, 10);
+    }
     S.pearl.playsDay = 0;
     S.crush.playedToday = false;
     const g = S.garden;
@@ -3672,7 +4140,7 @@
     const celestial = tod === "night" ? '<span class="sc-sun moon">\u{1F319}</span>' : tod === "dusk" ? '<span class="sc-sun dusk">\u{1F305}</span>' : '<span class="sc-sun">\u2600\uFE0F</span>';
     const rain = wx === "rain" ? `<div class="sc-rain">${Array.from({ length: 22 }, (_, i) => `<i style="left:${i * 4.7 % 100}%;animation-delay:${i % 7 * 0.13}s"></i>`).join("")}</div>` : "";
     return `<div class="sell-scene" id="sellScene" data-loc="${id}" data-tod="${SKY_CLASS[tod]}" data-wx="${wx}" aria-hidden="true">
-    ${celestial}<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice">${SCENES[id]().replace(/(<g class="sc-boat" transform="[^"]*">)/g, '$1<animateTransform attributeName="transform" type="translate" additive="sum" values="-16 0;16 -2;-16 0" dur="12s" repeatCount="indefinite"/>')}</svg>${rain}${deco}
+    ${celestial}<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice">${SCENES[id]().replace(/(<g class="sc-boat" transform="[^"]*">)/g, '$1<animateTransform attributeName="transform" type="translate" additive="sum" values="-24 0;0 -2;24 0" dur="12s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.92;1" dur="12s" repeatCount="indefinite"/>')}</svg>${rain}${deco}
     <span class="sc-clouds"><i>\u2601\uFE0F</i><i>\u2601\uFE0F</i></span></div>`;
   }
   function updateSceneTime(hour) {
@@ -3691,120 +4159,6 @@
     }
   }
   var SCENE_IDS = Object.keys(SCENES);
-
-  // js/sell-art.js
-  var DIR = "assets/sell/sprites/";
-  var img = (name, cls = "") => `<img class="sale-art ${cls}" src="${DIR}${name}.png" alt="" draggable="false" decoding="async">`;
-  var customerCells = {
-    sinhVien: 1,
-    vanPhong: 2,
-    genZ: 0,
-    bac: 4,
-    vip: 8,
-    macCa: 9,
-    reviewer: 2,
-    be: 6,
-    idol: 3,
-    gamer: 5,
-    congNhan: 7,
-    shipper: 1,
-    giaoVien: 8
-  };
-  var TEAS2 = ["traSua", "matcha", "hongTra", "lucTra", "olong", "traThai"];
-  var TOPS2 = ["tcDen", "tcTrang", "tcVang", "tcSoi", "tcNo", "cuNang", "thachTc", "suongSao", "thachCf", "fCheese", "fMatcha", "fMuoi", "fUbe", "pmVien", "thachPm"];
-  var TOP_ALIAS = { pmTuoi: "pmVien" };
-  function customerArt(key) {
-    if (!Object.prototype.hasOwnProperty.call(customerCells, key)) return "";
-    return img(`customer-${customerCells[key]}`, "customer-sprite");
-  }
-  function teaArt(id) {
-    return img(`tea-${TEAS2.includes(id) ? id : "traSua"}`);
-  }
-  function toppingArt(id) {
-    const k = TOP_ALIAS[id] || id;
-    return img(`top-${TOPS2.includes(k) ? k : "tcDen"}`);
-  }
-  function stackArt(size) {
-    const L = size === "L";
-    const rims = L ? [46, 52, 58, 64, 70, 76, 82] : [48, 54, 60, 66, 72, 78];
-    const wl = (y) => 6.5 + 6.5 * (y - 34) / 60;
-    const lines = rims.map((y) => `<path d="M${wl(y).toFixed(1)} ${y} Q30 ${y + 3.4} ${(60 - wl(y)).toFixed(1)} ${y}" fill="none" stroke="rgba(122,90,62,.5)" stroke-width="1.1"/>`).join("");
-    const id = `stk${cupUid++}`;
-    return `<svg class="sale-art stack-svg" viewBox="0 0 60 104" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
-    <defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#e6cfa8"/><stop offset=".35" stop-color="#fbf0dc"/><stop offset=".7" stop-color="#f1dfc0"/><stop offset="1" stop-color="#d9bf94"/></linearGradient></defs>
-    <ellipse cx="30" cy="99" rx="21" ry="3.6" fill="rgba(60,35,10,.2)"/>
-    <path d="M6.5 34 L13 93 Q30 98.5 47 93 L53.5 34 Z" fill="url(#${id})" stroke="#7a5a3e" stroke-width="1.8" stroke-linejoin="round"/>
-    ${lines}
-    <path d="M6.5 34 Q30 26 53.5 34" fill="none" stroke="#7a5a3e" stroke-width="1.8"/>
-    <ellipse cx="30" cy="34" rx="23.5" ry="6.4" fill="#fffaf0" stroke="#7a5a3e" stroke-width="1.8"/>
-    <ellipse cx="30" cy="35.2" rx="19.5" ry="4.2" fill="#e4cda6"/>
-    <path d="M12 44 L16.5 86" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
-  </svg>`;
-  }
-  function sealerArt() {
-    return img("sealer");
-  }
-  var cupUid = 0;
-  var BODY_IN = "M7.6 13 L17.4 95.5 Q39 101 60.6 95.5 L70.4 13 Z";
-  var Y_TOP = 14;
-  var Y_BOT = 97;
-  var wallL = (y) => 6 + 10 * (y - 12) / 84;
-  var wallR = (y) => 72 - 10 * (y - 12) / 84;
-  var surfaceOf = (fill) => Y_BOT - (Y_BOT - Y_TOP) * Math.min(1, Math.max(0, fill) * 0.86);
-  function setCupFill(cupEl, fill) {
-    const liq = cupEl && cupEl.querySelector(".c-liq");
-    if (!liq) return;
-    const y = surfaceOf(fill);
-    liq.setAttribute("y", y.toFixed(1));
-    liq.setAttribute("height", (110 - y).toFixed(1));
-    const top = cupEl.querySelector(".c-liq-top");
-    if (top) top.setAttribute("y", y.toFixed(1));
-    const surf = cupEl.querySelector(".c-surf");
-    if (surf) {
-      surf.setAttribute("cy", y.toFixed(1));
-      surf.style.opacity = fill > 0.02 ? 1 : 0;
-    }
-  }
-  function cupSvg(opts) {
-    var _a;
-    const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = "", straw = false } = opts;
-    const id = `cup${cupUid++}`;
-    const y = surfaceOf(tea ? fill : 0);
-    const balls = [];
-    let n = 0;
-    for (let ti = 0; ti < tops.length; ti++) {
-      const c = tops[ti], cnt = (_a = shown[ti]) != null ? _a : 3;
-      for (let k = 0; k < cnt; k++, n++) {
-        const row2 = Math.floor(n / 5), col = n % 5;
-        const yy = 91 - row2 * 6.6;
-        const xx = Math.max(wallL(yy) + 4.2, Math.min(wallR(yy) - 4.2, 39 + (col - 2) * 8.2 + (row2 % 2 ? 4.1 : 0)));
-        balls.push(`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="3.7" fill="${c}"/><circle cx="${(xx - 1.2).toFixed(1)}" cy="${(yy - 1.3).toFixed(1)}" r="1.1" fill="#fff" opacity=".55"/>`);
-      }
-    }
-    const liquid = tea ? `<rect class="c-liq" x="0" y="${y.toFixed(1)}" width="78" height="${(110 - y).toFixed(1)}" fill="${tea}"/>
-      <rect class="c-liq-top" x="0" y="${y.toFixed(1)}" width="78" height="14" fill="url(#${id}g)"/>
-      ${flavor ? `<rect class="c-flav" x="0" y="64" width="78" height="40" fill="${flavor}" opacity=".5"/>` : ""}
-      <ellipse class="c-surf" cx="39" cy="${y.toFixed(1)}" rx="31.5" ry="3.1" fill="#fff" fill-opacity=".38" style="opacity:${fill > 0.02 ? 1 : 0}"/>` : "";
-    const lidSvg = lid ? `<g class="c-lidg ${lid === "drop" ? "drop" : ""}">
-      <path d="M7.5 9.8 Q39 -8.5 70.5 9.8 Z" fill="rgba(255,255,255,.72)" stroke="#cdbda7" stroke-width="1.1"/>
-      <path d="M16 8 Q26 0 36 -0.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/>
-      <path d="M3.4 10 Q3.4 7.6 6 7.6 H72 Q74.6 7.6 74.6 10 L72.7 17.4 Q72.5 18.5 71.4 18.5 H6.6 Q5.5 18.5 5.3 17.4 Z" fill="#fffdf8" stroke="#cdbda7" stroke-width="1.2"/>
-      <path d="M6.2 12.4 H71.8" stroke="#e3d6c1" stroke-width="1"/>
-    </g>` : "";
-    const strawSvg = straw ? '<g class="c-strawg"><line x1="41" y1="92" x2="54" y2="-22" stroke="#ff7fa0" stroke-width="5" stroke-linecap="round"/><line x1="41" y1="92" x2="54" y2="-22" stroke="#fff" stroke-width="5" stroke-dasharray="4 5" opacity=".9"/></g>' : "";
-    return `<svg class="cup-svg" viewBox="0 0 78 104" width="100%" height="100%" overflow="visible" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
-    <defs><clipPath id="${id}c"><path d="${BODY_IN}"/></clipPath>
-      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
-    <ellipse cx="39" cy="100" rx="25" ry="3.2" fill="rgba(60,35,10,.16)"/>
-    <g clip-path="url(#${id}c)">${liquid}${balls.join("")}</g>
-    ${strawSvg}
-    <path d="M6 12 L16 96 Q39 103 62 96 L72 12" fill="rgba(235,245,252,.2)" stroke="rgba(121,88,64,.9)" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M12.5 20 L19 82" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".55"/>
-    <path d="M66 24 L61 62" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".4"/>
-    <ellipse cx="39" cy="12" rx="33" ry="4.6" fill="rgba(255,255,255,.28)" stroke="rgba(121,88,64,.9)" stroke-width="1.6"/>
-    ${lidSvg}
-  </svg>`;
-  }
 
   // js/brewui.js
   var sizePx = { M: [54, 76], L: [64, 90] };
@@ -3897,7 +4251,7 @@
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra s\u1EA3nh \u2192 <span id="lobbyCnt">0/0</span></button></div>
-    <div class="stream" id="stream"><i class="st-gloss"></i><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></div>
+    <div class="stream" id="stream" aria-hidden="true"><span class="st-jet"><i class="st-gloss"></i></span><span class="st-impact"><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></span></div>
   </div>`;
     root = $("#sell");
     fillTrays();
@@ -3908,18 +4262,23 @@
     (_a = $("#staffStrip")) == null ? void 0 : _a.addEventListener("click", (e) => {
       const b = e.target.closest(".stf");
       if (!b) return;
-      sfx("click");
+      if (comfortStaff(b.dataset.stf)) sfx("success");
+      else sfx("click");
       b.classList.add("tip");
       clearTimeout(b._tm);
       b._tm = setTimeout(() => b.classList.remove("tip"), 1800);
     });
     frameSell(0, true);
   }
-  var STAFF_ICON = { thuViec: "\u{1F98A}", phaChe: "\u{1F430}", online: "\u{1F43C}", quanLy: "\u{1F43B}", genZ: "\u{1F984}", svDem: "\u{1F989}", meKetTinh: "\u{1F98B}", diCho: "\u{1F9FA}", chuBa: "\u{1F46E}" };
-  var staffStripHTML = () => STAFF.filter((st) => S.staff[st.id]).map((st) => `<button class="stf idle" data-stf="${st.id}" data-tip="${esc(st.name)}" aria-label="${esc(st.name)}">${STAFF_ICON[st.id] || st.icon}<b></b></button>`).join("");
+  var staffStripHTML = () => STAFF.filter((st) => S.staff[st.id]).map((st) => `<button class="stf idle" data-stf="${st.id}" data-tip="${esc(st.name)}" aria-label="${esc(st.name)}">${staffArt(st.id)}<b></b></button>`).join("");
   function staffStatus(st) {
+    const auto = SH.board && SH.board.auto;
+    if (auto && auto.st.id === st.id) return { cls: "work", p: 60, txt: `${st.name}: ${auto.waiting || auto.stage || "chu\u1EA9n b\u1ECB pha"}` };
+    const mood = SH.staffT[st.id];
+    if (mood && (mood.sulk > 0 || mood.hiddenBill > 0)) return { cls: "sulk", p: 0, txt: `${st.name}: ${mood.hiddenBill > 0 ? "\u0111ang gi\u1EEF bill, ch\u1EA1m \u0111\u1EC3 thu l\u1EA1i" : "\u0111ang d\u1ED7i, ch\u1EA1m \u0111\u1EC3 d\u1ED7 tr\u01B0\u1EDBc khi ngh\u1EC9 vi\u1EC7c"}` };
     const job = SH.jobs.find((j) => j.by === st.id);
     if (job) return { cls: "work", p: clamp((1 - job.t / Math.max(0.5, st.sec)) * 100, 4, 100), txt: `${st.name}: \u0111ang pha m\xF3n cho kh\xE1ch` };
+    if (st.kind === "night") return { cls: "idle", p: 0, txt: `${st.name}: ch\u1EC9 l\xE0m sau 22h \u0111\u1EBFn 6h` };
     if (st.kind === "auto" || st.kind === "online") return { cls: "idle", p: 0, txt: `${st.name}: ${st.kind === "online" ? "ch\u1EDD \u0111\u01A1n online" : "\u0111ang r\u1EA3nh, ch\u1EDD kh\xE1ch"}` };
     if (st.kind === "buyer") return { cls: "idle", p: 0, txt: `${st.name}: canh kho, h\u1EBFt h\xE0ng s\u1EBD \u0111i ch\u1EE3` };
     if (st.id === "chuBa") return { cls: "idle", p: 0, txt: `${st.name}: \u0111ang canh g\xE1c qu\xE1n` };
@@ -3931,6 +4290,7 @@
       const st = STAFF.find((x) => x.id === el.dataset.stf);
       if (!st) continue;
       const s = staffStatus(st);
+      el.classList.toggle("sulk", s.cls === "sulk");
       el.classList.toggle("work", s.cls === "work");
       el.classList.toggle("idle", s.cls !== "work");
       el.style.setProperty("--p", s.p.toFixed(0));
@@ -4234,9 +4594,9 @@
     };
     requestAnimationFrame(frame2);
   }
-  function splash(cup, color, atY) {
-    if (!canShowBrewFx() || !cup.isConnected) return;
-    const r = cup.getBoundingClientRect();
+  function splash(cup2, color, atY) {
+    if (!canShowBrewFx() || !cup2.isConnected) return;
+    const r = cup2.getBoundingClientRect();
     const x = r.left + r.width / 2, y = atY != null ? atY : r.top + r.height * 0.5;
     fxSpark({ x, y }, 5);
     const ring = h(`<div class="fx-ripple" style="left:${x}px;top:${y}px;border-color:${color}"></div>`);
@@ -4297,6 +4657,10 @@
   });
   on("top", () => updateBoard(true));
   on("flavor", () => updateBoard(true));
+  on("staff:ingredient", (id) => {
+    dropFx(document.querySelector("#staffStrip .stf.work") || document.querySelector("#sealer"), ITEMS[id].color);
+    sfx("plop");
+  });
   on("auto:pour", () => updateBoard(true));
   on("trash", () => updateBoard(true));
   on("queue", () => {
@@ -4355,7 +4719,7 @@
     bub.classList.add("enter");
     const o = c.order;
     av.innerHTML = `<span class="face">${c.online ? c.avatar : customerArt(c.key) || c.avatar}</span>`;
-    bub.innerHTML = `<button class="rej" data-act="reject" aria-label="T\u1EEB ch\u1ED1i \u0111\u01A1n">\u2716 T\u1EEB ch\u1ED1i</button><div class="b-row">${orderCup(o)}<div><span class="atag">${esc(c.tag)}</span><div class="btxt">${esc(c.text)}</div></div></div>
+    bub.innerHTML = `<div class="order-head"><span class="atag">${esc(c.tag)}</span><button class="rej" data-act="reject" aria-label="T\u1EEB ch\u1ED1i \u0111\u01A1n c\u1EE7a ${esc(c.tag)}">\u2716 T\u1EEB ch\u1ED1i</button></div><div class="b-row">${orderCup(o)}<div><div class="btxt" tabindex="0" aria-label="N\u1ED9i dung \u0111\u01A1n h\xE0ng">${esc(c.text)}</div></div></div>
     <div class="pat"><span>KI\xCAN NH\u1EAAN</span><div class="bar" id="patBar"><i style="width:${(c.p / c.maxP * 100).toFixed(0)}%"></i></div></div>`;
   }
   function updateBoard(force) {
@@ -4395,6 +4759,11 @@
     (_a = $("#lobbyGo")) == null ? void 0 : _a.classList.toggle("alert", dirty2 > 0);
   }
   function hintText() {
+    const auto = SH.board && SH.board.auto;
+    if (auto) {
+      const labels = { tea: "ch\u1ECDn tr\xE0", pour: "r\xF3t tr\xE0", flavor: "th\xEAm h\u01B0\u01A1ng", sugar: "th\xEAm \u0111\u01B0\u1EDDng", ice: "th\xEAm \u0111\xE1", topping: "th\xEAm topping" };
+      return `${auto.st.name}: ${auto.waiting || labels[auto.stage] || "chu\u1EA9n b\u1ECB pha"}`;
+    }
     if (!S.settings.hints) return "";
     const c = frontCustomer();
     if (!c) return "Ch\u1EDD kh\xE1ch gh\xE9 qu\u1EA7y...";
@@ -4443,8 +4812,9 @@
     const st = $("#stream");
     const b = SH.board;
     const slot = $("#cupslot");
-    slot == null ? void 0 : slot.classList.toggle("pouring-art", !!(b == null ? void 0 : b.pouring));
-    if ((b == null ? void 0 : b.pouring) && b.tea && slot) {
+    const pouring = !!(b == null ? void 0 : b.pouring) && canShowBrewFx();
+    slot == null ? void 0 : slot.classList.toggle("pouring-art", pouring);
+    if (pouring && b.tea && slot) {
       const d = $(`.disp[data-tea="${b.tea}"] .tap`);
       if (d && st) {
         const a = d.getBoundingClientRect(), r0 = root.getBoundingClientRect();
@@ -4455,8 +4825,7 @@
           const cupEl = slot.querySelector(".cup");
           const cupW = cupEl ? cupEl.offsetWidth : 60, cupH = cupEl ? cupEl.offsetHeight : 80;
           const cupTop = baseT + slot.offsetHeight - 6 - cupH;
-          const vw = document.documentElement.clientWidth;
-          const cx = clamp(tapX, br.left + cupW / 2 + 8, br.right - cupW / 2 - 8);
+          const cx = clamp(tapX, r0.left + cupW / 2 + 8, r0.right - cupW / 2 - 8);
           const nx = Math.round(cx - (baseL + slot.offsetWidth / 2)), ny = 0;
           slot.style.transform = `translate(${nx}px,${ny}px)`;
           slot.classList.add("under-tap");
@@ -4473,7 +4842,8 @@
           const dx = mouth.left + mouth.width / 2 - tapX, dy = Math.max(10, surfaceY - a.bottom);
           const len = Math.hypot(dx, dy);
           const rim = clamp((rimY - a.bottom) / dy, 0, 1) * 100;
-          st.style.cssText = `display:block;left:${tapX - 3.5 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${len}px;--rim:${rim.toFixed(1)}%;transform-origin:50% 0;transform:rotate(${-Math.atan2(dx, dy) * 180 / Math.PI}deg);background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+          const angle = -Math.atan2(dx, dy) * 180 / Math.PI;
+          st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - r0.top}px;height:${len}px;--rim:${rim.toFixed(1)}%;--tea:${ITEMS[b.tea].color};--impact-angle:${-angle}deg;transform-origin:50% 0;transform:rotate(${angle}deg);color:${ITEMS[b.tea].color}`;
           if (performance.now() - P3.lastSfx > 1100) {
             P3.lastSfx = performance.now();
             sfx("pour");
@@ -4509,16 +4879,14 @@
       return SH.onlineQ.map((q) => `<div class="on-row"><span class="on-app" style="background:${q.app.color}">${q.app.name[0]}</span><div class="grow"><b>${q.app.name}</b><small>${ITEMS[q.o.tea].name} ${q.o.size}${q.o.flavor ? " \xB7 " + ITEMS[q.o.flavor].name : ""}${q.o.tops.length ? " \xB7 " + q.o.tops.length + " topping" : ""}</small></div><button class="btn pri sm" data-act="acc" data-id="${q.id}">Nh\u1EADn \xB7 ${Math.ceil(q.exp)}s</button></div>`).join("");
     };
     const m = openModal({ id: "online", cls: "small", html: `<h3 class="m-title">\u{1F4F1} \u0110\u01A1n online</h3><div id="onl">${draw()}</div><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
-    bindActions(m.body, {
-      acc: (t) => {
-        const e = acceptOnline(+t.dataset.id);
-        if (e) toast(e, "err");
-        else {
-          toast("\u0110\xE3 nh\u1EADn \u0111\u01A1n!", "ok");
-          $("#onl", m.body).innerHTML = draw();
-        }
-      }, x: () => m.close()
-    });
+    bindActions(m.body, { acc: (t) => {
+      const e = acceptOnline(+t.dataset.id);
+      if (e) toast(e, "err");
+      else {
+        toast("\u0110\xE3 nh\u1EADn \u0111\u01A1n!", "ok");
+        $("#onl", m.body).innerHTML = draw();
+      }
+    }, x: () => m.close() });
   }
   function renderLobby(view) {
     const busy = SH.tables.filter((t) => t.s === "busy").length;
@@ -4552,7 +4920,7 @@
 
   // js/panels1.js
   var subtab = (k, d) => S.subtab[k] || d;
-  var tabs = (key, list, def) => `<div class="tabs">${list.map(([id, label]) => `<button class="tab ${subtab(key, def) === id ? "on" : ""}" data-act="sub" data-k="${key}" data-v="${id}">${label}</button>`).join("")}</div>`;
+  var tabs = (key, list, def) => `<div class="tabs scroll">${list.map(([id, label]) => `<button class="tab ${subtab(key, def) === id ? "on" : ""}" data-act="sub" data-k="${key}" data-v="${id}">${label}</button>`).join("")}</div>`;
   var setSub = (t) => {
     S.subtab[t.dataset.k] = t.dataset.v;
     markDirty("panel");
@@ -4607,7 +4975,6 @@
     },
     bind(root2) {
       for (const inp of root2.querySelectorAll("[data-plan]")) {
-        inp.addEventListener("focus", () => inp.select());
         inp.addEventListener("change", () => setPlan(inp.dataset.plan, Math.round(+inp.value || 0)));
       }
     }
@@ -4743,7 +5110,7 @@
   function equipRow(eq) {
     const lv = equipLevel(eq.id), next = equipNext(eq.id);
     const cur2 = lv > 0 ? eq.tiers[lv - 1] : null;
-    return `<div class="erow"><span class="k-ico big">${eq.icon}</span><div class="k-main"><div class="k-t"><b>${eq.name}</b><span class="tier">C${Math.max(lv, 1)}</span></div>
+    return `<div class="erow"><span class="k-ico big">${eq.icon}</span><div class="k-main"><div class="k-t"><b>${eq.name}</b><span class="tier">${lv ? `C${lv}` : "Ch\u01B0a mua"}</span></div>
     <small>${cur2 ? `${cur2.n}: ${cur2.d}` : "Ch\u01B0a s\u1EDF h\u1EEFu"}</small>
     <div class="pips">${eq.tiers.map((_, i) => `<i class="${i < lv ? "on" : ""}"></i>`).join("")}</div>
     ${next ? `<button class="btn sm gold full" data-act="equip" data-id="${eq.id}">L\xEAn C${lv + 1} \xB7 ${next.n} \xB7 ${fmtK(next.c)}</button>` : '<button class="btn sm ghost full" disabled>\u0110\xE3 \u0111\u1EA1t c\u1EA5p t\u1ED1i \u0111a</button>'}</div></div>`;
@@ -4751,7 +5118,7 @@
   function onlineHTML() {
     const pr = onlineProgress();
     const bar2 = (l, v, t, f) => `<div class="gate"><span>${l}</span><div class="bar"><i style="width:${Math.min(100, v / t * 100)}%"></i></div><b>${f(v)}/${f(t)}</b></div>`;
-    const ok = pr.profit >= ONLINE_GATE.profit && pr.orders >= ONLINE_GATE.orders;
+    const ok = pr.profit >= ONLINE_GATE.profit && pr.orders >= ONLINE_GATE.orders && pr.rating >= ONLINE_GATE.rating;
     return `${catCard("online")}
     <div class="catcard col"><h4>\u{1F4F2} M\u1EDF b\xE1n Online (${APPS.map((a) => a.name).join(", ")})</h4>
       ${bar2("\u{1F4B0} l\u1EE3i nhu\u1EADn", pr.profit, ONLINE_GATE.profit, (x) => fmtK(Math.max(0, x)))}${bar2("\u{1F9CB} \u0111\u01A1n", pr.orders, ONLINE_GATE.orders, (x) => x)}${bar2("\u2B50 \u0111\xE1nh gi\xE1", pr.rating, ONLINE_GATE.rating, (x) => x.toFixed(1))}
@@ -4766,7 +5133,7 @@
     const hired = !!S.staff[st.id];
     const why = hireBlock(st.id);
     const wageTxt = `${fmtK(st.wage)}/ng\xE0y${st.revPct ? ` + ${st.revPct * 100}% doanh thu` : ""}`;
-    return `<div class="staffcard ${hired ? "hired" : ""}"><div class="sc-top"><span class="sc-av">${st.icon}</span><div class="grow"><b>${esc(st.name)}</b><small>(${esc(st.role)})</small>
+    return `<div class="staffcard ${hired ? "hired" : ""}"><div class="sc-top"><span class="sc-av">${staffArt(st.id)}</span><div class="grow"><b>${esc(st.name)}</b><small>(${esc(st.role)})</small>
       <div class="sc-st">${hired ? "\u{1F7E2} \u0110ang l\xE0m" : "\u26AA Ch\u01B0a tuy\u1EC3n"}</div><div class="sc-w">\u{1F4B5} L\u01B0\u01A1ng ${wageTxt}</div></div>
       ${hired ? `<button class="btn ghost sm" data-act="fire" data-id="${st.id}">Cho ngh\u1EC9</button>` : why ? `<span class="why">${esc(why)}</span>` : `<button class="btn pri sm" data-act="hire" data-id="${st.id}">${fmtK(st.hire)}<br/>Thu\xEA</button>`}</div>
     <details class="fold"><summary>Xem chi ti\u1EBFt</summary><p class="sc-d">${esc(st.desc)}</p></details></div>`;
@@ -4779,7 +5146,7 @@
       const avail = STAFF.filter((s) => !S.staff[s.id]);
       return `<div class="kpi"><div class="kpi-h"><b>\u{1F4CA} Chu k\u1EF3 x\xE9t KPI & Tr\u1EA3 l\u01B0\u01A1ng 7 ca b\xE1n n\u01B0\u1EDBc</b><span class="chip">Ca ${n}/7</span></div>
       <div class="bar"><i style="width:${(n / 7 * 100).toFixed(0)}%"></i></div>
-      <p>\u0110\xE3 t\xEDch lu\u1EF9 ${n}/7 ca b\xE1n. C\xF2n ${7 - n} ca b\xE1n n\u1EEFa s\u1EBD \u0111\u1EBFn \u0111\u1EE3t x\xE9t KPI & thanh to\xE1n d\u1ED3n ti\u1EC1n l\u01B0\u01A1ng, ti\u1EC1n th\u01B0\u1EDFng \u0111\u1ECBnh k\u1EF3 cho to\xE0n b\u1ED9 nh\xE2n vi\xEAn.</p>
+      <p>\u0110\xE3 t\xEDch lu\u1EF9 ${n}/7 ca b\xE1n. C\xF2n ${7 - n} ca b\xE1n n\u1EEFa s\u1EBD \u0111\u1EBFn \u0111\u1EE3t x\xE9t KPI & thanh to\xE1n d\u1ED3n ti\u1EC1n l\u01B0\u01A1ng, cho to\xE0n b\u1ED9 nh\xE2n vi\xEAn. L\u01B0\u01A1ng ch\u1EDD thanh to\xE1n: ${fmtK(S.kpi.payable || 0)}.</p>
       <span class="chip green">\u{1F4E3} G\u1ECDi th\xEAm kh\xE1ch: +${callPct}%</span>
       <button class="btn soft block" data-act="kpi">\u{1F50D} Xem chi ti\u1EBFt KPI & Phong \u0111\u1ED9 nh\xE2n vi\xEAn</button></div>
       ${hiredList.length ? `<h5 class="grp">\u0110\u1ED9i ng\u0169 qu\xE1n (${hiredList.length})</h5>${hiredList.map(staffCard).join("")}` : `<div class="emptybox">\u{1F468}\u200D\u{1F373}<b>Ch\u01B0a c\xF3 nh\xE2n vi\xEAn n\xE0o trong \u0111\u1ED9i ng\u0169 qu\xE1n</b><p>B\u1EA1n c\xF3 th\u1EC3 b\u1EA5m <b>Thu\xEA</b> ngay \u1EE9ng vi\xEAn b\xEAn d\u01B0\u1EDBi \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ch\u1EA5m c\xF4ng & x\xE9t KPI.</p></div>`}
@@ -4816,8 +5183,7 @@
   }
   function taxReceipt(amount) {
     const until = new Date(S.tax.until);
-    const m = openModal({
-      cls: "small", html: `<div class="receipt"><div class="r-ico">\u{1F3DB}\uFE0F\u{1F4DC}</div><h3>BI\xCAN LAI \u0110\xD3NG THU\u1EBE TR\u1EF0C TUY\u1EBEN 72H</h3>
+    const m = openModal({ cls: "small", html: `<div class="receipt"><div class="r-ico">\u{1F3DB}\uFE0F\u{1F4DC}</div><h3>BI\xCAN LAI \u0110\xD3NG THU\u1EBE TR\u1EF0C TUY\u1EBEN 72H</h3>
     <div class="r-box"><p>\u2705 <b>Tr\u1EA1ng th\xE1i:</b> \u0110\xC3 N\u1ED8P THU\u1EBE TH\xC0NH C\xD4NG</p><p>\u{1F4B0} <b>S\u1ED1 ti\u1EC1n n\u1ED9p:</b> ${fmtK(amount)} (${Math.round(S.tax.rate * 100)}% k\xE9t)</p><p>\u23F1\uFE0F <b>Th\u1EDDi h\u1EA1n b\u1EA3o h\u1ED9:</b> 72 Gi\u1EDD Th\u1EF1c T\u1EBF (3 ng\xE0y) (\u0111\u1EBFn ${until.toLocaleString("vi-VN")})</p>
     <p>\u2728 <b>Hi\u1EC7u \u1EE9ng k\xEDch ho\u1EA1t:</b></p><p>\u2022 T\u0103ng +15% kh\xE1ch h\xE0ng gh\xE9 qu\xE1n.</p><p>\u2022 T\u0103ng +15% t\u1ED1c \u0111\u1ED9 l\xE0m vi\u1EC7c c\u1EE7a to\xE0n b\u1ED9 nh\xE2n vi\xEAn.</p><p>\u2022 Gi\u1EA3m 15% nguy c\u01A1 tr\u1ED9m c\u1EAFp, ti\u1EC1n gi\u1EA3 v\xE0 b\xF9ng ti\u1EC1n!</p><p>\u2022 T\u0103ng +15% t\u1EC9 l\u1EC7 may m\u1EAFn x2 ti\u1EC1n bill m\u1ED7i ly n\u01B0\u1EDBc!</p></div></div>
     <button class="btn pri block" data-act="ok">\u0110\xE3 hi\u1EC3u & X\xE1c nh\u1EADn</button>` });
@@ -4831,7 +5197,7 @@
       const b = S.bank;
       const principal = b.principal || 0;
       return `<div class="taxcard"><h4>\u{1F3DB}\uFE0F \u0110\xD3NG THU\u1EBE TR\u1EF0C TUY\u1EBEN 72H (3 NG\xC0Y TH\u1EF0C)</h4><p>\u0110\xF3ng thu\u1EBF m\u1ED7i 3 ng\xE0y th\u1EF1c t\u1EBF (72 gi\u1EDD) \u0111\u1EC3 Buff to\xE0n di\u1EC7n & ph\xF2ng ng\u1EEBa tr\u1ED9m c\u1EAFp.</p>
-      ${active ? `<div class="ok-box">\u{1F7E1} <b>\u0110ANG TRONG TH\u1EDCI GIAN \xC2N H\u1EA0N 72H</b><div>\u23F3 H\u1EA1n ch\xF3t: <b data-cd="tax">${fmtCountdown(S.tax.until - Date.now())}</b></div><small>H\xE3y ho\xE0n th\xE0nh \u0111\xF3ng thu\u1EBF tr\u1EF1c tuy\u1EBFn \u0111\u1EC3 nh\u1EADn ngay Buff ph\xE1t tri\u1EC3n v\xE0 b\u1EA3o v\u1EC7 an ninh qu\xE1n!</small></div>` : `<div class="warn-box">\u23F0 Ch\u01B0a c\xF3 buff thu\u1EBF. N\u1ED9p thu\u1EBF \u0111\u1EC3 nh\u1EADn hi\u1EC7u \u1EE9ng trong 72 gi\u1EDD th\u1EF1c.</div>`}
+      ${active ? `<div class="ok-box">\u{1F7E1} <b>BUFF THU\u1EBE \u0110ANG C\xD3 HI\u1EC6U L\u1EF0C</b><div>\u23F3 H\u1EA1n ch\xF3t: <b data-cd="tax">${fmtCountdown(S.tax.until - Date.now())}</b></div><small>\u0110\xE3 n\u1ED9p thu\u1EBF; kh\xF4ng c\u1EA7n \u0111\xF3ng l\u1EA1i tr\u01B0\u1EDBc khi h\u1EBFt th\u1EDDi h\u1EA1n.</small></div>` : `<div class="warn-box">\u23F0 Ch\u01B0a c\xF3 buff thu\u1EBF. N\u1ED9p thu\u1EBF \u0111\u1EC3 nh\u1EADn hi\u1EC7u \u1EE9ng trong 72 gi\u1EDD th\u1EF1c.</div>`}
       <div class="tax-sel"><b>\u{1F4B0} Ch\u1ECDn m\u1EE9c \u0111\xF3ng thu\u1EBF theo s\u1ED1 ti\u1EC1n k\xE9t hi\u1EC7n c\xF3</b><p class="muted">K\xE9t hi\u1EC7n c\xF3: <b>${fmtK(S.money)}</b> \xB7 M\u1EE9c thu\u1EBF quy \u0111\u1ECBnh t\u1EEB ${TAX.minRate * 100}% \u0111\u1EBFn ${TAX.maxRate * 100}%.</p>
         <div class="rate-row"><span>T\u1EC9 l\u1EC7 \u0111\xF3ng thu\u1EBF:</span><b>${Math.round(rate * 100)}%</b></div>
         <input type="range" min="5" max="15" step="1" value="${Math.round(rate * 100)}" data-rate aria-label="T\u1EC9 l\u1EC7 thu\u1EBF">
@@ -4839,12 +5205,12 @@
         <div class="tax-amt">S\u1ED1 ti\u1EC1n thu\u1EBF c\u1EA7n n\u1ED9p: <b>${fmtK(amt)}</b> \xB7 Quy\u1EC1n l\u1EE3i nh\u1EADn \u0111\u01B0\u1EE3c: <b>Buff +15% / 72h</b></div>
         <button class="btn pri block" data-act="pay" ${active ? "disabled" : ""}>\u{1F3DB}\uFE0F ${active ? "\u0110\xE3 n\u1ED9p thu\u1EBF (\u0111ang c\xF3 buff)" : `N\u1ED9p thu\u1EBF ngay (${fmtK(amt)} \xB7 Buff +15%)`}</button></div>
       <div class="bank"><div class="bank-h"><small>B\u1EA2O H\u1ED8 T\xC0I CH\xCDNH AN TO\xC0N 100%</small><h4>\u{1F3E6} NG\xC2N H\xC0NG T\xC0 T\u01AFA BANK</h4><span class="chip y">L\xC3I K\xC9P ${BANK.interest * 100}%/NG\xC0Y</span></div>
-        <div class="bank-st"><div><small>\u{1F4B0} Ti\u1EC1n g\u1EEDi hi\u1EC7n t\u1EA1i:</small><b>${fmtK(b.balance)}</b><em>(G\u1ED1c: ${fmtK(principal)})</em></div><div><small>\u{1F4C8} H\u1EA1n m\u1EE9c g\u1EEDi t\u1ED1i \u0111a:</small><b>${fmtK(BANK.max)}</b><em>(+${BANK.starBonus * 100}% khi \u0111\u1EA1t 5\u2605; khi qu\xE1 1 t\u1EF7 t\u0103ng +${BANK.bigBonus * 100}%, t\u1ED1i \u0111a 99 T\u1EF7)</em></div></div>
+        <div class="bank-st"><div><small>\u{1F4B0} Ti\u1EC1n g\u1EEDi hi\u1EC7n t\u1EA1i:</small><b>${fmtK(b.balance)}</b><em>(G\u1ED1c: ${fmtK(principal)})</em></div><div><small>\u{1F4C8} H\u1EA1n m\u1EE9c g\u1EEDi t\u1ED1i \u0111a:</small><b>${fmtK(BANK.max)}</b><em>(+${BANK.starBonus * 100}% khi \u0111\u1EA1t 4,5\u2605; khi qu\xE1 1 t\u1EF7 t\u0103ng +${BANK.bigBonus * 100}%, t\u1ED1i \u0111a 99 T\u1EF7)</em></div></div>
         <div class="bank-lock">\u{1F512} K\u1EF3 h\u1EA1n cam k\u1EBFt: <b>${BANK.lockShifts} ng\xE0y b\xE1n n\u01B0\u1EDBc</b> \xB7 Ti\u1EBFn \u0111\u1ED9: <b>${Math.min(b.shifts, BANK.lockShifts)}/${BANK.lockShifts}</b> ng\xE0y. R\xFAt tr\u01B0\u1EDBc h\u1EA1n s\u1EBD m\u1EA5t to\xE0n b\u1ED9 ti\u1EC1n l\xE3i.</div>
         <p class="bank-note">\u{1F510} <b>\u0110\u1EB7c quy\u1EC1n:</b> Ti\u1EC1n g\u1EEDi tuy\u1EC7t \u0111\u1ED1i kh\xF4ng b\u1ECB tr\u1ED9m c\u1EAFp, b\xF9ng ti\u1EC1n hay l\u1EEBa \u0111\u1EA3o.</p>
         <div class="dep-btns"><button class="btn gold sm" data-act="dep" data-p="0.1">G\u1EEDi 10% k\xE9t</button><button class="btn gold sm" data-act="dep" data-p="0.5">G\u1EEDi 50%</button><button class="btn gold sm" data-act="dep" data-p="1">G\u1EEDi t\u1EA5t c\u1EA3</button></div>
         <button class="btn soft block" data-act="wd" ${b.balance > 0 ? "" : "disabled"}>\u{1F4B8} R\xFAt ti\u1EC1n</button></div>
-      <details class="policy fold"><summary>\u{1F4DC} Ch\xEDnh s\xE1ch thu\u1EBF & Th\u1ED1ng k\xEA ti\u1EC7m</summary><p>\u2022 Chu k\u1EF3 72 gi\u1EDD (3 ng\xE0y) th\u1EF1c t\u1EBF. H\u1EBFt 72h c\u1EA7n \u0111\xF3ng chu k\u1EF3 m\u1EDBi, kh\xF4ng c\u1ED9ng d\u1ED3n.</p><p>\u2022 T\u1EC9 l\u1EC7 Buff: \u0110\xF3ng thu\u1EBF nhi\u1EC1u % k\xE9t th\xEC t\u0103ng kh\xE1ch, t\u0103ng t\u1ED1c \u0111\u1ED9 v\xE0 gi\u1EA3m tr\u1ED9m c\u1EAFp (t\u1ED1i \u0111a 15%).</p><p>\u2022 Nh\xE2n vi\xEAn Me k\u1EBFt tinh: Khi \u0111\xE3 thu\xEA, qu\xE1n kh\xF4ng b\u1ECB ph\u1EA1t ch\u1EADm thu\u1EBF; chuy\u1EC3n th\xE0nh th\u1EDDi gian \xE2n h\u1EA1n duy tr\xEC buff.</p><p>\u2022 T\u1ED5ng thu\u1EBF \u0111\xE3 n\u1ED9p: <b>${fmtK(S.tax.paid)}</b></p></details>`;
+      <details class="policy fold"><summary>\u{1F4DC} Ch\xEDnh s\xE1ch thu\u1EBF & Th\u1ED1ng k\xEA ti\u1EC7m</summary><p>\u2022 Chu k\u1EF3 72 gi\u1EDD (3 ng\xE0y) th\u1EF1c t\u1EBF. H\u1EBFt 72h c\u1EA7n \u0111\xF3ng chu k\u1EF3 m\u1EDBi, kh\xF4ng c\u1ED9ng d\u1ED3n.</p><p>\u2022 N\u1ED9p t\u1EEB 5% \u0111\u1EBFn 15% k\xE9t \u0111\u1EC3 nh\u1EADn buff c\u1ED1 \u0111\u1ECBnh +15% trong 72 gi\u1EDD; ch\u1ECDn m\u1EE9c cao h\u01A1n kh\xF4ng c\u1ED9ng d\u1ED3n buff.</p><p>\u2022 Nh\xE2n vi\xEAn Me k\u1EBFt tinh: Khi \u0111\xE3 thu\xEA, qu\xE1n kh\xF4ng b\u1ECB ph\u1EA1t ch\u1EADm thu\u1EBF; chuy\u1EC3n th\xE0nh th\u1EDDi gian \xE2n h\u1EA1n duy tr\xEC buff.</p><p>\u2022 T\u1ED5ng thu\u1EBF \u0111\xE3 n\u1ED9p: <b>${fmtK(S.tax.paid)}</b></p></details>`;
     },
     acts: {
       rate: (t) => {
@@ -4852,42 +5218,23 @@
         markDirty("panel");
       },
       pay: () => {
-        const amt = Math.round(S.money * S.tax.rate);
-        if (amt <= 0) return toast("K\xE9t tr\u1ED1ng, ch\u01B0a c\xF3 g\xEC \u0111\u1EC3 n\u1ED9p thu\u1EBF", "err");
-        S.money -= amt;
-        S.tax.paid += amt;
-        S.today.tax += amt;
-        S.tax.until = Date.now() + TAX.hours * 3600 * 1e3;
-        S.tax.last = Date.now();
-        markDirty("hud", "panel");
-        requestSave();
+        const result = payTax();
+        if (typeof result === "string") return toast(result, "err");
         sfx("success");
-        taxReceipt(amt);
+        taxReceipt(result);
       },
       dep: (t) => {
-        const amt = Math.floor(S.money * +t.dataset.p);
-        if (amt <= 0) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n \u0111\u1EC3 g\u1EEDi", "err");
-        const room = BANK.max - S.bank.balance;
-        const a = Math.min(amt, room);
-        S.money -= a;
-        S.bank.balance += a;
-        S.bank.principal = (S.bank.principal || 0) + a;
-        S.bank.shifts = S.bank.shifts || 0;
-        markDirty("hud", "panel");
-        requestSave();
+        const result = depositBank(+t.dataset.p);
+        if (typeof result === "string") return toast(result, "err");
         sfx("coin");
-        toast(`\u0110\xE3 g\u1EEDi ${fmtK(a)}`, "ok");
+        toast(`\u0110\xE3 g\u1EEDi ${fmtK(result)}`, "ok");
       },
       wd: () => {
         const b = S.bank;
         const early = b.shifts < BANK.lockShifts;
         confirmBox("R\xFAt ti\u1EC1n ti\u1EBFt ki\u1EC7m?", early ? `Ch\u01B0a \u0111\u1EE7 ${BANK.lockShifts} ng\xE0y cam k\u1EBFt: ch\u1EC9 nh\u1EADn l\u1EA1i ti\u1EC1n g\u1ED1c ${fmtK(b.principal || 0)}, m\u1EA5t l\xE3i ${fmtK(b.balance - (b.principal || 0))}.` : `B\u1EA1n s\u1EBD nh\u1EADn ${fmtK(b.balance)} g\u1ED3m c\u1EA3 l\xE3i.`, () => {
-          S.money += early ? b.principal || 0 : b.balance;
-          b.balance = 0;
-          b.principal = 0;
-          b.shifts = 0;
-          markDirty("hud", "panel");
-          requestSave();
+          const result = withdrawBank();
+          if (typeof result === "string") return toast(result, "err");
           sfx("coin");
         }, "R\xFAt ti\u1EC1n");
       }
@@ -4930,28 +5277,25 @@
     const total = main + brP + frP;
     const tot = Math.max(1, Math.abs(main) + Math.abs(brP) + Math.abs(frP));
     const bar2 = (l, v) => `<div class="sbar"><span>${l}</span><div class="bar"><i style="width:${Math.abs(v) / tot * 100}%"></i></div><b>${fmtK(v)}</b></div>`;
-    return `<div class="stcard"><small>B\xC1O C\xC1O T\xC0I CH\xCDNH TO\xC0N H\u1EC6 TH\u1ED0NG</small><h4>L\u1EE3i Nhu\u1EADn R\xF2ng: <span class="${total >= 0 ? "pos" : "neg"}">${fmtK(total)}</span></h4><p class="muted">T\u1ED5ng h\u1EE3p doanh thu t\u1EEB Qu\xE1n ch\xEDnh, ${brN} Chi nh\xE1nh tr\u1EF1c thu\u1ED9c & ${S.franchise.count} Chi nh\xE1nh nh\u01B0\u1EE3ng quy\u1EC1n (ng\xE0y g\u1EA7n nh\u1EA5t).</p></div>
+    return `<div class="stcard"><small>B\xC1O C\xC1O T\xC0I CH\xCDNH TO\xC0N H\u1EC6 TH\u1ED0NG</small><h4>L\u1EE3i Nhu\u1EADn R\xF2ng: <span class="${total >= 0 ? "pos" : "neg"}">${fmtK(total)}</span></h4><p class="muted">T\u1ED5ng h\u1EE3p l\u1EE3i nhu\u1EADn t\u1EEB Qu\xE1n ch\xEDnh, ${brN} Chi nh\xE1nh tr\u1EF1c thu\u1ED9c & ${S.franchise.count} Chi nh\xE1nh nh\u01B0\u1EE3ng quy\u1EC1n (ng\xE0y g\u1EA7n nh\u1EA5t).</p></div>
     <div class="dl"><span>\u{1F3EA} Qu\xE1n Ch\xEDnh (Flagship)</span><b class="${main >= 0 ? "pos" : "neg"}">${fmtK(main)}</b></div>
     <div class="dl"><span>\u{1F3E2} ${brN} Chi Nh\xE1nh Tr\u1EF1c Thu\u1ED9c</span><b class="${brP >= 0 ? "pos" : "neg"}">${fmtK(brP)}</b></div>
     <div class="dl"><span>\u{1F91D} ${S.franchise.count} Chi Nh\xE1nh Nh\u01B0\u1EE3ng Quy\u1EC1n</span><b class="pos">${fmtK(frP)}</b></div>
     <div class="dl big"><span>\u{1F4B0} T\u1ED5ng L\u1EE3i Nhu\u1EADn Chu\u1ED7i</span><b class="${total >= 0 ? "pos" : "neg"}">${fmtK(total)}</b></div>
-    <div class="stcard"><b>\u{1F4CA} Bi\u1EC3u \u0110\u1ED3 Ph\xE2n B\u1ED5 Ngu\u1ED3n Doanh Thu:</b>${bar2("Qu\xE1n ch\xEDnh", main)}${bar2("Chi nh\xE1nh", brP)}${bar2("Nh\u01B0\u1EE3ng quy\u1EC1n", frP)}</div>`;
+    <div class="stcard"><b>\u{1F4CA} Bi\u1EC3u \u0110\u1ED3 Ph\xE2n B\u1ED5 L\u1EE3i Nhu\u1EADn:</b>${bar2("Qu\xE1n ch\xEDnh", main)}${bar2("Chi nh\xE1nh", brP)}${bar2("Nh\u01B0\u1EE3ng quy\u1EC1n", frP)}</div>`;
   }
   var chinhanh = {
     html() {
       const t = S.subtab.cn || "tt";
       const tb = [["tt", "\u{1F3E2} Tr\u1EF1c thu\u1ED9c"], ["nq", "\u{1F91D} Nh\u01B0\u1EE3ng quy\u1EC1n"], ["tk", "\u{1F4CA} Th\u1ED1ng k\xEA"]];
-      return `<div class="tabs">${tb.map(([id, l]) => `<button class="tab ${t === id ? "on" : ""}" data-act="sub" data-v="${id}">${l}</button>`).join("")}</div>${t === "tt" ? branchHTML() : t === "nq" ? franchiseHTML() : statsHTML()}`;
+      return `<div class="tabs scroll">${tb.map(([id, l]) => `<button class="tab ${t === id ? "on" : ""}" data-act="sub" data-v="${id}">${l}</button>`).join("")}</div>${t === "tt" ? branchHTML() : t === "nq" ? franchiseHTML() : statsHTML()}`;
     },
     bind(root2) {
       for (const inp of root2.querySelectorAll("[data-bstaff]")) {
         inp.addEventListener("focus", () => inp.select());
         inp.addEventListener("change", () => {
-          const o = S.branches[inp.dataset.bstaff];
-          if (o) {
-            o.staff = Math.max(0, Math.min(3, Math.round(+inp.value || 0)));
-            markDirty("panel");
-          }
+          const error = setBranchStaff(inp.dataset.bstaff, +inp.value);
+          if (error) toast(error, "err");
         });
       }
     },
@@ -4960,40 +5304,27 @@
         S.subtab.cn = t.dataset.v;
         markDirty("panel");
       },
-      bopen: (t) => confirmBox("Thu\xEA & m\u1EDF chi nh\xE1nh?", `Chi ph\xED m\u1EDF: ${fmtK(BRANCHES.find((b) => b.id === t.dataset.id).cost)}. Chi nh\xE1nh t\u1EF1 kinh doanh v\xE0 g\u1EEDi l\xE3i r\xF2ng v\u1EC1 m\u1ED7i cu\u1ED1i ng\xE0y.`, () => {
+      bopen: (t) => {
         const b = BRANCHES.find((x) => x.id === t.dataset.id);
-        if (S.money < b.cost) {
-          toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n", "err");
-          sfx("error");
-          return;
-        }
-        S.money -= b.cost;
-        S.branches[b.id] = { staff: 0, rev: 0, days: 0 };
-        markDirty("hud", "panel");
-        requestSave();
-        sfx("unlock");
-        toast("\u{1F3E2} Khai tr\u01B0\u01A1ng chi nh\xE1nh m\u1EDBi!", "ok");
-      }, "M\u1EDF chi nh\xE1nh"),
+        if (!b) return;
+        confirmBox("Thu\xEA & m\u1EDF chi nh\xE1nh?", `Chi ph\xED m\u1EDF: ${fmtK(b.cost)}. Chi nh\xE1nh t\u1EF1 kinh doanh v\xE0 g\u1EEDi l\xE3i r\xF2ng v\u1EC1 m\u1ED7i cu\u1ED1i ng\xE0y.`, () => {
+          const error = openBranch(b.id);
+          if (error) return toast(error, "err");
+          sfx("unlock");
+          toast("\u{1F3E2} Khai tr\u01B0\u01A1ng chi nh\xE1nh m\u1EDBi!", "ok");
+        }, "M\u1EDF chi nh\xE1nh");
+      },
       "bstaff+": (t) => {
         const o = S.branches[t.dataset.id];
-        if (o.staff < 3) {
-          o.staff++;
-          markDirty("panel");
-        }
+        if (o) setBranchStaff(t.dataset.id, (o.staff || 0) + 1);
       },
       "bstaff-": (t) => {
         const o = S.branches[t.dataset.id];
-        if (o.staff > 0) {
-          o.staff--;
-          markDirty("panel");
-        }
+        if (o) setBranchStaff(t.dataset.id, (o.staff || 0) - 1);
       },
       fopen: () => {
-        if (S.rating < FRANCHISE.needRating || S.followers < FRANCHISE.needFollowers) return;
-        S.money += FRANCHISE.fee;
-        S.franchise.count++;
-        markDirty("hud", "panel");
-        requestSave();
+        const error = sellFranchise();
+        if (error) return toast(error, "err");
         sfx("level");
         toast(`\u{1F91D} \u0110\xE3 b\xE1n nh\u01B0\u1EE3ng quy\u1EC1n! +${fmtK(FRANCHISE.fee)}`, "ok");
       }
@@ -5014,9 +5345,9 @@
       const verified = S.followers >= 5e4 && S.rating >= 4.5;
       const quota = ad ? ad.videos : 1;
       const used = S.social.videosToday;
-      const traffic = ad ? Math.round(ad.traffic * 100) : 0;
+      const traffic = (ad ? Math.round(ad.traffic * 100) : 0) + (S.social.videoDay === S.day ? Math.round((S.social.videoBuff || 0) * 100) : 0);
       return `<div class="profile"><div class="pf-h">${logoHTML(60)}<div><h4>${esc(S.shopName)} ${verified ? "\u2714\uFE0F" : ""}</h4><small class="${verified ? "green" : "grayish"}">${verified ? "\u{1F331} \u0110\xE3 t\xEDch xanh" : "\u{1F331} \u0110ang x\xE2y th\u01B0\u01A1ng hi\u1EC7u"}</small><p class="muted">${verified ? "K\xEAnh \u1EA9m th\u1EF1c ch\xEDnh th\u1EE9c" : "C\u1EA7n 50K followers & 4.5\u2605 \u0111\u1EC3 t\xEDch xanh"}</p></div></div>
-      <div class="pf-s"><div><b>${S.followers.toLocaleString("vi-VN")}</b><small>Ng\u01B0\u1EDDi theo d\xF5i</small></div><div><b>${S.rating.toFixed(1)} \u2605</b><small>${S.ratingCount} \u0111\xE1nh gi\xE1</small></div><div><b>+${traffic}%</b><small>Buff t\u1EEB Ads</small></div></div></div>
+      <div class="pf-s"><div><b>${S.followers.toLocaleString("vi-VN")}</b><small>Ng\u01B0\u1EDDi theo d\xF5i</small></div><div><b>${S.rating.toFixed(1)} \u2605</b><small>${S.ratingCount} \u0111\xE1nh gi\xE1</small></div><div><b>+${traffic}%</b><small>Buff Ads / video</small></div></div></div>
       <div class="adbox"><h4>\u{1F4E3} Qu\u1EA3ng c\xE1o t\u0103ng kh\xE1ch</h4><p class="sub">\u0110ang ch\u1EA1y ${ad ? 1 : 0}/1 chi\u1EBFn d\u1ECBch${ad ? ` \xB7 c\xF2n ${S.social.ad.endsDay - S.day + 1} ng\xE0y` : ""}</p>
       ${ADS.map((a) => `<div class="adcard ${(ad == null ? void 0 : ad.id) === a.id ? "run" : ""}" data-act="adinfo" data-id="${a.id}"><span class="ad-ic">${a.icon}</span><div class="ad-m"><b>${a.name}</b><small>+${Math.round(a.traffic * 100)}% kh\xE1ch \xB7 ${a.days} ng\xE0y \xB7 \u24D8</small></div><button class="btn pri sm ad-btn" data-act="ad" data-id="${a.id}" ${ad ? "disabled" : ""}>${(ad == null ? void 0 : ad.id) === a.id ? "\u0110ang ch\u1EA1y" : `<b>${fmtK(a.cost)}</b><small>K\xEDch ho\u1EA1t</small>`}</button></div>`).join("")}</div>
       <div class="vidbox"><h4>\u{1F3AC} \u0110\u0103ng video qu\u1EA3ng b\xE1</h4><p>T\u1EC9 l\u1EC7 Viral: <b>25%</b> \xB7 M\u1ED7i l\u1EA7n quay nh\u1EADn ng\u1EABu nhi\xEAn % buff kh\xE1ch. S\u1ED1 l\u01B0\u1EE3t quay h\xF4m nay d\u1EF1a v\xE0o chi\u1EBFn d\u1ECBch ads (${used}/${quota} l\u01B0\u1EE3t/ng\xE0y).</p>
@@ -5038,9 +5369,8 @@
           return;
         }
         confirmBox(a.name, `Chi ${fmtK(a.cost)} ch\u1EA1y trong ${a.days} ng\xE0y: +${Math.round(a.traffic * 100)}% kh\xE1ch qu\xE1n ch\xEDnh, +${a.followers.toLocaleString("vi-VN")} followers.`, () => {
-          S.money -= a.cost;
-          S.social.ad = { id: a.id, endsDay: S.day + a.days - 1 };
-          S.followers += a.followers;
+          const error = startAd(a.id);
+          if (error) return toast(error, "err");
           for (let i = 0; i < a.posts; i++) S.social.posts.unshift(genPost());
           S.social.posts = S.social.posts.slice(0, 10);
           markDirty("hud", "panel");
@@ -5050,8 +5380,9 @@
         }, "K\xEDch ho\u1EA1t");
       },
       video: () => {
+        const error = recordVideo();
+        if (error) return toast(error, "err");
         const viral = chance(0.25);
-        S.social.videosToday++;
         const gain = viral ? randInt(1500, 6e3) : randInt(100, 600);
         S.followers += gain;
         if (viral) S.social.posts.unshift(genPost());
@@ -5156,6 +5487,7 @@
         sfx("pour");
         toast("\u{1F4A7} \u0110\xE3 t\u01B0\u1EDBi n\u01B0\u1EDBc! C\xE2y s\u1EBD l\u1EDBn th\xEAm khi sang ng\xE0y m\u1EDBi.", "ok");
         markDirty("panel");
+        requestSave();
       },
       replant: () => {
         const id = S.subtab.seed || SEEDS[0].id;
@@ -5178,28 +5510,23 @@
       punlock: () => {
         const g = S.garden, cost = plotCost(g.unlocked + 1);
         confirmBox("M\u1EDF th\xEAm m\u1EA3nh \u0111\u1EA5t?", `M\u1EDF \xF4 s\u1ED1 ${g.unlocked + 1} v\u1EDBi gi\xE1 ${fmtK(cost)}.`, () => {
-          if (S.money < cost) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n", "err");
-          S.money -= cost;
-          g.unlocked++;
+          const error = unlockPlot();
+          if (error) return toast(error, "err");
           sfx("unlock");
-          markDirty("hud", "panel");
-          requestSave();
         }, "M\u1EDF kh\xF3a");
       },
       shop: () => {
         const m = openModal({ id: "seedshop", cls: "small", html: `<h3 class="m-title">\u{1F6D2} C\u1EEDa h\xE0ng h\u1EA1t gi\u1ED1ng</h3>${SEEDS.map((s) => `<div class="nrow"><span class="k-ico">${s.icon}</span><div class="k-main"><b>${s.name}</b><small>L\u1EDBn trong ${s.days} ng\xE0y \xB7 thu ${s.yield[0]}-${s.yield[1]} ph\u1EA7n ${ITEMS[s.gives].name}</small></div><button class="btn gold sm" data-act="buy" data-id="${s.id}">${fmtK(s.price)}</button></div>`).join("")}<button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
-        bindActions(m.body, {
-          buy: (t) => {
-            const s = seedDef(t.dataset.id);
-            if (S.money < s.price) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n", "err");
-            S.money -= s.price;
-            S.garden.seeds[s.id] = (S.garden.seeds[s.id] || 0) + 1;
-            sfx("coin");
-            markDirty("hud", "panel");
-            toast(`+1 ${s.name}`, "ok");
-            requestSave();
-          }, x: () => m.close()
-        });
+        bindActions(m.body, { buy: (t) => {
+          const s = seedDef(t.dataset.id);
+          if (S.money < s.price) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n", "err");
+          S.money -= s.price;
+          S.garden.seeds[s.id] = (S.garden.seeds[s.id] || 0) + 1;
+          sfx("coin");
+          markDirty("hud", "panel");
+          toast(`+1 ${s.name}`, "ok");
+          requestSave();
+        }, x: () => m.close() });
       }
     }
   };
@@ -5219,7 +5546,7 @@
         <div class="pstats">${[["hunger", "\u{1F356} No"], ["joy", "\u{1F497} Vui v\u1EBB"], ["clean", "\u{1F6C1} S\u1EA1ch s\u1EBD"], ["energy", "\u{1F634} Kh\u1ECFe"]].map(([k2, l]) => `<div class="ps"><span>${l}</span>${bar(p2[k2])}<b>${Math.round(p2[k2])}</b></div>`).join("")}</div>
         <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ""}</button>`).join("")}</div>
         <div class="buffs">${info.buffs.map((b) => `<p>${b}</p>`).join("")}</div>
-        <p class="muted">Decor \u0111\xE3 mua: ${Object.keys(S.petDecor).length}/${PET_DECOR.length} \xB7 mua th\xEAm \u1EDF N\xE2ng c\u1EA5p \u203A Decor Th\xFA C\u01B0ng.</p></div>
+        <p class="muted">Decor \u0111\xE3 mua: ${Object.keys(S.petDecor).length}/${PET_DECOR.length} \xB7 mua th\xEAm \u1EDF N\xE2ng c\u1EA5p \u203A Decor Th\xFA C\u01B0ng.</p><div class="petrow">${["shiba", "meo"].filter((k2) => k2 !== p2.kind).map((k2) => `<button class="btn soft" data-act="adopt" data-k="${k2}">\u0110\u1ED5i sang ${PETS[k2].icon} ${PETS[k2].name} \xB7 ${fmtK(PETS[k2].adopt)}</button>`).join("")}</div></div>
         ${S.pet2 ? `<div class="petcard owned"><div class="pet-big">\u{1F9AB}</div><h4>${PETS.capybara.name} <span class="chip green">Nu\xF4i chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join("")}</div>` : ""}
         ${!S.pet2 && secretCount() >= 7 ? '<button class="btn pri block" data-act="capy">\u{1F9AB} Nh\u1EADn nu\xF4i C\xE1p Bi (mi\u1EC5n ph\xED)</button>' : ""}`;
       }
@@ -5244,34 +5571,25 @@
       adopt: (t) => {
         const k = t.dataset.k, p = PETS[k];
         if (S.money < p.adopt) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n nh\u1EADn nu\xF4i", "err");
-        confirmBox("Nh\u1EADn nu\xF4i " + p.name + "?", `Ph\xED ${fmtK(p.adopt)}. B\xE9 s\u1EBD \u0111\u1ED3ng h\xE0nh c\xF9ng qu\xE1n.`, () => {
-          S.money -= p.adopt;
-          S.pet = { kind: k, hunger: 80, joy: 80, clean: 80, energy: 80 };
+        confirmBox("Nh\u1EADn nu\xF4i " + p.name + "?", `Ph\xED ${fmtK(p.adopt)}. Ch\u1EC9 s\u1ED1 ch\u0103m s\xF3c b\xE9 ch\xEDnh tr\u1EDF v\u1EC1 80; C\xE1p Bi nu\xF4i chung \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.`, () => {
+          const error = adoptPet(k);
+          if (error) return toast(error, "err");
           sfx("level");
-          markDirty("hud", "panel", "tiles");
-          requestSave();
           toast("\u{1F43E} Ch\xE0o m\u1EEBng th\xE0nh vi\xEAn m\u1EDBi!", "gold");
         }, "Nh\u1EADn nu\xF4i");
       },
       capy: () => {
-        if (secretCount() < 7) return;
-        S.pet2 = { kind: "capybara" };
-        S.pet = S.pet || { kind: "capybara", hunger: 80, joy: 80, clean: 80, energy: 80 };
+        const error = adoptPet("capybara");
+        if (error) return toast(error, "err");
         sfx("level");
-        markDirty("panel", "tiles");
-        requestSave();
         toast("\u{1F9AB} C\xE1p Bi \u0111\xE3 v\u1EC1 qu\xE1n!", "gold");
       },
       care: (t) => {
         const c = PET_CARE.find((x) => x.id === t.dataset.id);
-        if (S.money < c.cost) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n", "err");
-        S.money -= c.cost;
-        const boost = S.petDecor.app ? 1.3 : 1;
-        S.pet[c.stat] = clamp(S.pet[c.stat] + c.gain * boost, 0, 100);
+        const error = carePet(t.dataset.id);
+        if (error) return toast(error, "err");
         sfx("pop");
         fxText("+" + c.name, t, "g");
-        markDirty("hud", "panel");
-        requestSave();
       }
     }
   };
@@ -5414,13 +5732,9 @@
         const l = LOCATIONS[t.dataset.id];
         if (S.money < LOCATION_COST) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n kh\u1EDFi nghi\u1EC7p", "err");
         confirmBox(`Kh\u1EDFi nghi\u1EC7p t\u1EA1i ${l.name}?`, `Chi ph\xED ${fmtK(LOCATION_COST)}. Qu\xE1n chuy\u1EC3n sang v\xF9ng m\u1EDBi: \u0111\u1ED5i th\u1EDDi ti\u1EBFt, l\u1EE3i th\u1EBF v\xE0 th\u1EED th\xE1ch v\u1EADn h\xE0nh.`, () => {
-          S.money -= LOCATION_COST;
-          S.location = t.dataset.id;
-          S.forecast = [];
-          ensureForecast();
+          const error = moveShop(t.dataset.id);
+          if (error) return toast(error, "err");
           sfx("level");
-          markDirty("hud", "panel", "board", "view");
-          requestSave();
           toast(`\u{1F680} \u0110\xE3 kh\u1EDFi nghi\u1EC7p t\u1EA1i ${l.name}!`, "gold");
         }, "Kh\u1EDFi nghi\u1EC7p");
       }
@@ -5435,12 +5749,10 @@
         <div class="tables">${Array.from({ length: b.tables }, (_, i) => `<div class="tbl free"><span class="t-ico">\u2728</span><small>B\xE0n ${i + 1}</small></div>`).join("")}</div>
         <button class="btn gold block" data-act="goto" data-to="nangcap">\u{1F6E0}\uFE0F N\xE2ng c\u1EA5p b\xE0n gh\u1EBF</button></div>`;
     },
-    acts: {
-      goto: (t) => {
-        S.subtab.nc = "trangbi";
-        emit("goto", t.dataset.to);
-      }
-    }
+    acts: { goto: (t) => {
+      S.subtab.nc = "trangbi";
+      emit("goto", t.dataset.to);
+    } }
   };
   var danhgia = {
     html() {
@@ -5449,7 +5761,7 @@
       const mx = Math.max(1, ...dist.map((d) => d[1]));
       return `<div class="rvhead"><div class="big-r">${S.rating.toFixed(1).replace(".", ",")}<small>/5</small></div><div><span class="stars lg">${Array.from({ length: 5 }, (_, i) => `<i class="${i < Math.round(S.rating) ? "on" : ""}">\u2605</i>`).join("")}</span><small>${S.ratingCount} l\u01B0\u1EE3t \u0111\xE1nh gi\xE1 \xB7 ${rv.length} g\u1EA7n nh\u1EA5t</small></div></div>
       <div class="dist">${dist.map(([s, n]) => `<div class="dr"><span>${s}\u2605</span><div class="bar"><i style="width:${n / mx * 100}%"></i></div><b>${n}</b></div>`).join("")}</div>
-      ${rv.length ? rv.slice(0, 30).map((r) => `<div class="review"><span class="r-av">${r.av}</span><div class="grow"><div class="r-h"><b>${esc(r.name)}</b><span class="stars">${"\u2605".repeat(r.stars)}${"\u2606".repeat(5 - r.stars)}</span></div><p>${esc(r.text)}</p><small>Ng\xE0y ${r.day}</small></div></div>`).join("") : '<div class="emptybox">\u2B50<b>Ch\u01B0a c\xF3 \u0111\xE1nh gi\xE1</b><p>M\u1EDF c\u1EEDa v\xE0 ph\u1EE5c v\u1EE5 kh\xE1ch \u0111\u1EC3 nh\u1EADn \u0111\xE1nh gi\xE1 \u0111\u1EA7u ti\xEAn!</p></div>'}`;
+      ${rv.length ? rv.slice(0, 30).map((r) => `<div class="review"><span class="r-av">${r.av}</span><div class="grow"><div class="r-h"><b>${esc(r.name)}</b><span class="stars">${"\u2605".repeat(r.stars)}${"\u2606".repeat(5 - r.stars)}</span></div><p>${esc(r.text)}</p>${r.reply ? `<p class="muted">Ti\u1EC7m tr\u1EA3 l\u1EDDi: ${esc(r.reply)}</p>` : ""}<small>Ng\xE0y ${r.day}</small></div></div>`).join("") : '<div class="emptybox">\u2B50<b>Ch\u01B0a c\xF3 \u0111\xE1nh gi\xE1</b><p>M\u1EDF c\u1EEDa v\xE0 ph\u1EE5c v\u1EE5 kh\xE1ch \u0111\u1EC3 nh\u1EADn \u0111\xE1nh gi\xE1 \u0111\u1EA7u ti\xEAn!</p></div>'}`;
     },
     acts: {}
   };
@@ -5517,10 +5829,8 @@
         requestSave();
       },
       visit: (t) => {
-        const id = t.dataset.id, gift = randInt(5, 20) * 1e3;
-        S.friends.gifted[id] = S.day;
-        S.money += gift;
-        S.followers += randInt(10, 80);
+        const gift = visitFriend(t.dataset.id);
+        if (typeof gift === "string") return toast(gift, "err");
         toast(`\u{1F381} B\u1EA1n t\u1EB7ng qu\xE0! +${fmtK(gift)}`, "gold");
         sfx("coin");
         markDirty("hud", "panel");
@@ -5576,6 +5886,7 @@
         S.collection.packs++;
         sfx("coin");
         markDirty("hud", "panel");
+        requestSave();
       }
     }
   };
@@ -5972,11 +6283,9 @@
     const cfg = levelCfg(S.crush.level);
     Q = { cfg, g: null, moves: cfg.moves, score: 0, got: 0, busy: false, over: false, sel: null, types: cfg.types, used: {}, made: {} };
     Q.g = newGrid(cfg);
-    const m = openModal({
-      id: "crush", cls: "crush-m", html: crushHTML(), onClose: () => {
-        Q = null;
-      }
-    });
+    const m = openModal({ id: "crush", cls: "crush-m", html: crushHTML(), onClose: () => {
+      Q = null;
+    } });
     paint(Q, true);
     updateHud(Q);
     const restart = () => {
@@ -6045,11 +6354,9 @@
     }
   }
   function crushDebug() {
-    return {
-      get Q() {
-        return Q;
-      }, swap, N, open: openCrush
-    };
+    return { get Q() {
+      return Q;
+    }, swap, N, open: openCrush };
   }
   var PN = 6;
   var PDUR = 30;
@@ -6202,12 +6509,10 @@
   }
   function openPearl() {
     if (S.pearl.playsDay >= 3) return toast("H\xF4m nay b\u1EA1n \u0111\xE3 ch\u01A1i \u0111\u1EE7 3 l\u01B0\u1EE3t Tr\xE2n Ch\xE2u N\u1ED5", "err");
-    const m = openModal({
-      id: "pearl", cls: "pearl-modal", onClose: () => {
-        if (P2 == null ? void 0 : P2.timer) clearInterval(P2.timer);
-        P2 = null;
-      }, html: `<div id="pBody"><h3 class="m-title">\u2728 Tr\xE2n Ch\xE2u N\u1ED5</h3><div class="pearl-preview">${PIDS.map((_, i) => pearlIcon(i)).join("")}</div><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Nh\xF3m c\xE0ng l\u1EDBn \u0111i\u1EC3m c\xE0ng cao, n\u1ED5 li\xEAn ti\u1EBFp trong ${PCOMBO_MS / 1e3}s = nh\xE2n combo! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y. Cu\u1ED1i v\xE1n nh\u1EADn th\xEAm tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u cho kho.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>`
-    });
+    const m = openModal({ id: "pearl", cls: "pearl-modal", onClose: () => {
+      if (P2 == null ? void 0 : P2.timer) clearInterval(P2.timer);
+      P2 = null;
+    }, html: `<div id="pBody"><h3 class="m-title">\u2728 Tr\xE2n Ch\xE2u N\u1ED5</h3><div class="pearl-preview">${PIDS.map((_, i) => pearlIcon(i)).join("")}</div><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Nh\xF3m c\xE0ng l\u1EDBn \u0111i\u1EC3m c\xE0ng cao, n\u1ED5 li\xEAn ti\u1EBFp trong ${PCOMBO_MS / 1e3}s = nh\xE2n combo! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y. Cu\u1ED1i v\xE1n nh\u1EADn th\xEAm tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u cho kho.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>` });
     bindActions(m.body, {
       x: () => m.close(),
       start: () => {
@@ -6291,11 +6596,9 @@
     });
   }
   function pearlDebug() {
-    return {
-      get state() {
-        return P2;
-      }, open: openPearl, group: pGroup, render: pRender, end: pEnd
-    };
+    return { get state() {
+      return P2;
+    }, open: openPearl, group: pGroup, render: pRender, end: pEnd };
   }
   var crush = {
     html() {
@@ -6545,14 +6848,12 @@
       tile: (t) => goTab(t.dataset.tab, false)
     });
     bindNav();
-    const panelActs = new Proxy({}, {
-      get: (_, k) => (t, e) => {
-        var _a, _b;
-        const fn = (_b = (_a = PANELS[S.tab]) == null ? void 0 : _a.acts) == null ? void 0 : _b[k];
-        if (fn) fn(t, e);
-        else if (k === "goto") goTab(t.dataset.to);
-      }
-    });
+    const panelActs = new Proxy({}, { get: (_, k) => (t, e) => {
+      var _a, _b;
+      const fn = (_b = (_a = PANELS[S.tab]) == null ? void 0 : _a.acts) == null ? void 0 : _b[k];
+      if (fn) fn(t, e);
+      else if (k === "goto") goTab(t.dataset.to);
+    } });
     bindActions($("#panel"), panelActs);
   }
   function goTab(tab, scroll = true) {
@@ -6673,6 +6974,8 @@
         }
       },
       tokho: () => {
+        const missing = openMissing().miss;
+        S.subtab.kho = missing.includes("Tr\xE0") ? "tra" : missing.includes("D\u1EE5ng c\u1EE5") ? "dc" : "top";
         goTab("kho");
         toast("V\xE0o Kho ch\u1ECDn Tr\xE0, Topping, D\u1EE5ng c\u1EE5 r\u1ED3i b\u1EA5m N\u1EA5u & nh\u1EADp", "");
       },
@@ -6717,16 +7020,14 @@
       m.body.innerHTML = `<div class="panel-in">${P3.html()}</div>`;
       (_a2 = P3.bind) == null ? void 0 : _a2.call(P3, m.body);
     };
-    bindActions(m.body, new Proxy({}, {
-      get: (_, k) => (t, e) => {
-        var _a2;
-        const fn = (_a2 = P3.acts) == null ? void 0 : _a2[k];
-        if (fn) {
-          fn(t, e);
-          setTimeout(redraw, 20);
-        }
+    bindActions(m.body, new Proxy({}, { get: (_, k) => (t, e) => {
+      var _a2;
+      const fn = (_a2 = P3.acts) == null ? void 0 : _a2[k];
+      if (fn) {
+        fn(t, e);
+        setTimeout(redraw, 20);
       }
-    }));
+    } }));
     (_a = P3.bind) == null ? void 0 : _a.call(P3, m.body);
     return m;
   }
@@ -6734,15 +7035,22 @@
   // js/tutorial.js
   var goNav = (g) => () => {
     var _a;
-    return (_a = document.querySelector(`.nav-i[data-group="${g}"]`)) == null ? void 0 : _a.click();
+    (_a = document.querySelector(`.nav-i[data-group="${g}"]`)) == null ? void 0 : _a.click();
+    flushRender();
   };
   var goKho = (tab) => () => {
+    var _a;
     goNav("kho")();
-    setTimeout(() => {
-      var _a;
-      return (_a = document.querySelector(`.tab[data-v="${tab}"]`)) == null ? void 0 : _a.click();
-    }, 60);
+    (_a = document.querySelector(`.tab[data-v="${tab}"]`)) == null ? void 0 : _a.click();
+    flushRender();
   };
+  var goGames = () => {
+    var _a;
+    goNav("them")();
+    (_a = document.querySelector('.tile[data-tab="crush"]')) == null ? void 0 : _a.click();
+    flushRender();
+  };
+  var openingDescription = () => planTotal() > 0 ? "B\u1EA1n \u0111ang c\xF3 k\u1EBF ho\u1EA1ch nh\u1EADp h\xE0ng. N\xFAt hi\u1EC7n t\u1EA1i l\xE0 <b>N\u1EA5u & nh\u1EADp</b>: x\xE1c nh\u1EADn \u0111\u1EC3 tr\u1EA3 ti\u1EC1n v\xE0 \u0111\u01B0a h\xE0ng v\xE0o kho. Sau \u0111\xF3 ki\u1EC3m tra nguy\xEAn li\u1EC7u tr\u01B0\u1EDBc khi m\u1EDF c\u1EEDa." : openMissing().canOpen ? "Kho \u0111\xE3 \u0111\u1EE7 \u0111i\u1EC1u ki\u1EC7n m\u1EDF c\u1EEDa. Ch\u1EA1m <b>M\u1EDF c\u1EEDa ng\xE0y\u2026</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng. Topping kh\xF4ng b\u1EAFt bu\u1ED9c, nh\u01B0ng c\u1EA7n nh\u1EADp n\u1EBFu mu\u1ED1n b\xE1n m\xF3n c\xF3 topping." : "N\xFAt \u0111ang b\xE1o thi\u1EBFu nguy\xEAn li\u1EC7u v\xE0 d\u1EABn v\u1EC1 Kho, ch\u01B0a b\u1EAFt \u0111\u1EA7u b\xE1n h\xE0ng. C\u1EA7n c\xF3 <b>tr\xE0 \u0111ang b\u1EADt trong menu, \xEDt nh\u1EA5t m\u1ED9t c\u1EE1 ly, \u0111\xE1 v\xE0 \u0111\u01B0\u1EDDng</b>. Nh\u1EADp h\xE0ng xong, n\xFAt m\u1EDBi \u0111\u1ED5i th\xE0nh <b>M\u1EDF c\u1EEDa ng\xE0y\u2026</b>.";
   var STEPS = {
     home: [
       { sel: ".shopcard", ico: "\u{1FAA7}", t: "Ti\u1EC7m c\u1EE7a b\u1EA1n", d: "\u0110\xE2y l\xE0 <b>bi\u1EC3n hi\u1EC7u</b>. Ch\u1EA1m logo ho\u1EB7c t\xEAn \u0111\u1EC3 \u0111\u1ED5i; hai nh\xE3n nh\u1ECF d\u1EABn t\u1EDBi <b>Kh\u1EDFi nghi\u1EC7p</b> v\xE0 <b>S\u1EA3nh Tr\xE0</b>." },
@@ -6753,18 +7061,21 @@
       { sel: '.nav-i[data-group="kho"]', pre: goNav("kho"), ico: "\u{1F4E6}", t: "V\xE0o Kho", d: "M\u1EDF nh\xF3m <b>Kho</b> \u0111\u1EC3 ch\u1ECDn nguy\xEAn li\u1EC7u cho h\xF4m nay. M\u1ED7i ng\xE0y b\u1EA1n nh\u1EADp h\xE0ng \u1EDF \u0111\xE2y tr\u01B0\u1EDBc khi m\u1EDF c\u1EEDa." },
       { sel: '.tab[data-v="tra"]', pre: goKho("tra"), ico: "\u{1FAD6}", t: "Tab Tr\xE0", d: "Ch\u1ECDn lo\u1EA1i <b>Tr\xE0</b> s\u1EBD b\xE1n. M\u1ED7i d\xF2ng cho bi\u1EBFt t\u1ED3n kho, v\u1ED1n v\xE0 h\u1EA1n d\xF9ng \u23F3." },
       { sel: '.tab[data-v="top"]', pre: goKho("top"), ico: "\u{1F9CB}", t: "Tab Topping", d: "Ch\u1ECDn <b>Topping</b> kh\xE1ch hay g\u1ECDi: tr\xE2n ch\xE2u, th\u1EA1ch, kem... Kh\xF4ng c\u1EA7n nh\u1EADp h\u1EBFt, ch\u1EC9 nh\u1EADp m\xF3n b\u1EA1n mu\u1ED1n b\xE1n." },
-      { sel: '.tab[data-v="dc"]', pre: goKho("dc"), ico: "\u{1F964}", t: "Tab D\u1EE5ng c\u1EE5", d: "<b>Ly M, ly L</b>, \u0111\xE1, \u0111\u01B0\u1EDDng... Thi\u1EBFu ly th\xEC kh\xF4ng pha \u0111\u01B0\u1EE3c, nh\u1EDB nh\u1EADp c\u1EA3 hai size." },
-      { sel: ".krow .stepper", pre: goKho("dc"), ico: "\u{1F522}", t: "\xD4 nh\u1EADp s\u1ED1 l\u01B0\u1EE3ng", d: "G\xF5 th\u1EB3ng s\u1ED1 v\xE0o \xF4 gi\u1EEFa, ho\u1EB7c b\u1EA5m <b>\u2212 / +</b> (m\u1ED7i l\u1EA7n 1). D\xF2ng xanh <b>+N</b> l\xE0 l\u01B0\u1EE3ng s\u1EAFp nh\u1EADp." },
-      { sel: "#cta .cta-btn", ico: "\u{1F6D2}", t: "N\u1EA5u & nh\u1EADp", d: "B\u1EA5m <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n, nguy\xEAn li\u1EC7u v\xE0o kho. N\xFAt \u0111\u1ECF \u26A0\uFE0F ngh\u0129a l\xE0 c\xF2n thi\u1EBFu m\xF3n b\u1EAFt bu\u1ED9c." },
-      { sel: "#cta .cta-btn", ico: "\u{1F3EE}", t: "M\u1EDF c\u1EEDa", d: "\u0110\u1EE7 nguy\xEAn li\u1EC7u th\xEC n\xFAt \u0111\u1ED5i th\xE0nh <b>M\u1EDF c\u1EEDa</b>. B\u1EA5m \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u ca b\xE1n h\xE0ng!" }
+      { sel: '.tab[data-v="dc"]', pre: goKho("dc"), ico: "\u{1F964}", t: "Tab D\u1EE5ng c\u1EE5", d: "<b>Ly M, ly L, \u0111\xE1, \u0111\u01B0\u1EDDng</b> d\xF9ng \u0111\u1EC3 pha ch\u1EBF. C\xF3 \xEDt nh\u1EA5t m\u1ED9t c\u1EE1 ly \u0111\u1EC3 m\u1EDF c\u1EEDa; nh\u1EADp c\u1EA3 hai n\u1EBFu mu\u1ED1n ph\u1EE5c v\u1EE5 \u0111\u1EE7 hai size." },
+      { sel: ".krow .stepper", pre: goKho("dc"), ico: "\u{1F522}", t: "L\u1EADp s\u1ED1 l\u01B0\u1EE3ng c\u1EA7n nh\u1EADp", d: "\xD4 gi\u1EEFa l\xE0 <b>s\u1ED1 l\u01B0\u1EE3ng d\u1EF1 \u0111\u1ECBnh mua th\xEAm</b>, kh\xF4ng ph\u1EA3i t\u1ED3n kho. G\xF5 s\u1ED1 0\u2013999 ho\u1EB7c b\u1EA5m <b>\u2212 / +</b> \u0111\u1EC3 gi\u1EA3m/t\u0103ng 1. S\u1ED1 0 b\u1ECF m\xF3n kh\u1ECFi k\u1EBF ho\u1EA1ch. H\xE0ng ch\u1EC9 v\xE0o kho v\xE0 ti\u1EC1n ch\u1EC9 b\u1ECB tr\u1EEB khi x\xE1c nh\u1EADn <b>N\u1EA5u & nh\u1EADp</b>." },
+      { sel: "#cta .cta-btn", ico: "\u{1F6D2}", t: "X\xE1c nh\u1EADn nh\u1EADp h\xE0ng", d: () => planTotal() > 0 ? "N\xFAt <b>N\u1EA5u & nh\u1EADp</b> x\xE1c nh\u1EADn to\xE0n b\u1ED9 s\u1ED1 l\u01B0\u1EE3ng \u0111\xE3 ch\u1ECDn v\xE0 tr\u1EEB t\u1ED5ng chi ph\xED. Kh\xF4ng \u0111\u1EE7 ti\u1EC1n th\xEC giao d\u1ECBch kh\xF4ng th\u1EF1c hi\u1EC7n. B\u1EA5m Ti\u1EBFp ch\u1EC9 xem h\u01B0\u1EDBng d\u1EABn, kh\xF4ng mua h\xE0ng." : "Ch\u01B0a c\xF3 s\u1ED1 l\u01B0\u1EE3ng c\u1EA7n mua. T\u0103ng s\u1ED1 l\u01B0\u1EE3ng trong Kho \u0111\u1EC3 hi\u1EC7n n\xFAt <b>N\u1EA5u & nh\u1EADp</b>. N\xFAt \u0111\u1ECF hi\u1EC7n t\u1EA1i d\u1EABn t\u1EDBi nguy\xEAn li\u1EC7u c\xF2n thi\u1EBFu; n\u1EBFu kho \u0111\u1EE7 h\xE0ng, n\xFAt s\u1EBD l\xE0 M\u1EDF c\u1EEDa." },
+      { sel: "#cta .cta-btn", ico: "\u{1F3EE}", t: "\u0110i\u1EC1u ki\u1EC7n m\u1EDF c\u1EEDa", d: openingDescription },
+      { sel: '.tile[data-tab="crush"]', pre: goNav("them"), ico: "\u{1F3AE}", t: "Th\xEAm \xB7 Tr\xF2 ch\u01A1i", d: "Trong nh\xF3m <b>Th\xEAm</b>, ch\u1ECDn \xF4 <b>Milk Tea Crush</b> \u0111\u1EC3 xem hai tr\xF2 ch\u01A1i ph\u1EE5, ti\u1EBFn \u0111\u1ED9 v\xE0 ph\u1EA7n th\u01B0\u1EDFng. Tr\xF2 ch\u01A1i gi\xFAp b\u1ED5 sung ti\u1EC1n, nguy\xEAn li\u1EC7u ho\u1EB7c th\u01B0\u1EDFng doanh thu cho qu\xE1n." },
+      { sel: '.panel-in [data-act="crush"]', pre: goGames, ico: "\u{1F36C}", t: "Milk Tea Crush", d: "\u0110\u1ED5i ch\u1ED7 c\xE1c \xF4 k\u1EC1 nhau \u0111\u1EC3 gh\xE9p \xEDt nh\u1EA5t <b>3 icon gi\u1ED1ng nhau</b>. Ho\xE0n th\xE0nh m\u1EE5c ti\xEAu trong s\u1ED1 l\u01B0\u1EE3t c\u1EE7a m\xE0n. Gh\xE9p \u0111\u1EB7c bi\u1EC7t t\u1EA1o hi\u1EC7u \u1EE9ng h\xE0ng/c\u1ED9t, bom ho\u1EB7c c\u1EA7u v\u1ED3ng. M\u1ED7i m\xE0n v\u01B0\u1EE3t qua c\u1ED9ng <b>1% doanh thu v\u0129nh vi\u1EC5n</b>, t\u1ED1i \u0111a 50%." },
+      { sel: '.panel-in [data-act="pearl"]', pre: goGames, ico: "\u{1F9CB}", t: "Tr\xE2n Ch\xE2u N\u1ED5", d: "Ch\u1EA1m nh\xF3m <b>\xEDt nh\u1EA5t 2 vi\xEAn c\xF9ng m\xE0u k\u1EC1 nhau</b>. M\u1EE5c ti\xEAu 120 \u0111i\u1EC3m trong 30 gi\xE2y; n\u1ED5 li\xEAn ti\u1EBFp trong 1,2 gi\xE2y t\u0103ng combo. Cu\u1ED1i v\xE1n nh\u1EADn ti\u1EC1n v\xE0 tr\xE2n ch\xE2u theo k\u1EBFt qu\u1EA3. T\u1ED1i \u0111a <b>3 l\u01B0\u1EE3t m\u1ED7i ng\xE0y</b>; l\u01B0\u1EE3t ch\u1EC9 b\u1ECB t\xEDnh khi b\u1EA5m B\u1EAFt \u0111\u1EA7u." }
     ],
     sell: [
       { sel: "#qrow", ico: "\u{1F465}", t: "H\xE0ng \u0111\u1EE3i kh\xE1ch", d: "Kh\xE1ch x\u1EBFp h\xE0ng \u1EDF \u0111\xE2y. Ch\u1EA1m avatar \u0111\u1EC3 ph\u1EE5c v\u1EE5 ng\u01B0\u1EDDi kh\xE1c tr\u01B0\u1EDBc, \u01B0u ti\xEAn ai s\u1EAFp h\u1EBFt <b>ki\xEAn nh\u1EABn</b>." },
       { sel: ".cust-zone", ico: "\u{1F464}", t: "Bong b\xF3ng order", d: "Bong b\xF3ng ghi <b>size, lo\u1EA1i tr\xE0, h\u01B0\u01A1ng, topping</b>. V\xF2ng quanh avatar l\xE0 ki\xEAn nh\u1EABn; c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i." },
       { sel: ".stacks", ico: "\u{1F964}", t: "L\u1EA5y ly", d: "Ch\u1EA1m \u0111\xFAng ch\u1ED3ng ly <b>M</b> ho\u1EB7c <b>L</b> kh\xE1ch g\u1ECDi. M\u1ED7i size c\xF3 s\u1ED1 l\u01B0\u1EE3ng ri\xEAng, h\u1EBFt ly ph\u1EA3i nh\u1EADp th\xEAm." },
       { sel: "#disps", ico: "\u{1FAD6}", t: "R\xF3t tr\xE0", d: "Ch\u1EA1m <b>b\xECnh tr\xE0</b> \u0111\xFAng lo\u1EA1i \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u r\xF3t, ch\u1EA1m l\u1EA1i \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>." },
-      { sel: "#trays", ico: "\u{1F9CB}", t: "Topping & h\u01B0\u01A1ng", d: "Ch\u1EA1m c\xE1c <b>khay topping</b> kh\xE1ch mu\u1ED1n; n\u1EBFu c\xF3 h\u01B0\u01A1ng, ch\u1EA1m chai \u1EDF h\xE0ng <b>H\u01AF\u01A0NG</b> d\u01B0\u1EDBi b\xECnh tr\xE0. \u0110\u1EEBng th\xEAm th\u1EEBa." },
-      { sel: "#sealer", ico: "\u{1F512}", t: "\u0110\xF3ng n\u1EAFp", d: "Ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b> tr\u01B0\u1EDBc, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly tr\xEAn th\u1EDBt</b> \u0111\u1EC3 d\u1EADp n\u1EAFp." },
+      { sel: "#trays", ico: "\u{1F9CB}", t: "Topping & h\u01B0\u01A1ng", d: "Ch\u1EA1m c\xE1c <b>khay topping</b> kh\xE1ch mu\u1ED1n; n\u1EBFu c\xF3 h\u01B0\u01A1ng, ch\u1EA1m n\xFAt \u1EDF h\xE0ng <b>H\u01AF\u01A0NG</b> d\u01B0\u1EDBi khu PHA LY, ph\xEDa tr\xEAn khay topping. \u0110\u1EEBng th\xEAm th\u1EEBa." },
+      { sel: "#sealer", ico: "\u{1F512}", t: "\u0110\xF3ng n\u1EAFp", d: "Khi ly \u0111\xE3 c\xF3 tr\xE0, ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u \xE9p n\u1EAFp. Ch\u1EDD qu\xE1 tr\xECnh ho\xE0n t\u1EA5t, r\u1ED3i ch\u1EA1m <b>ly \u0111\xE3 c\xF3 n\u1EAFp</b> \u0111\u1EC3 giao kh\xE1ch." },
       { sel: "#wboard", ico: "\u{1F91D}", t: "Giao kh\xE1ch", d: "Ly \u0111\xE3 c\xF3 n\u1EAFp n\u1EB1m tr\xEAn th\u1EDBt <b>PHA LY</b>: ch\u1EA1m \u0111\u1EC3 giao cho kh\xE1ch. \u0110\xFAng \u0111\u01A1n v\xE0 nhanh th\xEC 5 sao, c\xF3 th\u1EC3 \u0111\u01B0\u1EE3c boa." },
       { sel: ".trash", ico: "\u{1F5D1}\uFE0F", t: "Th\xF9ng r\xE1c", d: "Pha nh\u1EA7m th\xEC ch\u1EA1m <b>th\xF9ng r\xE1c</b> \u0111\u1EC3 \u0111\u1ED5 ly r\u1ED3i l\xE0m l\u1EA1i." },
       { sel: ".phone", ico: "\u{1F4F1}", t: "\u0110\u01A1n online", d: "S\u1ED1 \u0111\u1ECF tr\xEAn <b>\u0111i\u1EC7n tho\u1EA1i</b> l\xE0 s\u1ED1 \u0111\u01A1n online \u0111ang ch\u1EDD. Ch\u1EA1m \u0111\u1EC3 xem v\xE0 nh\u1EADn \u0111\u01A1n." },
@@ -6784,20 +7095,38 @@
     return step.sel.split(",").map((q) => document.querySelector(q.trim())).find((n) => n && n.offsetParent !== null) || null;
   }
   function place() {
+    var _a;
     if (!cur) return;
     const el = $("#coach"), ring = el.querySelector(".coach-ring"), card = el.querySelector(".coach-card");
     el.style.visibility = document.querySelector("#modal .modal-back") ? "hidden" : "visible";
     const st = STEPS[cur.phase][cur.i];
     const t = targetOf(st);
+    const vp = window.visualViewport;
+    const topEdge = ((vp == null ? void 0 : vp.offsetTop) || 0) + 8;
+    const bottomEdge = ((vp == null ? void 0 : vp.offsetTop) || 0) + ((vp == null ? void 0 : vp.height) || innerHeight) - 8;
+    const app = (_a = document.querySelector(".app")) == null ? void 0 : _a.getBoundingClientRect();
+    card.style.left = `${app ? app.left + app.width / 2 : innerWidth / 2}px`;
+    card.style.width = `${Math.min(440, ((app == null ? void 0 : app.width) || innerWidth) - 20)}px`;
+    card.style.maxHeight = `${bottomEdge - topEdge}px`;
     if (t) {
+      const view = document.querySelector("#view");
+      if ((view == null ? void 0 : view.contains(t)) && cur.positioned !== cur.i) {
+        const vr = view.getBoundingClientRect(), tr = t.getBoundingClientRect();
+        const desired = vr.top + Math.min(24, Math.max(8, (vr.height - tr.height) / 2));
+        view.scrollTop += tr.top - desired;
+        cur.positioned = cur.i;
+      }
       const r = t.getBoundingClientRect();
       ring.style.cssText = `display:block;left:${r.left - 5}px;top:${r.top - 5}px;width:${r.width + 10}px;height:${r.height + 10}px`;
+      const above = Math.max(0, r.top - 12 - topEdge);
+      const below = Math.max(0, bottomEdge - r.bottom - 12);
       const ch = card.offsetHeight || 160;
-      const below = r.bottom + 12 + ch < innerHeight;
-      card.style.top = below ? `${r.bottom + 12}px` : `${Math.max(8, r.top - 12 - ch)}px`;
+      const useBelow = below >= ch || below >= above;
+      card.style.maxHeight = `${Math.max(1, useBelow ? below : above)}px`;
+      card.style.top = `${useBelow ? r.bottom + 12 : Math.max(topEdge, r.top - 12 - card.offsetHeight)}px`;
     } else {
       ring.style.display = "none";
-      card.style.top = `${Math.max(8, (innerHeight - (card.offsetHeight || 160)) / 2)}px`;
+      card.style.top = `${topEdge + Math.max(0, (bottomEdge - topEdge - card.offsetHeight) / 2)}px`;
     }
     cur.raf = requestAnimationFrame(place);
   }
@@ -6813,7 +7142,7 @@
       }
     }
     card.innerHTML = `<div class="coach-h"><span class="coach-ico">${st.ico}</span><div><small>B\u01B0\u1EDBc ${cur.i + 1}/${steps.length}</small><b>${esc(st.t)}</b></div></div>
-    <p>${st.d}</p>
+    <p>${typeof st.d === "function" ? st.d() : st.d}</p>
     <div class="coach-dots">${steps.map((_, k) => `<i class="${k === cur.i ? "on" : k < cur.i ? "done" : ""}"></i>`).join("")}</div>
     <div class="coach-btns"><button class="btn ghost sm" data-c="skip">B\u1ECF qua h\u01B0\u1EDBng d\u1EABn</button><button class="btn pri sm" data-c="next">${last2 ? "Xong \u2713" : "Ti\u1EBFp \u2192"}</button></div>`;
     card.querySelector('[data-c="skip"]').onclick = () => {
@@ -6964,6 +7293,8 @@
       E: econ_exports,
       G: sell_exports,
       SH,
+      flush: flushRender,
+      counterFrame: () => frameSell(0, true),
       addMoney: (n = 1e6) => {
         S.money += n;
         markDirty("hud", "cta");

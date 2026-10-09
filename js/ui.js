@@ -10,6 +10,7 @@ import * as E from './econ.js';
 import { SH, closeNow, nextDay } from './sell.js';
 import { icon } from './icons.js';
 import { copyText } from './platform.js';
+import { guideHTML } from './guide-content.js';
 
 /* ===== Delegation ===== */
 export function bindActions(root, map) {
@@ -193,9 +194,9 @@ export function initHud() {
 
 /* ===== Báo cáo P&L ===== */
 export function aggregate(entries) {
-  const a = { rev: 0, cogs: 0, rent: 0, util: 0, wage: 0, tax: 0, branch: 0, fran: 0, interest: 0, profit: 0, cups: 0, left: 0, online: 0, stars: [], days: entries.length };
+  const a = { rev: 0, cogs: 0, rent: 0, util: 0, wage: 0, tax: 0, fine: 0, branch: 0, fran: 0, interest: 0, profit: 0, cups: 0, left: 0, online: 0, stars: [], days: entries.length };
   for (const e of entries) {
-    for (const k of ['rev', 'cogs', 'rent', 'util', 'wage', 'tax', 'branch', 'fran', 'interest', 'profit', 'cups', 'left', 'online']) a[k] += e[k] || 0;
+    for (const k of ['rev', 'cogs', 'rent', 'util', 'wage', 'tax', 'fine', 'branch', 'fran', 'interest', 'profit', 'cups', 'left', 'online']) a[k] += e[k] || 0;
     if (e.stars) a.stars.push(e.stars);
   }
   a.avgStars = a.stars.length ? sum(a.stars) / a.stars.length : 0;
@@ -204,7 +205,7 @@ export function aggregate(entries) {
 const pct = (x, t) => (t > 0 ? (x / t * 100) : 0);
 export function plHTML(a, label) {
   const loss = a.profit < 0;
-  const cost = a.cogs + a.rent + a.util + a.wage;
+  const cost = a.cogs + a.rent + a.util + a.wage + a.tax + (a.fine || 0);
   const base = Math.max(a.rev, cost, 1);
   const cg = pct(a.cogs, base), pe = pct(a.wage, base), ma = pct(a.rent + a.util, base);
   const lossPct = loss ? Math.max(0, 100 - cg - pe - ma) : 0;
@@ -224,6 +225,8 @@ export function plHTML(a, label) {
       ${row('#ff8a3d', 'Nguyên liệu', fmtK(a.cogs), cogsPct.toFixed(0) + '%')}
       ${row('#3d9bff', 'Nhân sự', fmtK(a.wage), wagePct.toFixed(0) + '%')}
       ${row('#8b5cf6', 'Mặt bằng & điện nước', fmtK(a.rent + a.util), pct(a.rent + a.util, a.rev).toFixed(0) + '%')}
+      ${row('#d97706', 'Thuế & tiền phạt', fmtK(a.tax + (a.fine || 0)), pct(a.tax + (a.fine || 0), a.rev).toFixed(0) + '%')}
+      ${row('#2d8a63', 'Chi nhánh / nhượng quyền / lãi gửi', fmtK(a.branch + a.fran + a.interest), '')}
     </div>
     <details class="pl2-more"><summary>Phân tích F&B chi tiết</summary>
       <div class="pl-cards">
@@ -321,7 +324,7 @@ export function openPause() {
 
 /* ===== Cài đặt ===== */
 const MUSIC_OPTIONS = [
-  ['lofi', 'Lofi Chill Quán Cafe'], ['vui', 'Vui nhộn'],
+  ['lofi', '🎧 Lofi Chill Quán Cafe'], ['vui', '🎉 Vui nhộn'],
   ['spring', '🌸 Mùa Xuân'], ['summer', '☀️ Mùa Hạ'],
   ['autumn', '🍂 Mùa Thu'], ['winter', '❄️ Mùa Đông'], ['off', 'Tắt nhạc'],
 ];
@@ -390,71 +393,11 @@ function openBackups() {
 
 /* ===== Hướng dẫn ===== */
 export function openGuide() {
-  const li = (ico, body) => `<li><span>${ico}</span><div>${body}</div></li>`;
-  const sec = (ico, title, items, open) => `<details class="g-det"${open ? ' open' : ''}><summary>${ico} ${title}</summary><ul class="g-list">${items.map((x) => li(x[0], x[1])).join('')}</ul></details>`;
-  const m = openModal({ id: 'guide', cls: 'settings', html: `<h2 class="set-title">📖 Hướng dẫn chơi</h2>
-    <div class="guide rich">
-    ${sec('🏠', 'Màn chuẩn bị', [
-      ['🪧', '<b>Biển hiệu</b>: chạm logo hoặc tên tiệm để đổi. Hai nhãn nhỏ dẫn nhanh tới <b>Khởi nghiệp</b> (địa điểm) và <b>Sảnh Trà</b>.'],
-      ['🥤', '<b>Menu hôm nay</b>: các món đang bán kèm giá, size L phụ thu thêm. Dòng sự kiện và <b>👥 khách dự kiến</b> + thời tiết nằm ngay bên dưới.'],
-      ['🧭', '<b>Thanh dưới cùng</b> có 5 nhóm: 🏪 Tiệm · 📦 Kho · 📈 Phát triển · 👥 Xã hội · 🎀 Thêm. Chọn nhóm rồi chạm ô chức năng bên trong.'],
-      ['☰', 'Nút <b>≡</b> góc trái trên là Cài đặt, nút 📖 là mở lại Hướng dẫn, ⛅ để xem dự báo thời tiết và sự kiện.'],
-      ['🏮', 'Nút hồng đáy màn hình đổi theo tình trạng: <b>Nấu & nhập</b> → <b>⚠️ Chưa nấu…</b> (đỏ, thiếu món) → <b>Mở cửa</b>.'],
-    ], true)}
-    ${sec('📦', 'Kho & nhập hàng', [
-      ['🫖', 'Các tab: <b>Trà</b>, <b>Topping</b>, <b>Dụng cụ</b> (ly, đá, đường…) và <b>🍓 Hương</b> (khi đã mở khóa).'],
-      ['🔢', 'Mỗi món có ô số: gõ thẳng số lượng hoặc bấm <b>− / +</b> (mỗi lần 1). Dòng xanh <b>+N</b> là lượng sẽ nhập, kèm tiền vốn.'],
-      ['⏳', '<b>⏳ N ngày</b> là hạn dùng; <b>⚠️</b> báo món hết hạn hôm nay. Chai hương = nhiều ly, dùng được 7 ngày.'],
-      ['🛒', 'Xong thì bấm <b>Nấu & nhập</b> để trả tiền. Thiếu Trà hoặc Dụng cụ thì chưa mở cửa được.'],
-      ['🪴', 'Nhóm Kho còn có <b>Vườn cây</b> (trồng nguyên liệu) và <b>Thú cưng</b> (🔒 đến khi nhận nuôi).'],
-    ])}
-    ${sec('🧋', 'Màn bán hàng – từng bước pha 1 ly', [
-      ['1️⃣', '<b>Đọc đơn</b>: hàng đợi khách ở trên cùng, khách đang phục vụ hiện <b>bong bóng</b> ghi size, trà, hương, topping. Vòng quanh avatar là <b>kiên nhẫn</b>, cạn là khách bỏ đi. Chạm avatar khác để đổi khách.'],
-      ['2️⃣', '<b>Lấy ly</b>: ở <b>QUẦY TRÀ</b>, chạm chồng ly <b>M</b> hoặc <b>L</b> đúng size (mỗi size có số lượng riêng).'],
-      ['3️⃣', '<b>Rót trà</b>: chạm đúng <b>bình trà</b> để bắt đầu rót, chạm lại để dừng khi thanh chạy tới <b>vùng vàng</b>. Ly lưng hoặc tràn bị trừ sao.'],
-      ['4️⃣', '<b>Hương</b>: nếu khách gọi, chạm chai ở hàng <b>HƯƠNG</b> dưới bình trà.'],
-      ['5️⃣', '<b>Topping</b>: chạm các khay topping khách yêu cầu, không thêm thừa.'],
-      ['6️⃣', '<b>Đóng nắp</b>: chạm <b>máy đóng nắp</b>, chờ đèn READY rồi chạm <b>ly trên thớt</b> (khu PHA LY).'],
-      ['7️⃣', '<b>Giao khách</b>: ly xong sẽ giao cho khách. Đúng đơn và nhanh thì 5 sao, khách hài lòng còn boa.'],
-      ['📱', '<b>Điện thoại</b>: đơn online (số đỏ là số đơn chờ). Nhận đơn rồi pha như bình thường.'],
-      ['🗑️', '<b>Thùng rác</b>: đổ ly bị sai để pha lại.'],
-      ['⭐', 'Chấm sao: sai trà −3, sai size −2, thiếu/thừa hương −1, sai topping −1~2, ly lưng −1, tràn −1, chờ quá lâu −1.'],
-      ['⏸️', 'Nút <b>⏸</b> trên cùng là tạm dừng; nút bánh răng bên phải là Cài đặt.'],
-    ], true)}
-    ${sec('🪑', 'Sảnh & bàn', [
-      ['➡️', 'Nút <b>Ra sảnh</b> dưới cùng (kèm số bàn) chuyển sang Sảnh Trà; quay lại quầy bằng nút tương ứng.'],
-      ['🧹', 'Khách ăn xong để lại bàn bẩn, dọn bàn để có chỗ cho khách mới. Khách ngồi hài lòng có thể boa thêm.'],
-    ])}
-    ${sec('📊', 'Cuối ngày & tổng kết', [
-      ['🔔', 'Hết giờ ca, bảng <b>Tổng kết ngày</b> cho doanh thu, boa, số khách phục vụ/bỏ về và sao nhận được.'],
-      ['⭐', 'Tab <b>Đánh giá</b> (nhóm Tiệm) xem nhận xét. Sao càng cao thì khách càng đông.'],
-      ['📊', 'Tab <b>Tổng kết</b> xem lại số liệu các ngày. Game tự lưu cuối mỗi ngày.'],
-    ])}
-    ${sec('📈', 'Phát triển (nâng cấp, nhân sự, chi nhánh, khởi nghiệp)', [
-      ['💵', '<b>Giá bán</b> (nhóm Tiệm): chỉnh giá Trà, Hương, Topping, Size. Trà trên 50k, topping trên 20k dễ làm khách bỏ đi.'],
-      ['🛠️', '<b>Nâng cấp</b>: mở khóa trà/topping, cải thiện quầy, thêm tiện ích.'],
-      ['🏆', '<b>Quản lý nhân sự</b>: thuê nhân viên tự pha, quản lý hỗ trợ topping.'],
-      ['🏢', '<b>Chi nhánh</b>: mở thêm tiệm để có thu nhập. <b>🗺️ Khởi nghiệp</b>: đổi địa điểm, mở rộng xuyên Việt.'],
-      ['📜', '<b>Thuế & Bank</b> (nhóm Thêm): đóng thuế nhận buff, gửi tiết kiệm.'],
-    ])}
-    ${sec('👥', 'Xã hội', [
-      ['📱', '<b>Mạng Xã Hội</b>: đăng bài, chạy quảng cáo để kéo thêm khách.'],
-      ['👥', '<b>Bạn bè</b>: kết nối và so sánh với bạn bè.'],
-      ['🎴', '<b>Sưu tầm</b> (nhóm Thêm) cũng mở nhanh bằng nút ở góc phải thanh đầu màn hình.'],
-    ])}
-    ${sec('🍬', 'Mini game', [
-      ['🍬', '<b>Milk Tea Crush</b> (nhóm Thêm): ghép 3 món giống nhau để nhận thưởng.'],
-    ])}
-    ${sec('⚙️', 'Cài đặt (màu, rung, nhạc)', [
-      ['🎨', 'Bấm <b>≡</b> (màn chuẩn bị) hoặc bánh răng (khi bán) rồi chọn <b>Màu giao diện</b>.'],
-      ['📳', '<b>Rung</b>: chọn mức rung khi thao tác.'],
-      ['🎵', '<b>Nhạc nền</b> và <b>SFX</b> chỉnh âm lượng riêng; <b>🎼 Nhạc nền & Mùa</b> đổi phong cách nhạc. Còn có ⏱️ thời gian bán mỗi ngày và 🧭 chỉ dẫn từng bước.'],
-    ])}
-    </div>
+  const m = openModal({ id: 'guide', cls: 'settings', html: `<h2 class="set-title">${icon('book', 24)} Hướng dẫn chơi</h2>
+    <div class="guide rich">${guideHTML()}</div>
     <button class="btn pri block" data-act="x" style="margin-top:6px">Đã hiểu</button>` });
   bindActions(m.body, { x: () => m.close() });
 }
-
 /* ===== Dự báo thời tiết ===== */
 export function openForecast() {
   const ev = E.eventOf();

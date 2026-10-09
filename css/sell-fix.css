@@ -179,3 +179,40 @@
 
 /* Vòi rót nằm giữa đáy bình (đúng vị trí vòi trên hình), dòng trà chảy ra từ đây */
 .disp .image-tap { left: 50%; bottom: 0; width: 8px; height: 6px; transform: translateX(-50%); }
+
+/* Compact order card: reserve a separate row for the reject action. */
+.sell .cust-zone { height: 102px; min-height: 102px; max-height: 102px; align-items: flex-start; }
+.sell .bubble { height: 96px; border-radius: 20px; border: 1px solid rgba(180, 141, 101, .45); padding: 5px 8px; gap: 2px; box-shadow: 0 3px 8px rgba(80, 45, 20, .16); }
+.order-head { display: flex; align-items: center; justify-content: space-between; gap: 5px; flex: none; min-height: 26px; }
+.order-head .atag { overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+.sell .rej { position: static; flex: none; min-height: 26px; padding: 3px 9px; background: linear-gradient(#e66561, #c74743); color: #fff; border: 1px solid #b93835; font-size: 11px; font-weight: 800; box-shadow: 0 2px 4px rgba(163, 44, 39, .22); }
+.sell .rej:focus-visible { outline: 3px solid #ffd54a; outline-offset: 2px; }
+.sell .bubble .b-row { gap: 6px; }
+.sell .bubble .b-row > div:last-child { flex: 1; height: 100%; overflow: hidden; }
+.sell .bubble .cup { width: 32px !important; height: 44px !important; }
+.sell .bubble .btxt { display: block; height: 100%; overflow-y: auto; max-height: none; font-size: 11.5px; line-height: 1.25; margin: 0; overscroll-behavior: contain; }
+.sell .bubble .pat { height: 12px; }
+@media (max-height: 800px) { .sell .cust-zone { height: 96px; min-height: 96px; max-height: 96px; } .sell .bubble { height: 90px; } }
+@media (max-height: 690px) { .sell .cust-zone { height: 90px; min-height: 90px; max-height: 90px; } .sell .bubble { height: 84px; } }
+
+/* Keep the jet and impact separate so droplets are never clipped by the jet. */
+.stream { width: 8px; margin: 0; background: none; clip-path: none; animation: none; overflow: visible; }
+.st-jet { position: absolute; inset: 0; background-color: var(--tea); border-radius: 3px; clip-path: polygon(5% 0, 95% 0, 72% 100%, 28% 100%);
+  background-image: linear-gradient(180deg, transparent calc(var(--rim) - 2%), rgba(255,255,255,.28) var(--rim)), linear-gradient(90deg, rgba(77,43,17,.25), rgba(255,255,255,.48) 30%, transparent 60%, rgba(77,43,17,.2)); }
+.st-jet::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(180deg, transparent 0 15px, rgba(255,255,255,.35) 17px, transparent 23px); background-size: 100% 28px; animation: teaFlow .26s linear infinite; }
+.stream .st-gloss { left: 26%; width: 18%; opacity: .65; }
+.st-impact { position: absolute; left: 50%; bottom: 0; width: 0; height: 0; transform: rotate(var(--impact-angle, 0deg)); }
+.stream .st-spl { bottom: 0; }
+.stream .st-spl i { width: 3px; height: 4px; animation-name: teaDroplet; animation-duration: .72s; }
+.stream .st-ring { width: 22px; height: 5px; bottom: -2px; margin-left: -11px; border-width: 1px; box-shadow: none; }
+.c-pour-bubbles { opacity: 0; fill: #fff; fill-opacity: .55; pointer-events: none; }
+.pouring-art .c-pour-bubbles { opacity: 1; }
+.pouring-art .tea-bubble { animation: teaBubble .85s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.pouring-art .tea-bubble:nth-child(2) { animation-delay: -.3s; }
+.pouring-art .tea-bubble:nth-child(3) { animation-delay: -.6s; }
+.pouring-art .c-surf { transform-box: fill-box; transform-origin: center; animation: teaSurface .7s ease-in-out infinite; }
+@keyframes teaFlow { to { background-position: 0 28px; } }
+@keyframes teaDroplet { 0% { opacity: 0; transform: translate(0, 0) scale(.5); } 15% { opacity: .8; } 48% { opacity: .7; transform: translate(calc(var(--dx) * .65), calc(var(--dy) * .45)) scale(.85); } 100% { opacity: 0; transform: translate(var(--dx), 4px) scale(.4); } }
+@keyframes teaBubble { 0% { opacity: 0; transform: translateY(6px) scale(.5); } 30% { opacity: .7; } 100% { opacity: 0; transform: translateY(-3px) scale(1.2); } }
+@keyframes teaSurface { 0%, 100% { transform: scaleY(.9) rotate(-1deg); } 50% { transform: scaleY(1.2) rotate(1deg); } }
+@media (prefers-reduced-motion: reduce) { .st-jet::after, .pouring-art .tea-bubble, .pouring-art .c-surf, .stream .st-spl i { animation: none; } }

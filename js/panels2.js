@@ -1,3 +1,4 @@
+import { staffArt } from './sell-art.js';
 /**
  * Menu Home (2/3): Quản lý nhân sự · Thuế & Bank · Chi nhánh · Mạng xã hội.
  */
@@ -12,7 +13,7 @@ function staffCard(st) {
   const hired = !!S.staff[st.id];
   const why = E.hireBlock(st.id);
   const wageTxt = `${fmtK(st.wage)}/ngày${st.revPct ? ` + ${st.revPct * 100}% doanh thu` : ''}`;
-  return `<div class="staffcard ${hired ? 'hired' : ''}"><div class="sc-top"><span class="sc-av">${st.icon}</span><div class="grow"><b>${esc(st.name)}</b><small>(${esc(st.role)})</small>
+  return `<div class="staffcard ${hired ? 'hired' : ''}"><div class="sc-top"><span class="sc-av">${staffArt(st.id)}</span><div class="grow"><b>${esc(st.name)}</b><small>(${esc(st.role)})</small>
       <div class="sc-st">${hired ? '🟢 Đang làm' : '⚪ Chưa tuyển'}</div><div class="sc-w">💵 Lương ${wageTxt}</div></div>
       ${hired ? `<button class="btn ghost sm" data-act="fire" data-id="${st.id}">Cho nghỉ</button>` : why ? `<span class="why">${esc(why)}</span>` : `<button class="btn pri sm" data-act="hire" data-id="${st.id}">${fmtK(st.hire)}<br/>Thuê</button>`}</div>
     <details class="fold"><summary>Xem chi tiết</summary><p class="sc-d">${esc(st.desc)}</p></details></div>`;
@@ -25,7 +26,7 @@ const nhansu = {
     const avail = STAFF.filter((s) => !S.staff[s.id]);
     return `<div class="kpi"><div class="kpi-h"><b>📊 Chu kỳ xét KPI & Trả lương 7 ca bán nước</b><span class="chip">Ca ${n}/7</span></div>
       <div class="bar"><i style="width:${(n / 7 * 100).toFixed(0)}%"></i></div>
-      <p>Đã tích luỹ ${n}/7 ca bán. Còn ${7 - n} ca bán nữa sẽ đến đợt xét KPI & thanh toán dồn tiền lương, tiền thưởng định kỳ cho toàn bộ nhân viên.</p>
+      <p>Đã tích luỹ ${n}/7 ca bán. Còn ${7 - n} ca bán nữa sẽ đến đợt xét KPI & thanh toán dồn tiền lương, cho toàn bộ nhân viên. Lương chờ thanh toán: ${fmtK(S.kpi.payable || 0)}.</p>
       <span class="chip green">📣 Gọi thêm khách: +${callPct}%</span>
       <button class="btn soft block" data-act="kpi">🔍 Xem chi tiết KPI & Phong độ nhân viên</button></div>
       ${hiredList.length ? `<h5 class="grp">Đội ngũ quán (${hiredList.length})</h5>${hiredList.map(staffCard).join('')}` : `<div class="emptybox">👨‍🍳<b>Chưa có nhân viên nào trong đội ngũ quán</b><p>Bạn có thể bấm <b>Thuê</b> ngay ứng viên bên dưới để bắt đầu chấm công & xét KPI.</p></div>`}
@@ -66,7 +67,7 @@ const thue = {
     const b = S.bank;
     const principal = b.principal || 0;
     return `<div class="taxcard"><h4>🏛️ ĐÓNG THUẾ TRỰC TUYẾN 72H (3 NGÀY THỰC)</h4><p>Đóng thuế mỗi 3 ngày thực tế (72 giờ) để Buff toàn diện & phòng ngừa trộm cắp.</p>
-      ${active ? `<div class="ok-box">🟡 <b>ĐANG TRONG THỜI GIAN ÂN HẠN 72H</b><div>⏳ Hạn chót: <b data-cd="tax">${fmtCountdown(S.tax.until - Date.now())}</b></div><small>Hãy hoàn thành đóng thuế trực tuyến để nhận ngay Buff phát triển và bảo vệ an ninh quán!</small></div>` : `<div class="warn-box">⏰ Chưa có buff thuế. Nộp thuế để nhận hiệu ứng trong 72 giờ thực.</div>`}
+      ${active ? `<div class="ok-box">🟡 <b>BUFF THUẾ ĐANG CÓ HIỆU LỰC</b><div>⏳ Hạn chót: <b data-cd="tax">${fmtCountdown(S.tax.until - Date.now())}</b></div><small>Đã nộp thuế; không cần đóng lại trước khi hết thời hạn.</small></div>` : `<div class="warn-box">⏰ Chưa có buff thuế. Nộp thuế để nhận hiệu ứng trong 72 giờ thực.</div>`}
       <div class="tax-sel"><b>💰 Chọn mức đóng thuế theo số tiền két hiện có</b><p class="muted">Két hiện có: <b>${fmtK(S.money)}</b> · Mức thuế quy định từ ${TAX.minRate * 100}% đến ${TAX.maxRate * 100}%.</p>
         <div class="rate-row"><span>Tỉ lệ đóng thuế:</span><b>${Math.round(rate * 100)}%</b></div>
         <input type="range" min="5" max="15" step="1" value="${Math.round(rate * 100)}" data-rate aria-label="Tỉ lệ thuế">
@@ -74,36 +75,32 @@ const thue = {
         <div class="tax-amt">Số tiền thuế cần nộp: <b>${fmtK(amt)}</b> · Quyền lợi nhận được: <b>Buff +15% / 72h</b></div>
         <button class="btn pri block" data-act="pay" ${active ? 'disabled' : ''}>🏛️ ${active ? 'Đã nộp thuế (đang có buff)' : `Nộp thuế ngay (${fmtK(amt)} · Buff +15%)`}</button></div>
       <div class="bank"><div class="bank-h"><small>BẢO HỘ TÀI CHÍNH AN TOÀN 100%</small><h4>🏦 NGÂN HÀNG TÀ TƯA BANK</h4><span class="chip y">LÃI KÉP ${BANK.interest * 100}%/NGÀY</span></div>
-        <div class="bank-st"><div><small>💰 Tiền gửi hiện tại:</small><b>${fmtK(b.balance)}</b><em>(Gốc: ${fmtK(principal)})</em></div><div><small>📈 Hạn mức gửi tối đa:</small><b>${fmtK(BANK.max)}</b><em>(+${BANK.starBonus * 100}% khi đạt 5★; khi quá 1 tỷ tăng +${BANK.bigBonus * 100}%, tối đa 99 Tỷ)</em></div></div>
+        <div class="bank-st"><div><small>💰 Tiền gửi hiện tại:</small><b>${fmtK(b.balance)}</b><em>(Gốc: ${fmtK(principal)})</em></div><div><small>📈 Hạn mức gửi tối đa:</small><b>${fmtK(BANK.max)}</b><em>(+${BANK.starBonus * 100}% khi đạt 4,5★; khi quá 1 tỷ tăng +${BANK.bigBonus * 100}%, tối đa 99 Tỷ)</em></div></div>
         <div class="bank-lock">🔒 Kỳ hạn cam kết: <b>${BANK.lockShifts} ngày bán nước</b> · Tiến độ: <b>${Math.min(b.shifts, BANK.lockShifts)}/${BANK.lockShifts}</b> ngày. Rút trước hạn sẽ mất toàn bộ tiền lãi.</div>
         <p class="bank-note">🔐 <b>Đặc quyền:</b> Tiền gửi tuyệt đối không bị trộm cắp, bùng tiền hay lừa đảo.</p>
         <div class="dep-btns"><button class="btn gold sm" data-act="dep" data-p="0.1">Gửi 10% két</button><button class="btn gold sm" data-act="dep" data-p="0.5">Gửi 50%</button><button class="btn gold sm" data-act="dep" data-p="1">Gửi tất cả</button></div>
         <button class="btn soft block" data-act="wd" ${b.balance > 0 ? '' : 'disabled'}>💸 Rút tiền</button></div>
-      <details class="policy fold"><summary>📜 Chính sách thuế & Thống kê tiệm</summary><p>• Chu kỳ 72 giờ (3 ngày) thực tế. Hết 72h cần đóng chu kỳ mới, không cộng dồn.</p><p>• Tỉ lệ Buff: Đóng thuế nhiều % két thì tăng khách, tăng tốc độ và giảm trộm cắp (tối đa 15%).</p><p>• Nhân viên Me kết tinh: Khi đã thuê, quán không bị phạt chậm thuế; chuyển thành thời gian ân hạn duy trì buff.</p><p>• Tổng thuế đã nộp: <b>${fmtK(S.tax.paid)}</b></p></details>`;
+      <details class="policy fold"><summary>📜 Chính sách thuế & Thống kê tiệm</summary><p>• Chu kỳ 72 giờ (3 ngày) thực tế. Hết 72h cần đóng chu kỳ mới, không cộng dồn.</p><p>• Nộp từ 5% đến 15% két để nhận buff cố định +15% trong 72 giờ; chọn mức cao hơn không cộng dồn buff.</p><p>• Nhân viên Me kết tinh: Khi đã thuê, quán không bị phạt chậm thuế; chuyển thành thời gian ân hạn duy trì buff.</p><p>• Tổng thuế đã nộp: <b>${fmtK(S.tax.paid)}</b></p></details>`;
   },
   acts: {
     rate: (t) => { S.tax.rate = +t.dataset.r / 100; markDirty('panel'); },
     pay: () => {
-      const amt = Math.round(S.money * S.tax.rate);
-      if (amt <= 0) return toast('Két trống, chưa có gì để nộp thuế', 'err');
-      S.money -= amt; S.tax.paid += amt; S.today.tax += amt; S.tax.until = Date.now() + TAX.hours * 3600 * 1000; S.tax.last = Date.now();
-      markDirty('hud', 'panel'); requestSave(); sfx('success'); taxReceipt(amt);
+      const result = E.payTax();
+      if (typeof result === 'string') return toast(result, 'err');
+      sfx('success'); taxReceipt(result);
     },
     dep: (t) => {
-      const amt = Math.floor(S.money * +t.dataset.p);
-      if (amt <= 0) return toast('Không đủ tiền để gửi', 'err');
-      const room = BANK.max - S.bank.balance;
-      const a = Math.min(amt, room);
-      S.money -= a; S.bank.balance += a; S.bank.principal = (S.bank.principal || 0) + a; S.bank.shifts = S.bank.shifts || 0;
-      markDirty('hud', 'panel'); requestSave(); sfx('coin'); toast(`Đã gửi ${fmtK(a)}`, 'ok');
+      const result = E.depositBank(+t.dataset.p);
+      if (typeof result === 'string') return toast(result, 'err');
+      sfx('coin'); toast(`Đã gửi ${fmtK(result)}`, 'ok');
     },
     wd: () => {
       const b = S.bank;
       const early = b.shifts < BANK.lockShifts;
       confirmBox('Rút tiền tiết kiệm?', early ? `Chưa đủ ${BANK.lockShifts} ngày cam kết: chỉ nhận lại tiền gốc ${fmtK(b.principal || 0)}, mất lãi ${fmtK(b.balance - (b.principal || 0))}.` : `Bạn sẽ nhận ${fmtK(b.balance)} gồm cả lãi.`, () => {
-        S.money += early ? (b.principal || 0) : b.balance;
-        b.balance = 0; b.principal = 0; b.shifts = 0;
-        markDirty('hud', 'panel'); requestSave(); sfx('coin');
+        const result = E.withdrawBank();
+        if (typeof result === 'string') return toast(result, 'err');
+        sfx('coin');
       }, 'Rút tiền');
     },
   },
@@ -142,31 +139,31 @@ function statsHTML() {
   const total = main + brP + frP;
   const tot = Math.max(1, Math.abs(main) + Math.abs(brP) + Math.abs(frP));
   const bar = (l, v) => `<div class="sbar"><span>${l}</span><div class="bar"><i style="width:${Math.abs(v) / tot * 100}%"></i></div><b>${fmtK(v)}</b></div>`;
-  return `<div class="stcard"><small>BÁO CÁO TÀI CHÍNH TOÀN HỆ THỐNG</small><h4>Lợi Nhuận Ròng: <span class="${total >= 0 ? 'pos' : 'neg'}">${fmtK(total)}</span></h4><p class="muted">Tổng hợp doanh thu từ Quán chính, ${brN} Chi nhánh trực thuộc & ${S.franchise.count} Chi nhánh nhượng quyền (ngày gần nhất).</p></div>
+  return `<div class="stcard"><small>BÁO CÁO TÀI CHÍNH TOÀN HỆ THỐNG</small><h4>Lợi Nhuận Ròng: <span class="${total >= 0 ? 'pos' : 'neg'}">${fmtK(total)}</span></h4><p class="muted">Tổng hợp lợi nhuận từ Quán chính, ${brN} Chi nhánh trực thuộc & ${S.franchise.count} Chi nhánh nhượng quyền (ngày gần nhất).</p></div>
     <div class="dl"><span>🏪 Quán Chính (Flagship)</span><b class="${main >= 0 ? 'pos' : 'neg'}">${fmtK(main)}</b></div>
     <div class="dl"><span>🏢 ${brN} Chi Nhánh Trực Thuộc</span><b class="${brP >= 0 ? 'pos' : 'neg'}">${fmtK(brP)}</b></div>
     <div class="dl"><span>🤝 ${S.franchise.count} Chi Nhánh Nhượng Quyền</span><b class="pos">${fmtK(frP)}</b></div>
     <div class="dl big"><span>💰 Tổng Lợi Nhuận Chuỗi</span><b class="${total >= 0 ? 'pos' : 'neg'}">${fmtK(total)}</b></div>
-    <div class="stcard"><b>📊 Biểu Đồ Phân Bổ Nguồn Doanh Thu:</b>${bar('Quán chính', main)}${bar('Chi nhánh', brP)}${bar('Nhượng quyền', frP)}</div>`;
+    <div class="stcard"><b>📊 Biểu Đồ Phân Bổ Lợi Nhuận:</b>${bar('Quán chính', main)}${bar('Chi nhánh', brP)}${bar('Nhượng quyền', frP)}</div>`;
 }
 const chinhanh = {
   html() {
     const t = S.subtab.cn || 'tt';
     const tb = [['tt', '🏢 Trực thuộc'], ['nq', '🤝 Nhượng quyền'], ['tk', '📊 Thống kê']];
-    return `<div class="tabs">${tb.map(([id, l]) => `<button class="tab ${t === id ? 'on' : ''}" data-act="sub" data-v="${id}">${l}</button>`).join('')}</div>${t === 'tt' ? branchHTML() : t === 'nq' ? franchiseHTML() : statsHTML()}`;
+    return `<div class="tabs scroll">${tb.map(([id, l]) => `<button class="tab ${t === id ? 'on' : ''}" data-act="sub" data-v="${id}">${l}</button>`).join('')}</div>${t === 'tt' ? branchHTML() : t === 'nq' ? franchiseHTML() : statsHTML()}`;
   },
   bind(root) {
     for (const inp of root.querySelectorAll('[data-bstaff]')) {
       inp.addEventListener('focus', () => inp.select());
-      inp.addEventListener('change', () => { const o = S.branches[inp.dataset.bstaff]; if (o) { o.staff = Math.max(0, Math.min(3, Math.round(+inp.value || 0))); markDirty('panel'); } });
+      inp.addEventListener('change', () => { const error = E.setBranchStaff(inp.dataset.bstaff, +inp.value); if (error) toast(error, 'err'); });
     }
   },
   acts: {
     sub: (t) => { S.subtab.cn = t.dataset.v; markDirty('panel'); },
-    bopen: (t) => confirmBox('Thuê & mở chi nhánh?', `Chi phí mở: ${fmtK(BRANCHES.find((b) => b.id === t.dataset.id).cost)}. Chi nhánh tự kinh doanh và gửi lãi ròng về mỗi cuối ngày.`, () => { const b = BRANCHES.find((x) => x.id === t.dataset.id); if (S.money < b.cost) { toast('Không đủ tiền', 'err'); sfx('error'); return; } S.money -= b.cost; S.branches[b.id] = { staff: 0, rev: 0, days: 0 }; markDirty('hud', 'panel'); requestSave(); sfx('unlock'); toast('🏢 Khai trương chi nhánh mới!', 'ok'); }, 'Mở chi nhánh'),
-    'bstaff+': (t) => { const o = S.branches[t.dataset.id]; if (o.staff < 3) { o.staff++; markDirty('panel'); } },
-    'bstaff-': (t) => { const o = S.branches[t.dataset.id]; if (o.staff > 0) { o.staff--; markDirty('panel'); } },
-    fopen: () => { if (S.rating < FRANCHISE.needRating || S.followers < FRANCHISE.needFollowers) return; S.money += FRANCHISE.fee; S.franchise.count++; markDirty('hud', 'panel'); requestSave(); sfx('level'); toast(`🤝 Đã bán nhượng quyền! +${fmtK(FRANCHISE.fee)}`, 'ok'); },
+    bopen: (t) => { const b = BRANCHES.find(x => x.id === t.dataset.id); if (!b) return; confirmBox('Thuê & mở chi nhánh?', `Chi phí mở: ${fmtK(b.cost)}. Chi nhánh tự kinh doanh và gửi lãi ròng về mỗi cuối ngày.`, () => { const error = E.openBranch(b.id); if (error) return toast(error, 'err'); sfx('unlock'); toast('🏢 Khai trương chi nhánh mới!', 'ok'); }, 'Mở chi nhánh'); },
+    'bstaff+': (t) => { const o = S.branches[t.dataset.id]; if (o) E.setBranchStaff(t.dataset.id, (o.staff || 0) + 1); },
+    'bstaff-': (t) => { const o = S.branches[t.dataset.id]; if (o) E.setBranchStaff(t.dataset.id, (o.staff || 0) - 1); },
+    fopen: () => { const error = E.sellFranchise(); if (error) return toast(error, 'err'); sfx('level'); toast(`🤝 Đã bán nhượng quyền! +${fmtK(FRANCHISE.fee)}`, 'ok'); },
   },
 };
 
@@ -186,9 +183,9 @@ const mxh = {
     const verified = S.followers >= 50000 && S.rating >= 4.5;
     const quota = ad ? ad.videos : 1;
     const used = S.social.videosToday;
-    const traffic = ad ? Math.round(ad.traffic * 100) : 0;
+    const traffic = (ad ? Math.round(ad.traffic * 100) : 0) + (S.social.videoDay === S.day ? Math.round((S.social.videoBuff || 0) * 100) : 0);
     return `<div class="profile"><div class="pf-h">${logoHTML(60)}<div><h4>${esc(S.shopName)} ${verified ? '✔️' : ''}</h4><small class="${verified ? 'green' : 'grayish'}">${verified ? '🌱 Đã tích xanh' : '🌱 Đang xây thương hiệu'}</small><p class="muted">${verified ? 'Kênh ẩm thực chính thức' : 'Cần 50K followers & 4.5★ để tích xanh'}</p></div></div>
-      <div class="pf-s"><div><b>${S.followers.toLocaleString('vi-VN')}</b><small>Người theo dõi</small></div><div><b>${S.rating.toFixed(1)} ★</b><small>${S.ratingCount} đánh giá</small></div><div><b>+${traffic}%</b><small>Buff từ Ads</small></div></div></div>
+      <div class="pf-s"><div><b>${S.followers.toLocaleString('vi-VN')}</b><small>Người theo dõi</small></div><div><b>${S.rating.toFixed(1)} ★</b><small>${S.ratingCount} đánh giá</small></div><div><b>+${traffic}%</b><small>Buff Ads / video</small></div></div></div>
       <div class="adbox"><h4>📣 Quảng cáo tăng khách</h4><p class="sub">Đang chạy ${ad ? 1 : 0}/1 chiến dịch${ad ? ` · còn ${S.social.ad.endsDay - S.day + 1} ngày` : ''}</p>
       ${ADS.map((a) => `<div class="adcard ${ad?.id === a.id ? 'run' : ''}" data-act="adinfo" data-id="${a.id}"><span class="ad-ic">${a.icon}</span><div class="ad-m"><b>${a.name}</b><small>+${Math.round(a.traffic * 100)}% khách · ${a.days} ngày · ⓘ</small></div><button class="btn pri sm ad-btn" data-act="ad" data-id="${a.id}" ${ad ? 'disabled' : ''}>${ad?.id === a.id ? 'Đang chạy' : `<b>${fmtK(a.cost)}</b><small>Kích hoạt</small>`}</button></div>`).join('')}</div>
       <div class="vidbox"><h4>🎬 Đăng video quảng bá</h4><p>Tỉ lệ Viral: <b>25%</b> · Mỗi lần quay nhận ngẫu nhiên % buff khách. Số lượt quay hôm nay dựa vào chiến dịch ads (${used}/${quota} lượt/ngày).</p>
@@ -206,15 +203,15 @@ const mxh = {
       const a = ADS.find((x) => x.id === t.dataset.id);
       if (S.money < a.cost) { toast('Không đủ tiền chạy quảng cáo', 'err'); sfx('error'); return; }
       confirmBox(a.name, `Chi ${fmtK(a.cost)} chạy trong ${a.days} ngày: +${Math.round(a.traffic * 100)}% khách quán chính, +${a.followers.toLocaleString('vi-VN')} followers.`, () => {
-        S.money -= a.cost; S.social.ad = { id: a.id, endsDay: S.day + a.days - 1 }; S.followers += a.followers;
+        const error = E.startAd(a.id); if (error) return toast(error, 'err');
         for (let i = 0; i < a.posts; i++) S.social.posts.unshift(genPost());
         S.social.posts = S.social.posts.slice(0, 10);
         markDirty('hud', 'panel'); requestSave(); sfx('success'); toast('📣 Chiến dịch đã bắt đầu!', 'ok');
       }, 'Kích hoạt');
     },
     video: () => {
+      const error = E.recordVideo(); if (error) return toast(error, 'err');
       const viral = chance(0.25);
-      S.social.videosToday++;
       const gain = viral ? randInt(1500, 6000) : randInt(100, 600);
       S.followers += gain;
       if (viral) S.social.posts.unshift(genPost());

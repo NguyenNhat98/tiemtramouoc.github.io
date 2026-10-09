@@ -29,7 +29,7 @@ export function stackArt(size) {
   const wl = (y) => 6.5 + 6.5 * (y - 34) / 60;
   const lines = rims.map((y) => `<path d="M${wl(y).toFixed(1)} ${y} Q30 ${y + 3.4} ${(60 - wl(y)).toFixed(1)} ${y}" fill="none" stroke="rgba(122,90,62,.5)" stroke-width="1.1"/>`).join('');
   const id = `stk${cupUid++}`;
-  return `<svg class="sale-art stack-svg" viewBox="0 0 60 104" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
+  return `<svg class="sale-art stack-svg" viewBox="0 26 60 78" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
     <defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#e6cfa8"/><stop offset=".35" stop-color="#fbf0dc"/><stop offset=".7" stop-color="#f1dfc0"/><stop offset="1" stop-color="#d9bf94"/></linearGradient></defs>
     <ellipse cx="30" cy="99" rx="21" ry="3.6" fill="rgba(60,35,10,.2)"/>
     <path d="M6.5 34 L13 93 Q30 98.5 47 93 L53.5 34 Z" fill="url(#${id})" stroke="#7a5a3e" stroke-width="1.8" stroke-linejoin="round"/>
@@ -53,6 +53,9 @@ const Y_TOP = 14, Y_BOT = 97;
 const wallL = (y) => 6 + 10 * (y - 12) / 84;
 const wallR = (y) => 72 - 10 * (y - 12) / 84;
 const surfaceOf = (fill) => Y_BOT - (Y_BOT - Y_TOP) * Math.min(1, Math.max(0, fill) * 0.86);
+const teaTone = (hex, amount) => /^#[0-9a-f]{6}$/i.test(hex || '')
+  ? '#' + [1, 3, 5].map((p) => Math.round(Math.max(0, Math.min(255, parseInt(hex.slice(p, p + 2), 16) + amount))).toString(16).padStart(2, '0')).join('')
+  : hex || '#fff';
 
 /** Cập nhật mực nước khi đang rót (không vẽ lại cả ly). */
 export function setCupFill(cupEl, fill) {
@@ -64,6 +67,8 @@ export function setCupFill(cupEl, fill) {
   if (top) top.setAttribute('y', y.toFixed(1));
   const surf = cupEl.querySelector('.c-surf');
   if (surf) { surf.setAttribute('cy', y.toFixed(1)); surf.style.opacity = fill > 0.02 ? 1 : 0; }
+  const bubbles = cupEl.querySelector('.c-pour-bubbles');
+  if (bubbles) bubbles.setAttribute('transform', `translate(0 ${y.toFixed(1)})`);
 }
 
 /** opts: { fill, tea (màu), flavor (màu), tops: [màu...], lid: '' | 'drop' | 'on', straw: bool } */
@@ -83,10 +88,11 @@ export function cupSvg(opts) {
       balls.push(`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="3.7" fill="${c}"/><circle cx="${(xx - 1.2).toFixed(1)}" cy="${(yy - 1.3).toFixed(1)}" r="1.1" fill="#fff" opacity=".55"/>`);
     }
   }
-  const liquid = tea ? `<rect class="c-liq" x="0" y="${y.toFixed(1)}" width="78" height="${(110 - y).toFixed(1)}" fill="${tea}"/>
+  const liquid = tea ? `<rect class="c-liq" x="0" y="${y.toFixed(1)}" width="78" height="${(110 - y).toFixed(1)}" fill="url(#${id}tea)"/>
       <rect class="c-liq-top" x="0" y="${y.toFixed(1)}" width="78" height="14" fill="url(#${id}g)"/>
       ${flavor ? `<rect class="c-flav" x="0" y="64" width="78" height="40" fill="${flavor}" opacity=".5"/>` : ''}
-      <ellipse class="c-surf" cx="39" cy="${y.toFixed(1)}" rx="31.5" ry="3.1" fill="#fff" fill-opacity=".38" style="opacity:${fill > 0.02 ? 1 : 0}"/>` : '';
+      <ellipse class="c-surf" cx="39" cy="${y.toFixed(1)}" rx="31.5" ry="3.1" fill="#fff" fill-opacity=".38" style="opacity:${fill > 0.02 ? 1 : 0}"/>
+      <g class="c-pour-bubbles" transform="translate(0 ${y.toFixed(1)})"><circle class="tea-bubble" cx="33" cy="5" r="1.8"/><circle class="tea-bubble" cx="45" cy="9" r="1.2"/><circle class="tea-bubble" cx="39" cy="15" r="1.5"/></g>` : '';
   const lidSvg = lid ? `<g class="c-lidg ${lid === 'drop' ? 'drop' : ''}">
       <path d="M7.5 9.8 Q39 -8.5 70.5 9.8 Z" fill="rgba(255,255,255,.72)" stroke="#cdbda7" stroke-width="1.1"/>
       <path d="M16 8 Q26 0 36 -0.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/>
@@ -96,7 +102,8 @@ export function cupSvg(opts) {
   const strawSvg = straw ? '<g class="c-strawg"><line x1="41" y1="92" x2="54" y2="-22" stroke="#ff7fa0" stroke-width="5" stroke-linecap="round"/><line x1="41" y1="92" x2="54" y2="-22" stroke="#fff" stroke-width="5" stroke-dasharray="4 5" opacity=".9"/></g>' : '';
   return `<svg class="cup-svg" viewBox="0 0 78 104" width="100%" height="100%" overflow="visible" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
     <defs><clipPath id="${id}c"><path d="${BODY_IN}"/></clipPath>
-      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${id}tea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${teaTone(tea, 15)}"/><stop offset=".35" stop-color="${tea || '#fff'}"/><stop offset="1" stop-color="${teaTone(tea, -28)}"/></linearGradient></defs>
     <ellipse cx="39" cy="100" rx="25" ry="3.2" fill="rgba(60,35,10,.16)"/>
     <g clip-path="url(#${id}c)">${liquid}${balls.join('')}</g>
     ${strawSvg}
@@ -107,3 +114,4 @@ export function cupSvg(opts) {
     ${lidSvg}
   </svg>`;
 }
+export function staffArt(id) { const cells = {thuViec:2,phaChe:1,online:5,quanLy:4,genZ:3,diCho:6,svDem:9,meKetTinh:8,chuBa:7}; return img(`customer-${cells[id] || 0}`, "staff-sprite"); }

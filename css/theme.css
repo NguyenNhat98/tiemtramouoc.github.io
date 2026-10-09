@@ -452,3 +452,6 @@ body { background: color-mix(in srgb, var(--bg) 85%, #7a5a3a); }
 .home .panel, .panel-in { min-width: 0; }
 .panel-in > * { max-width: 100%; }
 .krow .plan { min-height: 1.3em; }
+/* Submenu labels stay on one horizontally scrollable row. */
+.panel-in .tabs.scroll { flex-wrap: nowrap; overflow-x: auto; min-width: 0; max-width: 100%; -webkit-overflow-scrolling: touch; }
+.panel-in .tabs.scroll .tab { flex: 0 0 auto; white-space: nowrap; }

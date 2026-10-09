@@ -70,7 +70,7 @@ function wire() {
 function exposeDebug() {
   if (!DEBUG) return;
   window.debugGame = {
-    S, E, G, SH,
+    S, E, G, SH, flush: flushRender, counterFrame: () => frameSell(0, true),
     addMoney: (n = 1e6) => { S.money += n; markDirty('hud', 'cta'); },
     fillStock: (q = 30) => { for (const id of Object.keys(S.stock)) if (S.unlocked[id]) E.addStock(id, q); markDirty('panel', 'cta'); },
     unlockAll: () => { for (const id of Object.keys(S.unlocked)) { S.unlocked[id] = true; S.onMenu[id] = !['lyM', 'lyL', 'da', 'duong'].includes(id); } markDirty('view', 'panel', 'board'); },
