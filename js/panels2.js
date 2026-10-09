@@ -15,7 +15,7 @@ function staffCard(st) {
   return `<div class="staffcard ${hired ? 'hired' : ''}"><div class="sc-top"><span class="sc-av">${st.icon}</span><div class="grow"><b>${esc(st.name)}</b><small>(${esc(st.role)})</small>
       <div class="sc-st">${hired ? '🟢 Đang làm' : '⚪ Chưa tuyển'}</div><div class="sc-w">💵 Lương ${wageTxt}</div></div>
       ${hired ? `<button class="btn ghost sm" data-act="fire" data-id="${st.id}">Cho nghỉ</button>` : why ? `<span class="why">${esc(why)}</span>` : `<button class="btn pri sm" data-act="hire" data-id="${st.id}">${fmtK(st.hire)}<br/>Thuê</button>`}</div>
-    <p class="sc-d">${esc(st.desc)}</p></div>`;
+    <details class="fold"><summary>Xem chi tiết</summary><p class="sc-d">${esc(st.desc)}</p></details></div>`;
 }
 const nhansu = {
   html() {
@@ -79,7 +79,7 @@ const thue = {
         <p class="bank-note">🔐 <b>Đặc quyền:</b> Tiền gửi tuyệt đối không bị trộm cắp, bùng tiền hay lừa đảo.</p>
         <div class="dep-btns"><button class="btn gold sm" data-act="dep" data-p="0.1">Gửi 10% két</button><button class="btn gold sm" data-act="dep" data-p="0.5">Gửi 50%</button><button class="btn gold sm" data-act="dep" data-p="1">Gửi tất cả</button></div>
         <button class="btn soft block" data-act="wd" ${b.balance > 0 ? '' : 'disabled'}>💸 Rút tiền</button></div>
-      <div class="policy"><b>📜 Chính sách thuế & Thống kê tiệm:</b><p>• Chu kỳ 72 giờ (3 ngày) thực tế. Hết 72h cần đóng chu kỳ mới, không cộng dồn.</p><p>• Tỉ lệ Buff: Đóng thuế nhiều % két thì tăng khách, tăng tốc độ và giảm trộm cắp (tối đa 15%).</p><p>• Nhân viên Me kết tinh: Khi đã thuê, quán không bị phạt chậm thuế; chuyển thành thời gian ân hạn duy trì buff.</p><p>• Tổng thuế đã nộp: <b>${fmtK(S.tax.paid)}</b></p></div>`;
+      <details class="policy fold"><summary>📜 Chính sách thuế & Thống kê tiệm</summary><p>• Chu kỳ 72 giờ (3 ngày) thực tế. Hết 72h cần đóng chu kỳ mới, không cộng dồn.</p><p>• Tỉ lệ Buff: Đóng thuế nhiều % két thì tăng khách, tăng tốc độ và giảm trộm cắp (tối đa 15%).</p><p>• Nhân viên Me kết tinh: Khi đã thuê, quán không bị phạt chậm thuế; chuyển thành thời gian ân hạn duy trì buff.</p><p>• Tổng thuế đã nộp: <b>${fmtK(S.tax.paid)}</b></p></details>`;
   },
   acts: {
     rate: (t) => { S.tax.rate = +t.dataset.r / 100; markDirty('panel'); },
@@ -132,7 +132,7 @@ function franchiseHTML() {
       <button class="btn ${can ? 'pri' : 'ghost'} block" data-act="fopen" ${can ? '' : 'disabled'}>${can ? `🤝 Bán nhượng quyền (+${fmtK(FRANCHISE.fee)})` : '🔒 CHƯA ĐẠT ĐIỀU KIỆN'}</button>
       <div class="frreq"><div class="frbox"><small>⭐ Điểm Uy Tín Quán:</small><b>${S.rating.toFixed(1)} / ${FRANCHISE.needRating}★ ${okR ? '✅' : '❌'}</b><div class="bar"><i style="width:${Math.min(100, S.rating / FRANCHISE.needRating * 100)}%"></i></div></div>
         <div class="frbox"><small>📱 Người Theo Dõi MXH:</small><b>${S.followers.toLocaleString('vi-VN')}đ / ${FRANCHISE.needFollowers.toLocaleString('vi-VN')} ${okF ? '✅' : '❌'}</b><div class="bar"><i style="width:${Math.min(100, S.followers / FRANCHISE.needFollowers * 100)}%"></i></div></div></div></div>
-    <div class="tipbox"><b>💡 Mẹo để mở bán nhượng quyền:</b><p>• Hãy phục vụ khách thật nhanh và dán nắp chuẩn xác để nhận nhiều đánh giá <b>5 sao</b> nâng điểm Uy Tín lên ≥ 4.5★.</p><p>• Vào mục <b>Mạng Xã Hội</b> để chạy các chiến dịch Quảng cáo TikTok / Facebook / Thuê KOL để tích lũy đủ 50.000 Người theo dõi!</p></div>`;
+    <details class="tipbox fold"><summary>💡 Mẹo để mở bán nhượng quyền</summary><p>• Hãy phục vụ khách thật nhanh và dán nắp chuẩn xác để nhận nhiều đánh giá <b>5 sao</b> nâng điểm Uy Tín lên ≥ 4.5★.</p><p>• Vào mục <b>Mạng Xã Hội</b> để chạy các chiến dịch Quảng cáo TikTok / Facebook / Thuê KOL để tích lũy đủ 50.000 Người theo dõi!</p></details>`;
 }
 function statsHTML() {
   const last = S.history[S.history.length - 1];

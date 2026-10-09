@@ -2402,12 +2402,8 @@
       ["\u{1F3B5}", "<b>Nh\u1EA1c n\u1EC1n</b> v\xE0 <b>SFX</b> ch\u1EC9nh \xE2m l\u01B0\u1EE3ng ri\xEAng; <b>\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a</b> \u0111\u1ED5i phong c\xE1ch nh\u1EA1c. C\xF2n c\xF3 \u23F1\uFE0F th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y v\xE0 \u{1F9ED} ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc."]
     ])}
     </div>
-    <button class="btn blue block" data-act="replay">\u{1F393} Xem h\u01B0\u1EDBng d\u1EABn t\u01B0\u01A1ng t\xE1c t\u1EEBng b\u01B0\u1EDBc</button>
     <button class="btn pri block" data-act="x" style="margin-top:6px">\u0110\xE3 hi\u1EC3u</button>` });
-    bindActions(m.body, { x: () => m.close(), replay: () => {
-      m.close();
-      emit("tutorial:replay");
-    } });
+    bindActions(m.body, { x: () => m.close() });
   }
   function openForecast() {
     const ev = eventOf();
@@ -2489,7 +2485,7 @@
     <div class="in-queue" aria-hidden="true"><span class="q1">\u{1F9D1}\u200D\u{1F393}<b>\u{1F9CB}</b></span><span class="q2">\u{1F469}\u200D\u{1F4BC}<b>\u{1F375}</b></span><span class="q3">\u{1F475}<b>\u{1F9CB}</b></span><span class="q4">\u{1F466}<b>\u{1F964}</b></span></div>
     <div class="in-counter" aria-hidden="true"><span class="in-plant">\u{1F335}</span><div class="in-cups"><span>\u{1F9CB}</span><span>\u{1F964}</span><span>\u{1F9C3}</span><span>\u{1F375}</span></div><div class="in-cat">\u{1F431}<small>z z</small></div><span class="in-plant">\u{1FAB4}</span></div>
     <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="in-walk" aria-hidden="true"><span class="w1">\u{1F6B6}\u200D\u2640\uFE0F<i>\u{1F9CB}</i></span><span class="w2">\u{1F6F5}</span><span class="w3">\u{1F415}</span></div>
+    <div class="in-walk" aria-hidden="true"><span class="w1"><em class="stp">\u{1F6B6}\u200D\u2640\uFE0F</em><i>\u{1F9CB}</i></span><span class="w2"><em class="rid">\u{1F6F5}</em></span><span class="w3"><em class="trt">\u{1F415}</em></span></div>
     <span class="in-corner l">\u{1F353}</span><span class="in-corner r">\u{1F343}</span>
     <small class="ver">${VERSION}</small>`;
     bindActions(el, { play: () => {
@@ -4566,7 +4562,7 @@
     return `<div class="staffcard ${hired ? "hired" : ""}"><div class="sc-top"><span class="sc-av">${st.icon}</span><div class="grow"><b>${esc(st.name)}</b><small>(${esc(st.role)})</small>
       <div class="sc-st">${hired ? "\u{1F7E2} \u0110ang l\xE0m" : "\u26AA Ch\u01B0a tuy\u1EC3n"}</div><div class="sc-w">\u{1F4B5} L\u01B0\u01A1ng ${wageTxt}</div></div>
       ${hired ? `<button class="btn ghost sm" data-act="fire" data-id="${st.id}">Cho ngh\u1EC9</button>` : why ? `<span class="why">${esc(why)}</span>` : `<button class="btn pri sm" data-act="hire" data-id="${st.id}">${fmtK(st.hire)}<br/>Thu\xEA</button>`}</div>
-    <p class="sc-d">${esc(st.desc)}</p></div>`;
+    <details class="fold"><summary>Xem chi ti\u1EBFt</summary><p class="sc-d">${esc(st.desc)}</p></details></div>`;
   }
   var nhansu = {
     html() {
@@ -4640,7 +4636,7 @@
         <p class="bank-note">\u{1F510} <b>\u0110\u1EB7c quy\u1EC1n:</b> Ti\u1EC1n g\u1EEDi tuy\u1EC7t \u0111\u1ED1i kh\xF4ng b\u1ECB tr\u1ED9m c\u1EAFp, b\xF9ng ti\u1EC1n hay l\u1EEBa \u0111\u1EA3o.</p>
         <div class="dep-btns"><button class="btn gold sm" data-act="dep" data-p="0.1">G\u1EEDi 10% k\xE9t</button><button class="btn gold sm" data-act="dep" data-p="0.5">G\u1EEDi 50%</button><button class="btn gold sm" data-act="dep" data-p="1">G\u1EEDi t\u1EA5t c\u1EA3</button></div>
         <button class="btn soft block" data-act="wd" ${b.balance > 0 ? "" : "disabled"}>\u{1F4B8} R\xFAt ti\u1EC1n</button></div>
-      <div class="policy"><b>\u{1F4DC} Ch\xEDnh s\xE1ch thu\u1EBF & Th\u1ED1ng k\xEA ti\u1EC7m:</b><p>\u2022 Chu k\u1EF3 72 gi\u1EDD (3 ng\xE0y) th\u1EF1c t\u1EBF. H\u1EBFt 72h c\u1EA7n \u0111\xF3ng chu k\u1EF3 m\u1EDBi, kh\xF4ng c\u1ED9ng d\u1ED3n.</p><p>\u2022 T\u1EC9 l\u1EC7 Buff: \u0110\xF3ng thu\u1EBF nhi\u1EC1u % k\xE9t th\xEC t\u0103ng kh\xE1ch, t\u0103ng t\u1ED1c \u0111\u1ED9 v\xE0 gi\u1EA3m tr\u1ED9m c\u1EAFp (t\u1ED1i \u0111a 15%).</p><p>\u2022 Nh\xE2n vi\xEAn Me k\u1EBFt tinh: Khi \u0111\xE3 thu\xEA, qu\xE1n kh\xF4ng b\u1ECB ph\u1EA1t ch\u1EADm thu\u1EBF; chuy\u1EC3n th\xE0nh th\u1EDDi gian \xE2n h\u1EA1n duy tr\xEC buff.</p><p>\u2022 T\u1ED5ng thu\u1EBF \u0111\xE3 n\u1ED9p: <b>${fmtK(S.tax.paid)}</b></p></div>`;
+      <details class="policy fold"><summary>\u{1F4DC} Ch\xEDnh s\xE1ch thu\u1EBF & Th\u1ED1ng k\xEA ti\u1EC7m</summary><p>\u2022 Chu k\u1EF3 72 gi\u1EDD (3 ng\xE0y) th\u1EF1c t\u1EBF. H\u1EBFt 72h c\u1EA7n \u0111\xF3ng chu k\u1EF3 m\u1EDBi, kh\xF4ng c\u1ED9ng d\u1ED3n.</p><p>\u2022 T\u1EC9 l\u1EC7 Buff: \u0110\xF3ng thu\u1EBF nhi\u1EC1u % k\xE9t th\xEC t\u0103ng kh\xE1ch, t\u0103ng t\u1ED1c \u0111\u1ED9 v\xE0 gi\u1EA3m tr\u1ED9m c\u1EAFp (t\u1ED1i \u0111a 15%).</p><p>\u2022 Nh\xE2n vi\xEAn Me k\u1EBFt tinh: Khi \u0111\xE3 thu\xEA, qu\xE1n kh\xF4ng b\u1ECB ph\u1EA1t ch\u1EADm thu\u1EBF; chuy\u1EC3n th\xE0nh th\u1EDDi gian \xE2n h\u1EA1n duy tr\xEC buff.</p><p>\u2022 T\u1ED5ng thu\u1EBF \u0111\xE3 n\u1ED9p: <b>${fmtK(S.tax.paid)}</b></p></details>`;
     },
     acts: {
       rate: (t) => {
@@ -4716,7 +4712,7 @@
       <button class="btn ${can ? "pri" : "ghost"} block" data-act="fopen" ${can ? "" : "disabled"}>${can ? `\u{1F91D} B\xE1n nh\u01B0\u1EE3ng quy\u1EC1n (+${fmtK(FRANCHISE.fee)})` : "\u{1F512} CH\u01AFA \u0110\u1EA0T \u0110I\u1EC0U KI\u1EC6N"}</button>
       <div class="frreq"><div class="frbox"><small>\u2B50 \u0110i\u1EC3m Uy T\xEDn Qu\xE1n:</small><b>${S.rating.toFixed(1)} / ${FRANCHISE.needRating}\u2605 ${okR ? "\u2705" : "\u274C"}</b><div class="bar"><i style="width:${Math.min(100, S.rating / FRANCHISE.needRating * 100)}%"></i></div></div>
         <div class="frbox"><small>\u{1F4F1} Ng\u01B0\u1EDDi Theo D\xF5i MXH:</small><b>${S.followers.toLocaleString("vi-VN")}\u0111 / ${FRANCHISE.needFollowers.toLocaleString("vi-VN")} ${okF ? "\u2705" : "\u274C"}</b><div class="bar"><i style="width:${Math.min(100, S.followers / FRANCHISE.needFollowers * 100)}%"></i></div></div></div></div>
-    <div class="tipbox"><b>\u{1F4A1} M\u1EB9o \u0111\u1EC3 m\u1EDF b\xE1n nh\u01B0\u1EE3ng quy\u1EC1n:</b><p>\u2022 H\xE3y ph\u1EE5c v\u1EE5 kh\xE1ch th\u1EADt nhanh v\xE0 d\xE1n n\u1EAFp chu\u1EA9n x\xE1c \u0111\u1EC3 nh\u1EADn nhi\u1EC1u \u0111\xE1nh gi\xE1 <b>5 sao</b> n\xE2ng \u0111i\u1EC3m Uy T\xEDn l\xEAn \u2265 4.5\u2605.</p><p>\u2022 V\xE0o m\u1EE5c <b>M\u1EA1ng X\xE3 H\u1ED9i</b> \u0111\u1EC3 ch\u1EA1y c\xE1c chi\u1EBFn d\u1ECBch Qu\u1EA3ng c\xE1o TikTok / Facebook / Thu\xEA KOL \u0111\u1EC3 t\xEDch l\u0169y \u0111\u1EE7 50.000 Ng\u01B0\u1EDDi theo d\xF5i!</p></div>`;
+    <details class="tipbox fold"><summary>\u{1F4A1} M\u1EB9o \u0111\u1EC3 m\u1EDF b\xE1n nh\u01B0\u1EE3ng quy\u1EC1n</summary><p>\u2022 H\xE3y ph\u1EE5c v\u1EE5 kh\xE1ch th\u1EADt nhanh v\xE0 d\xE1n n\u1EAFp chu\u1EA9n x\xE1c \u0111\u1EC3 nh\u1EADn nhi\u1EC1u \u0111\xE1nh gi\xE1 <b>5 sao</b> n\xE2ng \u0111i\u1EC3m Uy T\xEDn l\xEAn \u2265 4.5\u2605.</p><p>\u2022 V\xE0o m\u1EE5c <b>M\u1EA1ng X\xE3 H\u1ED9i</b> \u0111\u1EC3 ch\u1EA1y c\xE1c chi\u1EBFn d\u1ECBch Qu\u1EA3ng c\xE1o TikTok / Facebook / Thu\xEA KOL \u0111\u1EC3 t\xEDch l\u0169y \u0111\u1EE7 50.000 Ng\u01B0\u1EDDi theo d\xF5i!</p></details>`;
   }
   function statsHTML() {
     const last2 = S.history[S.history.length - 1];
@@ -5073,9 +5069,10 @@
     const l = LOCATIONS[id];
     const here = S.location === id;
     return `<div class="loccard ${here ? "here" : ""}" id="loc-${id}"><div class="loc-img ${id}">${sceneHTML(id)}<span class="loc-tag">${l.icon} ${esc(l.tag)}</span><h4>${l.icon} ${esc(l.name)}</h4></div>
-    <div class="loc-body"><i class="slogan">"${esc(l.slogan)}"</i><p>${esc(l.desc)}</p>
+    <div class="loc-body"><i class="slogan">"${esc(l.slogan)}"</i>
+    <details class="fold"><summary>Xem m\xF4 t\u1EA3, l\u1EE3i th\u1EBF & th\u1EED th\xE1ch</summary><p>${esc(l.desc)}</p>
     <div class="pro"><b>\u{1F7E2} L\u1EE3i Th\u1EBF Kinh Doanh (\u01AFu \u0110i\u1EC3m):</b>${l.pro.map((x) => `<p>\u2022 ${esc(x)}</p>`).join("")}</div>
-    ${l.con.length ? `<div class="con"><b>\u{1F534} Th\u1EED Th\xE1ch V\u1EADn H\xE0nh (Kh\xF3 Kh\u0103n):</b>${l.con.map((x) => `<p>\u2022 ${esc(x)}</p>`).join("")}</div>` : ""}
+    ${l.con.length ? `<div class="con"><b>\u{1F534} Th\u1EED Th\xE1ch V\u1EADn H\xE0nh (Kh\xF3 Kh\u0103n):</b>${l.con.map((x) => `<p>\u2022 ${esc(x)}</p>`).join("")}</div>` : ""}</details>
     <button class="btn ${here ? "ghost" : "pri"} block" data-act="startup" data-id="${id}" ${here ? "disabled" : ""}>${here ? "\u2705 \u0110ang \u0110\u1EB7t Qu\xE1n T\u1EA1i \u0110\xE2y" : `\u{1F680} Kh\u1EDFi Nghi\u1EC7p T\u1EA1i ${l.name} \xB7 ${fmtK(LOCATION_COST)}`}</button></div></div>`;
   }
   var SCENES = {
@@ -6565,6 +6562,7 @@
   function place() {
     if (!cur) return;
     const el = $("#coach"), ring = el.querySelector(".coach-ring"), card = el.querySelector(".coach-card");
+    el.style.visibility = document.querySelector("#modal .modal-back") ? "hidden" : "visible";
     const st = STEPS[cur.phase][cur.i];
     const t = targetOf(st);
     if (t) {
@@ -6627,6 +6625,7 @@
   }
   function startTutorial(phase) {
     if (cur) end(false);
+    document.querySelectorAll("#modal [data-modal-x]").forEach((b) => b.click());
     cur = { phase, i: 0, raf: 0 };
     if (phase === "sell") setPaused(true);
     show();

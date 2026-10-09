@@ -146,9 +146,10 @@ function locCard(id) {
   const l = LOCATIONS[id];
   const here = S.location === id;
   return `<div class="loccard ${here ? 'here' : ''}" id="loc-${id}"><div class="loc-img ${id}">${sceneHTML(id)}<span class="loc-tag">${l.icon} ${esc(l.tag)}</span><h4>${l.icon} ${esc(l.name)}</h4></div>
-    <div class="loc-body"><i class="slogan">"${esc(l.slogan)}"</i><p>${esc(l.desc)}</p>
+    <div class="loc-body"><i class="slogan">"${esc(l.slogan)}"</i>
+    <details class="fold"><summary>Xem mô tả, lợi thế & thử thách</summary><p>${esc(l.desc)}</p>
     <div class="pro"><b>🟢 Lợi Thế Kinh Doanh (Ưu Điểm):</b>${l.pro.map((x) => `<p>• ${esc(x)}</p>`).join('')}</div>
-    ${l.con.length ? `<div class="con"><b>🔴 Thử Thách Vận Hành (Khó Khăn):</b>${l.con.map((x) => `<p>• ${esc(x)}</p>`).join('')}</div>` : ''}
+    ${l.con.length ? `<div class="con"><b>🔴 Thử Thách Vận Hành (Khó Khăn):</b>${l.con.map((x) => `<p>• ${esc(x)}</p>`).join('')}</div>` : ''}</details>
     <button class="btn ${here ? 'ghost' : 'pri'} block" data-act="startup" data-id="${id}" ${here ? 'disabled' : ''}>${here ? '✅ Đang Đặt Quán Tại Đây' : `🚀 Khởi Nghiệp Tại ${l.name} · ${fmtK(LOCATION_COST)}`}</button></div></div>`;
 }
 const SCENES = {

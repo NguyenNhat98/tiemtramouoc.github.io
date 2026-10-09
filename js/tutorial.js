@@ -52,6 +52,8 @@ function targetOf(step) {
 function place() {
   if (!cur) return;
   const el = $('#coach'), ring = el.querySelector('.coach-ring'), card = el.querySelector('.coach-card');
+  // có hộp thoại đang mở: tạm ẩn hướng dẫn để không chồng lên giao diện
+  el.style.visibility = document.querySelector('#modal .modal-back') ? 'hidden' : 'visible';
   const st = STEPS[cur.phase][cur.i];
   const t = targetOf(st);
   if (t) {
@@ -94,6 +96,7 @@ function end(skipped) {
 }
 export function startTutorial(phase) {
   if (cur) end(false);
+  document.querySelectorAll('#modal [data-modal-x]').forEach((b) => b.click()); // đóng Cài đặt / Hướng dẫn... trước khi chạy
   cur = { phase, i: 0, raf: 0 };
   if (phase === 'sell') setPaused(true);
   show();

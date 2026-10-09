@@ -451,9 +451,8 @@ export function openGuide() {
       ['🎵', '<b>Nhạc nền</b> và <b>SFX</b> chỉnh âm lượng riêng; <b>🎼 Nhạc nền & Mùa</b> đổi phong cách nhạc. Còn có ⏱️ thời gian bán mỗi ngày và 🧭 chỉ dẫn từng bước.'],
     ])}
     </div>
-    <button class="btn blue block" data-act="replay">🎓 Xem hướng dẫn tương tác từng bước</button>
     <button class="btn pri block" data-act="x" style="margin-top:6px">Đã hiểu</button>` });
-  bindActions(m.body, { x: () => m.close(), replay: () => { m.close(); emit('tutorial:replay'); } });
+  bindActions(m.body, { x: () => m.close() });
 }
 
 /* ===== Dự báo thời tiết ===== */
@@ -520,7 +519,7 @@ export function showIntro(onPlay) {
     <div class="in-queue" aria-hidden="true"><span class="q1">🧑‍🎓<b>🧋</b></span><span class="q2">👩‍💼<b>🍵</b></span><span class="q3">👵<b>🧋</b></span><span class="q4">👦<b>🥤</b></span></div>
     <div class="in-counter" aria-hidden="true"><span class="in-plant">🌵</span><div class="in-cups"><span>🧋</span><span>🥤</span><span>🧃</span><span>🍵</span></div><div class="in-cat">🐱<small>z z</small></div><span class="in-plant">🪴</span></div>
     <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="in-walk" aria-hidden="true"><span class="w1">🚶‍♀️<i>🧋</i></span><span class="w2">🛵</span><span class="w3">🐕</span></div>
+    <div class="in-walk" aria-hidden="true"><span class="w1"><em class="stp">🚶‍♀️</em><i>🧋</i></span><span class="w2"><em class="rid">🛵</em></span><span class="w3"><em class="trt">🐕</em></span></div>
     <span class="in-corner l">🍓</span><span class="in-corner r">🍃</span>
     <small class="ver">${VERSION}</small>`;
   bindActions(el, { play: () => { goFullscreen(); el.hidden = true; onPlay(); }, guide: () => openGuide() });
