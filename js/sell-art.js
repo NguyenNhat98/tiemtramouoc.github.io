@@ -68,14 +68,15 @@ export function setCupFill(cupEl, fill) {
 
 /** opts: { fill, tea (màu), flavor (màu), tops: [màu...], lid: '' | 'drop' | 'on', straw: bool } */
 export function cupSvg(opts) {
-  const { fill = 0, tea = null, flavor = null, tops = [], lid = '', straw = false } = opts;
+  const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = '', straw = false } = opts;
   const id = `cup${cupUid++}`;
   const y = surfaceOf(tea ? fill : 0);
   // topping xếp từ đáy lên, mỗi hàng 5 viên so le
   const balls = [];
   let n = 0;
-  for (const c of tops) {
-    for (let k = 0; k < 3; k++, n++) {
+  for (let ti = 0; ti < tops.length; ti++) {
+    const c = tops[ti], cnt = shown[ti] ?? 3;
+    for (let k = 0; k < cnt; k++, n++) {
       const row = Math.floor(n / 5), col = n % 5;
       const yy = 91 - row * 6.6;
       const xx = Math.max(wallL(yy) + 4.2, Math.min(wallR(yy) - 4.2, 39 + (col - 2) * 8.2 + (row % 2 ? 4.1 : 0)));

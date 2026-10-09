@@ -3596,13 +3596,15 @@
     }
   }
   function cupSvg(opts) {
-    const { fill = 0, tea = null, flavor = null, tops = [], lid = "", straw = false } = opts;
+    var _a;
+    const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = "", straw = false } = opts;
     const id = `cup${cupUid++}`;
     const y = surfaceOf(tea ? fill : 0);
     const balls = [];
     let n = 0;
-    for (const c of tops) {
-      for (let k = 0; k < 3; k++, n++) {
+    for (let ti = 0; ti < tops.length; ti++) {
+      const c = tops[ti], cnt = (_a = shown[ti]) != null ? _a : 3;
+      for (let k = 0; k < cnt; k++, n++) {
         const row2 = Math.floor(n / 5), col = n % 5;
         const yy = 91 - row2 * 6.6;
         const xx = Math.max(wallL(yy) + 4.2, Math.min(wallR(yy) - 4.2, 39 + (col - 2) * 8.2 + (row2 % 2 ? 4.1 : 0)));
@@ -3636,6 +3638,16 @@
 
   // js/brewui.js
   var sizePx = { M: [54, 76], L: [64, 90] };
+  var topShown = {};
+  var topShownBoard = null;
+  var shownFor = (c) => {
+    if (c !== SH.board) return [];
+    if (topShownBoard !== c) {
+      topShown = {};
+      topShownBoard = c;
+    }
+    return (c.tops || []).map((_, i) => topShown[i]);
+  };
   function cupHTML(c, { mini = false, stamp = true } = {}) {
     var _a;
     const [w, hgt] = sizePx[c.size || "M"];
@@ -3644,7 +3656,7 @@
     const fl = c.flavor ? ITEMS[c.flavor] : null;
     const fill = clamp((_a = c.fill) != null ? _a : 0, 0, 1.15);
     const lid = c.phase === "ready" ? "on" : c.phase === "sealing" ? "drop" : "";
-    const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), lid, straw: c.phase === "ready" });
+    const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), shown: shownFor(c), lid, straw: c.phase === "ready" });
     const st = stamp && !mini && equipLevel("nhanDien") > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : "";
     const seal = Math.round(Math.max(500, (c.sealMax || 1.2) * 1e3 * 0.8));
     return `<div class="cup ${c.phase || ""}" style="width:${w * k}px;height:${hgt * k}px;--seal-ms:${seal}ms">${svg}${st}</div>`;
@@ -3778,11 +3790,22 @@
       const id = t.dataset.t;
       if (!S.unlocked[id]) return toast("M\u1EDF kh\xF3a trong N\xE2ng c\u1EA5p \u203A Topping", "err");
       if (!S.onMenu[id]) return toast("M\xF3n \u0111ang t\u1EAFt kh\u1ECFi menu", "err");
+      const b = SH.board;
+      let idx = -1;
+      if (b) {
+        if (topShownBoard !== b) {
+          topShown = {};
+          topShownBoard = b;
+        }
+        idx = b.tops.length;
+        topShown[idx] = 0;
+      }
       const e = addTop(id);
       if (e) {
+        if (idx >= 0) delete topShown[idx];
         toast(e, "err");
         sfx("error");
-      } else dropFx(t, ITEMS[id].color);
+      } else dropFx(t, ITEMS[id].color, idx);
     },
     seal: () => {
       const e = sealCup();
@@ -3820,6 +3843,16 @@
     sel: (t) => selectCustomer(+t.dataset.cid)
   };
   var serveHold = false;
+  function tween(ms, step, done) {
+    const t0 = performance.now();
+    const f = (now) => {
+      const t = Math.min(1, (now - t0) / ms);
+      step(t);
+      if (t < 1) requestAnimationFrame(f);
+      else if (done) done();
+    };
+    requestAnimationFrame(f);
+  }
   var THANKS = [
     null,
     ["\u{1F615}", "H\u01A1i th\u1EA5t v\u1ECDng..."],
@@ -3875,15 +3908,26 @@
     const clone = cupEl.cloneNode(true);
     clone.style.cssText = `position:fixed;left:${from.left}px;top:${from.top}px;width:${from.width}px;height:${from.height}px;margin:0;pointer-events:none;transition:none;will-change:transform,opacity`;
     brewFxLayer().appendChild(clone);
-    const DUR = r.refused ? 900 : 640, STEPS2 = 22, frames2 = [];
-    for (let i = 0; i <= STEPS2; i++) {
-      const t = i / STEPS2, e = r.refused ? Math.sin(Math.PI * Math.min(1, t * 1.05)) * 0.9 : t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-      frames2.push({ transform: `translate(${(dx * e).toFixed(1)}px,${(dy * e - 46 * 4 * t * (1 - t)).toFixed(1)}px) scale(${(1 - 0.4 * e).toFixed(3)}) rotate(${(-10 + 16 * e).toFixed(1)}deg)`, opacity: 1, offset: t });
-    }
-    clone.animate(frames2, { duration: DUR, easing: "linear", fill: "forwards" }).onfinish = () => {
-      if (!r.refused) clone.animate([{ transform: `translate(${dx}px,${dy}px) scale(.6) rotate(6deg)`, opacity: 1 }, { transform: `translate(${dx}px,${dy - 6}px) scale(.72) rotate(6deg)`, opacity: 0.9, offset: 0.4 }, { transform: `translate(${dx}px,${dy - 14}px) scale(.55) rotate(6deg)`, opacity: 0 }], { duration: 260, easing: "ease-out", fill: "forwards" }).onfinish = () => clone.remove();
-      else clone.remove();
-      if (generation !== brewFxGeneration) return;
+    cupEl.style.visibility = "hidden";
+    const DUR = r.refused ? 900 : 640;
+    const alive = () => generation === brewFxGeneration && clone.isConnected;
+    tween(DUR, (t) => {
+      if (!alive()) return;
+      const e = r.refused ? Math.sin(Math.PI * Math.min(1, t * 1.05)) * 0.9 : t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      clone.style.transform = `translate(${(dx * e).toFixed(1)}px,${(dy * e - 46 * 4 * t * (1 - t)).toFixed(1)}px) scale(${(1 - 0.4 * e).toFixed(3)}) rotate(${(-10 + 16 * e).toFixed(1)}deg)`;
+    }, () => {
+      if (!r.refused) {
+        tween(300, (t) => {
+          if (!alive()) return;
+          const up = Math.sin(Math.min(1, t * 1.6) * Math.PI) * 6;
+          clone.style.transform = `translate(${dx}px,${(dy - up - 16 * t).toFixed(1)}px) scale(${(0.6 * (1 - 0.75 * t) + 0.1 * Math.sin(Math.PI * Math.min(1, t * 2))).toFixed(3)}) rotate(6deg)`;
+          clone.style.opacity = String(1 - t);
+        }, () => clone.remove());
+      } else clone.remove();
+      if (generation !== brewFxGeneration) {
+        finish2();
+        return;
+      }
       const [emo, msg] = r.refused ? REFUSED : r.discount ? DISCOUNTED : THANKS[r.stars] || THANKS[3];
       const face = $(".face", av);
       if (face) {
@@ -3906,12 +3950,21 @@
       fxSpark({ x: tx, y: ty }, r.stars >= 5 ? 10 : 5);
       sfx(r.stars >= 4 ? "reward" : "sad");
       setTimeout(finish2, 900);
-    };
+    });
   }
-  function dropFx(fromEl, color) {
+  function dropFx(fromEl, color, idx = -1) {
     sfx("drop");
     const slot = $("#cupslot");
-    if (!fromEl || !slot || !canShowBrewFx()) return;
+    const reveal = (count) => {
+      if (idx < 0 || SH.board !== topShownBoard) return;
+      if (count >= 3) delete topShown[idx];
+      else topShown[idx] = count;
+      updateBoard(true);
+    };
+    if (!fromEl || !slot || !canShowBrewFx()) {
+      reveal(3);
+      return;
+    }
     const generation = brewFxGeneration, board = SH.board;
     const a = fromEl.getBoundingClientRect();
     const n = 5, DUR = 820, GAP = 95, SPLIT = 0.62;
@@ -3928,6 +3981,7 @@
       var _a;
       if (generation !== brewFxGeneration || !slot.isConnected || !canShowBrewFx() || SH.board !== board) {
         balls.forEach((o) => o.el.remove());
+        reveal(3);
         return;
       }
       const cupEl = slot.querySelector(".cup") || slot;
@@ -3947,6 +4001,7 @@
         if (u >= 1) {
           o.done = true;
           o.el.remove();
+          reveal(Math.round((o.k + 1) * 3 / n));
           if (o.k === 0) {
             slot.classList.remove("plop");
             void slot.offsetWidth;

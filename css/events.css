@@ -17,9 +17,7 @@
 .ev-off .sealer .sl-led { opacity: .15; }
 
 /* Topping / hương / trà sắp hết hạn hôm nay */
-.tray.exp-soon, .fbtn.exp-soon { box-shadow: inset 0 0 0 2px #ff9a3d, 0 0 7px rgba(255, 154, 61, .6); }
 .tray.exp-soon::after, .fbtn.exp-soon::after { content: '⏳'; position: absolute; left: 1px; bottom: 0; font-size: 11px; line-height: 1; pointer-events: none; }
-.disp.exp-soon .jar { box-shadow: 0 0 0 2px #ff9a3d, 0 0 7px rgba(255, 154, 61, .6); border-radius: 8px; }
 .fbtn { position: relative; }
 
 /* Hộp thoại kiểm tra */

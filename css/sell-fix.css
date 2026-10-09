@@ -176,3 +176,6 @@
     linear-gradient(90deg, rgba(80, 45, 10, .34), rgba(80, 45, 10, 0) 34%, rgba(80, 45, 10, 0) 62%, rgba(80, 45, 10, .3)); }
 @keyframes streamWobble { 0%, 100% { transform-origin: 50% 0; filter: none; } 50% { filter: brightness(1.06); } }
 .stream .st-gloss { left: 26%; width: 20%; }
+
+/* Vòi rót nằm giữa đáy bình (đúng vị trí vòi trên hình), dòng trà chảy ra từ đây */
+.disp .image-tap { left: 50%; bottom: 0; width: 8px; height: 6px; transform: translateX(-50%); }

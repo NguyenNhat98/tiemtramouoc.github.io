@@ -12,6 +12,14 @@ import { teaArt, toppingArt, stackArt, sealerArt, cupSvg, setCupFill, customerAr
 
 /* ===== Hình ly ===== */
 const sizePx = { M: [54, 76], L: [64, 90] };
+/** Số viên đã CHẠM vào ly của từng topping đang bay (chưa có trong map = đã hiện đủ 3 viên). */
+let topShown = {};
+let topShownBoard = null;
+const shownFor = (c) => {
+  if (c !== SH.board) return [];
+  if (topShownBoard !== c) { topShown = {}; topShownBoard = c; }
+  return (c.tops || []).map((_, i) => topShown[i]);
+};
 export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const [w, hgt] = sizePx[c.size || 'M'];
   const k = mini ? 0.78 : 1;
@@ -19,7 +27,7 @@ export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const fl = c.flavor ? ITEMS[c.flavor] : null;
   const fill = clamp(c.fill ?? 0, 0, 1.15);
   const lid = c.phase === 'ready' ? 'on' : c.phase === 'sealing' ? 'drop' : '';
-  const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), lid, straw: c.phase === 'ready' });
+  const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), shown: shownFor(c), lid, straw: c.phase === 'ready' });
   const st = stamp && !mini && E.equipLevel('nhanDien') > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : '';
   const seal = Math.round(Math.max(500, (c.sealMax || 1.2) * 1000 * 0.8));
   return `<div class="cup ${c.phase || ''}" style="width:${w * k}px;height:${hgt * k}px;--seal-ms:${seal}ms">${svg}${st}</div>`;
@@ -134,8 +142,11 @@ const sellActs = {
     const id = t.dataset.t;
     if (!S.unlocked[id]) return toast('Mở khóa trong Nâng cấp › Topping', 'err');
     if (!S.onMenu[id]) return toast('Món đang tắt khỏi menu', 'err');
+    const b = SH.board;
+    let idx = -1;
+    if (b) { if (topShownBoard !== b) { topShown = {}; topShownBoard = b; } idx = b.tops.length; topShown[idx] = 0; }
     const e = G.addTop(id);
-    if (e) { toast(e, 'err'); sfx('error'); } else dropFx(t, ITEMS[id].color);
+    if (e) { if (idx >= 0) delete topShown[idx]; toast(e, 'err'); sfx('error'); } else dropFx(t, ITEMS[id].color, idx);
   },
   seal: () => { const e = G.sealCup(); if (e) { toast(e, 'err'); sfx('error'); } },
   boardTap: () => { if (SH.board?.phase === 'ready') doServe(); },
@@ -146,6 +157,16 @@ const sellActs = {
   sel: (t) => G.selectCustomer(+t.dataset.cid),
 };
 let serveHold = false;
+/** Hoạt ảnh bằng requestAnimationFrame: step(t) với t từ 0 đến 1, xong thì gọi done. */
+function tween(ms, step, done) {
+  const t0 = performance.now();
+  const f = (now) => {
+    const t = Math.min(1, (now - t0) / ms);
+    step(t);
+    if (t < 1) requestAnimationFrame(f); else if (done) done();
+  };
+  requestAnimationFrame(f);
+}
 const THANKS = [
   null, ['😕', 'Hơi thất vọng...'], ['😕', 'Hơi thất vọng...'], ['🙂', 'Cũng được, cảm ơn!'], ['😊', 'Ngon, cảm ơn bạn!'], ['🥰', 'Ngon tuyệt vời, cảm ơn!'],
 ];
@@ -187,17 +208,25 @@ function doServe() {
   const clone = cupEl.cloneNode(true);
   clone.style.cssText = `position:fixed;left:${from.left}px;top:${from.top}px;width:${from.width}px;height:${from.height}px;margin:0;pointer-events:none;transition:none;will-change:transform,opacity`;
   brewFxLayer().appendChild(clone);
-  const DUR = r.refused ? 900 : 640, STEPS = 22, frames = [];
-  for (let i = 0; i <= STEPS; i++) {
+  cupEl.style.visibility = 'hidden';
+  const DUR = r.refused ? 900 : 640;
+  const alive = () => generation === brewFxGeneration && clone.isConnected;
+  tween(DUR, (t) => {
+    if (!alive()) return;
     // ly bị từ chối: bay tới khách rồi bị đẩy ngược lại
-    const t = i / STEPS, e = r.refused ? Math.sin(Math.PI * Math.min(1, t * 1.05)) * 0.9 : (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-    frames.push({ transform: `translate(${(dx * e).toFixed(1)}px,${(dy * e - 46 * 4 * t * (1 - t)).toFixed(1)}px) scale(${(1 - 0.4 * e).toFixed(3)}) rotate(${(-10 + 16 * e).toFixed(1)}deg)`, opacity: 1, offset: t });
-  }
-  clone.animate(frames, { duration: DUR, easing: 'linear', fill: 'forwards' }).onfinish = () => {
-    // chạm tay khách: ly nhún một cái rồi mờ dần
-    if (!r.refused) clone.animate([{ transform: `translate(${dx}px,${dy}px) scale(.6) rotate(6deg)`, opacity: 1 }, { transform: `translate(${dx}px,${dy - 6}px) scale(.72) rotate(6deg)`, opacity: 0.9, offset: 0.4 }, { transform: `translate(${dx}px,${dy - 14}px) scale(.55) rotate(6deg)`, opacity: 0 }], { duration: 260, easing: 'ease-out', fill: 'forwards' }).onfinish = () => clone.remove();
-    else clone.remove();
-    if (generation !== brewFxGeneration) return;
+    const e = r.refused ? Math.sin(Math.PI * Math.min(1, t * 1.05)) * 0.9 : (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    clone.style.transform = `translate(${(dx * e).toFixed(1)}px,${(dy * e - 46 * 4 * t * (1 - t)).toFixed(1)}px) scale(${(1 - 0.4 * e).toFixed(3)}) rotate(${(-10 + 16 * e).toFixed(1)}deg)`;
+  }, () => {
+    // chạm tay khách: ly nhún một cái, nhỏ dần rồi biến mất
+    if (!r.refused) {
+      tween(300, (t) => {
+        if (!alive()) return;
+        const up = Math.sin(Math.min(1, t * 1.6) * Math.PI) * 6;
+        clone.style.transform = `translate(${dx}px,${(dy - up - 16 * t).toFixed(1)}px) scale(${(0.6 * (1 - 0.75 * t) + 0.1 * Math.sin(Math.PI * Math.min(1, t * 2))).toFixed(3)}) rotate(6deg)`;
+        clone.style.opacity = String(1 - t);
+      }, () => clone.remove());
+    } else clone.remove();
+    if (generation !== brewFxGeneration) { finish(); return; }
     const [emo, msg] = r.refused ? REFUSED : r.discount ? DISCOUNTED : (THANKS[r.stars] || THANKS[3]);
     const face = $('.face', av);
     if (face) { face.classList.remove('thanks', 'sad'); void face.offsetWidth; face.classList.add(r.stars <= 2 ? 'sad' : 'thanks'); }
@@ -211,14 +240,19 @@ function doServe() {
     fxSpark({ x: tx, y: ty }, r.stars >= 5 ? 10 : 5);
     sfx(r.stars >= 4 ? 'reward' : 'sad');
     setTimeout(finish, 900);
-  };
+  });
 }
 
 /* ===== Hiệu ứng bước ===== */
-function dropFx(fromEl, color) {
+function dropFx(fromEl, color, idx = -1) {
   sfx('drop');
   const slot = $('#cupslot');
-  if (!fromEl || !slot || !canShowBrewFx()) return;
+  const reveal = (count) => {
+    if (idx < 0 || SH.board !== topShownBoard) return;
+    if (count >= 3) delete topShown[idx]; else topShown[idx] = count;
+    updateBoard(true);
+  };
+  if (!fromEl || !slot || !canShowBrewFx()) { reveal(3); return; }
   const generation = brewFxGeneration, board = SH.board;
   const a = fromEl.getBoundingClientRect();
   const n = 5, DUR = 820, GAP = 95, SPLIT = 0.62;
@@ -234,7 +268,7 @@ function dropFx(fromEl, color) {
   // vị trí ly đo lại MỖI khung hình: ly đang trượt về/ra thì trân châu bay theo đúng ly
   const frame = (now) => {
     if (generation !== brewFxGeneration || !slot.isConnected || !canShowBrewFx() || SH.board !== board) {
-      balls.forEach((o) => o.el.remove()); return;
+      balls.forEach((o) => o.el.remove()); reveal(3); return;
     }
     const cupEl = slot.querySelector('.cup') || slot;
     const cr = cupEl.getBoundingClientRect();
@@ -249,6 +283,7 @@ function dropFx(fromEl, color) {
       if (u < 0) { alive = true; continue; }
       if (u >= 1) {
         o.done = true; o.el.remove();
+        reveal(Math.round((o.k + 1) * 3 / n));
         if (o.k === 0) { slot.classList.remove('plop'); void slot.offsetWidth; slot.classList.add('plop'); }
         if (o.k === n - 1) splash(slot, color, surfaceY);
         continue;
