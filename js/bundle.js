@@ -2474,17 +2474,20 @@
     goFullscreen();
     const hasSave = S.started;
     el.innerHTML = `
-    <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="spark" style="left:12%;top:36%">\u2726</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">\u2726</span></div>
+    <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="cloud c3">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="spark" style="left:12%;top:36%">\u2726</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">\u2726</span><span class="spark" style="left:46%;top:30%;animation-delay:-1.8s">\u2726</span></div>
+    <div class="in-rays" aria-hidden="true"></div>
+    <div class="in-fx" aria-hidden="true"><i class="bub" style="left:6%;--s:14px;--d:0.0s;--t:9.0s"></i><i class="bub" style="left:14%;--s:9px;--d:2.5s;--t:7.5s"></i><i class="bub" style="left:23%;--s:18px;--d:5.0s;--t:11.0s"></i><i class="bub" style="left:33%;--s:10px;--d:1.2s;--t:8.0s"></i><i class="bub" style="left:44%;--s:15px;--d:6.5s;--t:10.0s"></i><i class="bub" style="left:55%;--s:9px;--d:3.2s;--t:7.0s"></i><i class="bub" style="left:63%;--s:17px;--d:0.8s;--t:12.0s"></i><i class="bub" style="left:72%;--s:11px;--d:4.4s;--t:8.5s"></i><i class="bub" style="left:81%;--s:15px;--d:7.5s;--t:10.5s"></i><i class="bub" style="left:90%;--s:10px;--d:2.0s;--t:7.8s"></i><i class="bub" style="left:96%;--s:13px;--d:5.6s;--t:9.4s"></i> <i class="pet" style="left:8%;--d:0.0s;--t:11.0s;--x:40px">\u{1F338}</i><i class="pet" style="left:24%;--d:3.5s;--t:13.0s;--x:-30px">\u{1F338}</i><i class="pet" style="left:42%;--d:6.0s;--t:12.0s;--x:50px">\u{1F338}</i><i class="pet" style="left:61%;--d:1.5s;--t:14.0s;--x:-40px">\u{1F338}</i><i class="pet" style="left:78%;--d:8.0s;--t:11.5s;--x:30px">\u{1F338}</i><i class="pet" style="left:92%;--d:4.5s;--t:12.5s;--x:-35px">\u{1F338}</i></div>
     <div class="in-aw" aria-hidden="true"></div>
     <div class="in-lan" aria-hidden="true"><span>\u{1F3EE}</span><span>\u{1F390}</span><span>\u{1F3EE}</span></div>
     <h1 class="intro-title">Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc</h1>
-    <div class="in-counter" aria-hidden="true"><span class="in-plant">\u{1F335}</span><div class="in-cups"><span>\u{1F9CB}</span><span>\u{1F964}</span><span>\u{1F9C3}</span><span>\u{1F375}</span></div><div class="in-cat">\u{1F431}<small>z z</small></div><span class="in-plant">\u{1FAB4}</span></div>
-    <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <span class="in-corner l">\u{1F353}</span><span class="in-corner r">\u{1F343}</span>
     <p class="intro-tag">Pha tr\xE0, \u0111\xF3n kh\xE1ch, m\u1EDF ti\u1EC7m nh\u1ECF c\u1EE7a ri\xEAng b\u1EA1n</p>
     <div class="intro-info">${esc(S.shopName)} \xB7 Ng\xE0y ${S.day} \xB7 ${fmtK(S.money)}</div>
     <button class="btn pri big" data-act="play">${hasSave ? "Ch\u01A1i ti\u1EBFp" : "Ch\u01A1i m\u1EDBi"}</button>
     <button class="link" data-act="guide">H\u01B0\u1EDBng d\u1EABn</button>
+    <div class="in-hero" aria-hidden="true"><span class="hero-glow"></span><span class="hero-cup">\u{1F9CB}</span><span class="hero-steam s1">\u2728</span><span class="hero-steam s2">\u2728</span><span class="hero-steam s3">\u{1F497}</span></div>
+    <div class="in-counter" aria-hidden="true"><span class="in-plant">\u{1F335}</span><div class="in-cups"><span>\u{1F9CB}</span><span>\u{1F964}</span><span>\u{1F9C3}</span><span>\u{1F375}</span></div><div class="in-cat">\u{1F431}<small>z z</small></div><span class="in-plant">\u{1FAB4}</span></div>
+    <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="in-corner l">\u{1F353}</span><span class="in-corner r">\u{1F343}</span>
     <small class="ver">${VERSION}</small>`;
     bindActions(el, { play: () => {
       goFullscreen();

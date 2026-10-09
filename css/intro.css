@@ -1,0 +1,66 @@
+/* ======================================================================
+   Màn mở đầu (v3): tên tiệm → nút chơi ngay bên dưới, nền hoàng hôn sống động
+   ====================================================================== */
+.intro { background: linear-gradient(#f7cfc4 0, #fbe0cf 16%, #fdeedd 38%, #fdf3e4 60%, #f4e4cf 100%); overflow: hidden; }
+.intro::before { height: 15%; z-index: 1; background: repeating-linear-gradient(90deg, #f3e7dc 0 60px, #ece0d4 60px 62px), #f3e7dc; box-shadow: inset 0 8px 10px rgba(150, 110, 80, .12); }
+
+/* tia nắng xoay chậm sau tiêu đề */
+.in-rays { position: absolute; left: 50%; top: 24%; width: 150vmax; height: 150vmax; margin: -75vmax 0 0 -75vmax; z-index: 0; pointer-events: none; opacity: .5;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 236, 190, .55) 0 7deg, rgba(255, 236, 190, 0) 7deg 22deg);
+  -webkit-mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, .5) 14%, transparent 34%); mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, .5) 14%, transparent 34%);
+  animation: inRays 60s linear infinite; }
+@keyframes inRays { to { transform: rotate(360deg); } }
+
+/* lớp hiệu ứng: bong bóng trân châu nổi lên, cánh hoa rơi */
+.in-fx { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.in-fx .bub { position: absolute; bottom: -24px; width: var(--s); height: var(--s); border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, .95) 0 14%, rgba(255, 190, 205, .55) 40%, rgba(255, 150, 175, .25) 70%); border: 1px solid rgba(255, 255, 255, .8);
+  animation: inBub var(--t) linear var(--d) infinite; }
+@keyframes inBub { 0% { transform: translate(0, 0) scale(.6); opacity: 0; } 10% { opacity: .9; } 50% { transform: translate(10px, -45vh) scale(1); } 90% { opacity: .7; } 100% { transform: translate(-8px, -105vh) scale(1.1); opacity: 0; } }
+.in-fx .pet { position: absolute; top: -28px; font-style: normal; font-size: 16px; opacity: 0; animation: inPet var(--t) ease-in-out var(--d) infinite; }
+@keyframes inPet { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: .9; } 50% { transform: translate(var(--x), 48vh) rotate(180deg); } 100% { transform: translate(calc(var(--x) * -.6), 104vh) rotate(420deg); opacity: .15; } }
+
+/* mây trôi ngang */
+.intro-sky .cloud { animation: inCloud 28s linear infinite; opacity: .8; }
+.intro-sky .c1 { left: -20%; top: 5%; font-size: 52px; }
+.intro-sky .c2 { left: -30%; top: 17%; font-size: 40px; animation-duration: 36s; animation-delay: -14s; right: auto; }
+.intro-sky .c3 { position: absolute; left: -25%; top: 29%; font-size: 34px; animation-duration: 44s; animation-delay: -30s; }
+@keyframes inCloud { from { transform: translateX(0); } to { transform: translateX(150vw); } }
+.intro-sky .star { animation: inStar 3.6s ease-in-out infinite; }
+@keyframes inStar { 0%, 100% { transform: scale(1) rotate(-6deg); } 50% { transform: scale(1.18) rotate(8deg); filter: drop-shadow(0 0 10px #ffe27a); } }
+
+/* tiêu đề + nút chơi ngay bên dưới */
+.in-aw { margin-top: clamp(28px, 5vh, 52px); }
+.intro-title { margin: 14px 0 0; font-size: clamp(32px, 9vw, 44px); line-height: 1.1; text-shadow: 0 2px 0 #fff, 0 0 18px rgba(255, 255, 255, .95), 0 6px 14px rgba(190, 90, 100, .25); animation: inTitle 3.6s ease-in-out infinite; }
+@keyframes inTitle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.intro-tag { margin: 8px 0 0; font-size: 13.5px; text-shadow: 0 1px 0 rgba(255, 255, 255, .9); }
+.intro-info { margin: 4px 0 0; font-size: 13px; }
+.intro .btn.big { margin-top: 14px; width: min(78%, 320px); animation: inPlay 2.2s ease-in-out infinite; }
+@keyframes inPlay { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); box-shadow: 0 4px 0 #b95a73, 0 12px 22px rgba(185, 90, 115, .4); } }
+.intro .link { margin: 6px 0 0; }
+
+/* nhân vật chính ở giữa màn hình: ly trà khổng lồ + hào quang */
+.in-hero { position: relative; z-index: 3; margin: auto 0; width: 190px; height: 170px; flex: none; display: grid; place-items: center; }
+.hero-glow { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, .95) 0, rgba(255, 220, 200, .65) 38%, rgba(255, 200, 190, 0) 70%); animation: heroGlow 3.4s ease-in-out infinite; }
+@keyframes heroGlow { 50% { transform: scale(1.12); opacity: .85; } }
+.hero-cup { position: relative; font-size: 104px; line-height: 1; filter: drop-shadow(0 10px 10px rgba(120, 60, 40, .25)); animation: heroCup 3.2s ease-in-out infinite; }
+@keyframes heroCup { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-9px) rotate(3deg); } }
+.hero-steam { position: absolute; font-size: 20px; opacity: 0; animation: heroSteam 3s ease-in infinite; }
+.hero-steam.s1 { left: 34%; top: 10%; } .hero-steam.s2 { left: 60%; top: 16%; animation-delay: 1s; } .hero-steam.s3 { left: 48%; top: 6%; animation-delay: 2s; }
+@keyframes heroSteam { 0% { transform: translateY(14px) scale(.6); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-34px) scale(1.15); opacity: 0; } }
+
+/* quầy ở phía dưới */
+.in-counter { margin-top: 0; padding-bottom: 2px; background: linear-gradient(transparent calc(100% - 14px), #c99a6b calc(100% - 14px)); }
+.in-cups span, .in-plant { animation: none; }
+.in-cups span { display: inline-block; animation: bob 3s ease-in-out infinite; }
+.in-front { height: clamp(46px, 7vh, 66px); }
+.in-corner { bottom: calc(10px + var(--safe-b)); }
+.intro .ver { z-index: 4; }
+@media (prefers-reduced-motion: reduce) {
+  .in-rays, .in-fx .bub, .in-fx .pet, .intro-sky .cloud, .intro-title, .hero-glow, .hero-cup, .hero-steam, .intro .btn.big { animation: none; }
+}
+@media (max-height: 700px) { .in-hero { width: 140px; height: 120px; } .hero-cup { font-size: 76px; } .hero-glow { width: 140px; height: 140px; } .in-aw { height: 70px; } }
+.intro .ver { left: 50%; transform: translateX(-50%); bottom: calc(14px + var(--safe-b)); }
+/* sàn nằm dưới quầy, không chen sau lưng quầy */
+.intro::before { height: 74px; }
+.in-front { margin-bottom: 74px; }

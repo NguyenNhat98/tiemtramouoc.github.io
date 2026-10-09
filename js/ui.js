@@ -501,17 +501,20 @@ export function showIntro(onPlay) {
   goFullscreen();
   const hasSave = S.started;
   el.innerHTML = `
-    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="bubble-tea">🧋</span><span class="spark" style="left:12%;top:36%">✦</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">✦</span></div>
+    <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="cloud c3">☁️</span><span class="bubble-tea">🧋</span><span class="spark" style="left:12%;top:36%">✦</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">✦</span><span class="spark" style="left:46%;top:30%;animation-delay:-1.8s">✦</span></div>
+    <div class="in-rays" aria-hidden="true"></div>
+    <div class="in-fx" aria-hidden="true"><i class="bub" style="left:6%;--s:14px;--d:0.0s;--t:9.0s"></i><i class="bub" style="left:14%;--s:9px;--d:2.5s;--t:7.5s"></i><i class="bub" style="left:23%;--s:18px;--d:5.0s;--t:11.0s"></i><i class="bub" style="left:33%;--s:10px;--d:1.2s;--t:8.0s"></i><i class="bub" style="left:44%;--s:15px;--d:6.5s;--t:10.0s"></i><i class="bub" style="left:55%;--s:9px;--d:3.2s;--t:7.0s"></i><i class="bub" style="left:63%;--s:17px;--d:0.8s;--t:12.0s"></i><i class="bub" style="left:72%;--s:11px;--d:4.4s;--t:8.5s"></i><i class="bub" style="left:81%;--s:15px;--d:7.5s;--t:10.5s"></i><i class="bub" style="left:90%;--s:10px;--d:2.0s;--t:7.8s"></i><i class="bub" style="left:96%;--s:13px;--d:5.6s;--t:9.4s"></i> <i class="pet" style="left:8%;--d:0.0s;--t:11.0s;--x:40px">🌸</i><i class="pet" style="left:24%;--d:3.5s;--t:13.0s;--x:-30px">🌸</i><i class="pet" style="left:42%;--d:6.0s;--t:12.0s;--x:50px">🌸</i><i class="pet" style="left:61%;--d:1.5s;--t:14.0s;--x:-40px">🌸</i><i class="pet" style="left:78%;--d:8.0s;--t:11.5s;--x:30px">🌸</i><i class="pet" style="left:92%;--d:4.5s;--t:12.5s;--x:-35px">🌸</i></div>
     <div class="in-aw" aria-hidden="true"></div>
     <div class="in-lan" aria-hidden="true"><span>🏮</span><span>🎐</span><span>🏮</span></div>
     <h1 class="intro-title">Tiệm Trà Mơ Ước</h1>
-    <div class="in-counter" aria-hidden="true"><span class="in-plant">🌵</span><div class="in-cups"><span>🧋</span><span>🥤</span><span>🧃</span><span>🍵</span></div><div class="in-cat">🐱<small>z z</small></div><span class="in-plant">🪴</span></div>
-    <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <span class="in-corner l">🍓</span><span class="in-corner r">🍃</span>
     <p class="intro-tag">Pha trà, đón khách, mở tiệm nhỏ của riêng bạn</p>
     <div class="intro-info">${esc(S.shopName)} · Ngày ${S.day} · ${fmtK(S.money)}</div>
     <button class="btn pri big" data-act="play">${hasSave ? 'Chơi tiếp' : 'Chơi mới'}</button>
     <button class="link" data-act="guide">Hướng dẫn</button>
+    <div class="in-hero" aria-hidden="true"><span class="hero-glow"></span><span class="hero-cup">🧋</span><span class="hero-steam s1">✨</span><span class="hero-steam s2">✨</span><span class="hero-steam s3">💗</span></div>
+    <div class="in-counter" aria-hidden="true"><span class="in-plant">🌵</span><div class="in-cups"><span>🧋</span><span>🥤</span><span>🧃</span><span>🍵</span></div><div class="in-cat">🐱<small>z z</small></div><span class="in-plant">🪴</span></div>
+    <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="in-corner l">🍓</span><span class="in-corner r">🍃</span>
     <small class="ver">${VERSION}</small>`;
   bindActions(el, { play: () => { goFullscreen(); el.hidden = true; onPlay(); }, guide: () => { goFullscreen(); openGuide(); } });
 }
