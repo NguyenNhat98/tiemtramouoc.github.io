@@ -328,13 +328,55 @@ const HAPTIC = {
   sparkle: 8, unlock: [20, 30, 20], level: [15, 30, 15, 30, 30], bell: 16, match: 12, boom: [40, 20, 60],
   pour: 0, combo: [14, 24, 20], bounce: 8, fly: 6, swoosh: 8, collect: [10, 20, 10],
 };
-/** Rung theo mức đã chọn. `pattern` là số ms hoặc mảng [rung, nghỉ, rung...]. */
+// Động cơ rung cần tối thiểu ~15-30ms mới cảm nhận được, nên mỗi mức có ngưỡng sàn riêng.
+const HAPTIC_MIN = [0, 14, 22, 36];
+const BRIDGE_OBJECTS = ['Android', 'AndroidBridge', 'AndroidInterface', 'NativeBridge', 'JSInterface', 'AppBridge', 'Native', 'app'];
+const BRIDGE_METHODS = ['vibrate', 'haptic', 'hapticFeedback', 'vibrateMs'];
+/** Tìm cầu nối rung của ứng dụng bọc APK (nếu có) khi WebView không có navigator.vibrate. */
+function nativeVibrate(ms) {
+  try {
+    const cap = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+    if (cap && cap.vibrate) { cap.vibrate({ duration: ms }); return true; }
+    if (navigator.notification && navigator.notification.vibrate) { navigator.notification.vibrate(ms); return true; }
+    for (const o of BRIDGE_OBJECTS) {
+      const obj = window[o];
+      if (!obj) continue;
+      for (const m of BRIDGE_METHODS) if (typeof obj[m] === 'function') { obj[m](ms); return true; }
+    }
+  } catch (e) { /* cầu nối lỗi: bỏ qua */ }
+  return false;
+}
+/** 'web' | 'native' | 'none' — cách rung khả dụng trên thiết bị / ứng dụng hiện tại. */
+export function hapticSupport() {
+  if (typeof navigator.vibrate === 'function') return 'web';
+  const probe = nativeProbe();
+  return probe ? 'native' : 'none';
+}
+function nativeProbe() {
+  const cap = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+  if (cap && cap.vibrate) return true;
+  if (navigator.notification && navigator.notification.vibrate) return true;
+  return BRIDGE_OBJECTS.some((o) => window[o] && BRIDGE_METHODS.some((m) => typeof window[o][m] === 'function'));
+}
+/** Rung theo mức đã chọn. `pattern` là số ms hoặc mảng [rung, nghỉ, rung...]. Trả về true nếu đã gửi lệnh rung. */
 export function buzz(pattern = 10) {
-  const m = HAPTIC_MUL[S.settings.haptic ?? 2] || 0;
-  if (pattern === 0) return;
-  if (!m || !navigator.vibrate) return;
-  const arr = Array.isArray(pattern) ? pattern : [pattern];
-  try { navigator.vibrate(arr.map((v, i) => (i % 2 === 0 ? Math.max(4, Math.round(v * m)) : v))); } catch (e) { /* thiết bị không hỗ trợ */ }
+  const level = S.settings.haptic ?? 2;
+  const m = HAPTIC_MUL[level] || 0;
+  if (pattern === 0 || !m) return false;
+  const arr = (Array.isArray(pattern) ? pattern : [pattern]).map((v, i) => (i % 2 === 0 ? Math.max(HAPTIC_MIN[level], Math.round(v * m)) : v));
+  try {
+    if (typeof navigator.vibrate === 'function') {
+      const ok = navigator.vibrate(arr);
+      if (ok !== false) return true;
+    }
+  } catch (e) { /* thử cầu nối */ }
+  // WebView của ứng dụng bọc APK thường không cấp quyền rung cho web: thử cầu nối native, mỗi nhịp một lệnh
+  let t = 0, sent = false;
+  arr.forEach((v, i) => {
+    if (i % 2 === 0) { sent = true; setTimeout(() => nativeVibrate(v), t); }
+    t += v;
+  });
+  return sent && nativeProbe();
 }
 function playSfx(n) {
   const sound = SFX[n];

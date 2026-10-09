@@ -71,3 +71,19 @@ Android buộc dừng tiến trình có thể làm mất thao tác sau lần lư
 
 Nếu chỉ chọn ảnh hoặc lưu dữ liệu vẫn không hoạt động, cần sửa cấu hình/mã wrapper.
 Không thể bảo đảm các quyền này bằng cách sửa HTML/JS đơn thuần.
+
+## Toàn màn hình, thanh trạng thái tím và rung (cấu hình công cụ tạo APK)
+
+Phần này nằm ở **ứng dụng bọc APK**, game (HTML/JS) không thay đổi được:
+
+- **Viền tím phía trên**: đó là màu thanh trạng thái do công cụ tạo APK đặt (mặc định thường là màu tím).
+  Trong công cụ: bật *Fullscreen / Immersive mode* và đặt màu thanh trạng thái thành **trong suốt** hoặc `#FDF3E4`.
+  Nếu tự viết mã Android: `WindowCompat.setDecorFitsSystemWindows(window, false)`,
+  ẩn `WindowInsetsCompat.Type.systemBars()` bằng `WindowInsetsControllerCompat`, và đặt
+  `layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES` để nội dung phủ cả vùng tai thỏ.
+  Game đã khai báo `viewport-fit=cover` và dùng `env(safe-area-inset-*)` để chừa chỗ cho tai thỏ.
+- **Rung**: WebView chỉ cho `navigator.vibrate()` hoạt động khi ứng dụng có quyền
+  `<uses-permission android:name="android.permission.VIBRATE"/>`. Hãy bật quyền *Vibrate* trong công cụ tạo APK.
+  Nếu công cụ có cầu nối JavaScript, game tự dùng thêm các hàm `Android.vibrate(ms)`, `AndroidBridge.vibrate(ms)`,
+  `NativeBridge.vibrate(ms)` (hoặc Capacitor Haptics / Cordova `navigator.notification.vibrate`) khi có.
+  Khi chọn mức rung trong Cài đặt mà thiết bị không rung, game hiện thông báo nhắc kiểm tra quyền này.

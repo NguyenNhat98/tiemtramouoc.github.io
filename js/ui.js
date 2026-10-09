@@ -342,7 +342,7 @@ export function openSettings() {
     update: () => confirmBox('Cập nhật bản mới', 'Lưu game và tải lại trang để lấy bản mới nhất?', () => { saveGame(); location.reload(); }),
     hints: () => openChoice('🧭 Chỉ dẫn từng bước', [[true, 'Tự động'], [false, 'Tắt']], S.settings.hints, (v) => { S.settings.hints = v; requestSave(); setVal('hints', v ? 'Tự động' : 'Tắt'); }),
     shiftMin: () => openChoice('⏱️ Thời gian bán mỗi ngày', SHIFT_MINUTES.map((n) => [n, `${n} phút`]), S.settings.shiftMinNext, (v) => { S.settings.shiftMinNext = v; requestSave(); setVal('shiftMin', `${v} phút · áp dụng từ ngày sau`); }),
-    haptic: () => openChoice('📳 Rung khi thao tác & chơi game', HAPTIC_NAMES.map((n, i) => [i, n]), S.settings.haptic ?? 2, (v) => { S.settings.haptic = v; requestSave(); setVal('haptic', HAPTIC_NAMES[v]); buzz([30, 40, 30]); }),
+    haptic: () => openChoice('📳 Rung khi thao tác & chơi game', HAPTIC_NAMES.map((n, i) => [i, n]), S.settings.haptic ?? 2, (v) => { S.settings.haptic = v; requestSave(); setVal('haptic', HAPTIC_NAMES[v]); if (v > 0 && !buzz([40, 60, 40])) toast('Thiết bị hoặc ứng dụng này chưa cho web rung. Với APK: bật quyền VIBRATE trong công cụ tạo APK.', 'err', 3200); }),
     theme: () => openThemePicker(() => setVal('theme', THEMES[S.settings.theme].name)),
     style: () => openChoice('🎼 Nhạc nền & Mùa', MUSIC_OPTIONS, S.settings.style, (v) => { S.settings.style = v; restartMusic(); requestSave(); setVal('style', musicStyleName()); }),
     export: () => openExport(), import: () => openImport(), backups: () => openBackups(),

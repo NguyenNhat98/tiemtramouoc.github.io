@@ -8,26 +8,21 @@ import * as E from './econ.js';
 import * as G from './sell.js';
 import { SH } from './sell.js';
 import { toast, fxText, fxCoins, fxSpark, bindActions, logoHTML, openModal, isModalOpen, updateClock } from './ui.js';
-import { teaArt, toppingArt, stackArt, sealerArt, cupArt, pourArt, splashArt, customerArt } from './sell-art.js';
+import { teaArt, toppingArt, stackArt, sealerArt, cupSvg, setCupFill, customerArt } from './sell-art.js';
 
 /* ===== Hình ly ===== */
 const sizePx = { M: [54, 76], L: [64, 90] };
 export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const [w, hgt] = sizePx[c.size || 'M'];
-  const k = mini ? 0.55 : 1;
+  const k = mini ? 0.78 : 1;
   const tea = c.tea ? ITEMS[c.tea] : null;
   const fl = c.flavor ? ITEMS[c.flavor] : null;
-  const fill = clamp((c.fill ?? 0) / 1.0, 0, 1.15);
-  const liq = tea ? `linear-gradient(${tea.color}, ${tea.color}${fl ? '' : ''})` : 'transparent';
-  const flav = fl ? `<i class="c-flav" style="background:${fl.color}"></i>` : '';
-  const tops = (c.tops || []).map((t) => `<i class="c-top" style="background-color:${ITEMS[t].color}"></i>`.repeat(3)).join('');
-  const lid = c.phase === 'ready' ? '<i class="c-lid"></i>' : '';
-  const straw = c.phase === 'ready' ? '<i class="c-straw"></i>' : '';
+  const fill = clamp(c.fill ?? 0, 0, 1.15);
+  const lid = c.phase === 'ready' ? 'on' : c.phase === 'sealing' ? 'drop' : '';
+  const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), lid, straw: c.phase === 'ready' });
   const st = stamp && !mini && E.equipLevel('nhanDien') > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : '';
-  return `<div class="cup illustrated-cup ${c.phase || ''}" style="width:${w * k}px;height:${hgt * k}px">
-    <div class="c-body"><div class="c-liq" style="height:${Math.min(100, fill * 86)}%;background:${liq}">${flav}</div><div class="c-tops">${tops}</div></div>
-    <div class="cup-art-overlay">${cupArt()}</div><div class="cup-pour-art">${c.tea ? pourArt(c.tea) : ''}</div><div class="cup-splash-art">${c.tea ? splashArt(c.tea) : ''}</div>
-    ${lid}${straw}${st}</div>`;
+  const seal = Math.round(Math.max(500, (c.sealMax || 1.2) * 1000 * 0.8));
+  return `<div class="cup ${c.phase || ''}" style="width:${w * k}px;height:${hgt * k}px;--seal-ms:${seal}ms">${svg}${st}</div>`;
 }
 function orderCup(o) {
   return cupHTML({ size: o.size, tea: o.tea, flavor: o.flavor, tops: o.tops, fill: 0.95, phase: 'ready' }, { mini: true, stamp: false });
@@ -257,17 +252,6 @@ function sealAnim() {
   if (!cupEl || !sealer || !canShowBrewFx()) return;
   const dur = Math.max(600, (SH.board?.sealMax || 1.2) * 1000);
   sealer.classList.add('press');
-  // nắp rơi xuống miệng ly, rồi ép nhẹ
-  const lid = h('<div class="fx-lid cup-attached-lid"></div>');
-  cupEl.appendChild(lid);
-  lid.animate([
-    { transform: 'translateY(-64px) scaleX(.86)', opacity: 0, offset: 0 },
-    { transform: 'translateY(-44px) scaleX(.92)', opacity: 1, offset: 0.2 },
-    { transform: 'translateY(0) scaleX(1)', opacity: 1, offset: 0.62, easing: 'cubic-bezier(.4,0,1,.7)' },
-    { transform: 'translateY(4px) scaleX(1.04)', opacity: 1, offset: 0.74 },
-    { transform: 'translateY(0) scaleX(1)', opacity: 1, offset: 0.86 },
-    { transform: 'translateY(0) scaleX(1)', opacity: 1, offset: 1 },
-  ], { duration: dur, easing: 'ease-out' }).onfinish = () => lid.remove();
   cupEl.animate([
     { transform: 'none', offset: 0 }, { transform: 'none', offset: 0.6 },
     { transform: 'scale(1.05,.93)', offset: 0.72 }, { transform: 'scale(.99,1.03)', offset: 0.86 }, { transform: 'none', offset: 1 },
@@ -332,8 +316,7 @@ function updateBoard(force) {
     slot.dataset.sig = sig;
     slot.innerHTML = cupHTML(b);
   }
-  const liq = slot.querySelector('.c-liq');
-  if (liq) liq.style.height = `${Math.min(100, b.fill * 86)}%`;
+  setCupFill(slot.querySelector('.cup'), b.fill);
   $('#pbFill').style.width = `${clamp(b.fill / 1.25 * 100, 0, 100)}%`;
   $('#pbFill').className = b.fill > 1.02 ? 'over' : b.fill >= 0.85 ? 'ok' : '';
   slot.classList.toggle('ready', b.phase === 'ready');

@@ -838,7 +838,7 @@
   var pendingClick = null;
   var sfxActiveUntil = 0;
   var sfxPriority = -1;
-  var sfxLastPlayed = Object.create(null);
+  var sfxLastPlayed = /* @__PURE__ */ Object.create(null);
   function ctx() {
     if (actx) return actx;
     try {
@@ -879,95 +879,109 @@
     if (!actx) return;
     try {
       const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + when;
-      o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(Math.max(25, f1), t + d);
-      g.gain.setValueAtTime(1e-4, t); g.gain.exponentialRampToValueAtTime(Math.max(2e-4, vol), t + 0.01); g.gain.exponentialRampToValueAtTime(1e-4, t + d);
-      o.connect(g).connect(sfxBus || master); o.start(t); o.stop(t + d + 0.04);
+      o.type = type;
+      o.frequency.setValueAtTime(f0, t);
+      o.frequency.exponentialRampToValueAtTime(Math.max(25, f1), t + d);
+      g.gain.setValueAtTime(1e-4, t);
+      g.gain.exponentialRampToValueAtTime(Math.max(2e-4, vol), t + 0.01);
+      g.gain.exponentialRampToValueAtTime(1e-4, t + d);
+      o.connect(g).connect(sfxBus || master);
+      o.start(t);
+      o.stop(t + d + 0.04);
     } catch (e) {
     }
   }
   var SFX = {
-    click: () => tone(660, 0.06, "triangle", 0.5),
-    pop: () => tone(440, 0.06, "square", 0.25),
-    cup: () => {
-      tone(300, 0.08, "triangle", 0.6);
-      tone(420, 0.06, "triangle", 0.4, 0.05);
+    click: () => {
+      tone(520, 0.035, "sine", 0.16);
+      tone(780, 0.045, "sine", 0.07, 0.015);
     },
-    pour: () => tone(520 + Math.random() * 60, 0.09, "sine", 0.18),
+    pop: () => glide(520, 300, 0.075, "triangle", 0.2),
+    cup: () => {
+      tone(390, 0.07, "sine", 0.24);
+      tone(520, 0.08, "triangle", 0.12, 0.055);
+    },
+    pour: () => {
+      glide(720, 520, 0.14, "sine", 0.07);
+      tone(340, 0.12, "sine", 0.035);
+    },
     drop: () => {
-      tone(880, 0.05, "sine", 0.4);
-      tone(660, 0.07, "sine", 0.3, 0.04);
+      glide(760, 420, 0.085, "sine", 0.2);
+      tone(620, 0.08, "triangle", 0.12, 0.035);
     },
     seal: () => {
-      tone(160, 0.12, "sawtooth", 0.5);
-      tone(900, 0.1, "square", 0.25, 0.14);
+      glide(220, 110, 0.16, "triangle", 0.24);
+      tone(620, 0.08, "sine", 0.08, 0.17);
     },
     ding: () => {
-      tone(1568, 0.25, "sine", 0.5);
-      tone(2093, 0.3, "sine", 0.3, 0.05);
+      tone(1318, 0.2, "sine", 0.2);
+      tone(1760, 0.26, "sine", 0.12, 0.045);
     },
     coin: () => {
-      tone(1040, 0.08, "square", 0.3);
-      tone(1310, 0.13, "square", 0.3, 0.07);
+      tone(880, 0.065, "sine", 0.14);
+      tone(1175, 0.09, "sine", 0.12, 0.06);
+    },
+    reward: () => {
+      tone(659, 0.13, "sine", 0.16);
+      tone(784, 0.16, "sine", 0.16, 0.09);
+      tone(988, 0.22, "sine", 0.12, 0.19);
+      tone(1318, 0.27, "sine", 0.08, 0.29);
     },
     success: () => {
-      tone(523, 0.1, "triangle");
-      tone(659, 0.1, "triangle", 1, 0.09);
-      tone(784, 0.18, "triangle", 1, 0.18);
+      tone(523, 0.12, "triangle", 0.22);
+      tone(659, 0.14, "triangle", 0.19, 0.1);
+      tone(784, 0.2, "sine", 0.17, 0.2);
     },
     error: () => {
-      tone(215, 0.14, "sawtooth", 0.4);
-      tone(175, 0.2, "sawtooth", 0.4, 0.11);
+      glide(330, 240, 0.11, "triangle", 0.19);
+      tone(196, 0.14, "sine", 0.13, 0.1);
     },
     sad: () => {
-      tone(392, 0.14, "sine");
-      tone(310, 0.26, "sine", 1, 0.13);
+      tone(392, 0.16, "sine", 0.15);
+      glide(330, 262, 0.22, "sine", 0.14, 0.13);
     },
-    sparkle: () => [1560, 1980, 2350].forEach((f, i) => tone(f, 0.09, "sine", 0.45, i * 0.05)),
+    sparkle: () => [1318, 1568, 1976].forEach((f, i) => tone(f, 0.08, "sine", 0.12, i * 0.055)),
     unlock: () => {
-      tone(700, 0.11, "sine");
-      tone(930, 0.11, "sine", 1, 0.1);
-      tone(1170, 0.22, "sine", 1, 0.2);
+      tone(587, 0.11, "sine", 0.16);
+      tone(784, 0.13, "sine", 0.15, 0.1);
+      tone(988, 0.2, "sine", 0.13, 0.2);
     },
-    level: () => [523, 659, 784, 1046, 1318].forEach((f, i) => tone(f, 0.2, "triangle", 1, i * 0.08)),
+    level: () => [523, 659, 784, 988, 1175].forEach((f, i) => tone(f, 0.14, "triangle", 0.15, i * 0.09)),
     bell: () => {
-      tone(1760, 0.3, "sine", 0.4);
-      tone(2217, 0.4, "sine", 0.25, 0.02);
+      tone(1568, 0.24, "sine", 0.18);
+      tone(1976, 0.3, "sine", 0.12, 0.035);
     },
     match: () => {
-      tone(600 + Math.random() * 300, 0.1, "triangle", 0.5);
+      tone(660 + Math.random() * 220, 0.085, "triangle", 0.17);
     },
     boom: () => {
-      tone(120, 0.25, "sawtooth", 0.5);
-      tone(80, 0.3, "square", 0.35, 0.05);
+      glide(150, 58, 0.24, "sine", 0.22);
+      tone(392, 0.12, "triangle", 0.1, 0.08);
     },
     /* --- Trân Châu Nổ --- */
     // nổ lách tách nhỏ (nhóm 2-3 viên), tông ngẫu nhiên nhẹ
     pearlPop: () => {
-      const f = 700 + Math.random() * 200;
-      tone(f, 0.05, "square", 0.22);
-      tone(f * 1.5, 0.07, "triangle", 0.3, 0.03);
-      tone(f * 2, 0.05, "sine", 0.2, 0.06);
+      const f = 650 + Math.random() * 180;
+      glide(f, f * 0.72, 0.055, "sine", 0.16);
+      tone(f * 1.5, 0.06, "triangle", 0.11, 0.025);
     },
     // nổ vừa (4-5 viên): tông cao hơn, 4 nốt tách liên tiếp
-    pearlPop2: () => [880, 1100, 1320, 1760].forEach((f, i) => tone(f * (1 + Math.random() * 0.03), 0.06, i % 2 ? "triangle" : "square", 0.28, i * 0.035)),
+    pearlPop2: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f * (1 + Math.random() * 0.02), 0.06, "sine", 0.13, i * 0.04)),
     // nổ lớn (≥6 viên)
     pearlBoom: () => {
-      tone(110, 0.22, "sawtooth", 0.45);
-      tone(70, 0.3, "square", 0.3, 0.03);
-      [1046, 1318, 1568, 2093].forEach((f, i) => tone(f, 0.12, "triangle", 0.35, 0.05 + i * 0.045));
+      glide(130, 55, 0.2, "sine", 0.22);
+      [784, 988, 1175, 1568].forEach((f, i) => tone(f, 0.11, "triangle", 0.14, 0.06 + i * 0.05));
     },
     fly: () => {
-      [400, 520, 680].forEach((f, i) => tone(f, 0.07, "sine", 0.16, i * 0.03));
+      [440, 587, 740].forEach((f, i) => tone(f, 0.06, "sine", 0.09, i * 0.04));
     },
-    swoosh: () => {
-      [900, 700, 520, 380].forEach((f, i) => tone(f, 0.06, "sine", 0.14, i * 0.025));
-    },
+    swoosh: () => glide(760, 300, 0.18, "sine", 0.08),
     bounce: () => {
-      tone(220, 0.07, "sine", 0.35);
-      tone(330, 0.05, "triangle", 0.18, 0.05);
+      glide(280, 190, 0.07, "sine", 0.15);
+      tone(440, 0.05, "triangle", 0.07, 0.045);
     },
     // arpeggio combo tăng dần theo cấp: gọi sfx('combo2') ... sfx('combo6')
-    combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, "triangle", 0.4, i * 0.06)),
+    combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, "triangle", 0.16, i * 0.065)),
     ...Object.fromEntries([2, 3, 4, 5, 6].map((l) => ["combo" + l, () => {
       const b = 523 * Math.pow(1.122, l * 2);
       [1, 1.25, 1.5, 2, 2.5].slice(0, l + 1).forEach((m, i) => tone(b * m, 0.12, "triangle", 0.42, i * 0.055));
@@ -984,40 +998,35 @@
       [440, 392, 330, 262].forEach((f, i) => tone(f, 0.2, "sine", 0.5, i * 0.13));
     }
   };
-  Object.assign(SFX, {
-    click: () => { tone(520, 0.035, "sine", 0.16); tone(780, 0.045, "sine", 0.07, 0.015); },
-    pop: () => glide(520, 300, 0.075, "triangle", 0.2),
-    cup: () => { tone(390, 0.07, "sine", 0.24); tone(520, 0.08, "triangle", 0.12, 0.055); },
-    pour: () => { glide(720, 520, 0.14, "sine", 0.07); tone(340, 0.12, "sine", 0.035); },
-    drop: () => { glide(760, 420, 0.085, "sine", 0.2); tone(620, 0.08, "triangle", 0.12, 0.035); },
-    seal: () => { glide(220, 110, 0.16, "triangle", 0.24); tone(620, 0.08, "sine", 0.08, 0.17); },
-    ding: () => { tone(1318, 0.2, "sine", 0.2); tone(1760, 0.26, "sine", 0.12, 0.045); },
-    coin: () => { tone(880, 0.065, "sine", 0.14); tone(1175, 0.09, "sine", 0.12, 0.06); },
-    reward: () => { tone(659, 0.13, "sine", 0.16); tone(784, 0.16, "sine", 0.16, 0.09); tone(988, 0.22, "sine", 0.12, 0.19); tone(1318, 0.27, "sine", 0.08, 0.29); },
-    success: () => { tone(523, 0.12, "triangle", 0.22); tone(659, 0.14, "triangle", 0.19, 0.1); tone(784, 0.2, "sine", 0.17, 0.2); },
-    error: () => { glide(330, 240, 0.11, "triangle", 0.19); tone(196, 0.14, "sine", 0.13, 0.1); },
-    sad: () => { tone(392, 0.16, "sine", 0.15); glide(330, 262, 0.22, "sine", 0.14, 0.13); },
-    sparkle: () => [1318, 1568, 1976].forEach((f, i) => tone(f, 0.08, "sine", 0.12, i * 0.055)),
-    unlock: () => { tone(587, 0.11, "sine", 0.16); tone(784, 0.13, "sine", 0.15, 0.1); tone(988, 0.2, "sine", 0.13, 0.2); },
-    level: () => [523, 659, 784, 988, 1175].forEach((f, i) => tone(f, 0.14, "triangle", 0.15, i * 0.09)),
-    bell: () => { tone(1568, 0.24, "sine", 0.18); tone(1976, 0.3, "sine", 0.12, 0.035); },
-    match: () => tone(660 + Math.random() * 220, 0.085, "triangle", 0.17),
-    boom: () => { glide(150, 58, 0.24, "sine", 0.22); tone(392, 0.12, "triangle", 0.1, 0.08); },
-    pearlPop: () => { const f = 650 + Math.random() * 180; glide(f, f * 0.72, 0.055, "sine", 0.16); tone(f * 1.5, 0.06, "triangle", 0.11, 0.025); },
-    pearlPop2: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f * (1 + Math.random() * 0.02), 0.06, "sine", 0.13, i * 0.04)),
-    pearlBoom: () => { glide(130, 55, 0.2, "sine", 0.22); [784, 988, 1175, 1568].forEach((f, i) => tone(f, 0.11, "triangle", 0.14, 0.06 + i * 0.05)); },
-    fly: () => [440, 587, 740].forEach((f, i) => tone(f, 0.06, "sine", 0.09, i * 0.04)),
-    swoosh: () => glide(760, 300, 0.18, "sine", 0.08),
-    bounce: () => { glide(280, 190, 0.07, "sine", 0.15); tone(440, 0.05, "triangle", 0.07, 0.045); },
-    combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, "triangle", 0.16, i * 0.065))
-  });
   var SFX_RULES = {
-    click: [65, 0, 90, 0.48], pop: [90, 1, 140, 0.62], cup: [130, 2, 170, 0.62], pour: [650, 0, 180, 0.42], drop: [110, 2, 150, 0.62],
-    seal: [180, 3, 320, 0.75], ding: [180, 4, 330, 0.72], coin: [130, 2, 190, 0.55], reward: [250, 4, 620, 0.76], success: [220, 4, 430, 0.72],
-    error: [180, 3, 300, 0.62], sad: [250, 2, 430, 0.55], sparkle: [150, 2, 230, 0.52], unlock: [300, 4, 470, 0.72], level: [350, 4, 610, 0.68],
-    bell: [250, 3, 430, 0.68], match: [70, 1, 130, 0.58], boom: [260, 3, 430, 0.7], pearlPop: [70, 1, 170, 0.5], pearlPop2: [100, 2, 260, 0.58],
-    pearlBoom: [280, 4, 440, 0.72], fly: [100, 1, 200, 0.48], swoosh: [130, 1, 230, 0.45], bounce: [100, 1, 160, 0.5], combo: [180, 3, 360, 0.62],
-    collect: [150, 2, 260, 0.6], win: [600, 5, 1450, 0.74], lose: [400, 3, 700, 0.62]
+    click: [65, 0, 90, 0.48],
+    pop: [90, 1, 140, 0.62],
+    cup: [130, 2, 170, 0.62],
+    pour: [650, 0, 180, 0.42],
+    drop: [110, 2, 150, 0.62],
+    seal: [180, 3, 320, 0.75],
+    ding: [180, 4, 330, 0.72],
+    coin: [130, 2, 190, 0.55],
+    reward: [250, 4, 620, 0.76],
+    success: [220, 4, 430, 0.72],
+    error: [180, 3, 300, 0.62],
+    sad: [250, 2, 430, 0.55],
+    sparkle: [150, 2, 230, 0.52],
+    unlock: [300, 4, 470, 0.72],
+    level: [350, 4, 610, 0.68],
+    bell: [250, 3, 430, 0.68],
+    match: [70, 1, 130, 0.58],
+    boom: [260, 3, 430, 0.7],
+    pearlPop: [70, 1, 170, 0.5],
+    pearlPop2: [100, 2, 260, 0.58],
+    pearlBoom: [280, 4, 440, 0.72],
+    fly: [100, 1, 200, 0.48],
+    swoosh: [130, 1, 230, 0.45],
+    bounce: [100, 1, 160, 0.5],
+    combo: [180, 3, 360, 0.62],
+    collect: [150, 2, 260, 0.6],
+    win: [600, 5, 1450, 0.74],
+    lose: [400, 3, 700, 0.62]
   };
   var HAPTIC_MUL = [0, 0.6, 1, 1.7];
   var HAPTIC = {
@@ -1044,34 +1053,96 @@
     swoosh: 8,
     collect: [10, 20, 10]
   };
-  function buzz(pattern = 10) {
-    var _a;
-    const m = HAPTIC_MUL[(_a = S.settings.haptic) != null ? _a : 2] || 0;
-    if (pattern === 0) return;
-    if (!m || !navigator.vibrate) return;
-    const arr = Array.isArray(pattern) ? pattern : [pattern];
+  var HAPTIC_MIN = [0, 14, 22, 36];
+  var BRIDGE_OBJECTS = ["Android", "AndroidBridge", "AndroidInterface", "NativeBridge", "JSInterface", "AppBridge", "Native", "app"];
+  var BRIDGE_METHODS = ["vibrate", "haptic", "hapticFeedback", "vibrateMs"];
+  function nativeVibrate(ms) {
     try {
-      navigator.vibrate(arr.map((v, i) => i % 2 === 0 ? Math.max(4, Math.round(v * m)) : v));
+      const cap = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+      if (cap && cap.vibrate) {
+        cap.vibrate({ duration: ms });
+        return true;
+      }
+      if (navigator.notification && navigator.notification.vibrate) {
+        navigator.notification.vibrate(ms);
+        return true;
+      }
+      for (const o of BRIDGE_OBJECTS) {
+        const obj = window[o];
+        if (!obj) continue;
+        for (const m of BRIDGE_METHODS) if (typeof obj[m] === "function") {
+          obj[m](ms);
+          return true;
+        }
+      }
     } catch (e) {
     }
+    return false;
+  }
+  function nativeProbe() {
+    const cap = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+    if (cap && cap.vibrate) return true;
+    if (navigator.notification && navigator.notification.vibrate) return true;
+    return BRIDGE_OBJECTS.some((o) => window[o] && BRIDGE_METHODS.some((m) => typeof window[o][m] === "function"));
+  }
+  function buzz(pattern = 10) {
+    var _a;
+    const level = (_a = S.settings.haptic) != null ? _a : 2;
+    const m = HAPTIC_MUL[level] || 0;
+    if (pattern === 0 || !m) return false;
+    const arr = (Array.isArray(pattern) ? pattern : [pattern]).map((v, i) => i % 2 === 0 ? Math.max(HAPTIC_MIN[level], Math.round(v * m)) : v);
+    try {
+      if (typeof navigator.vibrate === "function") {
+        const ok = navigator.vibrate(arr);
+        if (ok !== false) return true;
+      }
+    } catch (e) {
+    }
+    let t = 0, sent = false;
+    arr.forEach((v, i) => {
+      if (i % 2 === 0) {
+        sent = true;
+        setTimeout(() => nativeVibrate(v), t);
+      }
+      t += v;
+    });
+    return sent && nativeProbe();
   }
   function playSfx(n) {
+    var _a;
     const sound = SFX[n];
     if (!sound || !unlocked || S.settings.sfx <= 0) return;
-    const rule = SFX_RULES[n] || (n.startsWith("combo") ? [180, 3, 420, 0.62] : [100, 1, 220, 0.55]);
-    const [cooldown, priority, duration, volume] = rule;
+    const [cooldown, priority, duration, volume] = SFX_RULES[n] || (n.startsWith("combo") ? [180, 3, 420, 0.62] : [100, 1, 220, 0.55]);
     const now = performance.now();
-    if (now - (sfxLastPlayed[n] != null ? sfxLastPlayed[n] : -Infinity) < cooldown) return;
+    if (now - ((_a = sfxLastPlayed[n]) != null ? _a : -Infinity) < cooldown) return;
     if (now < sfxActiveUntil && priority < sfxPriority) return;
     const c = ctx();
     if (!c || !master) return;
-    if (sfxBus) { sfxBus.gain.cancelScheduledValues(c.currentTime); sfxBus.gain.setTargetAtTime(1e-4, c.currentTime, 0.018); }
-    const bus = c.createGain(); bus.gain.setValueAtTime(volume, c.currentTime); bus.connect(master);
-    sfxBus = bus; sfxActiveUntil = now + duration; sfxPriority = priority; sfxLastPlayed[n] = now;
+    if (sfxBus) {
+      sfxBus.gain.cancelScheduledValues(c.currentTime);
+      sfxBus.gain.setTargetAtTime(1e-4, c.currentTime, 0.018);
+    }
+    const bus = c.createGain();
+    bus.gain.setValueAtTime(volume, c.currentTime);
+    bus.connect(master);
+    sfxBus = bus;
+    sfxActiveUntil = now + duration;
+    sfxPriority = priority;
+    sfxLastPlayed[n] = now;
     sound();
     setTimeout(() => {
-      if (sfxBus === bus) { bus.gain.setTargetAtTime(1e-4, c.currentTime, 0.035); sfxBus = null; sfxPriority = -1; sfxActiveUntil = 0; }
-      setTimeout(() => { try { bus.disconnect(); } catch (e) {} }, 120);
+      if (sfxBus === bus) {
+        bus.gain.setTargetAtTime(1e-4, c.currentTime, 0.035);
+        sfxBus = null;
+        sfxPriority = -1;
+        sfxActiveUntil = 0;
+      }
+      setTimeout(() => {
+        try {
+          bus.disconnect();
+        } catch (e) {
+        }
+      }, 120);
     }, duration);
   }
   var sfx = (n) => {
@@ -1080,10 +1151,16 @@
     if (!unlocked || S.settings.sfx <= 0) return;
     if (n === "click") {
       if (pendingClick) return;
-      pendingClick = setTimeout(() => { pendingClick = null; playSfx("click"); }, 38);
+      pendingClick = setTimeout(() => {
+        pendingClick = null;
+        playSfx("click");
+      }, 38);
       return;
     }
-    if (pendingClick) { clearTimeout(pendingClick); pendingClick = null; }
+    if (pendingClick) {
+      clearTimeout(pendingClick);
+      pendingClick = null;
+    }
     playSfx(n);
   };
   var STYLES = {
@@ -2821,7 +2898,7 @@
           S.settings.haptic = v;
           requestSave();
           setVal("haptic", HAPTIC_NAMES[v]);
-          buzz([30, 40, 30]);
+          if (v > 0 && !buzz([40, 60, 40])) toast("Thi\u1EBFt b\u1ECB ho\u1EB7c \u1EE9ng d\u1EE5ng n\xE0y ch\u01B0a cho web rung. V\u1EDBi APK: b\u1EADt quy\u1EC1n VIBRATE trong c\xF4ng c\u1EE5 t\u1EA1o APK.", "err", 3200);
         });
       },
       theme: () => openThemePicker(() => setVal("theme", THEMES[S.settings.theme].name)),
@@ -3048,82 +3125,111 @@
   }
 
   // js/sell-art.js
-/** Crops used by the daily counter from the supplied kawaii sprite sheet. */
-const SOURCE = 'assets/sell/kawaii-sheet.png';
-
-// Character portraits along the top of the sheet, ordered left to right.
-const customerCells = {
-  sinhVien: 1, vanPhong: 2, genZ: 0, bac: 4,
-  vip: 8, macCa: 9, reviewer: 2, be: 6,
-};
-
-const teaCells = {
-  traSua: [13, 316, 111, 173], matcha: [125, 316, 115, 173],
-  hongTra: [239, 316, 117, 173], lucTra: [356, 316, 116, 173],
-  olong: [472, 316, 116, 173], traThai: [587, 316, 118, 173],
-};
-
-// Ingredient crops omit the printed labels so the game name remains authoritative.
-const topCells = {
-  tcDen: [14, 620, 76, 59], tcTrang: [91, 620, 75, 59], tcVang: [168, 620, 78, 59],
-  tcSoi: [927, 702, 85, 59], tcNo: [412, 620, 81, 59], cuNang: [496, 620, 82, 59],
-  thachTc: [14, 701, 80, 60], suongSao: [759, 620, 83, 59], thachCf: [582, 620, 84, 59],
-  fCheese: [258, 490, 62, 126], fMatcha: [284, 701, 84, 60], fMuoi: [331, 490, 62, 126], fUbe: [740, 701, 83, 60],
-  pmVien: [375, 701, 83, 60], pmTuoi: [375, 701, 83, 60], thachPm: [669, 620, 86, 59],
-};
-
-let artId = 0;
-function region(rect, cls = '', mask = null) {
-  const [x, y, width, height] = rect;
-  const id = `sale-art-${artId++}`;
-  const clip = mask ? `<defs><clipPath id="${id}"><polygon points="${mask.map(([px, py]) => `${px * width / 100},${py * height / 100}`).join(' ')}"/></clipPath></defs>` : `<defs><clipPath id="${id}"><rect width="${width}" height="${height}"/></clipPath></defs>`;
-  return `<svg class="sale-art ${cls}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns:xlink="http://www.w3.org/1999/xlink">${clip}<image href="${SOURCE}" xlink:href="${SOURCE}" x="${-x}" y="${-y}" width="1536" height="1024" clip-path="url(#${id})"/></svg>`;
-}
-
-function customerArt(key) {
-  if (!Object.prototype.hasOwnProperty.call(customerCells, key)) return '';
-  const i = customerCells[key];
-  return region([i * 112 + 8, 78, 108, 106], 'customer-sprite');
-}
-function teaArt(id) { return region(teaCells[id] || teaCells.traSua); }
-function toppingArt(id) { return region(topCells[id] || topCells.tcDen); }
-function stackArt(size) {
-  return region(size === 'L' ? [141, 217, 104, 100] : [20, 217, 109, 100]);
-}
-function sealerArt() { return region([1100, 486, 232, 296]); }
-function cupArt() {
-  // A transparent outline lets live liquid, flavor and topping layers remain visible.
-  return '<svg class="sale-art cup-sprite" viewBox="0 0 78 101" aria-hidden="true"><path d="M5 10 L15 90 Q39 105 63 90 L73 10" fill="none" stroke="#795840" stroke-width="2.5"/><ellipse cx="39" cy="10" rx="34" ry="8" fill="rgba(255,255,255,.18)" stroke="#795840" stroke-width="2.5"/><path d="M14 24 L21 80" stroke="white" opacity=".6" stroke-width="3" stroke-linecap="round"/></svg>';
-}
-const pourCells = { traSua: [1230, 205], matcha: [1334, 205], hongTra: [1230, 205], lucTra: [1334, 205], olong: [1230, 205], traThai: [1334, 205] };
-function pourArt(tea) {
-  const [x, y] = pourCells[tea] || pourCells.traSua;
-  return region([x, y, 82, 226], 'pour-sprite');
-}
-function splashArt(tea) {
-  const x = ({ traSua: 15, hongTra: 100, matcha: 178, lucTra: 254, olong: 333, traThai: 410 })[tea] || 15;
-  return region([x, 876, 76, 59], 'tea-splash-sprite');
-}
+  var DIR = "assets/sell/sprites/";
+  var img = (name, cls = "") => `<img class="sale-art ${cls}" src="${DIR}${name}.png" alt="" draggable="false" decoding="async">`;
+  var customerCells = {
+    sinhVien: 1,
+    vanPhong: 2,
+    genZ: 0,
+    bac: 4,
+    vip: 8,
+    macCa: 9,
+    reviewer: 2,
+    be: 6
+  };
+  var TEAS2 = ["traSua", "matcha", "hongTra", "lucTra", "olong", "traThai"];
+  var TOPS2 = ["tcDen", "tcTrang", "tcVang", "tcSoi", "tcNo", "cuNang", "thachTc", "suongSao", "thachCf", "fCheese", "fMatcha", "fMuoi", "fUbe", "pmVien", "thachPm"];
+  var TOP_ALIAS = { pmTuoi: "pmVien" };
+  function customerArt(key) {
+    if (!Object.prototype.hasOwnProperty.call(customerCells, key)) return "";
+    return img(`customer-${customerCells[key]}`, "customer-sprite");
+  }
+  function teaArt(id) {
+    return img(`tea-${TEAS2.includes(id) ? id : "traSua"}`);
+  }
+  function toppingArt(id) {
+    const k = TOP_ALIAS[id] || id;
+    return img(`top-${TOPS2.includes(k) ? k : "tcDen"}`);
+  }
+  function stackArt(size) {
+    return img(size === "L" ? "stack-L" : "stack-M");
+  }
+  function sealerArt() {
+    return img("sealer");
+  }
+  var cupUid = 0;
+  var BODY_IN = "M7.6 13 L17.4 95.5 Q39 101 60.6 95.5 L70.4 13 Z";
+  var Y_TOP = 14;
+  var Y_BOT = 97;
+  var wallL = (y) => 6 + 10 * (y - 12) / 84;
+  var wallR = (y) => 72 - 10 * (y - 12) / 84;
+  var surfaceOf = (fill) => Y_BOT - (Y_BOT - Y_TOP) * Math.min(1, Math.max(0, fill) * 0.86);
+  function setCupFill(cupEl, fill) {
+    const liq = cupEl && cupEl.querySelector(".c-liq");
+    if (!liq) return;
+    const y = surfaceOf(fill);
+    liq.setAttribute("y", y.toFixed(1));
+    liq.setAttribute("height", (110 - y).toFixed(1));
+    const top = cupEl.querySelector(".c-liq-top");
+    if (top) top.setAttribute("y", y.toFixed(1));
+    const surf = cupEl.querySelector(".c-surf");
+    if (surf) {
+      surf.setAttribute("cy", y.toFixed(1));
+      surf.style.opacity = fill > 0.02 ? 1 : 0;
+    }
+  }
+  function cupSvg(opts) {
+    const { fill = 0, tea = null, flavor = null, tops = [], lid = "", straw = false } = opts;
+    const id = `cup${cupUid++}`;
+    const y = surfaceOf(tea ? fill : 0);
+    const balls = [];
+    let n = 0;
+    for (const c of tops) {
+      for (let k = 0; k < 3; k++, n++) {
+        const row = Math.floor(n / 5), col = n % 5;
+        const yy = 91 - row * 6.6;
+        const xx = Math.max(wallL(yy) + 4.2, Math.min(wallR(yy) - 4.2, 39 + (col - 2) * 8.2 + (row % 2 ? 4.1 : 0)));
+        balls.push(`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="3.7" fill="${c}"/><circle cx="${(xx - 1.2).toFixed(1)}" cy="${(yy - 1.3).toFixed(1)}" r="1.1" fill="#fff" opacity=".55"/>`);
+      }
+    }
+    const liquid = tea ? `<rect class="c-liq" x="0" y="${y.toFixed(1)}" width="78" height="${(110 - y).toFixed(1)}" fill="${tea}"/>
+      <rect class="c-liq-top" x="0" y="${y.toFixed(1)}" width="78" height="14" fill="url(#${id}g)"/>
+      ${flavor ? `<rect class="c-flav" x="0" y="64" width="78" height="40" fill="${flavor}" opacity=".5"/>` : ""}
+      <ellipse class="c-surf" cx="39" cy="${y.toFixed(1)}" rx="31.5" ry="3.1" fill="#fff" fill-opacity=".38" style="opacity:${fill > 0.02 ? 1 : 0}"/>` : "";
+    const lidSvg = lid ? `<g class="c-lidg ${lid === "drop" ? "drop" : ""}">
+      <path d="M8 10 Q39 -10 70 10 Z" fill="rgba(255,255,255,.62)" stroke="#cdbda7" stroke-width="1.2"/>
+      <path d="M17 8 Q27 -1 36 -1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+      <rect x="3.5" y="8.2" width="71" height="6.2" rx="3.1" fill="#fffdf8" stroke="#cdbda7" stroke-width="1.2"/>
+    </g>` : "";
+    const strawSvg = straw ? '<g class="c-strawg"><line x1="41" y1="92" x2="54" y2="-22" stroke="#ff7fa0" stroke-width="5" stroke-linecap="round"/><line x1="41" y1="92" x2="54" y2="-22" stroke="#fff" stroke-width="5" stroke-dasharray="4 5" opacity=".9"/></g>' : "";
+    return `<svg class="cup-svg" viewBox="0 0 78 104" width="100%" height="100%" overflow="visible" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
+    <defs><clipPath id="${id}c"><path d="${BODY_IN}"/></clipPath>
+      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <ellipse cx="39" cy="100" rx="25" ry="3.2" fill="rgba(60,35,10,.16)"/>
+    <g clip-path="url(#${id}c)">${liquid}${balls.join("")}</g>
+    ${strawSvg}
+    <path d="M6 12 L16 96 Q39 103 62 96 L72 12" fill="rgba(235,245,252,.2)" stroke="rgba(121,88,64,.9)" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M12.5 20 L19 82" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".55"/>
+    <path d="M66 24 L61 62" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".4"/>
+    <ellipse cx="39" cy="12" rx="33" ry="4.6" fill="rgba(255,255,255,.28)" stroke="rgba(121,88,64,.9)" stroke-width="1.6"/>
+    ${lidSvg}
+  </svg>`;
+  }
 
   // js/brewui.js
   var sizePx = { M: [54, 76], L: [64, 90] };
   function cupHTML(c, { mini = false, stamp = true } = {}) {
     var _a;
     const [w, hgt] = sizePx[c.size || "M"];
-    const k = mini ? 0.55 : 1;
+    const k = mini ? 0.78 : 1;
     const tea = c.tea ? ITEMS[c.tea] : null;
     const fl = c.flavor ? ITEMS[c.flavor] : null;
-    const fill = clamp(((_a = c.fill) != null ? _a : 0) / 1, 0, 1.15);
-    const liq = tea ? `linear-gradient(${tea.color}, ${tea.color}${fl ? "" : ""})` : "transparent";
-    const flav = fl ? `<i class="c-flav" style="background:${fl.color}"></i>` : "";
-    const tops = (c.tops || []).map((t) => `<i class="c-top" style="background-color:${ITEMS[t].color}"></i>`.repeat(3)).join("");
-    const lid = c.phase === "ready" ? '<i class="c-lid"></i>' : "";
-    const straw = c.phase === "ready" ? '<i class="c-straw"></i>' : "";
+    const fill = clamp((_a = c.fill) != null ? _a : 0, 0, 1.15);
+    const lid = c.phase === "ready" ? "on" : c.phase === "sealing" ? "drop" : "";
+    const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), lid, straw: c.phase === "ready" });
     const st = stamp && !mini && equipLevel("nhanDien") > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : "";
-    return `<div class="cup illustrated-cup ${c.phase || ""}" style="width:${w * k}px;height:${hgt * k}px">
-    <div class="c-body"><div class="c-liq" style="height:${Math.min(100, fill * 86)}%;background:${liq}">${flav}</div><div class="c-tops">${tops}</div></div>
-    <div class="cup-art-overlay">${cupArt()}</div><div class="cup-pour-art">${c.tea ? pourArt(c.tea) : ""}</div><div class="cup-splash-art">${c.tea ? splashArt(c.tea) : ""}</div>
-    ${lid}${straw}${st}</div>`;
+    const seal = Math.round(Math.max(500, (c.sealMax || 1.2) * 1e3 * 0.8));
+    return `<div class="cup ${c.phase || ""}" style="width:${w * k}px;height:${hgt * k}px;--seal-ms:${seal}ms">${svg}${st}</div>`;
   }
   function orderCup(o) {
     return cupHTML({ size: o.size, tea: o.tea, flavor: o.flavor, tops: o.tops, fill: 0.95, phase: "ready" }, { mini: true, stamp: false });
@@ -3406,16 +3512,6 @@ function splashArt(tea) {
     if (!cupEl || !sealer || !canShowBrewFx()) return;
     const dur = Math.max(600, (((_a = SH.board) == null ? void 0 : _a.sealMax) || 1.2) * 1e3);
     sealer.classList.add("press");
-    const lid = h('<div class="fx-lid cup-attached-lid"></div>');
-    cupEl.appendChild(lid);
-    lid.animate([
-      { transform: "translateY(-64px) scaleX(.86)", opacity: 0, offset: 0 },
-      { transform: "translateY(-44px) scaleX(.92)", opacity: 1, offset: 0.2 },
-      { transform: "translateY(0) scaleX(1)", opacity: 1, offset: 0.62, easing: "cubic-bezier(.4,0,1,.7)" },
-      { transform: "translateY(4px) scaleX(1.04)", opacity: 1, offset: 0.74 },
-      { transform: "translateY(0) scaleX(1)", opacity: 1, offset: 0.86 },
-      { transform: "translateY(0) scaleX(1)", opacity: 1, offset: 1 }
-    ], { duration: dur, easing: "ease-out" }).onfinish = () => lid.remove();
     cupEl.animate([
       { transform: "none", offset: 0 },
       { transform: "none", offset: 0.6 },
@@ -3528,8 +3624,7 @@ function splashArt(tea) {
       slot.dataset.sig = sig;
       slot.innerHTML = cupHTML(b);
     }
-    const liq = slot.querySelector(".c-liq");
-    if (liq) liq.style.height = `${Math.min(100, b.fill * 86)}%`;
+    setCupFill(slot.querySelector(".cup"), b.fill);
     $("#pbFill").style.width = `${clamp(b.fill / 1.25 * 100, 0, 100)}%`;
     $("#pbFill").className = b.fill > 1.02 ? "over" : b.fill >= 0.85 ? "ok" : "";
     slot.classList.toggle("ready", b.phase === "ready");
@@ -3618,9 +3713,13 @@ function splashArt(tea) {
         }
         const P3 = slot._pour;
         if (performance.now() - P3.t0 > 380) {
-          const mouth = slot.querySelector(".cup").getBoundingClientRect(); const dx = mouth.left + mouth.width / 2 - tapX, dy = mouth.top + 8 - a.bottom;
+          const mouth = slot.querySelector(".cup").getBoundingClientRect();
+          const dx = mouth.left + mouth.width / 2 - tapX, dy = mouth.top + 8 - a.bottom;
           st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.hypot(dx, dy)}px;transform-origin:50% 0;transform:rotate(${-Math.atan2(dx, dy) * 180 / Math.PI}deg);background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
-          if (performance.now() - P3.lastSfx > 1100) { P3.lastSfx = performance.now(); sfx("pour"); }
+          if (performance.now() - P3.lastSfx > 1100) {
+            P3.lastSfx = performance.now();
+            sfx("pour");
+          }
         } else st.style.display = "none";
       }
     } else {
@@ -5433,78 +5532,12 @@ function splashArt(tea) {
     const iconEl = icon2;
     return `<svg class="stamp-svg" width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="Tem th\u01B0\u01A1ng hi\u1EC7u">${frame2}${iconEl}${text}${slogan}</svg>`;
   }
-  function fileToDataURL(file, size = 160) {
-    return new Promise((resolve2, reject) => {
-      const url = URL.createObjectURL(file);
-      const img = new Image();
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        reject(new Error("decode"));
-      };
-      img.onload = () => {
-        try {
-          const cv = document.createElement("canvas");
-          cv.width = cv.height = size;
-          const ctx2 = cv.getContext("2d");
-          const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
-          const s = Math.min(w, hh);
-          ctx2.fillStyle = "#fff";
-          ctx2.fillRect(0, 0, size, size);
-          ctx2.drawImage(img, (w - s) / 2, (hh - s) / 2, s, s, 0, 0, size, size);
-          resolve2(cv.toDataURL("image/jpeg", 0.82));
-        } catch (err) {
-          reject(err);
-        } finally {
-          URL.revokeObjectURL(url);
-        }
-      };
-      img.src = url;
-    });
-  }
-  function pickImage(cb) {
-    const inp = document.createElement("input");
-    inp.type = "file";
-    inp.accept = "image/*";
-    inp.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0;width:1px;height:1px";
-    document.body.appendChild(inp);
-    let done = false;
-    const finish2 = () => {
-      if (!done) {
-        done = true;
-        setTimeout(() => inp.remove(), 1500);
-      }
-    };
-    inp.addEventListener("change", async () => {
-      const f = inp.files && inp.files[0];
-      if (!f) {
-        finish2();
-        return;
-      }
-      try {
-        cb(await fileToDataURL(f));
-      } catch (e) {
-        toast("Kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c \u1EA3nh, h\xE3y th\u1EED \u1EA3nh kh\xE1c (JPG/PNG)", "err");
-      }
-      finish2();
-    });
-    inp.addEventListener("cancel", finish2);
-    inp.click();
-  }
   function openLogoModal() {
     const m = openModal({ id: "logo", cls: "small", html: logoBody() });
     const refresh = () => {
       m.body.innerHTML = logoBody();
     };
     bindActions(m.body, {
-      upload: () => pickImage((url) => {
-        S.logo.img = url;
-        S.stamp.img = url;
-        markDirty("view", "hud");
-        requestSave();
-        refresh();
-        toast("\u0110\xE3 \u0111\u1ED5i logo qu\xE1n!", "ok");
-        sfx("success");
-      }),
       design: () => {
         m.close();
         openStampDesigner();
@@ -5521,7 +5554,6 @@ function splashArt(tea) {
   }
   var logoBody = () => `<h3 class="m-title">\u{1F3A8} Logo Qu\xE1n & Nh\u1EADn Di\u1EC7n Th\u01B0\u01A1ng Hi\u1EC7u</h3><p class="m-text center">Logo n\xE0y hi\u1EC3n th\u1ECB tr\u01B0\u1EDBc t\xEAn ti\u1EC7m, tr\xEAn trang M\u1EA1ng X\xE3 H\u1ED9i v\xE0 in tr\xEAn tem ly tr\xE0 c\u1EE7a b\u1EA1n!</p>
   <div class="logo-prev">${logoHTML(70)}<div><b>${esc(S.shopName)}</b><small>Bi\u1EC3n hi\u1EC7u \xB7 M\u1EA1ng X\xE3 H\u1ED9i \xB7 Tem in ly</small></div></div>
-  <button class="btn pri block" data-act="upload">\u{1F4F7} T\u1EA3i \u1EA3nh c\xE1 nh\xE2n t\u1EEB m\xE1y l\xEAn l\xE0m Logo</button>
   <button class="btn soft block" data-act="design">\u{1F3A8} Thi\u1EBFt k\u1EBF tem & Ch\u1ECDn m\u1EABu logo ly</button>
   ${S.logo.img ? '<button class="btn ghost block" data-act="reset">\u21A9\uFE0F D\xF9ng l\u1EA1i bi\u1EC3u t\u01B0\u1EE3ng m\u1EB7c \u0111\u1ECBnh</button>' : ""}
   <button class="btn ghost block" data-act="x">\u0110\xF3ng</button>`;
@@ -5534,7 +5566,7 @@ function splashArt(tea) {
     <h5 class="grp c">M\xE0u n\u1EC1n tem</h5><div class="chips colors">${STAMP_COLORS.map((c) => `<button class="swatch ${d.bg === c ? "on" : ""}" style="background:${c}" data-act="bg" data-v="${c}" aria-label="M\xE0u ${c}"></button>`).join("")}</div>
     <h5 class="grp c">Kh\u1EA9u hi\u1EC7u (tu\u1EF3 ch\u1ECDn)</h5><input class="field" maxlength="26" value="${esc(d.slogan || "")}" data-slogan placeholder="vd: Tr\xE0 s\u1EEFa m\u1ED7i ng\xE0y" aria-label="Kh\u1EA9u hi\u1EC7u">
     <div class="chips">${SLOGANS.map((s) => `<button class="chip-s sm" data-act="slg" data-v="${esc(s)}">${esc(s)}</button>`).join("")}</div>
-    <div class="row-between"><h5 class="grp">H\xECnh logo</h5><button class="btn soft sm" data-act="up">\u{1F4F7} T\u1EA3i \u1EA3nh l\xEAn</button></div>
+    <div class="row-between"><h5 class="grp">H\xECnh logo</h5></div>
     <div class="icons">${LOGO_ICONS.map((ic) => `<button class="ico-s ${!d.img && d.icon === ic ? "on" : ""}" data-act="ic" data-v="${ic}">${ic}</button>`).join("")}</div>
     <button class="btn pri block" data-act="save">L\u01B0u tem</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>`;
     const m = openModal({ id: "stamp", cls: "small tall", html: body() });
@@ -5574,10 +5606,6 @@ function splashArt(tea) {
         d.img = null;
         redraw();
       },
-      up: () => pickImage((url) => {
-        d.img = url;
-        redraw();
-      }),
       save: () => {
         S.stamp = { ...d };
         if (d.img) S.logo.img = d.img;

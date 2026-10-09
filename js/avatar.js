@@ -26,52 +26,11 @@ export function stampSVG(st, size = 150, name = S.shopName) {
   return `<svg class="stamp-svg" width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="Tem thương hiệu">${frame}${iconEl}${text}${slogan}</svg>`;
 }
 
-function fileToDataURL(file, size = 160) {
-  // Dùng objectURL (nhẹ hơn FileReader với ảnh chụp điện thoại hàng chục MB), vẽ cắt vuông lên canvas.
-  return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
-    img.onload = () => {
-      try {
-        const cv = document.createElement('canvas');
-        cv.width = cv.height = size;
-        const ctx = cv.getContext('2d');
-        const w = img.naturalWidth || img.width, hh = img.naturalHeight || img.height;
-        const s = Math.min(w, hh);
-        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size);
-        ctx.drawImage(img, (w - s) / 2, (hh - s) / 2, s, s, 0, 0, size, size);
-        resolve(cv.toDataURL('image/jpeg', 0.82));
-      } catch (err) { reject(err); } finally { URL.revokeObjectURL(url); }
-    };
-    img.src = url;
-  });
-}
-/** Mở hộp chọn ảnh. Input phải nằm trong DOM thì trình duyệt điện thoại mới bắn sự kiện change ổn định. */
-function pickImage(cb) {
-  const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = 'image/*';
-  inp.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;width:1px;height:1px';
-  document.body.appendChild(inp);
-  let done = false;
-  const finish = () => { if (!done) { done = true; setTimeout(() => inp.remove(), 1500); } };
-  inp.addEventListener('change', async () => {
-    const f = inp.files && inp.files[0];
-    if (!f) { finish(); return; }
-    try { cb(await fileToDataURL(f)); } catch (e) { toast('Không đọc được ảnh, hãy thử ảnh khác (JPG/PNG)', 'err'); }
-    finish();
-  });
-  inp.addEventListener('cancel', finish);
-  inp.click();
-}
-
 /** Modal "Logo Quán & Nhận Diện Thương Hiệu". */
 export function openLogoModal() {
   const m = openModal({ id: 'logo', cls: 'small', html: logoBody() });
   const refresh = () => { m.body.innerHTML = logoBody(); };
   bindActions(m.body, {
-    upload: () => pickImage((url) => { S.logo.img = url; S.stamp.img = url; markDirty('view', 'hud'); requestSave(); refresh(); toast('Đã đổi logo quán!', 'ok'); sfx('success'); }),
     design: () => { m.close(); openStampDesigner(); },
     reset: () => { S.logo.img = null; S.stamp.img = null; markDirty('view'); requestSave(); refresh(); },
     x: () => m.close(),
@@ -79,7 +38,6 @@ export function openLogoModal() {
 }
 const logoBody = () => `<h3 class="m-title">🎨 Logo Quán & Nhận Diện Thương Hiệu</h3><p class="m-text center">Logo này hiển thị trước tên tiệm, trên trang Mạng Xã Hội và in trên tem ly trà của bạn!</p>
   <div class="logo-prev">${logoHTML(70)}<div><b>${esc(S.shopName)}</b><small>Biển hiệu · Mạng Xã Hội · Tem in ly</small></div></div>
-  <button class="btn pri block" data-act="upload">📷 Tải ảnh cá nhân từ máy lên làm Logo</button>
   <button class="btn soft block" data-act="design">🎨 Thiết kế tem & Chọn mẫu logo ly</button>
   ${S.logo.img ? '<button class="btn ghost block" data-act="reset">↩️ Dùng lại biểu tượng mặc định</button>' : ''}
   <button class="btn ghost block" data-act="x">Đóng</button>`;
@@ -94,7 +52,7 @@ export function openStampDesigner() {
     <h5 class="grp c">Màu nền tem</h5><div class="chips colors">${STAMP_COLORS.map((c) => `<button class="swatch ${d.bg === c ? 'on' : ''}" style="background:${c}" data-act="bg" data-v="${c}" aria-label="Màu ${c}"></button>`).join('')}</div>
     <h5 class="grp c">Khẩu hiệu (tuỳ chọn)</h5><input class="field" maxlength="26" value="${esc(d.slogan || '')}" data-slogan placeholder="vd: Trà sữa mỗi ngày" aria-label="Khẩu hiệu">
     <div class="chips">${SLOGANS.map((s) => `<button class="chip-s sm" data-act="slg" data-v="${esc(s)}">${esc(s)}</button>`).join('')}</div>
-    <div class="row-between"><h5 class="grp">Hình logo</h5><button class="btn soft sm" data-act="up">📷 Tải ảnh lên</button></div>
+    <div class="row-between"><h5 class="grp">Hình logo</h5></div>
     <div class="icons">${LOGO_ICONS.map((ic) => `<button class="ico-s ${!d.img && d.icon === ic ? 'on' : ''}" data-act="ic" data-v="${ic}">${ic}</button>`).join('')}</div>
     <button class="btn pri block" data-act="save">Lưu tem</button><button class="btn ghost block" data-act="x">Đóng</button>`;
   const m = openModal({ id: 'stamp', cls: 'small tall', html: body() });
@@ -105,7 +63,6 @@ export function openStampDesigner() {
     frame: (t) => { d.frame = t.dataset.v; redraw(); }, ts: (t) => { d.textStyle = t.dataset.v; redraw(); }, bg: (t) => { d.bg = t.dataset.v; redraw(); },
     slg: (t) => { d.slogan = t.dataset.v === 'Bỏ trống' ? '' : t.dataset.v; redraw(); },
     ic: (t) => { d.icon = t.dataset.v; d.img = null; redraw(); },
-    up: () => pickImage((url) => { d.img = url; redraw(); }),
     save: () => {
       S.stamp = { ...d };
       if (d.img) S.logo.img = d.img; else { S.logo.emoji = d.icon; S.logo.img = null; }
