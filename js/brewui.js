@@ -8,7 +8,7 @@ import * as E from './econ.js';
 import * as G from './sell.js';
 import { SH } from './sell.js';
 import { toast, fxText, fxCoins, fxSpark, bindActions, logoHTML, openModal, isModalOpen, updateClock } from './ui.js';
-import { teaArt, toppingArt, stackArt, sealerArt, cupArt, pourArt, splashArt } from './sell-art.js';
+import { teaArt, toppingArt, stackArt, sealerArt, cupArt, pourArt, splashArt, customerArt } from './sell-art.js';
 
 /* ===== Hình ly ===== */
 const sizePx = { M: [54, 76], L: [64, 90] };
@@ -71,7 +71,7 @@ export function renderSell() {
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join('')}</div>
       </div>
-      <div class="flav-row" id="flavs"></div>
+
     </div>
     <div class="work">
       <div class="work-row">
@@ -87,7 +87,7 @@ export function renderSell() {
           <button class="trash" data-act="trash" aria-label="Thùng rác">🗑️</button>
         </div>
       </div>
-      <div class="trays" id="trays"></div>
+      <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra sảnh → <span id="lobbyCnt">0/0</span></button></div>
     <div class="stream" id="stream"></div>
@@ -134,7 +134,7 @@ const sellActs = {
     const e = G.startPour(id);
     if (e) { toast(e, 'err'); sfx('error'); }
   },
-  flav: (t) => { const e = G.addFlavor(t.dataset.f); if (e) { toast(e, 'err'); sfx('error'); } else { sfx('drop'); dropFx(t, '#fff'); } },
+  flav: (t) => { const e = G.addFlavor(t.dataset.f); if (e) { toast(e, 'err'); sfx('error'); } else dropFx(t, '#fff'); },
   top: (t) => {
     const id = t.dataset.t;
     if (!S.unlocked[id]) return toast('Mở khóa trong Nâng cấp › Topping', 'err');
@@ -170,8 +170,7 @@ function doServe() {
   if (r.luck) setTimeout(() => fxText('🍀 MAY MẮN ×2!', anchor, 'g'), 700);
   fxCoins(anchor, r.stars >= 4 ? 7 : 3);
   if (r.stars >= 5) fxSpark(anchor, 10);
-  sfx(r.stars >= 4 ? 'success' : 'sad');
-  sfx('coin');
+  sfx(r.stars >= 4 ? 'reward' : 'sad');
   void front;
 }
 
@@ -305,7 +304,7 @@ function refreshQueue() {
   const row = $('#qrow');
   if (!row) return;
   const front = G.frontCustomer();
-  row.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? 'on' : ''}" data-act="sel" data-cid="${c.id}" aria-label="Khách ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.avatar}</b></button>`).join('') || '<span class="q-empty">Chưa có khách...</span>';
+  row.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? 'on' : ''}" data-act="sel" data-cid="${c.id}" aria-label="Khách ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b></button>`).join('') || '<span class="q-empty">Chưa có khách...</span>';
 }
 function refreshCustomer() {
   const av = $('#cav'), bub = $('#cbub');
@@ -317,7 +316,7 @@ function refreshCustomer() {
     return;
   }
   const o = c.order;
-  av.innerHTML = `<span class="face">${c.avatar}</span>`;
+  av.innerHTML = `<span class="face">${c.online ? c.avatar : customerArt(c.key) || c.avatar}</span>`;
   bub.innerHTML = `<div class="b-row">${orderCup(o)}<div><span class="atag">${esc(c.tag)}</span><div class="btxt">${esc(c.text)}</div></div></div>
     <div class="pat"><span>KIÊN NHẪN</span><div class="bar" id="patBar"><i style="width:${(c.p / c.maxP * 100).toFixed(0)}%"></i></div></div>`;
 }
@@ -405,16 +404,17 @@ export function frameSell(dt, force) {
         const cupW = cupEl ? cupEl.offsetWidth : 60, cupH = cupEl ? cupEl.offsetHeight : 80;
         const cupTop = baseT + slot.offsetHeight - 6 - cupH;
         const vw = document.documentElement.clientWidth;
-        const cx = Math.max(cupW / 2 + 6, Math.min(vw - cupW / 2 - 6, tapX));
-        const nx = Math.round(cx - (baseL + slot.offsetWidth / 2)), ny = Math.round(a.bottom + 22 - cupTop);
+        const cx = clamp(tapX, br.left + cupW / 2 + 8, br.right - cupW / 2 - 8);
+        const nx = Math.round(cx - (baseL + slot.offsetWidth / 2)), ny = 0;
         slot.style.transform = `translate(${nx}px,${ny}px)`;
         slot.classList.add('under-tap');
-        slot._pour = { tea: b.tea, t0: performance.now(), mouthY: cupTop + ny + 4 };
+        slot._pour = { tea: b.tea, t0: performance.now(), lastSfx: performance.now(), mouthY: cupTop + ny + 4 };
       }
       const P = slot._pour;
       if (performance.now() - P.t0 > 380) {
-        st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.max(0, P.mouthY - a.bottom + 2)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
-        if (Math.random() < 0.15) sfx('pour');
+        const mouth = slot.querySelector(".cup").getBoundingClientRect(); const dx = mouth.left + mouth.width / 2 - tapX, dy = mouth.top + 8 - a.bottom;
+        st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.hypot(dx, dy)}px;transform-origin:50% 0;transform:rotate(${-Math.atan2(dx, dy) * 180 / Math.PI}deg);background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+        if (performance.now() - P.lastSfx > 1100) { P.lastSfx = performance.now(); sfx('pour'); }
       } else st.style.display = 'none';
     }
   } else {

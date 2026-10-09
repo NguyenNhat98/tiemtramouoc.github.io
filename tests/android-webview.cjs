@@ -76,7 +76,8 @@ async function main() {
     assert.equal(await evaluate('!!document.querySelector("#sell")'), true);
     assert.equal(await evaluate('document.querySelectorAll(".image-jar .sale-art").length'), 6, 'all tea dispensers use supplied artwork');
     assert.equal(await evaluate('document.querySelectorAll(".image-tray .sale-art").length'), 16, 'all topping trays use supplied artwork');
-    assert.equal(await evaluate(`Promise.all(['cartoon-sheet.png'].map(name => new Promise((resolve,reject) => {
+    assert.equal(await evaluate('document.querySelectorAll(".qav .customer-sprite").length > 0'), true, 'customer portraits use supplied artwork');
+    assert.equal(await evaluate(`Promise.all(['kawaii-sheet.png'].map(name => new Promise((resolve,reject) => {
       var image = new Image(); image.onload = () => resolve(true); image.onerror = () => reject(Error(name)); image.src = 'assets/sell/' + name;
     }))).then(images => images.length)`), 1, 'new cartoon sheet loads offline');
     if (process.env.TIEMTRA_SCREENSHOT) {

@@ -43,7 +43,7 @@ Nguồn Android chính thức:
 - Đường dẫn CSS/JS không còn query phiên bản để wrapper tải tài nguyên cục bộ.
 - Icon ly, bình trà, máy đóng nắp và topping sử dụng ảnh cục bộ trong `assets/sell/`.
   Không bỏ thư mục ảnh này khi tạo ZIP/APK.
-  Bộ hình hiện tại là `cartoon-sheet.png`, được hiển thị theo từng vùng bằng SVG;
+  Bộ hình hiện tại là `kawaii-sheet.png`, được hiển thị theo từng vùng bằng SVG;
   hiệu ứng rót và giọt trà bắn sử dụng cùng sprite sheet. Món thiếu hình riêng dùng
   hình gần giống, tên món và luật tiêu hao nguyên liệu vẫn theo dữ liệu game.
 - Bundle nhắm Chrome 70, kèm fallback cho `Object.fromEntries` và hiệu ứng animation.

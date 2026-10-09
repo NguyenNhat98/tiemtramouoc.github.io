@@ -834,6 +834,11 @@
   var musicTimer = null;
   var mstep = 0;
   var unlocked = false;
+  var sfxBus = null;
+  var pendingClick = null;
+  var sfxActiveUntil = 0;
+  var sfxPriority = -1;
+  var sfxLastPlayed = Object.create(null);
   function ctx() {
     if (actx) return actx;
     try {
@@ -864,9 +869,19 @@
       g.gain.setValueAtTime(1e-4, t);
       g.gain.exponentialRampToValueAtTime(Math.max(2e-4, vol), t + 0.012);
       g.gain.exponentialRampToValueAtTime(1e-4, t + d);
-      o.connect(g).connect(dest || master);
+      o.connect(g).connect(dest || sfxBus || master);
       o.start(t);
       o.stop(t + d + 0.05);
+    } catch (e) {
+    }
+  }
+  function glide(f0, f1, d, type = "sine", vol = 0.2, when = 0) {
+    if (!actx) return;
+    try {
+      const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + when;
+      o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(Math.max(25, f1), t + d);
+      g.gain.setValueAtTime(1e-4, t); g.gain.exponentialRampToValueAtTime(Math.max(2e-4, vol), t + 0.01); g.gain.exponentialRampToValueAtTime(1e-4, t + d);
+      o.connect(g).connect(sfxBus || master); o.start(t); o.stop(t + d + 0.04);
     } catch (e) {
     }
   }
@@ -969,6 +984,41 @@
       [440, 392, 330, 262].forEach((f, i) => tone(f, 0.2, "sine", 0.5, i * 0.13));
     }
   };
+  Object.assign(SFX, {
+    click: () => { tone(520, 0.035, "sine", 0.16); tone(780, 0.045, "sine", 0.07, 0.015); },
+    pop: () => glide(520, 300, 0.075, "triangle", 0.2),
+    cup: () => { tone(390, 0.07, "sine", 0.24); tone(520, 0.08, "triangle", 0.12, 0.055); },
+    pour: () => { glide(720, 520, 0.14, "sine", 0.07); tone(340, 0.12, "sine", 0.035); },
+    drop: () => { glide(760, 420, 0.085, "sine", 0.2); tone(620, 0.08, "triangle", 0.12, 0.035); },
+    seal: () => { glide(220, 110, 0.16, "triangle", 0.24); tone(620, 0.08, "sine", 0.08, 0.17); },
+    ding: () => { tone(1318, 0.2, "sine", 0.2); tone(1760, 0.26, "sine", 0.12, 0.045); },
+    coin: () => { tone(880, 0.065, "sine", 0.14); tone(1175, 0.09, "sine", 0.12, 0.06); },
+    reward: () => { tone(659, 0.13, "sine", 0.16); tone(784, 0.16, "sine", 0.16, 0.09); tone(988, 0.22, "sine", 0.12, 0.19); tone(1318, 0.27, "sine", 0.08, 0.29); },
+    success: () => { tone(523, 0.12, "triangle", 0.22); tone(659, 0.14, "triangle", 0.19, 0.1); tone(784, 0.2, "sine", 0.17, 0.2); },
+    error: () => { glide(330, 240, 0.11, "triangle", 0.19); tone(196, 0.14, "sine", 0.13, 0.1); },
+    sad: () => { tone(392, 0.16, "sine", 0.15); glide(330, 262, 0.22, "sine", 0.14, 0.13); },
+    sparkle: () => [1318, 1568, 1976].forEach((f, i) => tone(f, 0.08, "sine", 0.12, i * 0.055)),
+    unlock: () => { tone(587, 0.11, "sine", 0.16); tone(784, 0.13, "sine", 0.15, 0.1); tone(988, 0.2, "sine", 0.13, 0.2); },
+    level: () => [523, 659, 784, 988, 1175].forEach((f, i) => tone(f, 0.14, "triangle", 0.15, i * 0.09)),
+    bell: () => { tone(1568, 0.24, "sine", 0.18); tone(1976, 0.3, "sine", 0.12, 0.035); },
+    match: () => tone(660 + Math.random() * 220, 0.085, "triangle", 0.17),
+    boom: () => { glide(150, 58, 0.24, "sine", 0.22); tone(392, 0.12, "triangle", 0.1, 0.08); },
+    pearlPop: () => { const f = 650 + Math.random() * 180; glide(f, f * 0.72, 0.055, "sine", 0.16); tone(f * 1.5, 0.06, "triangle", 0.11, 0.025); },
+    pearlPop2: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f * (1 + Math.random() * 0.02), 0.06, "sine", 0.13, i * 0.04)),
+    pearlBoom: () => { glide(130, 55, 0.2, "sine", 0.22); [784, 988, 1175, 1568].forEach((f, i) => tone(f, 0.11, "triangle", 0.14, 0.06 + i * 0.05)); },
+    fly: () => [440, 587, 740].forEach((f, i) => tone(f, 0.06, "sine", 0.09, i * 0.04)),
+    swoosh: () => glide(760, 300, 0.18, "sine", 0.08),
+    bounce: () => { glide(280, 190, 0.07, "sine", 0.15); tone(440, 0.05, "triangle", 0.07, 0.045); },
+    combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, "triangle", 0.16, i * 0.065))
+  });
+  var SFX_RULES = {
+    click: [65, 0, 90, 0.48], pop: [90, 1, 140, 0.62], cup: [130, 2, 170, 0.62], pour: [650, 0, 180, 0.42], drop: [110, 2, 150, 0.62],
+    seal: [180, 3, 320, 0.75], ding: [180, 4, 330, 0.72], coin: [130, 2, 190, 0.55], reward: [250, 4, 620, 0.76], success: [220, 4, 430, 0.72],
+    error: [180, 3, 300, 0.62], sad: [250, 2, 430, 0.55], sparkle: [150, 2, 230, 0.52], unlock: [300, 4, 470, 0.72], level: [350, 4, 610, 0.68],
+    bell: [250, 3, 430, 0.68], match: [70, 1, 130, 0.58], boom: [260, 3, 430, 0.7], pearlPop: [70, 1, 170, 0.5], pearlPop2: [100, 2, 260, 0.58],
+    pearlBoom: [280, 4, 440, 0.72], fly: [100, 1, 200, 0.48], swoosh: [130, 1, 230, 0.45], bounce: [100, 1, 160, 0.5], combo: [180, 3, 360, 0.62],
+    collect: [150, 2, 260, 0.6], win: [600, 5, 1450, 0.74], lose: [400, 3, 700, 0.62]
+  };
   var HAPTIC_MUL = [0, 0.6, 1, 1.7];
   var HAPTIC = {
     click: 8,
@@ -1005,10 +1055,36 @@
     } catch (e) {
     }
   }
+  function playSfx(n) {
+    const sound = SFX[n];
+    if (!sound || !unlocked || S.settings.sfx <= 0) return;
+    const rule = SFX_RULES[n] || (n.startsWith("combo") ? [180, 3, 420, 0.62] : [100, 1, 220, 0.55]);
+    const [cooldown, priority, duration, volume] = rule;
+    const now = performance.now();
+    if (now - (sfxLastPlayed[n] != null ? sfxLastPlayed[n] : -Infinity) < cooldown) return;
+    if (now < sfxActiveUntil && priority < sfxPriority) return;
+    const c = ctx();
+    if (!c || !master) return;
+    if (sfxBus) { sfxBus.gain.cancelScheduledValues(c.currentTime); sfxBus.gain.setTargetAtTime(1e-4, c.currentTime, 0.018); }
+    const bus = c.createGain(); bus.gain.setValueAtTime(volume, c.currentTime); bus.connect(master);
+    sfxBus = bus; sfxActiveUntil = now + duration; sfxPriority = priority; sfxLastPlayed[n] = now;
+    sound();
+    setTimeout(() => {
+      if (sfxBus === bus) { bus.gain.setTargetAtTime(1e-4, c.currentTime, 0.035); sfxBus = null; sfxPriority = -1; sfxActiveUntil = 0; }
+      setTimeout(() => { try { bus.disconnect(); } catch (e) {} }, 120);
+    }, duration);
+  }
   var sfx = (n) => {
-    var _a, _b;
+    var _a;
     buzz((_a = HAPTIC[n]) != null ? _a : 8);
-    if (unlocked && S.settings.sfx > 0) (_b = SFX[n]) == null ? void 0 : _b.call(SFX);
+    if (!unlocked || S.settings.sfx <= 0) return;
+    if (n === "click") {
+      if (pendingClick) return;
+      pendingClick = setTimeout(() => { pendingClick = null; playSfx("click"); }, 38);
+      return;
+    }
+    if (pendingClick) { clearTimeout(pendingClick); pendingClick = null; }
+    playSfx(n);
   };
   var STYLES = {
     lofi: { ms: 420, mel: [523, 0, 659, 0, 587, 0, 523, 0, 440, 0, 523, 659, 587, 0, 0, 0], bass: [131, 0, 0, 0, 175, 0, 0, 0, 147, 0, 0, 0, 196, 0, 0, 0], type: "sine" },
@@ -2972,61 +3048,62 @@
   }
 
   // js/sell-art.js
-  var SOURCE = "assets/sell/cartoon-sheet.png";
-  var teaColumns = { traSua: 0, matcha: 1, hongTra: 2, lucTra: 3, olong: 4, traThai: 5 };
-  var topCells = {
-    tcDen: [0, 0],
-    tcTrang: [0, 1],
-    tcVang: [0, 2],
-    tcSoi: [2, 2],
-    tcNo: [0, 5],
-    cuNang: [2, 3],
-    thachTc: [1, 2],
-    suongSao: [0, 9],
-    thachCf: [0, 7],
-    fCheese: [1, 3],
-    fMatcha: [1, 5],
-    fMuoi: [0, 8],
-    fUbe: [2, 0],
-    pmVien: [1, 6],
-    pmTuoi: [1, 6],
-    thachPm: [2, 1]
-  };
-  var artId = 0;
-  var TEA_MASK = [[35, 0], [66, 0], [69, 8], [97, 12], [100, 24], [100, 43], [94, 44], [94, 86], [72, 92], [64, 100], [40, 100], [33, 92], [7, 86], [7, 44], [0, 43], [0, 24], [3, 12], [32, 8]];
-  var CUP_MASK = [[0, 7], [12, 0], [88, 0], [100, 7], [90, 24], [81, 92], [70, 100], [30, 100], [19, 92], [10, 24]];
-  function region(rect, cls = "", mask = null) {
-    const [x, y, width, height] = rect;
-    const id = `sale-art-${artId++}`;
-    const clip = mask ? `<defs><clipPath id="${id}"><polygon points="${mask.map(([px, py]) => `${px * width / 100},${py * height / 100}`).join(" ")}"/></clipPath></defs>` : "";
-    return `<svg class="sale-art ${cls}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns:xlink="http://www.w3.org/1999/xlink">${clip}<image href="${SOURCE}" xlink:href="${SOURCE}" x="${-x}" y="${-y}" width="1536" height="1024" ${mask ? `clip-path="url(#${id})"` : ""}/></svg>`;
-  }
-  function teaArt(id) {
-    return region([13 + teaColumns[id] * 129, 17, 123, 246], "", TEA_MASK);
-  }
-  function toppingArt(id) {
-    const [row, col] = topCells[id];
-    return region([16 + col * 133.5, 395 + row * 108, 120, 64], "", [[7, 0], [93, 0], [100, 10], [100, 100], [0, 100], [0, 10]]);
-  }
-  function stackArt(size) {
-    return region(size === "L" ? [912, 53, 115, 304] : [785, 100, 117, 255], "", [[16, 0], [84, 0], [89, 31], [94, 58], [100, 61], [100, 97], [94, 100], [6, 100], [0, 97], [0, 61], [6, 58], [11, 31]]);
-  }
-  function sealerArt() {
-    return region([1287, 18, 231, 366], "", [[23, 0], [43, 4], [79, 0], [96, 10], [100, 36], [95, 85], [88, 100], [11, 100], [6, 93], [6, 40], [0, 23], [11, 4]]);
-  }
-  function cupArt() {
-    return region([15, 781, 95, 122], "cup-sprite", CUP_MASK);
-  }
-  var pourColumn = (tea) => {
-    var _a;
-    return (_a = { traSua: 0, matcha: 1, lucTra: 3, hongTra: 2, olong: 3, traThai: 4 }[tea]) != null ? _a : 0;
-  };
-  function pourArt(tea) {
-    return region([321 + pourColumn(tea) * 126, 716, 73, 72], "pour-sprite", [[0, 100], [0, 62], [6, 34], [18, 12], [37, 0], [60, 0], [88, 20], [96, 46], [67, 38], [48, 35], [39, 44], [29, 63], [24, 100]]);
-  }
-  function splashArt(tea) {
-    return region([14 + pourColumn(tea) * 137, 920, 124, 90], "tea-splash-sprite", [[0, 70], [8, 47], [21, 32], [17, 15], [34, 5], [41, 36], [54, 21], [68, 9], [80, 3], [98, 17], [91, 39], [75, 52], [99, 56], [93, 78], [63, 91], [34, 98], [10, 91]]);
-  }
+/** Crops used by the daily counter from the supplied kawaii sprite sheet. */
+const SOURCE = 'assets/sell/kawaii-sheet.png';
+
+// Character portraits along the top of the sheet, ordered left to right.
+const customerCells = {
+  sinhVien: 1, vanPhong: 2, genZ: 0, bac: 4,
+  vip: 8, macCa: 9, reviewer: 2, be: 6,
+};
+
+const teaCells = {
+  traSua: [13, 316, 111, 173], matcha: [125, 316, 115, 173],
+  hongTra: [239, 316, 117, 173], lucTra: [356, 316, 116, 173],
+  olong: [472, 316, 116, 173], traThai: [587, 316, 118, 173],
+};
+
+// Ingredient crops omit the printed labels so the game name remains authoritative.
+const topCells = {
+  tcDen: [14, 620, 76, 59], tcTrang: [91, 620, 75, 59], tcVang: [168, 620, 78, 59],
+  tcSoi: [927, 702, 85, 59], tcNo: [412, 620, 81, 59], cuNang: [496, 620, 82, 59],
+  thachTc: [14, 701, 80, 60], suongSao: [759, 620, 83, 59], thachCf: [582, 620, 84, 59],
+  fCheese: [258, 490, 62, 126], fMatcha: [284, 701, 84, 60], fMuoi: [331, 490, 62, 126], fUbe: [740, 701, 83, 60],
+  pmVien: [375, 701, 83, 60], pmTuoi: [375, 701, 83, 60], thachPm: [669, 620, 86, 59],
+};
+
+let artId = 0;
+function region(rect, cls = '', mask = null) {
+  const [x, y, width, height] = rect;
+  const id = `sale-art-${artId++}`;
+  const clip = mask ? `<defs><clipPath id="${id}"><polygon points="${mask.map(([px, py]) => `${px * width / 100},${py * height / 100}`).join(' ')}"/></clipPath></defs>` : `<defs><clipPath id="${id}"><rect width="${width}" height="${height}"/></clipPath></defs>`;
+  return `<svg class="sale-art ${cls}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns:xlink="http://www.w3.org/1999/xlink">${clip}<image href="${SOURCE}" xlink:href="${SOURCE}" x="${-x}" y="${-y}" width="1536" height="1024" clip-path="url(#${id})"/></svg>`;
+}
+
+function customerArt(key) {
+  if (!Object.prototype.hasOwnProperty.call(customerCells, key)) return '';
+  const i = customerCells[key];
+  return region([i * 112 + 8, 78, 108, 106], 'customer-sprite');
+}
+function teaArt(id) { return region(teaCells[id] || teaCells.traSua); }
+function toppingArt(id) { return region(topCells[id] || topCells.tcDen); }
+function stackArt(size) {
+  return region(size === 'L' ? [141, 217, 104, 100] : [20, 217, 109, 100]);
+}
+function sealerArt() { return region([1100, 486, 232, 296]); }
+function cupArt() {
+  // A transparent outline lets live liquid, flavor and topping layers remain visible.
+  return '<svg class="sale-art cup-sprite" viewBox="0 0 78 101" aria-hidden="true"><path d="M5 10 L15 90 Q39 105 63 90 L73 10" fill="none" stroke="#795840" stroke-width="2.5"/><ellipse cx="39" cy="10" rx="34" ry="8" fill="rgba(255,255,255,.18)" stroke="#795840" stroke-width="2.5"/><path d="M14 24 L21 80" stroke="white" opacity=".6" stroke-width="3" stroke-linecap="round"/></svg>';
+}
+const pourCells = { traSua: [1230, 205], matcha: [1334, 205], hongTra: [1230, 205], lucTra: [1334, 205], olong: [1230, 205], traThai: [1334, 205] };
+function pourArt(tea) {
+  const [x, y] = pourCells[tea] || pourCells.traSua;
+  return region([x, y, 82, 226], 'pour-sprite');
+}
+function splashArt(tea) {
+  const x = ({ traSua: 15, hongTra: 100, matcha: 178, lucTra: 254, olong: 333, traThai: 410 })[tea] || 15;
+  return region([x, 876, 76, 59], 'tea-splash-sprite');
+}
 
   // js/brewui.js
   var sizePx = { M: [54, 76], L: [64, 90] };
@@ -3093,7 +3170,7 @@
         </div>
         <div class="disps" id="disps">${TEAS.map(dispHTML).join("")}</div>
       </div>
-      <div class="flav-row" id="flavs"></div>
+
     </div>
     <div class="work">
       <div class="work-row">
@@ -3109,7 +3186,7 @@
           <button class="trash" data-act="trash" aria-label="Th\xF9ng r\xE1c">\u{1F5D1}\uFE0F</button>
         </div>
       </div>
-      <div class="trays" id="trays"></div>
+      <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra s\u1EA3nh \u2192 <span id="lobbyCnt">0/0</span></button></div>
     <div class="stream" id="stream"></div>
@@ -3171,10 +3248,7 @@
       if (e) {
         toast(e, "err");
         sfx("error");
-      } else {
-        sfx("drop");
-        dropFx(t, "#fff");
-      }
+      } else dropFx(t, "#fff");
     },
     top: (t) => {
       const id = t.dataset.t;
@@ -3236,8 +3310,7 @@
     if (r.luck) setTimeout(() => fxText("\u{1F340} MAY M\u1EAEN \xD72!", anchor, "g"), 700);
     fxCoins(anchor, r.stars >= 4 ? 7 : 3);
     if (r.stars >= 5) fxSpark(anchor, 10);
-    sfx(r.stars >= 4 ? "success" : "sad");
-    sfx("coin");
+    sfx(r.stars >= 4 ? "reward" : "sad");
     void front;
   }
   function dropFx(fromEl, color) {
@@ -3422,7 +3495,7 @@
     const row = $("#qrow");
     if (!row) return;
     const front = frontCustomer();
-    row.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? "on" : ""}" data-act="sel" data-cid="${c.id}" aria-label="Kh\xE1ch ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.avatar}</b></button>`).join("") || '<span class="q-empty">Ch\u01B0a c\xF3 kh\xE1ch...</span>';
+    row.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? "on" : ""}" data-act="sel" data-cid="${c.id}" aria-label="Kh\xE1ch ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b></button>`).join("") || '<span class="q-empty">Ch\u01B0a c\xF3 kh\xE1ch...</span>';
   }
   function refreshCustomer() {
     const av = $("#cav"), bub = $("#cbub");
@@ -3434,7 +3507,7 @@
       return;
     }
     const o = c.order;
-    av.innerHTML = `<span class="face">${c.avatar}</span>`;
+    av.innerHTML = `<span class="face">${c.online ? c.avatar : customerArt(c.key) || c.avatar}</span>`;
     bub.innerHTML = `<div class="b-row">${orderCup(o)}<div><span class="atag">${esc(c.tag)}</span><div class="btxt">${esc(c.text)}</div></div></div>
     <div class="pat"><span>KI\xCAN NH\u1EAAN</span><div class="bar" id="patBar"><i style="width:${(c.p / c.maxP * 100).toFixed(0)}%"></i></div></div>`;
   }
@@ -3537,16 +3610,17 @@
           const cupW = cupEl ? cupEl.offsetWidth : 60, cupH = cupEl ? cupEl.offsetHeight : 80;
           const cupTop = baseT + slot.offsetHeight - 6 - cupH;
           const vw = document.documentElement.clientWidth;
-          const cx = Math.max(cupW / 2 + 6, Math.min(vw - cupW / 2 - 6, tapX));
-          const nx = Math.round(cx - (baseL + slot.offsetWidth / 2)), ny = Math.round(a.bottom + 22 - cupTop);
+          const cx = clamp(tapX, br.left + cupW / 2 + 8, br.right - cupW / 2 - 8);
+          const nx = Math.round(cx - (baseL + slot.offsetWidth / 2)), ny = 0;
           slot.style.transform = `translate(${nx}px,${ny}px)`;
           slot.classList.add("under-tap");
-          slot._pour = { tea: b.tea, t0: performance.now(), mouthY: cupTop + ny + 4 };
+          slot._pour = { tea: b.tea, t0: performance.now(), lastSfx: performance.now(), mouthY: cupTop + ny + 4 };
         }
         const P3 = slot._pour;
         if (performance.now() - P3.t0 > 380) {
-          st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.max(0, P3.mouthY - a.bottom + 2)}px;background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
-          if (Math.random() < 0.15) sfx("pour");
+          const mouth = slot.querySelector(".cup").getBoundingClientRect(); const dx = mouth.left + mouth.width / 2 - tapX, dy = mouth.top + 8 - a.bottom;
+          st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.hypot(dx, dy)}px;transform-origin:50% 0;transform:rotate(${-Math.atan2(dx, dy) * 180 / Math.PI}deg);background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+          if (performance.now() - P3.lastSfx > 1100) { P3.lastSfx = performance.now(); sfx("pour"); }
         } else st.style.display = "none";
       }
     } else {

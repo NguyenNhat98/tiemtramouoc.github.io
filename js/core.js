@@ -236,6 +236,8 @@ export function flushRender() { for (const k of consumeDirty()) { try { renderer
 
 /* ===== Âm thanh (Web Audio, không cần file) ===== */
 let actx = null, master = null, mgain = null, musicTimer = null, mstep = 0, unlocked = false;
+let sfxBus = null, pendingClick = null, sfxActiveUntil = 0, sfxPriority = -1;
+const sfxLastPlayed = Object.create(null);
 function ctx() {
   if (actx) return actx;
   try {
@@ -261,44 +263,63 @@ function tone(f, d, type = 'sine', vol = 1, when = 0, dest = null) {
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol), t + 0.012);
     g.gain.exponentialRampToValueAtTime(0.0001, t + d);
-    o.connect(g).connect(dest || master);
+    o.connect(g).connect(dest || sfxBus || master);
     o.start(t); o.stop(t + d + 0.05);
   } catch (e) { /* bỏ qua */ }
 }
+function glide(f0, f1, d, type = 'sine', vol = 0.2, when = 0) {
+  if (!actx) return;
+  try {
+    const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + when;
+    o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(Math.max(25, f1), t + d);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol), t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g).connect(sfxBus || master); o.start(t); o.stop(t + d + 0.04);
+  } catch (e) { /* bỏ qua */ }
+}
 const SFX = {
-  click: () => tone(660, 0.06, 'triangle', 0.5),
-  pop: () => tone(440, 0.06, 'square', 0.25),
-  cup: () => { tone(300, 0.08, 'triangle', 0.6); tone(420, 0.06, 'triangle', 0.4, 0.05); },
-  pour: () => tone(520 + Math.random() * 60, 0.09, 'sine', 0.18),
-  drop: () => { tone(880, 0.05, 'sine', 0.4); tone(660, 0.07, 'sine', 0.3, 0.04); },
-  seal: () => { tone(160, 0.12, 'sawtooth', 0.5); tone(900, 0.1, 'square', 0.25, 0.14); },
-  ding: () => { tone(1568, 0.25, 'sine', 0.5); tone(2093, 0.3, 'sine', 0.3, 0.05); },
-  coin: () => { tone(1040, 0.08, 'square', 0.3); tone(1310, 0.13, 'square', 0.3, 0.07); },
-  success: () => { tone(523, 0.1, 'triangle'); tone(659, 0.1, 'triangle', 1, 0.09); tone(784, 0.18, 'triangle', 1, 0.18); },
-  error: () => { tone(215, 0.14, 'sawtooth', 0.4); tone(175, 0.2, 'sawtooth', 0.4, 0.11); },
-  sad: () => { tone(392, 0.14, 'sine'); tone(310, 0.26, 'sine', 1, 0.13); },
-  sparkle: () => [1560, 1980, 2350].forEach((f, i) => tone(f, 0.09, 'sine', 0.45, i * 0.05)),
-  unlock: () => { tone(700, 0.11, 'sine'); tone(930, 0.11, 'sine', 1, 0.1); tone(1170, 0.22, 'sine', 1, 0.2); },
-  level: () => [523, 659, 784, 1046, 1318].forEach((f, i) => tone(f, 0.2, 'triangle', 1, i * 0.08)),
-  bell: () => { tone(1760, 0.3, 'sine', 0.4); tone(2217, 0.4, 'sine', 0.25, 0.02); },
-  match: () => { tone(600 + Math.random() * 300, 0.1, 'triangle', 0.5); },
-  boom: () => { tone(120, 0.25, 'sawtooth', 0.5); tone(80, 0.3, 'square', 0.35, 0.05); },
+  click: () => { tone(520, 0.035, 'sine', 0.16); tone(780, 0.045, 'sine', 0.07, 0.015); },
+  pop: () => glide(520, 300, 0.075, 'triangle', 0.2),
+  cup: () => { tone(390, 0.07, 'sine', 0.24); tone(520, 0.08, 'triangle', 0.12, 0.055); },
+  pour: () => { glide(720, 520, 0.14, 'sine', 0.07); tone(340, 0.12, 'sine', 0.035); },
+  drop: () => { glide(760, 420, 0.085, 'sine', 0.2); tone(620, 0.08, 'triangle', 0.12, 0.035); },
+  seal: () => { glide(220, 110, 0.16, 'triangle', 0.24); tone(620, 0.08, 'sine', 0.08, 0.17); },
+  ding: () => { tone(1318, 0.2, 'sine', 0.2); tone(1760, 0.26, 'sine', 0.12, 0.045); },
+  coin: () => { tone(880, 0.065, 'sine', 0.14); tone(1175, 0.09, 'sine', 0.12, 0.06); },
+  reward: () => { tone(659, 0.13, 'sine', 0.16); tone(784, 0.16, 'sine', 0.16, 0.09); tone(988, 0.22, 'sine', 0.12, 0.19); tone(1318, 0.27, 'sine', 0.08, 0.29); },
+  success: () => { tone(523, 0.12, 'triangle', 0.22); tone(659, 0.14, 'triangle', 0.19, 0.1); tone(784, 0.2, 'sine', 0.17, 0.2); },
+  error: () => { glide(330, 240, 0.11, 'triangle', 0.19); tone(196, 0.14, 'sine', 0.13, 0.1); },
+  sad: () => { tone(392, 0.16, 'sine', 0.15); glide(330, 262, 0.22, 'sine', 0.14, 0.13); },
+  sparkle: () => [1318, 1568, 1976].forEach((f, i) => tone(f, 0.08, 'sine', 0.12, i * 0.055)),
+  unlock: () => { tone(587, 0.11, 'sine', 0.16); tone(784, 0.13, 'sine', 0.15, 0.1); tone(988, 0.2, 'sine', 0.13, 0.2); },
+  level: () => [523, 659, 784, 988, 1175].forEach((f, i) => tone(f, 0.14, 'triangle', 0.15, i * 0.09)),
+  bell: () => { tone(1568, 0.24, 'sine', 0.18); tone(1976, 0.3, 'sine', 0.12, 0.035); },
+  match: () => { tone(660 + Math.random() * 220, 0.085, 'triangle', 0.17); },
+  boom: () => { glide(150, 58, 0.24, 'sine', 0.22); tone(392, 0.12, 'triangle', 0.1, 0.08); },
   /* --- Trân Châu Nổ --- */
   // nổ lách tách nhỏ (nhóm 2-3 viên), tông ngẫu nhiên nhẹ
-  pearlPop: () => { const f = 700 + Math.random() * 200; tone(f, 0.05, 'square', 0.22); tone(f * 1.5, 0.07, 'triangle', 0.3, 0.03); tone(f * 2, 0.05, 'sine', 0.2, 0.06); },
+  pearlPop: () => { const f = 650 + Math.random() * 180; glide(f, f * 0.72, 0.055, 'sine', 0.16); tone(f * 1.5, 0.06, 'triangle', 0.11, 0.025); },
   // nổ vừa (4-5 viên): tông cao hơn, 4 nốt tách liên tiếp
-  pearlPop2: () => [880, 1100, 1320, 1760].forEach((f, i) => tone(f * (1 + Math.random() * 0.03), 0.06, i % 2 ? 'triangle' : 'square', 0.28, i * 0.035)),
+  pearlPop2: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f * (1 + Math.random() * 0.02), 0.06, 'sine', 0.13, i * 0.04)),
   // nổ lớn (≥6 viên)
-  pearlBoom: () => { tone(110, 0.22, 'sawtooth', 0.45); tone(70, 0.3, 'square', 0.3, 0.03); [1046, 1318, 1568, 2093].forEach((f, i) => tone(f, 0.12, 'triangle', 0.35, 0.05 + i * 0.045)); },
-  fly: () => { [400, 520, 680].forEach((f, i) => tone(f, 0.07, 'sine', 0.16, i * 0.03)); },
-  swoosh: () => { [900, 700, 520, 380].forEach((f, i) => tone(f, 0.06, 'sine', 0.14, i * 0.025)); },
-  bounce: () => { tone(220, 0.07, 'sine', 0.35); tone(330, 0.05, 'triangle', 0.18, 0.05); },
+  pearlBoom: () => { glide(130, 55, 0.2, 'sine', 0.22); [784, 988, 1175, 1568].forEach((f, i) => tone(f, 0.11, 'triangle', 0.14, 0.06 + i * 0.05)); },
+  fly: () => { [440, 587, 740].forEach((f, i) => tone(f, 0.06, 'sine', 0.09, i * 0.04)); },
+  swoosh: () => glide(760, 300, 0.18, 'sine', 0.08),
+  bounce: () => { glide(280, 190, 0.07, 'sine', 0.15); tone(440, 0.05, 'triangle', 0.07, 0.045); },
   // arpeggio combo tăng dần theo cấp: gọi sfx('combo2') ... sfx('combo6')
-  combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, 'triangle', 0.4, i * 0.06)),
+  combo: () => [659, 784, 988].forEach((f, i) => tone(f, 0.1, 'triangle', 0.16, i * 0.065)),
   ...Object.fromEntries([2, 3, 4, 5, 6].map((l) => ['combo' + l, () => { const b = 523 * Math.pow(1.122, l * 2); [1, 1.25, 1.5, 2, 2.5].slice(0, l + 1).forEach((m, i) => tone(b * m, 0.12, 'triangle', 0.42, i * 0.055)); }])),
   collect: () => { tone(1200, 0.06, 'sine', 0.3); tone(1600, 0.1, 'sine', 0.3, 0.06); },
   win: () => { [523, 659, 784, 1046, 784, 1046, 1318].forEach((f, i) => tone(f, 0.18, 'triangle', 0.55, i * 0.09)); tone(1568, 0.5, 'sine', 0.3, 0.65); },
   lose: () => { [440, 392, 330, 262].forEach((f, i) => tone(f, 0.2, 'sine', 0.5, i * 0.13)); },
+};
+const SFX_RULES = {
+  click: [65, 0, 90, 0.48], pop: [90, 1, 140, 0.62], cup: [130, 2, 170, 0.62], pour: [650, 0, 180, 0.42],
+  drop: [110, 2, 150, 0.62], seal: [180, 3, 320, 0.75], ding: [180, 4, 330, 0.72], coin: [130, 2, 190, 0.55],
+  reward: [250, 4, 620, 0.76], success: [220, 4, 430, 0.72], error: [180, 3, 300, 0.62], sad: [250, 2, 430, 0.55],
+  sparkle: [150, 2, 230, 0.52], unlock: [300, 4, 470, 0.72], level: [350, 4, 610, 0.68], bell: [250, 3, 430, 0.68],
+  match: [70, 1, 130, 0.58], boom: [260, 3, 430, 0.7], pearlPop: [70, 1, 170, 0.5], pearlPop2: [100, 2, 260, 0.58],
+  pearlBoom: [280, 4, 440, 0.72], fly: [100, 1, 200, 0.48], swoosh: [130, 1, 230, 0.45], bounce: [100, 1, 160, 0.5],
+  combo: [180, 3, 360, 0.62], collect: [150, 2, 260, 0.6], win: [600, 5, 1450, 0.74], lose: [400, 3, 700, 0.62],
 };
 /* ===== Rung (haptics): mức 0 tắt · 1 nhẹ · 2 vừa · 3 mạnh ===== */
 const HAPTIC_MUL = [0, 0.6, 1, 1.7];
@@ -315,7 +336,46 @@ export function buzz(pattern = 10) {
   const arr = Array.isArray(pattern) ? pattern : [pattern];
   try { navigator.vibrate(arr.map((v, i) => (i % 2 === 0 ? Math.max(4, Math.round(v * m)) : v))); } catch (e) { /* thiết bị không hỗ trợ */ }
 }
-export const sfx = (n) => { buzz(HAPTIC[n] ?? 8); if (unlocked && S.settings.sfx > 0) SFX[n]?.(); };
+function playSfx(n) {
+  const sound = SFX[n];
+  if (!sound || !unlocked || S.settings.sfx <= 0) return;
+  const [cooldown, priority, duration, volume] = SFX_RULES[n] || (n.startsWith('combo') ? [180, 3, 420, 0.62] : [100, 1, 220, 0.55]);
+  const now = performance.now();
+  if (now - (sfxLastPlayed[n] ?? -Infinity) < cooldown) return;
+  // Don't let tiny interface taps or ambient pour ticks interrupt an important cue.
+  if (now < sfxActiveUntil && priority < sfxPriority) return;
+  const c = ctx();
+  if (!c || !master) return;
+  if (sfxBus) {
+    sfxBus.gain.cancelScheduledValues(c.currentTime);
+    sfxBus.gain.setTargetAtTime(0.0001, c.currentTime, 0.018);
+  }
+  const bus = c.createGain();
+  bus.gain.setValueAtTime(volume, c.currentTime);
+  bus.connect(master);
+  sfxBus = bus; sfxActiveUntil = now + duration; sfxPriority = priority;
+  sfxLastPlayed[n] = now;
+  sound();
+  setTimeout(() => {
+    if (sfxBus === bus) {
+      bus.gain.setTargetAtTime(0.0001, c.currentTime, 0.035);
+      sfxBus = null; sfxPriority = -1; sfxActiveUntil = 0;
+    }
+    setTimeout(() => { try { bus.disconnect(); } catch (e) { /* đã ngắt */ } }, 120);
+  }, duration);
+}
+export const sfx = (n) => {
+  buzz(HAPTIC[n] ?? 8);
+  if (!unlocked || S.settings.sfx <= 0) return;
+  // Generic click feedback waits briefly so a semantic action sound can replace it.
+  if (n === 'click') {
+    if (pendingClick) return;
+    pendingClick = setTimeout(() => { pendingClick = null; playSfx('click'); }, 38);
+    return;
+  }
+  if (pendingClick) { clearTimeout(pendingClick); pendingClick = null; }
+  playSfx(n);
+};
 const STYLES = {
   lofi: { ms: 420, mel: [523, 0, 659, 0, 587, 0, 523, 0, 440, 0, 523, 659, 587, 0, 0, 0], bass: [131, 0, 0, 0, 175, 0, 0, 0, 147, 0, 0, 0, 196, 0, 0, 0], type: 'sine' },
   vui: { ms: 260, mel: [659, 784, 880, 784, 659, 523, 587, 659, 698, 880, 784, 698, 659, 587, 523, 0], bass: [262, 0, 262, 0, 349, 0, 349, 0, 294, 0, 294, 0, 392, 0, 392, 0], type: 'triangle' },
