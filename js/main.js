@@ -14,6 +14,7 @@ import { renderSell, frameSell } from './brewui.js';
 import { renderHome, renderBoard, renderTiles, renderNav, renderPanel, renderCta, bindCta, goTab, openPanelModal } from './home.js';
 import { tickCountdown } from './panels2.js';
 import { crushDebug, pearlDebug } from './minigames.js';
+import { debugEvents } from './events.js';
 import { armTutorial, maybeTutorial, replayTutorial } from './tutorial.js';
 
 function renderView() {
@@ -80,6 +81,7 @@ function exposeDebug() {
     nextDay: () => { G.nextDay(); },
     reset: () => { wipeSave(); emit('reset'); },
     save: saveGame,
+    events: debugEvents,
     crush: crushDebug,
     pearl: pearlDebug,
   };

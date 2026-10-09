@@ -2,7 +2,7 @@
  * Menu Home (3/3): Vườn cây · Thú cưng · Khởi nghiệp · Sảnh Trà · Đánh giá · Tổng kết · Bạn bè · Sưu tầm.
  */
 import {
-  ITEMS, SEEDS, PLOTS, PLOTS_START, plotCost, PETS, PET_CARE, PET_DECOR, LOCATIONS, LOCATION_COST, SEASONS, DAY_EVENTS, GACHA, SECRET_RECIPES, GIFT_COST, NPC_FRIENDS, WEATHERS,
+  ITEMS, SEEDS, PLOTS, PLOTS_START, plotCost, PETS, PET_CARE, PET_DECOR, LOCATIONS, LOCATION_COST, SEASONS, DAY_EVENTS, GACHA, SECRET_RECIPES, GIFT_COST, NPC_FRIENDS, WEATHERS, SHARE_URL,
 } from './config.js';
 import {
   S, markDirty, requestSave, esc, fmt, fmtK, sum, sfx, clamp, rand, randInt, pick, chance, wpick, emit, $,
@@ -203,22 +203,35 @@ const vmTxt = (lo, la, t, cls, rot) => { const [x, y] = vmXY([lo, la]); return `
 const vmMt = (p) => { const [x, y] = vmXY(p); return `M${vmF(x - 1.3)} ${vmF(y + 0.9)}L${vmF(x - 0.2)} ${vmF(y - 1)}L${vmF(x + 0.5)} ${vmF(y + 0.1)}L${vmF(x + 0.9)} ${vmF(y - 0.5)}L${vmF(x + 1.5)} ${vmF(y + 0.9)}Z`; };
 const vmDot = (p, r) => { const [x, y] = vmXY(p); return `<circle cx="${vmF(x)}" cy="${vmF(y)}" r="${r}"/>`; };
 const VM_PIN_LBL = { goc: ['Tiệm gốc', 'r'], hanoi: ['Hà Nội', 'l'], sapa: ['Sa Pa', 'r'], halong: ['Hạ Long', 'r'], hue: ['Huế', 'l'], danang: ['Đà Nẵng', 'r'], bmt: ['Buôn Ma Thuột', 'r'], hcm: ['TP.HCM', 'r'], canTho: ['Cần Thơ', 'l'], caMau: ['Cà Mau', 'r'], hoangSa: ['Hoàng Sa', 'r'] };
+const vmStar = (R) => Array.from({ length: 10 }, (_, i) => { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? R * 0.382 : R; return vmF(Math.cos(a) * r) + ',' + vmF(Math.sin(a) * r); }).join(' ');
+const vmFlag = (lo, la) => { const [x, y] = vmXY([lo, la]); return `<g class="vflag" transform="translate(${vmF(x)} ${vmF(y)})"><path d="M0 0V-4.2" class="pole"/><g><rect x="0" y="-4.2" width="3.4" height="2.3"/><polygon points="${vmStar(0.7).replace(/(-?[d.]+),(-?[d.]+)/g, (m, a, b) => vmF(+a + 1.7) + ',' + vmF(+b - 3.05))}"/></g></g>`; };
 const vmapSvg = () => `<svg viewBox="0 0 100 ${VM_H}" role="img" aria-label="Bản đồ Việt Nam">
-  <defs><pattern id="vwave" width="7" height="5" patternUnits="userSpaceOnUse"><path d="M0 1.6Q1.75 0 3.5 1.6T7 1.6M-3.5 4.1Q-1.75 2.5 0 4.1T3.5 4.1T7 4.1" class="vwv"/></pattern></defs>
+  <defs>
+    <linearGradient id="vfl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ee3a2f"/><stop offset="1" stop-color="#b3150f"/></linearGradient>
+    <linearGradient id="vsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8fb8"/><stop offset=".5" stop-color="#1b6a9c"/><stop offset="1" stop-color="#0d3a6b"/></linearGradient>
+    <clipPath id="vclip"><path d="${VM_SEA}"/></clipPath>
+    <pattern id="vwave" width="7" height="5" patternUnits="userSpaceOnUse"><path d="M0 1.6Q1.75 0 3.5 1.6T7 1.6M-3.5 4.1Q-1.75 2.5 0 4.1T3.5 4.1T7 4.1" class="vwv"/></pattern></defs>
   <rect width="100" height="${VM_H}" class="vnb"/>
   ${vmTxt(103.6, 23.3, 'TRUNG QUỐC', 'nb')}${vmTxt(105.3, 17.6, 'LÀO', 'nb', -62)}${vmTxt(102.95, 15.2, 'THÁI LAN', 'nb', -90)}${vmTxt(105.0, 12.2, 'CAMPUCHIA', 'nb')}
-  <path d="${VM_SEA}" class="vsea"/><path d="${VM_SEA}" fill="url(#vwave)"/>
+  <path d="${VM_SEA}" class="vsea"/><g clip-path="url(#vclip)"><rect class="vwvm" x="-7" width="114" height="${VM_H}" fill="url(#vwave)"/></g>
+  <g class="vcloud c1"><ellipse cx="0" cy="0" rx="6" ry="1.8"/><ellipse cx="3" cy="-1.2" rx="3.6" ry="1.8"/><ellipse cx="-3" cy="-.8" rx="3" ry="1.4"/></g>
+  <g class="vcloud c2"><ellipse cx="0" cy="0" rx="5" ry="1.5"/><ellipse cx="2.4" cy="-1" rx="3" ry="1.5"/></g>
   <path d="${vmLoop(VM_HAINAN)}" class="vnb2"/>${vmTxt(109.7, 19.1, 'Hải Nam', 'nb s')}
   ${vmTxt(112.3, 13.6, 'BIỂN ĐÔNG', 'sea')}${vmTxt(107.35, 18.9, 'Vịnh Bắc Bộ', 'sea s')}${vmTxt(103.2, 9.2, 'Vịnh Thái Lan', 'sea s')}
   <path d="${VM_LAND}" class="vglow"/>
   <path d="${VM_LAND}" class="land"/>
+  <g class="vstar" transform="translate(${vmF(vmXY([104.65, 19.4])[0])} ${vmF(vmXY([104.65, 19.4])[1])})"><polygon points="${vmStar(4.6)}"/></g>
   <path d="${vmLoop(VM_PQ)}" class="land isl-l"/><path d="${vmLoop(VM_CD)}" class="land isl-l"/>
   ${VM_RIVERS.map((r, i) => `<path d="${vmLine(r)}" class="river${i === 3 ? ' dim' : ''}"/>`).join('')}
   <path d="${VM_MTS.map(vmMt).join('')}" class="mts"/>
   <g class="isl">${VM_ISL.map((p) => vmDot(p, 0.55)).join('')}</g><g class="isl">${VM_TS.map((p) => vmDot(p, 0.55)).join('')}</g>
+  ${vmFlag(111.6, 16.3)}${vmFlag(113.2, 9.6)}
+  <g class="vboat b1" transform="translate(${vmPt([111.0, 12.2])})"><g><path d="M-2.2 0.4H2.2L1.4 1.6H-1.4Z" class="hull"/><path d="M0 -3.4V.2M0.3 -3.2L2 0H0.3Z" class="sail"/></g></g>
+  <g class="vboat b2" transform="translate(${vmPt([103.0, 9.7])})"><g><path d="M-2.2 0.4H2.2L1.4 1.6H-1.4Z" class="hull"/><path d="M0 -3.4V.2M0.3 -3.2L2 0H0.3Z" class="sail"/></g></g>
+  <g class="vbird"><path d="M0 0Q1 -1.2 2 0Q3 -1.2 4 0"/><path d="M5 2Q5.8 1 6.6 2Q7.4 1 8.2 2"/></g>
   ${vmTxt(111.5, 15.3, 'Q.đ Hoàng Sa', 'sea s')}${vmTxt(112.7, 8.55, 'Q.đ Trường Sa', 'sea s')}
   ${vmTxt(103.3, 21.55, 'Hoàng Liên Sơn', 'mt s', 0)}${vmTxt(107.2, 14.35, 'Trường Sơn', 'mt s', -72)}${vmTxt(106.1, 21.7, 'S. Hồng', 'rv s', -38)}${vmTxt(104.75, 11.15, 'S. Mê Kông', 'rv s', 0)}${vmTxt(103.6, 10.85, 'Phú Quốc', 'nb s')}
-  <g class="cmp" transform="translate(89 13)"><circle r="6.2" class="cmp-r"/><path d="M0 -6L1.5 0L0 6L-1.5 0Z" class="cmp-n"/><path d="M-6 0L0 -1.5L6 0L0 1.5Z" class="cmp-e"/><text y="-8" class="vt cmp-t">B</text></g>
+  <g class="cmp" transform="translate(89 13)"><circle r="6.2" class="cmp-r"/><g class="cmp-spin"><path d="M0 -6L1.5 0L0 6L-1.5 0Z" class="cmp-n"/><path d="M-6 0L0 -1.5L6 0L0 1.5Z" class="cmp-e"/></g><text y="-8" class="vt cmp-t">B</text></g>
   <g class="scl" transform="translate(36 131)"><path d="M0 0H14.4M0 -1V1M7.2 -.7V.7M14.4 -1V1"/><text x="7.2" y="-2" class="vt s">200 km</text></g>
 </svg>`;
 const VM_LEGEND = '<div class="vm-legend"><span><i class="lg-dot"></i>Quán trà</span><span><i class="lg-isl"></i>Đảo</span><span><i class="lg-rv"></i>Sông</span><span><i class="lg-mt"></i>Núi</span></div>';
@@ -303,12 +316,30 @@ const tongket = {
 };
 
 /* ===== BẠN BÈ ===== */
+const SHARE_BTNS = [['zalo', '💬', 'Zalo'], ['fb', '📘', 'Facebook'], ['x', '🐦', 'X'], ['tg', '✈️', 'Telegram'], ['tt', '🎵', 'TikTok'], ['ig', '📸', 'Instagram'], ['native', '📤', 'Chia sẻ…'], ['copy', '🔗', 'Sao chép']];
+function shareUrl() {
+  const { protocol, hostname, origin, pathname } = location;
+  return (protocol === 'http:' || protocol === 'https:') && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(hostname) && !/\.androidplatform\.net$/.test(hostname) ? origin + pathname : SHARE_URL;
+}
+const shareText = () => `🧋 Ghé "${S.shopName}" trong game Tiệm Trà Mơ Ước nhé! Nhập mã bạn bè ${S.friends.code} để cùng nhận quà.`;
+async function shareCopyFallback(msg) {
+  const full = shareText() + ' ' + shareUrl();
+  if (await copyText(full)) toast(msg, 'ok'); else alertBox('Nội dung chia sẻ', `<input class="field" readonly value="${esc(full)}" aria-label="Nội dung chia sẻ">Nhấn giữ để sao chép rồi dán vào bài đăng.`);
+}
+function shareReward() {
+  const f = S.friends;
+  if (f.shareDay === S.day) return;
+  f.shareDay = S.day; S.money += 5000; sfx('coin'); markDirty('hud', 'panel'); requestSave();
+  toast(`🎁 Thưởng chia sẻ lần đầu trong ngày +${fmtK(5000)}`, 'gold');
+}
 const banbe = {
   html() {
     const f = S.friends;
     const list = [...NPC_FRIENDS.map((x) => ({ ...x })), ...f.list];
     const board = [{ id: 'me', name: S.shopName + ' (Bạn)', av: '⭐', rich: S.money, rating: S.rating }, ...list].sort((a, b) => b.rich - a.rich);
     return `<div class="codecard"><small>Mã mời của bạn</small><b>${f.code}</b><button class="btn soft sm" data-act="copycode">📋 Sao chép</button></div>
+      <div class="sharebox"><h5>📣 Chia sẻ trò chơi</h5><p>Mời bạn bè cùng mở tiệm trà! ${f.shareDay === S.day ? 'Hôm nay bạn đã nhận thưởng chia sẻ.' : 'Chia sẻ lần đầu mỗi ngày nhận +' + fmtK(5000) + '.'}</p>
+        <div class="sh-grid">${SHARE_BTNS.map(([id, ic, nm]) => `<button class="sh-btn ${id}" data-act="share" data-id="${id}"><i>${ic}</i>${nm}</button>`).join('')}</div></div>
       <div class="addf"><input id="friendCode" placeholder="Nhập mã bạn bè (TTN-XXXXX)" aria-label="Mã bạn bè"><button class="btn pri sm" data-act="addf">Thêm bạn</button></div>
       <h5 class="grp">👥 Danh sách bạn bè (${list.length})</h5>
       ${list.map((x) => `<div class="frow"><span class="r-av">${x.av}</span><div class="grow"><b>${esc(x.name)}</b><small>⭐ ${x.rating.toFixed(1)} · 💰 ${fmtK(x.rich)}</small></div><button class="btn ${f.gifted[x.id] === S.day ? 'ghost' : 'gold'} sm" data-act="visit" data-id="${x.id}" ${f.gifted[x.id] === S.day ? 'disabled' : ''}>${f.gifted[x.id] === S.day ? 'Đã thăm' : '🎁 Thăm quán'}</button></div>`).join('')}
@@ -316,6 +347,30 @@ const banbe = {
   },
   acts: {
     copycode: async () => { if (await copyText(S.friends.code)) toast('Đã sao chép mã mời!', 'ok'); else alertBox('Mã mời của bạn', `<input class="field" readonly value="${esc(S.friends.code)}" aria-label="Mã mời">Nhấn giữ mã để sao chép.`); },
+    share: async (t) => {
+      const id = t.dataset.id, url = shareUrl(), txt = shareText(), eu = encodeURIComponent(url), et = encodeURIComponent(txt);
+      if (id === 'copy') { await shareCopyFallback('Đã sao chép liên kết mời!'); return shareReward(); }
+      if (id === 'native') {
+        if (!navigator.share) { await shareCopyFallback('Đã sao chép liên kết mời!'); return shareReward(); }
+        try { await navigator.share({ title: 'Tiệm Trà Mơ Ước', text: txt, url }); shareReward(); } catch (e) { /* người dùng huỷ */ }
+        return;
+      }
+      if (id === 'tt' || id === 'ig') {
+        const nm = id === 'tt' ? 'TikTok' : 'Instagram';
+        if (await copyText(txt + ' ' + url)) toast(`Đã sao chép! Mở ${nm} và dán vào bài đăng.`, 'ok'); else await shareCopyFallback('Đã sao chép!');
+        try { location.href = id === 'tt' ? 'snssdk1233://' : 'instagram://app'; } catch (e) { /* không có app */ }
+        return shareReward();
+      }
+      const urls = {
+        zalo: `https://zalo.me/share?url=${eu}&text=${et}`,
+        fb: `https://www.facebook.com/sharer/sharer.php?u=${eu}&quote=${et}`,
+        x: `https://twitter.com/intent/tweet?url=${eu}&text=${et}`,
+        tg: `https://t.me/share/url?url=${eu}&text=${et}`,
+      };
+      const w = window.open(urls[id], '_blank');
+      if (!w) await shareCopyFallback('Không mở được ứng dụng, đã sao chép liên kết — hãy dán vào tin nhắn.');
+      shareReward();
+    },
     addf: () => {
       const v = ($('#friendCode')?.value || '').trim().toUpperCase();
       if (!/^TTN-[A-Z0-9]{3,8}$/.test(v)) return toast('Mã bạn bè không hợp lệ (dạng TTN-XXXXX)', 'err');

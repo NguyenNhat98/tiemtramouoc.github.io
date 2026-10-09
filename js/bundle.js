@@ -203,6 +203,7 @@
     }
   };
   var LOCATION_COST = 1e6;
+  var SHARE_URL = "https://nguyennhat98.github.io/";
   var SEASONS = {
     spring: { name: "Xu\xE2n", icon: "\u{1F338}", temp: [20, 28], pool: { sunny: 40, cloudy: 30, rain: 25, hot: 0, cold: 5 } },
     summer: { name: "H\u1EA1", icon: "\u{1F31E}", temp: [28, 38], pool: { sunny: 35, cloudy: 15, rain: 18, hot: 32, cold: 0 } },
@@ -305,6 +306,61 @@
       w: 3,
       lines: ["Cho m\xECnh 1 ly {drink} {size}{tops}, m\xECnh \u0111ang quay review \u0111\xF3 nha!", "M\xECnh l\u1EA5y {drink} {size}{tops}, m\xECnh s\u1EBD ch\u1EA5m \u0111i\u1EC3m t\u1EEBng chi ti\u1EBFt nh\xE9!"]
     },
+    idol: {
+      name: "Idol / Streamer",
+      tag: "\u{1F3A4} Idol",
+      avatars: ["\u{1F469}\u200D\u{1F3A4}", "\u{1F933}"],
+      patience: 0.8,
+      bill: 1.1,
+      tip: 1.3,
+      hard: 0.3,
+      w: 7,
+      lines: ["Cho m\xECnh 1 ly {drink} {size}{tops} nha, m\xECnh \u0111ang livestream n\xEAn pha xinh xinh gi\xFAp m\xECnh!", "Ly {drink} {size}{tops} nh\xE9, nh\u1EDB cho ly \u0111\u1EB9p \u0111\u1EC3 m\xECnh quay clip \xE1!"]
+    },
+    gamer: {
+      name: "Game th\u1EE7",
+      tag: "\u{1F3A7} Game th\u1EE7",
+      avatars: ["\u{1F3A7}", "\u{1F3AE}"],
+      patience: 0.85,
+      bill: 1,
+      tip: 0.6,
+      hard: 0.25,
+      w: 9,
+      lines: ["Cho m\xECnh 1 ly {drink} {size}{tops} nh\xE9, \u0111ang k\u1EB9t tr\u1EADn, nhanh gi\xFAp m\xECnh!", "M\u1ED9t {drink} {size}{tops} \u0111i ch\u1EE7 qu\xE1n, m\xECnh th\u1EE9c \u0111\xEAm leo rank \u0111\xE2y."]
+    },
+    congNhan: {
+      name: "Th\u1EE3 & c\xF4ng nh\xE2n",
+      tag: "\u{1F477} C\xF4ng nh\xE2n",
+      avatars: ["\u{1F477}", "\u{1F9D1}\u200D\u{1F527}"],
+      patience: 0.9,
+      bill: 0.95,
+      tip: 0.9,
+      hard: 0.1,
+      w: 9,
+      lines: ["Cho anh 1 ly {drink} {size}{tops}, tr\u1EDDi n\xF3ng qu\xE1, nhi\u1EC1u \u0111\xE1 nha em!", "Em \u01A1i, m\u1ED9t {drink} {size}{tops}, anh gi\u1EA3i lao 10 ph\xFAt th\xF4i."]
+    },
+    shipper: {
+      name: "Shipper",
+      tag: "\u{1F6F5} Shipper",
+      avatars: ["\u{1F6F5}", "\u{1F9E2}"],
+      patience: 0.55,
+      bill: 1,
+      tip: 0.7,
+      hard: 0.3,
+      w: 8,
+      lines: ["Cho m\xECnh 1 ly {drink} {size}{tops}, nhanh nhanh gi\xFAp m\xECnh, c\xF2n \u0111\u01A1n \u0111ang giao!", "M\u1ED9t {drink} {size}{tops} mang \u0111i, m\xECnh g\u1EA5p l\u1EAFm!"]
+    },
+    giaoVien: {
+      name: "C\xF4 gi\xE1o",
+      tag: "\u{1F4DA} C\xF4 gi\xE1o",
+      avatars: ["\u{1F469}\u200D\u{1F3EB}", "\u{1F4DA}"],
+      patience: 1.1,
+      bill: 1,
+      tip: 1,
+      hard: 0.15,
+      w: 7,
+      lines: ["C\xF4 l\u1EA5y 1 ly {drink} {size}{tops} nh\xE9 em, \xEDt ng\u1ECDt th\xF4i.", "Cho c\xF4 m\u1ED9t {drink} {size}{tops}, c\xF4 ngh\u1EC9 gi\u1EEFa ti\u1EBFt gh\xE9 qua."]
+    },
     be: {
       name: "B\xE9 tan h\u1ECDc",
       tag: "\u{1F388} B\xE9",
@@ -341,7 +397,10 @@
     { id: "tang", icon: "\u{1F3EC}", name: "N\xE2ng t\u1EA7ng", tiers: [{ n: "T\u1EA7ng l\u1EEDng", c: 2e6, d: "Ph\u1EE5c v\u1EE5 c\xF9ng l\xFAc +10 kh\xE1ch/ng\xE0y" }, { n: "T\u1EA7ng 2 r\u1ED9ng r\xE3i", c: 15e6, d: "Th\xEAm 20 kh\xE1ch/ng\xE0y d\u1EF1 ki\u1EBFn" }, { n: "S\xE2n th\u01B0\u1EE3ng chill", c: 5e7, d: "Th\xEAm 35 kh\xE1ch/ng\xE0y d\u1EF1 ki\u1EBFn" }], key: "extraCust", vals: [4, 8, 14] },
     { id: "mayLanh", icon: "\u{1F9CA}", name: "M\xE1y l\u1EA1nh", tiers: [{ n: "Qu\u1EA1t tr\u1EA7n h\u01A1i n\u01B0\u1EDBc", c: 1e6, d: "Kh\xE1ch ki\xEAn nh\u1EABn h\u01A1n 8%" }, { n: "M\xE1y l\u1EA1nh treo t\u01B0\u1EDDng", c: 8e6, d: "Ki\xEAn nh\u1EABn +15%" }, { n: "H\u1EC7 th\u1ED1ng \u0111i\u1EC1u h\xF2a trung t\xE2m", c: 3e7, d: "Ki\xEAn nh\u1EABn +25%" }], key: "patience", vals: [0.08, 0.15, 0.25], util: [0.05, 0.1, 0.2] },
     { id: "nhanDien", icon: "\u{1F3F7}\uFE0F", name: "B\u1ED9 nh\u1EADn di\u1EC7n th\u01B0\u01A1ng hi\u1EC7u", tiers: [{ n: "Tem ly & menu th\u01B0\u01A1ng hi\u1EC7u", c: 7e5, d: "Ti\u1EC1n boa +5%, tem ly in logo" }, { n: "\u0110\u1ED3ng ph\u1EE5c & t\xFAi gi\u1EA5y", c: 6e6, d: "Ti\u1EC1n boa +10%, kh\xE1ch +3%" }, { n: "Th\u01B0\u01A1ng hi\u1EC7u chu\u1ED7i", c: 25e6, d: "Ti\u1EC1n boa +15%, kh\xE1ch +6%" }], key: "brand", vals: [0.05, 0.1, 0.15] },
-    { id: "tablet", icon: "\u{1F4DF}", name: "Tablet nh\u1EADn \u0111\u01A1n online", tiers: [{ n: "Tablet #1", c: 3e5, d: "M\u1EDF 1 app giao h\xE0ng" }, { n: "Tablet #2", c: 6e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }, { n: "Tablet #3", c: 12e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }, { n: "Tablet #4", c: 24e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }], key: "tablets", vals: [1, 2, 3, 4] }
+    { id: "tablet", icon: "\u{1F4DF}", name: "Tablet nh\u1EADn \u0111\u01A1n online", tiers: [{ n: "Tablet #1", c: 3e5, d: "M\u1EDF 1 app giao h\xE0ng" }, { n: "Tablet #2", c: 6e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }, { n: "Tablet #3", c: 12e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }, { n: "Tablet #4", c: 24e5, d: "M\u1EDF th\xEAm 1 app giao h\xE0ng" }], key: "tablets", vals: [1, 2, 3, 4] },
+    { id: "mayPhat", icon: "\u{1F50C}", name: "M\xE1y ph\xE1t \u0111i\u1EC7n", tiers: [{ n: "M\xE1y ph\xE1t \u0111i\u1EC7n mini", c: 25e5, d: "M\u1EA5t \u0111i\u1EC7n: m\xE1y \u0111\xF3ng n\u1EAFp & \u0111\xE8n v\u1EABn ch\u1EA1y (b\xECnh tr\xE0 t\u1EA1m ng\u01B0ng)" }, { n: "M\xE1y ph\xE1t \u0111i\u1EC7n c\xF4ng su\u1EA5t l\u1EDBn", c: 12e6, d: "M\u1EA5t \u0111i\u1EC7n ch\u1EC9 ch\u1EADp ch\u1EDDn 1\u20132 gi\xE2y, m\u1ECDi m\xE1y v\u1EABn ch\u1EA1y" }], key: "gen", vals: [1, 2] },
+    { id: "giayPhep", icon: "\u{1F4DC}", name: "Gi\u1EA5y ph\xE9p kinh doanh", tiers: [{ n: "Gi\u1EA5y ph\xE9p kinh doanh", c: 15e5, d: "Qua ki\u1EC3m tra gi\u1EA5y ph\xE9p \u0111\u01B0\u1EE3c th\u01B0\u1EDFng, kh\xF4ng b\u1ECB ph\u1EA1t/\u0111\xECnh ch\u1EC9" }], key: "license", vals: [1] },
+    { id: "attp", icon: "\u{1F9EA}", name: "Ch\u1EE9ng nh\u1EADn ATTP", tiers: [{ n: "Ch\u1EE9ng nh\u1EADn ATTP", c: 3e6, d: "Ki\u1EC3m tra v\u1EC7 sinh: th\u01B0\u1EDFng l\u1EDBn h\u01A1n, gi\u1EA3m 50% ti\u1EC1n ph\u1EA1t" }], key: "attp", vals: [1] }
   ];
   var APPS = [
     { id: "soppi", name: "Soppi", color: "#ff7a3d" },
@@ -592,6 +651,7 @@
       apps: {},
       staff: {},
       kpi: { shifts: 0 },
+      ev: { lic: 0, food: 0, blk: 0 },
       pet: null,
       petDecor: {},
       garden: { plots, unlocked: PLOTS_START, seeds: {}, watered: false },
@@ -699,7 +759,7 @@
   function normalize(raw) {
     const d = newState();
     const s = { ...d, ...raw };
-    for (const k of ["logo", "stamp", "cat", "garden", "social", "tax", "bank", "collection", "friends", "crush", "pearl", "settings", "kpi", "forecast"]) {
+    for (const k of ["logo", "stamp", "cat", "garden", "social", "tax", "bank", "collection", "friends", "crush", "pearl", "settings", "kpi", "forecast", "ev"]) {
       if (d[k] && typeof d[k] === "object" && !Array.isArray(d[k])) s[k] = { ...d[k], ...raw[k] || {} };
     }
     for (const k of ["stock", "unlocked", "onMenu", "prices"]) s[k] = { ...d[k], ...raw[k] || {} };
@@ -996,6 +1056,10 @@
     },
     lose: () => {
       [440, 392, 330, 262].forEach((f, i) => tone(f, 0.2, "sine", 0.5, i * 0.13));
+    },
+    alarm: () => {
+      [880, 620, 880, 620].forEach((f, i) => tone(f, 0.16, "square", 0.12, i * 0.18));
+      glide(180, 70, 0.5, "sawtooth", 0.12, 0.05);
     }
   };
   var SFX_RULES = {
@@ -1023,6 +1087,7 @@
     fly: [100, 1, 200, 0.48],
     swoosh: [130, 1, 230, 0.45],
     bounce: [100, 1, 160, 0.5],
+    alarm: [600, 4, 900, 0.7],
     combo: [180, 3, 360, 0.62],
     collect: [150, 2, 260, 0.6],
     win: [600, 5, 1450, 0.74],
@@ -1047,6 +1112,7 @@
     match: 12,
     boom: [40, 20, 60],
     pour: 0,
+    alarm: [50, 40, 50, 40, 90],
     combo: [14, 24, 20],
     bounce: 8,
     fly: 6,
@@ -1693,7 +1759,7 @@
   function expectedCustomers() {
     const b = bonus();
     const rating = 0.8 + clamp(S.rating, 1, 5) * 0.05;
-    const base = 8 + 0.5 * Math.min(S.day, 60) + b.extraCust * 0.5;
+    const base = 14 + 0.8 * Math.min(S.day, 60) + b.extraCust * 0.5;
     const wealth = 1 + clamp(Math.log10(Math.max(S.money, 1e3) / 1e3) * 0.12, 0, 0.6);
     const staffBoost = 1 + Math.min(0.9, staffCount() * 0.15);
     return Math.max(4, Math.round(base * (1 + b.traffic) * priceFactor() * rating * wealth * staffBoost));
@@ -1715,10 +1781,13 @@
     evaluate: () => evaluate,
     frontCustomer: () => frontCustomer,
     genPost: () => genPost,
+    isWrongOrder: () => isWrongOrder,
     makeOrder: () => makeOrder,
     nextDay: () => nextDay,
     orderPrice: () => orderPrice,
     pickCup: () => pickCup,
+    pushReview: () => pushReview,
+    rejectCustomer: () => rejectCustomer,
     resetShiftRuntime: () => resetShiftRuntime,
     restoreShiftRuntime: () => restoreShiftRuntime,
     sealCup: () => sealCup,
@@ -1730,707 +1799,6 @@
     trashCup: () => trashCup,
     updateShift: () => updateShift
   });
-  var SH = { on: false };
-  registerSaveHook(() => {
-    S.shiftRuntime = S.phase === "sell" && SH.on ? JSON.parse(JSON.stringify(SH)) : null;
-  });
-  function restoreShiftRuntime() {
-    const saved = S.shiftRuntime;
-    SH.on = false;
-    SH.fin = false;
-    if (S.phase !== "sell") return false;
-    if (!saved || !saved.on || !Number.isFinite(saved.total) || saved.total <= 0 || !Number.isFinite(saved.t) || !Array.isArray(saved.queue) || !Array.isArray(saved.plan) || !Array.isArray(saved.jobs) || !Array.isArray(saved.tables) || !Array.isArray(saved.onlineQ)) {
-      S.phase = "home";
-      S.shiftRuntime = null;
-      return false;
-    }
-    Object.assign(SH, saved);
-    if (SH.board) SH.board.pouring = false;
-    cid = Math.max(cid, ...SH.queue.map((c) => c.id + 1), ...SH.onlineQ.map((c) => (c.id || 0) + 1));
-    return true;
-  }
-  registerRestoreHook(restoreShiftRuntime);
-  function spawnPlan(n, total) {
-    const seg = [[10, 11, 1], [11, 13, 1.7], [13, 17, 1], [17, 19, 1.7], [19, 22, 1.1]];
-    const tot = sum(seg, (s) => (s[1] - s[0]) * s[2]);
-    const hourAt = (q) => {
-      let r = q * tot;
-      for (const [a, b, w] of seg) {
-        const m = (b - a) * w;
-        if (r <= m) return a + r / w;
-        r -= m;
-      }
-      return 22;
-    };
-    const times = [];
-    const minGap = Math.max(5, total / Math.max(n, 1) * 0.35);
-    for (let i = 0; i < n; i++) {
-      const q = clamp((i + 0.5 + rand(-0.28, 0.28)) / n, 0, 0.999);
-      let t = (hourAt(q) - 10) / 12 * total * 0.94 + 4;
-      if (times.length && t - times[times.length - 1] < minGap) t = times[times.length - 1] + minGap;
-      times.push(t);
-    }
-    return times;
-  }
-  function makeOrder() {
-    const b = bonus();
-    const w = weatherOf();
-    const ev = eventOf();
-    const tw = {};
-    for (const t of TEAS) {
-      if (!S.onMenu[t] || !S.unlocked[t]) continue;
-      let x = priceWeight(t) * (stockQty(t) > 0 ? 1 : 0.2);
-      const tp = ITEMS[t].temp;
-      if ((w.coldBias || ev.coldBias) && tp === "cold") x *= 1.5;
-      if (w.warmBias && tp === "warm") x *= 1.8;
-      if (ev.hotItem === t) x *= 2;
-      tw[t] = x;
-    }
-    const tea = wpick(tw) || TEAS.find((t) => S.onMenu[t]) || "traSua";
-    const size = chance(0.3 * sizeLWeight() * (w.coldBias || ev.coldBias ? 1.5 : 1)) ? "L" : "M";
-    let flavor = null;
-    const fw = {};
-    for (const f of FLAVORS) if (S.onMenu[f] && S.unlocked[f]) fw[f] = priceWeight(f) * (stockQty(f) > 0 ? 1 : 0.15);
-    if (Object.keys(fw).length && chance(0.45)) flavor = wpick(fw) || null;
-    const tw2 = {};
-    for (const t of TOPS) if (S.onMenu[t] && S.unlocked[t]) tw2[t] = priceWeight(t) * (stockQty(t) > 0 ? 1 : 0.15);
-    const nT = Math.min(Object.keys(tw2).length, +wpick({ 0: 20, 1: 45, 2: 25, 3: 8, 4: 2 }));
-    const tops = [];
-    const pool = { ...tw2 };
-    for (let i = 0; i < nT; i++) {
-      const t = wpick(pool);
-      if (!t) break;
-      tops.push(t);
-      delete pool[t];
-    }
-    return { tea, size, flavor, tops };
-  }
-  function orderText(arch, o) {
-    const drink = ITEMS[o.tea].name.toLowerCase() + (o.flavor ? ` v\u1ECB ${ITEMS[o.flavor].name.toLowerCase()}` : "");
-    const tops = o.tops.length ? " v\u1EDBi " + o.tops.map((t) => ITEMS[t].name.toLowerCase()).join(" v\xE0 ") : "";
-    return pick(arch.lines).replace("{drink}", drink).replace("{size}", "size " + o.size).replace("{tops}", tops);
-  }
-  function orderPrice(o) {
-    return priceOf(o.tea) + (o.flavor ? priceOf(o.flavor) : 0) + sum(o.tops, (t) => priceOf(t)) + (o.size === "L" ? priceOf("sizeL") : 0);
-  }
-  var cid = 1;
-  function newCustomer(opts = {}) {
-    const b = bonus();
-    const keys = {};
-    for (const [k, a2] of Object.entries(ARCHETYPES)) {
-      if (k === "reviewer" && !opts.reviewer) continue;
-      keys[k] = a2.w * (eventOf().student && (k === "sinhVien" || k === "be") ? 2 : 1);
-    }
-    const key = opts.reviewer ? "reviewer" : wpick(keys);
-    const a = ARCHETYPES[key];
-    const order = makeOrder();
-    const maxP = 62 * a.patience * (1 + b.patience) * (opts.online ? 1.2 : 1);
-    return {
-      id: cid++,
-      key,
-      tag: a.tag,
-      avatar: pick(a.avatars),
-      order,
-      text: orderText(a, order),
-      p: maxP,
-      maxP,
-      online: !!opts.online,
-      app: opts.app || null,
-      hard: a.hard + b.hardCust - b.badRev,
-      born: SH.t
-    };
-  }
-  function startShift() {
-    if (SH.on) return "\u0110ang trong ca";
-    const chk = openMissing();
-    if (!chk.canOpen) return "Ch\u01B0a \u0111\u1EE7 nguy\xEAn li\u1EC7u \u0111\u1EC3 m\u1EDF c\u1EEDa";
-    const total = S.settings.shiftMin * 60;
-    const n = expectedCustomers();
-    Object.assign(SH, {
-      on: true,
-      total,
-      t: 0,
-      hour: SHIFT_START_H,
-      queue: [],
-      sel: null,
-      plan: spawnPlan(n, total),
-      pi: 0,
-      expected: n,
-      served: 0,
-      left: 0,
-      rev: 0,
-      tip: 0,
-      board: null,
-      onlineQ: [],
-      onlineNext: rand(12, 25),
-      tables: [],
-      view: "counter",
-      staffT: {},
-      jobs: [],
-      over: 0,
-      fb: [],
-      buyT: 0,
-      fin: false,
-      critic: eventOf().critic ? { at: total * rand(0.35, 0.6), done: false } : null,
-      sat: 0,
-      cupsDone: 0
-    });
-    if (S.settings.tut && S.settings.tut.sell === false) {
-      const c = newCustomer();
-      c.order.tops = [];
-      c.order.flavor = null;
-      c.text = orderText(ARCHETYPES[c.key], c.order);
-      SH.queue.push(c);
-      SH.pi = Math.min(SH.pi + 1, SH.plan.length);
-    }
-    const nt = bonus().tables;
-    for (let i = 0; i < nt; i++) SH.tables.push({ s: "free", t: 0 });
-    S.phase = "sell";
-    S.started = true;
-    markDirty("view", "hud");
-    emit("shift:start");
-    return null;
-  }
-  var frontCustomer = () => SH.queue.find((c) => c.id === SH.sel) || SH.queue[0] || null;
-  function selectCustomer(id) {
-    if (!SH.queue.some((c) => c.id === id)) return;
-    SH.sel = id;
-    emit("sel");
-  }
-  function removeCust(c) {
-    SH.queue = SH.queue.filter((x) => x !== c);
-    if (SH.sel === c.id) SH.sel = null;
-    SH.jobs = SH.jobs.filter((j) => j.cid !== c.id);
-    emit("queue");
-  }
-  function customerLeaves(c, why) {
-    removeCust(c);
-    SH.left++;
-    S.today.left++;
-    if (why === "patience") {
-      const stars = chance(0.5) ? 1 : 2;
-      pushReview(c, stars, "Ch\u1EDD l\xE2u qu\xE1 n\xEAn m\xECnh \u0111\xE0nh b\u1ECF v\u1EC1...");
-      emit("left", c);
-    }
-  }
-  var REV_TEXT = {
-    5: ["Ly tr\xE0 chu\u1EA9n v\u1ECB lu\xF4n, nh\xE2n vi\xEAn d\u1EC5 th\u01B0\u01A1ng, s\u1EBD quay l\u1EA1i nh\xE9!", "Pha nhanh, \u0111\xFAng order t\u1EEBng ch\xFAt m\u1ED9t. 10 \u0111i\u1EC3m!", "Qu\xE1n xinh, tr\xE0 ngon, topping t\u01B0\u01A1i. Ch\u1EA5m 5 sao!"],
-    4: ["Tr\xE0 ngon, ch\u1EDD h\u01A1i l\xE2u m\u1ED9t ch\xFAt nh\u01B0ng x\u1EE9ng \u0111\xE1ng.", "\u1ED4n \xE1p, l\u1EA7n sau m\xECnh s\u1EBD gh\xE9 ti\u1EBFp.", "Ly \u0111\u1EB9p, v\u1ECB \u1ED5n, gi\xE1 h\u1EE3p l\xFD."],
-    3: ["T\u1EA1m \u0111\u01B0\u1EE3c, mong l\u1EA7n sau chu\u1EA9n v\u1ECB h\u01A1n.", "H\u01A1i nh\u1EA1t so v\u1EDBi mong \u0111\u1EE3i, ly c\u0169ng ch\u01B0a \u0111\u1EA7y.", "B\xECnh th\u01B0\u1EDDng, kh\xF4ng c\xF3 g\xEC \u0111\u1EB7c bi\u1EC7t."],
-    2: ["Ly b\u1ECB sai so v\u1EDBi order c\u1EE7a m\xECnh r\u1ED3i \u{1F615}", "Ch\u1EDD kh\xE1 l\xE2u m\xE0 ly l\u1EA1i sai topping.", "H\u01A1i th\u1EA5t v\u1ECDng, qu\xE1n c\u1EA7n c\u1EA9n th\u1EADn h\u01A1n."],
-    1: ["Sai h\u1EB3n m\xF3n m\xECnh g\u1ECDi, bu\u1ED3n gh\xEA.", "Ch\u1EDD m\xE3i kh\xF4ng t\u1EDBi l\u01B0\u1EE3t, m\xECnh v\u1EC1 \u0111\xE2y.", "Tr\u1EA3i nghi\u1EC7m t\u1EC7, mong qu\xE1n r\xFAt kinh nghi\u1EC7m."]
-  };
-  function pushReview(c, stars, text) {
-    const weight = c.key === "reviewer" ? 3 : 1;
-    for (let i = 0; i < weight; i++) {
-      S.reviews.unshift({ stars, name: c.tag, av: c.avatar, text: text || pick(REV_TEXT[stars]), day: S.day });
-    }
-    if (S.reviews.length > 200) S.reviews.length = 200;
-    S.ratingCount += 1;
-    S.rating = clamp((40 + sum(S.reviews, (r) => r.stars)) / (10 + S.reviews.length), 1, 5);
-    S.today.stars.push(stars);
-    markDirty("hud");
-  }
-  function pickCup(size) {
-    if (!SH.on) return "Ch\u01B0a m\u1EDF c\u1EEDa";
-    if (SH.board) return "\u0110ang c\xF3 ly tr\xEAn th\u1EDBt";
-    const cupId = size === "L" ? "lyL" : "lyM";
-    if (stockQty(cupId) < 1) return `H\u1EBFt ly size ${size === "L" ? "L" : "M"} r\u1ED3i!`;
-    take(cupId, 1);
-    SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: "cup", sealT: 0, pouring: false, spill: 0, auto: null };
-    const staffPour = STAFF.filter((s) => S.staff[s.id] && (s.kind === "pour" || s.kind === "manager"));
-    if (staffPour.length) {
-      const c = frontCustomer();
-      if (c) SH.board.auto = { cid: c.id, t: 1.1, topsLeft: staffPour.some((s) => s.kind === "manager") ? [...c.order.tops] : [], st: staffPour[0] };
-    }
-    emit("cup:pick", size);
-    return null;
-  }
-  function startPour(tea) {
-    const b = SH.board;
-    if (!b || b.phase !== "cup") return "H\xE3y l\u1EA5y ly tr\u01B0\u1EDBc";
-    if (b.tea && b.tea !== tea) return "Ly \u0111\xE3 r\xF3t lo\u1EA1i tr\xE0 kh\xE1c";
-    if (b.fill >= 1.25) return "Ly \u0111\u1EA7y r\u1ED3i";
-    if (!b.tea) {
-      if (stockQty(tea) < 1) return `H\u1EBFt ${ITEMS[tea].name}!`;
-      take(tea, 1);
-      b.tea = tea;
-    }
-    b.pouring = true;
-    emit("pour:start", tea);
-    return null;
-  }
-  function stopPour() {
-    const b = SH.board;
-    if (!b || !b.pouring) return;
-    b.pouring = false;
-    emit("pour:stop");
-  }
-  function addFlavor(id) {
-    const b = SH.board;
-    if (!b || b.phase !== "cup") return "H\xE3y l\u1EA5y ly tr\u01B0\u1EDBc";
-    if (b.flavor) return "Ly \u0111\xE3 c\xF3 h\u01B0\u01A1ng";
-    if (stockQty(id) < 1) return `H\u1EBFt ${ITEMS[id].name}!`;
-    take(id, 1);
-    b.flavor = id;
-    emit("flavor", id);
-    return null;
-  }
-  function addTop(id) {
-    const b = SH.board;
-    if (!b || b.phase !== "cup") return "H\xE3y l\u1EA5y ly tr\u01B0\u1EDBc";
-    if (b.tops.includes(id)) return "Ly \u0111\xE3 c\xF3 topping n\xE0y";
-    if (b.tops.length >= 4) return "T\u1ED1i \u0111a 4 topping";
-    if (stockQty(id) < 1) return `H\u1EBFt ${ITEMS[id].name}!`;
-    take(id, 1);
-    b.tops.push(id);
-    emit("top", id);
-    return null;
-  }
-  function sealCup() {
-    const b = SH.board;
-    if (!b || b.phase !== "cup") return "Ch\u01B0a c\xF3 ly \u0111\u1EC3 \u0111\xF3ng n\u1EAFp";
-    if (!b.tea || b.fill < 0.2) return "Ly ch\u01B0a c\xF3 tr\xE0";
-    if (b.pouring) stopPour();
-    if (stockQty("da") > 0) take("da", 1);
-    if (stockQty("duong") > 0) take("duong", 1);
-    b.phase = "sealing";
-    b.sealT = 1.2 * (1 - bonus().seal);
-    b.sealMax = b.sealT;
-    emit("seal:start");
-    return null;
-  }
-  function trashCup() {
-    if (!SH.board) return;
-    SH.board = null;
-    S.today.waste += 3e3;
-    emit("trash");
-  }
-  function evaluate(board, c) {
-    const o = c.order;
-    const issues = [];
-    let stars = 5;
-    if (board.tea !== o.tea) {
-      stars -= 3;
-      issues.push("sai lo\u1EA1i tr\xE0");
-    }
-    if (board.size !== o.size) {
-      stars -= 2;
-      issues.push("sai size");
-    }
-    if ((board.flavor || null) !== (o.flavor || null)) {
-      stars -= 1;
-      issues.push(board.flavor ? "th\u1EEBa/sai h\u01B0\u01A1ng" : "thi\u1EBFu h\u01B0\u01A1ng");
-    }
-    const miss = o.tops.filter((t) => !board.tops.includes(t)).length;
-    const extra = board.tops.filter((t) => !o.tops.includes(t)).length;
-    if (miss + extra) {
-      stars -= Math.min(2, miss + extra);
-      issues.push("sai topping");
-    }
-    if (board.fill < 0.75) {
-      stars -= 1;
-      issues.push("ly l\u01B0ng");
-    }
-    if (board.spill > 0) {
-      stars -= 1;
-      issues.push("r\xF3t tr\xE0n");
-    }
-    if (c.p / c.maxP < 0.2) {
-      stars -= 1;
-      issues.push("ch\u1EDD l\xE2u");
-    }
-    if (stars >= 4 && chance(clamp(c.hard * 0.5, 0, 0.5))) {
-      stars -= 1;
-      issues.push("kh\xE1ch kh\xF3 t\xEDnh");
-    }
-    return { stars: clamp(stars, 1, 5), issues };
-  }
-  var PAY = { 1: 0.3, 2: 0.55, 3: 0.8, 4: 1, 5: 1 };
-  function serve(forced) {
-    const b = SH.board;
-    const c = (forced == null ? void 0 : forced.c) || frontCustomer();
-    if (!c) return "Ch\u01B0a c\xF3 kh\xE1ch";
-    const board = (forced == null ? void 0 : forced.board) || b;
-    if (!board || board.phase !== "ready" && !forced) return "Ly ch\u01B0a \u0111\xF3ng n\u1EAFp xong";
-    const ev = evaluate(board, c);
-    const res = settle(c, board, ev.stars, ev.issues, !!forced);
-    if (!forced) SH.board = null;
-    return res;
-  }
-  function settle(c, board, stars, issues, byStaff) {
-    const bn = bonus();
-    const unit = priceOf(board.tea) + (board.flavor ? priceOf(board.flavor) : 0) + sum(board.tops, (t) => priceOf(t)) + (board.size === "L" ? priceOf("sizeL") : 0);
-    const arch = ARCHETYPES[c.key];
-    let bill = unit * PAY[stars] * arch.bill * (1 + bn.bill + (bn.billTeas[board.tea] || 0));
-    if (SH.hour >= 20) bill *= 1 + bn.lateBill;
-    if (c.online) bill *= 1.15;
-    let luck = false;
-    if (chance(0.015 + bn.lucky * 0.1)) {
-      bill *= 2;
-      luck = true;
-    }
-    let tip = 0;
-    if (stars >= 4) {
-      const coldPen = ITEMS[board.tea].temp === "cold" ? bn.coldTip : 0;
-      tip = bill * 0.12 * arch.tip * (stars === 5 ? 1.5 : 1) * Math.max(0, 1 + bn.tip + coldPen);
-      if (byStaff) tip *= 0.5;
-    }
-    let pay = Math.round(bill);
-    tip = Math.round(tip);
-    if (c.online) {
-      const fee = Math.round(pay * APP_FEE);
-      pay -= fee;
-      S.today.online += pay + tip;
-    }
-    S.money += pay + tip;
-    S.today.rev += pay;
-    S.today.tips += tip;
-    S.today.cups += 1;
-    SH.rev += pay + tip;
-    SH.tip += tip;
-    SH.served++;
-    SH.cupsDone++;
-    pushReview(c, stars, null);
-    S.followers += Math.round((stars >= 4 ? 3 : 0) + equipLevel("qcMxh") * 2);
-    removeCust(c);
-    let seat = null;
-    if (!c.online && !byStaff && chance(0.4)) {
-      const free = SH.tables.findIndex((t) => t.s === "free");
-      if (free >= 0) {
-        SH.tables[free] = { s: "busy", t: rand(16, 28), av: c.avatar };
-        seat = free;
-        const extra = Math.round(bill * 0.1);
-        S.money += extra;
-        S.today.rev += extra;
-        SH.rev += extra;
-      }
-    }
-    const out = { stars, pay, tip, issues, luck, seat, cust: c, byStaff };
-    emit("served", out);
-    markDirty("hud");
-    requestSave();
-    return out;
-  }
-  function cleanTable(i) {
-    const t = SH.tables[i];
-    if (!t || t.s !== "dirty") return false;
-    SH.tables[i] = { s: "free", t: 0 };
-    const tip = randInt(1, 3) * 1e3;
-    S.money += tip;
-    S.today.tips += tip;
-    SH.tip += tip;
-    SH.rev += tip;
-    emit("table:clean", { i, tip });
-    markDirty("hud");
-    return true;
-  }
-  function spawnOnline() {
-    const open = APPS.filter((a) => S.apps[a.id]);
-    if (!open.length) return;
-    SH.onlineQ.push({ id: cid++, app: pick(open), exp: 22, o: makeOrder() });
-    emit("online:new");
-  }
-  function acceptOnline(id) {
-    const q = SH.onlineQ.find((x) => x.id === id);
-    if (!q) return "\u0110\u01A1n \u0111\xE3 h\u1EBFt h\u1EA1n";
-    if (SH.queue.length >= bonus().queue + 2) return "H\xE0ng ch\u1EDD \u0111\xE3 \u0111\u1EA7y";
-    SH.onlineQ = SH.onlineQ.filter((x) => x !== q);
-    const c = newCustomer({ online: true, app: q.app });
-    c.order = q.o;
-    c.avatar = "\u{1F4F1}";
-    c.tag = `\u{1F4F1} ${q.app.name}`;
-    c.text = `\u0110\u01A1n ${q.app.name}: ${ITEMS[q.o.tea].name} size ${q.o.size}${q.o.flavor ? " v\u1ECB " + ITEMS[q.o.flavor].name.toLowerCase() : ""}${q.o.tops.length ? " + " + q.o.tops.map((t) => ITEMS[t].name.toLowerCase()).join(", ") : ""}. Giao nhanh gi\xFAp nh\xE9!`;
-    SH.queue.push(c);
-    emit("queue");
-    return null;
-  }
-  function staffStep(dt) {
-    const b = bonus();
-    const speedMul = 1 / (1 + b.speedStaff) * (S.staff.meKetTinh ? 0.8 : 1);
-    for (const st of STAFF) {
-      if (!S.staff[st.id]) continue;
-      if (st.kind === "auto" || st.kind === "online") {
-        const key = st.id;
-        const busy = SH.jobs.find((j) => j.by === key);
-        if (busy) {
-          busy.t -= dt;
-          if (busy.t <= 0) {
-            finishJob(busy, st, b);
-            SH.jobs = SH.jobs.filter((j) => j !== busy);
-          }
-          continue;
-        }
-        const free = SH.queue.filter((c) => !SH.jobs.some((j) => j.cid === c.id));
-        const front = frontCustomer();
-        let cand = null;
-        if (st.kind === "online") cand = free.find((c) => c.online);
-        else if (SH.queue.length >= (st.minQueue || 1)) cand = free.filter((c) => !c.online && !(SH.board && c === front)).sort((x, y) => x.p - y.p)[0];
-        if (cand) {
-          const need = needs(cand.order);
-          if (!canTake(need)) continue;
-          SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul });
-          for (const [id, n] of need) take(id, n);
-        }
-      } else if (st.kind === "buyer") {
-        SH.buyT += dt;
-        if (SH.buyT >= 4) {
-          SH.buyT = 0;
-          const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), "lyM", "lyL", "da", "duong"];
-          for (const id of want) {
-            if (stockQty(id) === 0) {
-              const q = 8, cost = Math.round(unitCost(id) * q * 1.1);
-              if (S.money >= cost) {
-                S.money -= cost;
-                S.today.purchase += cost;
-                addStock(id, q);
-                emit("buyer", id);
-                markDirty("hud");
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  var needs = (o) => [[o.size === "L" ? "lyL" : "lyM", 1], [o.tea, 1], ...o.flavor ? [[o.flavor, 1]] : [], ...o.tops.map((t) => [t, 1]), ["da", 1], ["duong", 1]];
-  var canTake = (list) => list.every(([id, n]) => stockQty(id) >= n);
-  function finishJob(job, st, b) {
-    const c = SH.queue.find((x) => x.id === job.cid);
-    if (!c) return;
-    const err = clamp(st.err * (1 - b.errReduce), 0, 1);
-    const board = { tea: c.order.tea, size: c.order.size, flavor: c.order.flavor, tops: [...c.order.tops], fill: 1, spill: 0, phase: "ready" };
-    let forceStars = null;
-    if (chance(err)) {
-      board.size = board.size === "M" ? "L" : "M";
-      forceStars = 3;
-    }
-    serveStaff(c, board, forceStars);
-  }
-  function serveStaff(c, board, forceStars) {
-    const ev = evaluate(board, c);
-    settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
-  }
-  function updateShift(dt) {
-    if (!SH.on || S.phase !== "sell") return;
-    SH.t += dt;
-    SH.hour = SHIFT_START_H + Math.min(SH.t, SH.total) / SH.total * (SHIFT_END_H - SHIFT_START_H);
-    const b = bonus();
-    const maxQ = b.queue;
-    while (SH.pi < SH.plan.length && SH.t >= SH.plan[SH.pi] && SH.t < SH.total) {
-      SH.pi++;
-      if (SH.queue.length >= maxQ) {
-        SH.left++;
-        S.today.left++;
-        emit("balk");
-        continue;
-      }
-      SH.queue.push(newCustomer());
-      emit("queue");
-      emit("ding");
-    }
-    if (SH.critic && !SH.critic.done && SH.t >= SH.critic.at && SH.queue.length < maxQ) {
-      SH.critic.done = true;
-      SH.queue.push(newCustomer({ reviewer: true }));
-      emit("queue");
-    }
-    if (S.settings && onlineEnabled() && SH.t < SH.total * 0.95) {
-      SH.onlineNext -= dt;
-      if (SH.onlineNext <= 0) {
-        SH.onlineNext = rand(16, 34) / Math.max(0.3, 1 + b.online);
-        spawnOnline();
-      }
-    }
-    for (const q of SH.onlineQ) q.exp -= dt;
-    const before = SH.onlineQ.length;
-    SH.onlineQ = SH.onlineQ.filter((q) => q.exp > 0);
-    if (before !== SH.onlineQ.length) emit("online:new");
-    for (const c of [...SH.queue]) {
-      if (SH.jobs.some((j) => j.cid === c.id)) {
-        c.p -= dt * 0.4;
-      } else c.p -= dt;
-      if (c.p <= 0) customerLeaves(c, "patience");
-    }
-    const bd = SH.board;
-    if (bd) {
-      if (bd.pouring) {
-        const rate = 0.55 * (1 + b.pour + b.speedStaff);
-        bd.fill += rate * dt;
-        if (bd.fill > 1) {
-          bd.spill += (bd.fill - 1) * 0.5;
-        }
-        if (bd.fill >= 1.25) {
-          bd.fill = 1.25;
-          bd.pouring = false;
-          emit("pour:stop");
-        }
-      }
-      if (bd.phase === "sealing") {
-        bd.sealT -= dt;
-        if (bd.sealT <= 0) {
-          bd.phase = "ready";
-          emit("seal:done");
-        }
-      }
-      if (bd.auto) {
-        const a = bd.auto;
-        a.t -= dt;
-        const c = SH.queue.find((x) => x.id === a.cid);
-        if (!c) bd.auto = null;
-        else if (a.t <= 0) {
-          if (!bd.tea && stockQty(c.order.tea) > 0) {
-            take(c.order.tea, 1);
-            bd.tea = c.order.tea;
-            const error = chance(a.st.err * (1 - b.errReduce));
-            bd.fill = error ? 0.6 : 0.95;
-            if (c.order.flavor && stockQty(c.order.flavor) > 0 && !bd.flavor) {
-              take(c.order.flavor, 1);
-              bd.flavor = c.order.flavor;
-            }
-            emit("auto:pour");
-            a.t = 0.7;
-          } else if (a.topsLeft.length) {
-            const t = a.topsLeft.shift();
-            if (stockQty(t) > 0 && !bd.tops.includes(t)) {
-              take(t, 1);
-              bd.tops.push(t);
-              emit("top", t);
-            }
-            a.t = 0.5;
-          } else bd.auto = null;
-        }
-      }
-    }
-    for (let i = 0; i < SH.tables.length; i++) {
-      const t = SH.tables[i];
-      if (t.s === "busy") {
-        t.t -= dt;
-        if (t.t <= 0) {
-          SH.tables[i] = { s: "dirty", t: 0 };
-          emit("tables");
-        }
-      }
-    }
-    staffStep(dt);
-    if (SH.t >= SH.total) {
-      SH.over += dt;
-      if (SH.queue.length === 0 || SH.over > 22) finishShift(false);
-    }
-  }
-  function closeNow() {
-    if (!SH.on) return;
-    SH.queue.forEach((c) => {
-      SH.left++;
-      S.today.left++;
-    });
-    SH.queue = [];
-    finishShift(true);
-  }
-  function branchDaily() {
-    const bn = bonus();
-    let net = 0, rev = 0;
-    for (const [id, br] of Object.entries(S.branches)) {
-      const def = BRANCHES.find((x) => x.id === id);
-      if (!def) continue;
-      const adB = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find((a) => a.id === S.social.ad.id).branch : 0;
-      const r = rand(def.rev[0], def.rev[1]) * (0.8 + S.rating * 0.05) * (1 + bn.branch + adB) * (1 + 0.1 * (br.staff || 0));
-      const ing = r * rand(def.ing[0], def.ing[1]);
-      const wage = (br.staff || 0) * 15e4;
-      const p = r - ing - wage - def.rent;
-      br.profit = p;
-      br.rev = (br.rev || 0) + r;
-      br.days = (br.days || 0) + 1;
-      br.last = { r, ing, wage, rent: def.rent, p };
-      net += p;
-      rev += r;
-    }
-    return { net, rev };
-  }
-  function franchiseDaily() {
-    const n = S.franchise.count;
-    if (!n) return 0;
-    const bn = bonus();
-    return Math.round(sum(Array.from({ length: n }), () => rand(FRANCHISE.revRange[0], FRANCHISE.revRange[1]) * FRANCHISE.royalty * (1 + bn.branch)));
-  }
-  function finishShift(early) {
-    if (SH.fin) return;
-    SH.fin = true;
-    SH.on = false;
-    const T = S.today;
-    const ex = expireStock();
-    T.rent = rentToday();
-    T.util = utilityToday();
-    T.wage = staffWagePerDay() + (S.staff.chuBa ? Math.round(T.rev * 0.01) : 0);
-    const br = branchDaily();
-    T.branch = Math.round(br.net);
-    T.fran = franchiseDaily();
-    let interest = 0;
-    if (S.bank.balance > 0) {
-      interest = Math.round(S.bank.balance * BANK.interest * (S.rating >= 4.5 ? 1 + BANK.starBonus : 1));
-      S.bank.balance = Math.min(BANK.max, S.bank.balance + interest);
-      S.bank.shifts++;
-    }
-    T.interest = interest;
-    S.money = Math.max(0, S.money - T.rent - T.util - T.wage + T.branch + T.fran);
-    T.profit = T.rev + T.tips - T.cogs - T.rent - T.util - T.wage - T.tax + T.branch + T.fran + T.interest;
-    T.avgStars = T.stars.length ? sum(T.stars) / T.stars.length : 0;
-    T.expired = ex.list;
-    T.cash = S.money;
-    T.event = S.eventId;
-    T.weather = S.weather;
-    S.history.push({ day: S.day, rev: T.rev + T.tips, cogs: T.cogs, rent: T.rent, util: T.util, wage: T.wage, tax: T.tax, branch: T.branch, fran: T.fran, interest, profit: T.profit, cups: T.cups, left: T.left, stars: T.avgStars, online: T.online, event: S.eventId });
-    if (S.history.length > 400) S.history.shift();
-    S.kpi.shifts++;
-    for (const k of Object.keys(S.staff)) S.staff[k].shifts = (S.staff[k].shifts || 0) + 1;
-    S.phase = "end";
-    S.last = { early };
-    saveBackup();
-    saveGame();
-    markDirty("view", "hud");
-    emit("shift:end", T);
-  }
-  function nextDay() {
-    S.day++;
-    ensureForecast();
-    S.eventId = pickEvent();
-    S.today = freshToday();
-    S.lastUsed = {};
-    S.social.videosToday = 0;
-    S.pearl.playsDay = 0;
-    S.crush.playedToday = false;
-    const g = S.garden;
-    for (const p of g.plots) if (p.seed) {
-      if (g.watered) p.grown++;
-    }
-    g.watered = false;
-    if (S.pet) {
-      const decay = (k, v) => Math.max(0, S.pet[k] - v);
-      const d = (id, f) => S.petDecor[id] ? f : 1;
-      S.pet.hunger = decay("hunger", 25 * d("bat", 0.8));
-      S.pet.joy = decay("joy", 15 * d("xit", 0.75));
-      S.pet.clean = decay("clean", 12 * d("say", 0.75));
-      S.pet.energy = decay("energy", 20 * d("sofa", 0.75));
-    }
-    if (S.kpi.shifts >= 7) {
-      S.kpi.shifts = 0;
-      emit("kpi:cycle");
-    }
-    S.phase = "home";
-    S.plan = {};
-    Object.assign(SH, { on: false, fin: false });
-    markDirty("view", "hud", "panel", "cta");
-    emit("day:next");
-    saveGame();
-  }
-  function resetShiftRuntime() {
-    Object.assign(SH, { on: false, fin: false });
-    restoreShiftRuntime();
-  }
-  function genPost() {
-    const t = pick(FEED_POSTS), a = pick(FEED_AUTHORS);
-    return { ...t, author: a, day: S.day, views: randInt(20, 180) + "K", likes: randInt(2, 20) + "K" };
-  }
 
   // js/icons.js
   var P = {
@@ -2496,10 +1864,24 @@
     if (S.phase === "sell" && !isModalOpen() && type !== "err") return;
     const root2 = $("#toasts");
     if (!root2) return;
+    for (const el of root2.children) {
+      if (el.dataset.msg === msg && !el.classList.contains("out")) {
+        clearTimeout(el._tm);
+        el.classList.remove("bump");
+        void el.offsetWidth;
+        el.classList.add("bump");
+        el._tm = setTimeout(() => {
+          el.classList.add("out");
+          setTimeout(() => el.remove(), 260);
+        }, dur);
+        return;
+      }
+    }
     const t = h(`<div class="toast ${type}">${esc(msg)}</div>`);
+    t.dataset.msg = msg;
     root2.appendChild(t);
     while (root2.children.length > 3) root2.firstElementChild.remove();
-    setTimeout(() => {
+    t._tm = setTimeout(() => {
       t.classList.add("out");
       setTimeout(() => t.remove(), 260);
     }, dur);
@@ -2516,17 +1898,6 @@
     const f = h(`<div class="fx-float ${cls}" style="left:${x}px;top:${y}px">${esc(text)}</div>`);
     $("#fx").appendChild(f);
     setTimeout(() => f.remove(), 1e3);
-  }
-  function fxCoins(target, n = 5) {
-    if (S.phase === "sell") return;
-    const from = centerOf(target);
-    const to = centerOf($("[data-money]"));
-    for (let i = 0; i < n; i++) {
-      const sx = from.x + rand(-18, 18), sy = from.y + rand(-8, 8);
-      const c = h(`<div class="fx-coin" style="left:${sx}px;top:${sy}px;--dx:${to.x - sx}px;--dy:${to.y - sy}px;animation-delay:${i * 45}ms">\u{1FA99}</div>`);
-      $("#fx").appendChild(c);
-      setTimeout(() => c.remove(), 950 + i * 45);
-    }
   }
   function fxSpark(target, n = 8) {
     if (S.phase === "sell" && isModalOpen()) return;
@@ -2718,15 +2089,15 @@
     const soldPerDay = a.cups / Math.max(1, a.days);
     const cogsCls = a.rev > 0 && cogsPct >= 28 && cogsPct <= 32 ? "good" : "warn";
     const wageCls = a.rev > 0 && wagePct >= 15 && wagePct <= 20 ? "good" : a.wage === 0 ? "neutral" : "warn";
-    const row = (c, n, v, p) => `<div class="pl2-r"><i style="background:${c}"></i><span>${n}</span><em>${p}</em><b>${v}</b></div>`;
+    const row2 = (c, n, v, p) => `<div class="pl2-r"><i style="background:${c}"></i><span>${n}</span><em>${p}</em><b>${v}</b></div>`;
     const gap = Math.max(0, be - Math.round(soldPerDay));
     return `<section class="pl2">
     <div class="pl2-hero ${loss ? "neg" : "pos"}"><small>${esc(label)} \xB7 ${loss ? "L\u1ED7" : "L\xE3i"}</small><b>${loss ? "\u2212" : "+"}${fmtK(Math.abs(a.profit))}</b><span>Doanh thu ${fmtK(a.rev)} \xB7 Chi ph\xED ${fmtK(cost)}</span></div>
     <div class="pl-bar"><i style="width:${cg}%;background:#ff8a3d"></i><i style="width:${pe}%;background:#3d9bff"></i><i style="width:${ma}%;background:#8b5cf6"></i><i style="width:${lossPct}%;background:#ef4444"></i></div>
     <div class="pl2-list">
-      ${row("#ff8a3d", "Nguy\xEAn li\u1EC7u", fmtK(a.cogs), cogsPct.toFixed(0) + "%")}
-      ${row("#3d9bff", "Nh\xE2n s\u1EF1", fmtK(a.wage), wagePct.toFixed(0) + "%")}
-      ${row("#8b5cf6", "M\u1EB7t b\u1EB1ng & \u0111i\u1EC7n n\u01B0\u1EDBc", fmtK(a.rent + a.util), pct(a.rent + a.util, a.rev).toFixed(0) + "%")}
+      ${row2("#ff8a3d", "Nguy\xEAn li\u1EC7u", fmtK(a.cogs), cogsPct.toFixed(0) + "%")}
+      ${row2("#3d9bff", "Nh\xE2n s\u1EF1", fmtK(a.wage), wagePct.toFixed(0) + "%")}
+      ${row2("#8b5cf6", "M\u1EB7t b\u1EB1ng & \u0111i\u1EC7n n\u01B0\u1EDBc", fmtK(a.rent + a.util), pct(a.rent + a.util, a.rev).toFixed(0) + "%")}
     </div>
     <details class="pl2-more"><summary>Ph\xE2n t\xEDch F&B chi ti\u1EBFt</summary>
       <div class="pl-cards">
@@ -2754,6 +2125,8 @@
     <h2 class="day-title">H\u1EBFt ng\xE0y ${S.day}</h2>
     <div class="day-stats"><div><b>${T.cups}</b><span>ly b\xE1n</span></div><div><b>${T.left}</b><span>kh\xE1ch b\u1ECF v\u1EC1</span></div><div><b>${T.avgStars ? T.avgStars.toFixed(1) + "\u2605" : "\u2013"}</b><span>\u0111\xE1nh gi\xE1</span></div></div>
     ${plHTML(agg, "Ng\xE0y " + S.day)}
+    ${T.expired && T.expired.length ? `<div class="exp-note">\u26A0\uFE0F ${sum(T.expired, (x) => x.q)} ${T.expired.every((x) => ITEMS[x.id].kind === "top") ? "topping" : "ph\u1EA7n nguy\xEAn li\u1EC7u/topping"} \u0111\xE3 h\u1ECFng, b\u1ECB b\u1ECF \u0111i: \u2212${fmtK(T.expiredCost || 0)}<small>${T.expired.map((x) => `${ITEMS[x.id].icon} ${esc(ITEMS[x.id].name)} \xD7${x.q}`).join(" \xB7 ")}</small></div>` : ""}
+    ${T.fine ? `<div class="exp-note">\u{1F4CB} Ti\u1EC1n ph\u1EA1t ki\u1EC3m tra \u0111\u1ED9t xu\u1EA5t: \u2212${fmtK(T.fine)}</div>` : ""}
     <div class="day-cash"><span>\u{1F5C4}\uFE0F S\u1ED1 d\u01B0 k\xE9t</span><b>${fmtK(S.money)}</b></div>
     <div class="tomorrow">\u{1F4C5} <b>Ng\xE0y mai:</b> ${esc(tw.tip)}</div>
     <button class="btn ghost block" data-act="sum">\u{1F4CA} T\u1ED5ng k\u1EBFt</button>
@@ -2844,7 +2217,7 @@
     var _a;
     const sell = S.phase === "sell";
     if (sell) setPaused(true);
-    const row = (act, icon2, label, value = "") => `<button class="set-row" data-act="${act}"><span class="si">${icon2}</span><b>${label}</b><em>${value}</em></button>`;
+    const row2 = (act, icon2, label, value = "") => `<button class="set-row" data-act="${act}"><span class="si">${icon2}</span><b>${label}</b><em>${value}</em></button>`;
     const m = openModal({
       id: "settings",
       cls: "settings",
@@ -2853,19 +2226,19 @@
       },
       html: `
     <h2 class="set-title">\u2699\uFE0F C\xE0i \u0111\u1EB7t</h2>
-    ${row("guide", "\u{1F4D6}", "H\u01B0\u1EDBng d\u1EABn")}
-    ${row("news", "\u{1F381}", "C\xF3 g\xEC m\u1EDBi", "v" + VERSION)}
-    ${row("update", "\u{1F504}", "C\u1EADp nh\u1EADt b\u1EA3n m\u1EDBi", "T\u1EA3i l\u1EA1i web & xo\xE1 b\u1ED9 nh\u1EDB \u0111\u1EC7m")}
-    ${row("hints", "\u{1F9ED}", "Ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc", S.settings.hints ? "T\u1EF1 \u0111\u1ED9ng" : "T\u1EAFt")}
-    ${row("shiftMin", "\u23F1\uFE0F", "Th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y", `${S.settings.shiftMinNext} ph\xFAt \xB7 \xE1p d\u1EE5ng t\u1EEB ng\xE0y sau`)}
-    ${row("theme", "\u{1F3A8}", "M\xE0u giao di\u1EC7n", THEMES[S.settings.theme].name)}
-    ${row("haptic", "\u{1F4F3}", "Rung", HAPTIC_NAMES[(_a = S.settings.haptic) != null ? _a : 2])}
+    ${row2("guide", "\u{1F4D6}", "H\u01B0\u1EDBng d\u1EABn")}
+    ${row2("news", "\u{1F381}", "C\xF3 g\xEC m\u1EDBi", "v" + VERSION)}
+    ${row2("update", "\u{1F504}", "C\u1EADp nh\u1EADt b\u1EA3n m\u1EDBi", "T\u1EA3i l\u1EA1i web & xo\xE1 b\u1ED9 nh\u1EDB \u0111\u1EC7m")}
+    ${row2("hints", "\u{1F9ED}", "Ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc", S.settings.hints ? "T\u1EF1 \u0111\u1ED9ng" : "T\u1EAFt")}
+    ${row2("shiftMin", "\u23F1\uFE0F", "Th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y", `${S.settings.shiftMinNext} ph\xFAt \xB7 \xE1p d\u1EE5ng t\u1EEB ng\xE0y sau`)}
+    ${row2("theme", "\u{1F3A8}", "M\xE0u giao di\u1EC7n", THEMES[S.settings.theme].name)}
+    ${row2("haptic", "\u{1F4F3}", "Rung", HAPTIC_NAMES[(_a = S.settings.haptic) != null ? _a : 2])}
     <div class="box">${sliderRow("Nh\u1EA1c n\u1EC1n qu\xE1n", "music", "\u{1F3B5}")}${sliderRow("\xC2m thanh pha ch\u1EBF & SFX", "sfx", "\u{1F9CB}")}</div>
-    ${row("style", "\u{1F3BC}", "Nh\u1EA1c n\u1EC1n & M\xF9a", musicStyleName())}
-    ${row("export", "\u{1F4E6}", "Sao l\u01B0u ti\u1EBFn tr\xECnh", S.savedAt ? "\u0110\xE3 l\u01B0u" : "Ch\u01B0a sao l\u01B0u")}
-    ${row("backups", "\u{1F5C2}\uFE0F", "Kh\xF4i ph\u1EE5c b\u1EA3n t\u1EF1 l\u01B0u", `Game t\u1EF1 l\u01B0u ${listBackups().length} cu\u1ED1i ng\xE0y g\u1EA7n nh\u1EA5t`)}
-    ${row("import", "\u{1F511}", "Kh\xF4i ph\u1EE5c t\u1EEB m\xE3")}
-    ${row("reset", "\u21A9\uFE0F", "Ch\u01A1i l\u1EA1i t\u1EEB \u0111\u1EA7u")}
+    ${row2("style", "\u{1F3BC}", "Nh\u1EA1c n\u1EC1n & M\xF9a", musicStyleName())}
+    ${row2("export", "\u{1F4E6}", "Sao l\u01B0u ti\u1EBFn tr\xECnh", S.savedAt ? "\u0110\xE3 l\u01B0u" : "Ch\u01B0a sao l\u01B0u")}
+    ${row2("backups", "\u{1F5C2}\uFE0F", "Kh\xF4i ph\u1EE5c b\u1EA3n t\u1EF1 l\u01B0u", `Game t\u1EF1 l\u01B0u ${listBackups().length} cu\u1ED1i ng\xE0y g\u1EA7n nh\u1EA5t`)}
+    ${row2("import", "\u{1F511}", "Kh\xF4i ph\u1EE5c t\u1EEB m\xE3")}
+    ${row2("reset", "\u21A9\uFE0F", "Ch\u01A1i l\u1EA1i t\u1EEB \u0111\u1EA7u")}
     <button class="btn pri block" data-act="close">\u0110\xF3ng</button>`
     });
     const sliders = bindSliders(m);
@@ -3124,6 +2497,1032 @@
     } });
   }
 
+  // js/events.js
+  var INSPECTOR = { key: "inspector", tag: "\u{1F575}\uFE0F \u0110o\xE0n ki\u1EC3m tra", avatar: "\u{1F575}\uFE0F" };
+  var ROUND_K = (v) => Math.round(v / 1e3) * 1e3;
+  function blankEv() {
+    return { bo: [], boI: 0, off: 0, flick: 0, halt: 0, mode: "", ins: [], pending: null };
+  }
+  function ensureEv() {
+    if (!SH.ev) SH.ev = blankEv();
+    return SH.ev;
+  }
+  function onShiftStart() {
+    const ev = SH.ev = blankEv();
+    clearUi();
+    if (S.day < 2) return;
+    const total = SH.total;
+    const span = total - 60 - 25;
+    const lastHad = (S.ev.blk || 0) > 0;
+    let n = +wpick(lastHad ? { 0: 65, 1: 30, 2: 5 } : { 0: 42, 1: 41, 2: 17 });
+    if (span < 120) n = Math.min(n, 1);
+    for (let i = 0; i < n; i++) ev.bo.push(Math.round(30 + span * (i + rand(0.1, 0.9)) / n));
+    S.ev.blk = n;
+    const sinceLic = S.day - (S.ev.lic || 0), sinceFood = S.day - (S.ev.food || 0);
+    const wantLic = S.day >= 3 && sinceLic >= 2 && chance(clamp(0.22 + 0.08 * (sinceLic - 2), 0.22, 0.7));
+    const wantFood = S.day >= 4 && sinceFood >= 2 && chance(clamp(0.2 + 0.08 * (sinceFood - 2), 0.2, 0.65));
+    const used = [...ev.bo];
+    const place2 = (lo, hi) => {
+      let t = total * rand(lo, hi);
+      for (let k = 0; k < 8 && used.some((u) => Math.abs(u - t) < 45); k++) t = total * rand(lo, hi);
+      used.push(t);
+      return Math.round(t);
+    };
+    if (wantLic) {
+      ev.ins.push({ k: "lic", at: place2(0.25, 0.7), done: false });
+      S.ev.lic = S.day;
+    }
+    if (wantFood) {
+      ev.ins.push({ k: "food", at: place2(0.3, 0.75), done: false });
+      S.ev.food = S.day;
+    }
+  }
+  function onRestore() {
+    const ev = ensureEv();
+    Object.assign(ev, { off: 0, flick: 0, halt: 0, mode: "", pending: null });
+    ev.bo = Array.isArray(ev.bo) ? ev.bo : [];
+    ev.ins = Array.isArray(ev.ins) ? ev.ins : [];
+    clearUi();
+  }
+  function blocked(kind) {
+    const ev = SH.ev;
+    if (!ev || !SH.on) return null;
+    if (ev.halt > 0) return "Qu\xE1n \u0111ang b\u1ECB \u0111\xECnh ch\u1EC9!";
+    if (ev.off > 0) {
+      if (kind === "pump") return "\u0110ang m\u1EA5t \u0111i\u1EC7n!";
+      if (kind === "seal" && ev.mode === "full") return "\u0110ang m\u1EA5t \u0111i\u1EC7n!";
+    }
+    return null;
+  }
+  var halted = () => !!(SH.ev && SH.ev.halt > 0);
+  function update(dt) {
+    const ev = SH.ev;
+    if (!ev) return;
+    if (ev.flick > 0) ev.flick = Math.max(0, ev.flick - dt);
+    if (ev.halt > 0) {
+      ev.halt = Math.max(0, ev.halt - dt);
+      if (!ev.halt) note("\u2705 Qu\xE1n \u0111\u01B0\u1EE3c m\u1EDF c\u1EEDa tr\u1EDF l\u1EA1i", "ok");
+    }
+    if (ev.off > 0) {
+      ev.off -= dt;
+      if (ev.off <= 0) endBlackout();
+    } else if (ev.boI < ev.bo.length && SH.t >= ev.bo[ev.boI] && SH.t < SH.total - 25) {
+      ev.boI++;
+      startBlackout();
+    }
+    if (!ev.pending) {
+      const due = ev.ins.find((x) => !x.done && SH.t >= x.at && SH.t < SH.total - 8);
+      if (due) {
+        due.done = true;
+        ev.pending = due.k;
+      }
+    }
+    if (ev.pending && ev.off <= 0 && !ev.halt && !isModalOpen()) openInspection(ev.pending);
+    sync();
+  }
+  function startBlackout(sec) {
+    var _a;
+    const ev = ensureEv();
+    const gen = equipLevel("mayPhat");
+    buzz([60, 40, 60, 40, 120]);
+    sfx("alarm");
+    if (gen >= 2) {
+      ev.flick = rand(1, 2);
+      note("\u26A1 M\u1EA5t \u0111i\u1EC7n! M\xE1y ph\xE1t \u0111i\u1EC7n \u0111\xE3 ch\u1EA1y", "ok");
+    } else {
+      ev.off = sec || rand(15, 25);
+      ev.mode = gen === 1 ? "gen1" : "full";
+      ev.flick = 1.2;
+      if ((_a = SH.board) == null ? void 0 : _a.pouring) stopPour();
+      note(gen === 1 ? "\u26A1 M\u1EA5t \u0111i\u1EC7n! M\xE1y ph\xE1t \u0111i\u1EC7n \u0111\xE3 ch\u1EA1y: b\xECnh tr\xE0 t\u1EA1m ng\u01B0ng" : "\u26A1 M\u1EA5t \u0111i\u1EC7n! B\xECnh tr\xE0 v\xE0 m\xE1y \u0111\xF3ng n\u1EAFp ng\u01B0ng ho\u1EA1t \u0111\u1ED9ng", gen === 1 ? "ok" : "err");
+    }
+    sync();
+  }
+  function endBlackout() {
+    const ev = ensureEv();
+    ev.off = 0;
+    ev.mode = "";
+    note("\u{1F4A1} \u0110\xE3 c\xF3 \u0111i\u1EC7n tr\u1EDF l\u1EA1i", "ok");
+    sfx("success");
+    sync();
+  }
+  var uiKey = "";
+  function layer() {
+    let el = $("#evlayer");
+    if (!el) {
+      el = h('<div id="evlayer" class="ev-layer" aria-hidden="true"><div class="ev-dark"></div><div class="ev-badge"></div></div>');
+      $("#app").appendChild(el);
+    }
+    return el;
+  }
+  function sync() {
+    var _a;
+    const ev = SH.ev, app = $("#app");
+    if (!ev || !app) return;
+    const off = ev.off > 0, halt = ev.halt > 0, flick = ev.flick > 0;
+    const key = `${off ? ev.mode : ""}|${flick ? 1 : 0}|${halt ? 1 : 0}|${Math.ceil(ev.off)}|${Math.ceil(ev.halt)}`;
+    if (key === uiKey) return;
+    uiKey = key;
+    app.classList.toggle("ev-off", off && ev.mode === "full");
+    app.classList.toggle("ev-gen1", off && ev.mode === "gen1");
+    app.classList.toggle("ev-flick", flick);
+    app.classList.toggle("ev-halt", halt);
+    if (!off && !halt && !flick) {
+      (_a = $("#evlayer")) == null ? void 0 : _a.remove();
+      return;
+    }
+    const badge = $(".ev-badge", layer());
+    if (off) badge.textContent = ev.mode === "gen1" ? `\u{1F50C} M\xE1y ph\xE1t \u0111i\u1EC7n \xB7 b\xECnh tr\xE0 t\u1EA1m ng\u01B0ng \xB7 ${Math.ceil(ev.off)}s` : `\u26A1 M\u1EA4T \u0110I\u1EC6N \xB7 ${Math.ceil(ev.off)}s`;
+    else if (halt) badge.textContent = `\u{1F6AB} Qu\xE1n b\u1ECB \u0111\xECnh ch\u1EC9 \xB7 ${Math.ceil(ev.halt)}s`;
+    else badge.textContent = "";
+    badge.style.display = badge.textContent ? "" : "none";
+  }
+  function clearUi() {
+    var _a, _b;
+    uiKey = "";
+    (_a = $("#evlayer")) == null ? void 0 : _a.remove();
+    (_b = $("#app")) == null ? void 0 : _b.classList.remove("ev-off", "ev-gen1", "ev-flick", "ev-halt");
+  }
+  function note(msg, type = "") {
+    const root2 = $("#toasts");
+    if (!root2 || [...root2.children].some((x) => x.dataset.msg === msg || x.textContent === msg)) return;
+    const t = h(`<div class="toast ${type}">${esc(msg)}</div>`);
+    t.dataset.msg = msg;
+    root2.appendChild(t);
+    while (root2.children.length > 3) root2.firstElementChild.remove();
+    setTimeout(() => {
+      t.classList.add("out");
+      setTimeout(() => t.remove(), 260);
+    }, 2800);
+  }
+  on("shift:end", clearUi);
+  on("reset", clearUi);
+  function money(delta) {
+    S.money = Math.max(0, S.money + delta);
+    markDirty("hud");
+  }
+  function fine(amount) {
+    const pay = Math.min(amount, S.money);
+    S.money -= pay;
+    S.today.fine = (S.today.fine || 0) + pay;
+    markDirty("hud");
+    return pay;
+  }
+  function reward(amount) {
+    money(amount);
+    S.today.tips += amount;
+    SH.tip += amount;
+    SH.rev += amount;
+    return amount;
+  }
+  var row = (cls, ico, title, detail) => `<div class="ev-row ${cls}"><i>${ico}</i><div><b>${title}</b><small>${detail}</small></div></div>`;
+  var verdict = (cls, text) => `<div class="ev-verdict ${cls}">${text}</div>`;
+  function licenseResult() {
+    const has = equipLevel("giayPhep") > 0;
+    if (has) {
+      const r = reward(clamp(ROUND_K(SH.rev * 0.05), 3e4, 15e4));
+      pushReview(INSPECTOR, 5, "Qu\xE1n c\xF3 gi\u1EA5y ph\xE9p kinh doanh \u0111\u1EA7y \u0111\u1EE7, l\xE0m \u0103n \u0111\xE0ng ho\xE0ng, uy t\xEDn!");
+      S.followers += 30;
+      return { rows: row("ok", "\u2705", "Gi\u1EA5y ph\xE9p kinh doanh", "H\u1EE3p l\u1EC7, c\xF2n hi\u1EC7u l\u1EF1c"), v: verdict("ok", `\u0110\u1EA0T \xB7 th\u01B0\u1EDFng +${fmtK(r)} \xB7 +1 \u0111\xE1nh gi\xE1 5\u2605 \xB7 +30 ng\u01B0\u1EDDi theo d\xF5i`) };
+    }
+    const f = fine(clamp(ROUND_K(SH.rev * 0.25 + 8e4), 12e4, 8e5));
+    const halt = Math.round(rand(30, 45));
+    SH.ev.halt = halt;
+    pushReview(INSPECTOR, 2, "Nghe n\xF3i qu\xE1n b\u1ECB \u0111\xECnh ch\u1EC9 v\xEC ch\u01B0a c\xF3 gi\u1EA5y ph\xE9p kinh doanh...");
+    return { rows: row("bad", "\u274C", "Gi\u1EA5y ph\xE9p kinh doanh", "Kh\xF4ng xu\u1EA5t tr\xECnh \u0111\u01B0\u1EE3c gi\u1EA5y ph\xE9p"), v: verdict("bad", `B\u1ECA PH\u1EA0T \u2212${fmtK(f)} \xB7 \u0111\xECnh ch\u1EC9 ${halt} gi\xE2y (kh\xE1ch v\u1EABn ph\u1EA3i ch\u1EDD)`) + '<p class="ev-tip">\u{1F4A1} Mua \u201CGi\u1EA5y ph\xE9p kinh doanh\u201D \u1EDF N\xE2ng c\u1EA5p \u203A Trang b\u1ECB.</p>' };
+  }
+  function foodResult() {
+    const cert = equipLevel("attp") > 0;
+    const dirty2 = SH.tables.filter((t) => t.s === "dirty").length;
+    let overdue = 0, today = 0;
+    const bad = [];
+    for (const id of IDS) {
+      for (const l of S.stock[id] || []) {
+        if (l.exp === -1 || l.q <= 0) continue;
+        if (l.exp < S.day) {
+          overdue += l.q;
+          bad.push(ITEMS[id].name);
+        } else if (l.exp === S.day) today += l.q;
+      }
+    }
+    const crit = [];
+    if (!dirty2) crit.push([0, "\u2705", "V\u1EC7 sinh s\u1EA3nh", "T\u1EA5t c\u1EA3 b\xE0n \u0111\u1EC1u s\u1EA1ch s\u1EBD"]);
+    else if (dirty2 === 1) crit.push([1, "\u26A0\uFE0F", "V\u1EC7 sinh s\u1EA3nh", "1 b\xE0n ch\u01B0a \u0111\u01B0\u1EE3c d\u1ECDn"]);
+    else crit.push([2, "\u274C", "V\u1EC7 sinh s\u1EA3nh", `${dirty2} b\xE0n b\u1EA9n ch\u01B0a d\u1ECDn`]);
+    if (overdue) crit.push([2, "\u274C", "H\u1EA1n s\u1EED d\u1EE5ng nguy\xEAn li\u1EC7u", `${overdue} ph\u1EA7n qu\xE1 h\u1EA1n c\xF2n trong kho (${[...new Set(bad)].slice(0, 3).join(", ")})`]);
+    else if (today) crit.push([1, "\u26A0\uFE0F", "H\u1EA1n s\u1EED d\u1EE5ng nguy\xEAn li\u1EC7u", `${today} ph\u1EA7n h\u1EBFt h\u1EA1n trong h\xF4m nay, c\u1EA7n d\xF9ng/b\u1ECF s\u1EDBm`]);
+    else crit.push([0, "\u2705", "H\u1EA1n s\u1EED d\u1EE5ng nguy\xEAn li\u1EC7u", "Kh\xF4ng c\xF3 h\xE0ng qu\xE1 h\u1EA1n hay s\u1EAFp h\u1EBFt h\u1EA1n"]);
+    crit.push(cert ? [0, "\u2705", "Ch\u1EE9ng nh\u1EADn ATTP", "C\xF3 ch\u1EE9ng nh\u1EADn an to\xE0n th\u1EF1c ph\u1EA9m"] : [1, "\u26A0\uFE0F", "Ch\u1EE9ng nh\u1EADn ATTP", "Ch\u01B0a c\xF3 ch\u1EE9ng nh\u1EADn ATTP"]);
+    const score = sum(crit, (c) => c[0]);
+    const rows = crit.map(([lv, ico, t, d]) => row(lv === 0 ? "ok" : lv === 1 ? "warn" : "bad", ico, t, d)).join("");
+    if (score <= 1) {
+      const r = reward(clamp(ROUND_K(SH.rev * 0.06 * (cert ? 1.5 : 1)), 4e4, 18e4));
+      pushReview(INSPECTOR, cert ? 5 : 4, "Qu\xE1n s\u1EA1ch s\u1EBD, nguy\xEAn li\u1EC7u t\u01B0\u01A1i, \u0111\u1EA1t chu\u1EA9n v\u1EC7 sinh an to\xE0n th\u1EF1c ph\u1EA9m!");
+      return { rows, v: verdict("ok", `\u0110\u1EA0T \xB7 th\u01B0\u1EDFng +${fmtK(r)} \xB7 +1 \u0111\xE1nh gi\xE1 ${cert ? 5 : 4}\u2605`) };
+    }
+    if (score <= 3) {
+      pushReview(INSPECTOR, 3, "\u0110o\xE0n ki\u1EC3m tra nh\u1EAFc nh\u1EDF qu\xE1n c\u1EA7n ch\xFA \xFD v\u1EC7 sinh h\u01A1n.");
+      return { rows, v: verdict("warn", "C\u1EA2NH C\xC1O \xB7 kh\xF4ng b\u1ECB ph\u1EA1t ti\u1EC1n \xB7 \u22121 \u0111\xE1nh gi\xE1 3\u2605") + '<p class="ev-tip">\u{1F4A1} D\u1ECDn b\xE0n k\u1ECBp th\u1EDDi, d\xF9ng topping c\u0169 tr\u01B0\u1EDBc v\xE0 mua ch\u1EE9ng nh\u1EADn ATTP \u0111\u1EC3 tr\xE1nh b\u1ECB ph\u1EA1t.</p>' };
+    }
+    const f = fine(Math.round(clamp(ROUND_K(SH.rev * 0.15 + 6e4), 1e5, 5e5) * (cert ? 0.5 : 1) / 1e3) * 1e3);
+    pushReview(INSPECTOR, 1, "Qu\xE1n b\u1ECB x\u1EED ph\u1EA1t v\xEC m\u1EA5t v\u1EC7 sinh an to\xE0n th\u1EF1c ph\u1EA9m, th\u1EA5t v\u1ECDng!");
+    return { rows, v: verdict("bad", `B\u1ECA PH\u1EA0T \u2212${fmtK(f)} \xB7 \u22121 \u0111\xE1nh gi\xE1 1\u2605`) + '<p class="ev-tip">\u{1F4A1} D\u1ECDn b\xE0n b\u1EA9n, b\u1ECF nguy\xEAn li\u1EC7u qu\xE1 h\u1EA1n v\xE0 mua ch\u1EE9ng nh\u1EADn ATTP (gi\u1EA3m 50% ti\u1EC1n ph\u1EA1t).</p>' };
+  }
+  function openInspection(kind) {
+    const ev = ensureEv();
+    ev.pending = null;
+    setPaused(true);
+    sfx("alarm");
+    buzz([40, 30, 40]);
+    const lic = kind === "lic";
+    const title = lic ? "Ki\u1EC3m tra gi\u1EA5y ph\xE9p kinh doanh" : "Ki\u1EC3m tra v\u1EC7 sinh ATTP";
+    const m = openModal({
+      id: "inspect",
+      cls: "small ev-modal",
+      closable: false,
+      title,
+      onClose: () => {
+        if (!isModalOpen("pause")) setPaused(false);
+        markDirty("hud");
+        requestSave();
+      },
+      html: `<div class="ev-ico">\u{1F575}\uFE0F</div><h3 class="m-title">\u0110o\xE0n ki\u1EC3m tra \u0111ang t\u1EDBi!</h3>
+      <p class="m-text center">${lic ? "\u0110o\xE0n thanh tra y\xEAu c\u1EA7u xu\u1EA5t tr\xECnh gi\u1EA5y ph\xE9p kinh doanh c\u1EE7a qu\xE1n." : "\u0110o\xE0n ki\u1EC3m tra v\u1EC7 sinh an to\xE0n th\u1EF1c ph\u1EA9m \u0111ang xem x\xE9t qu\u1EA7y, s\u1EA3nh v\xE0 kho nguy\xEAn li\u1EC7u."}</p>
+      <button class="btn pri block" data-act="go">Ti\u1EBFp \u0111\xF3n \u0111o\xE0n</button>`
+    });
+    bindActions(m.body, {
+      go: () => {
+        const r = lic ? licenseResult() : foodResult();
+        m.body.innerHTML = `<div class="ev-ico">${lic ? "\u{1F4DC}" : "\u{1F9EA}"}</div><h3 class="m-title">${title}</h3>
+        <div class="ev-list">${r.rows}</div>${r.v}<button class="btn pri block" data-act="ok">\u0110\xE3 hi\u1EC3u</button>`;
+        sfx("bell");
+      },
+      ok: () => m.close()
+    });
+  }
+  var inShift = () => SH.on && S.phase === "sell" ? true : (console.warn("[events] c\u1EA7n \u0111ang trong ca b\xE1n h\xE0ng"), false);
+  var debugEvents = {
+    blackout: (sec) => {
+      if (inShift()) startBlackout(sec);
+    },
+    licenseCheck: () => {
+      if (inShift()) ensureEv().pending = "lic";
+    },
+    foodCheck: () => {
+      if (inShift()) ensureEv().pending = "food";
+    }
+  };
+
+  // js/sell.js
+  var SH = { on: false };
+  registerSaveHook(() => {
+    S.shiftRuntime = S.phase === "sell" && SH.on ? JSON.parse(JSON.stringify(SH)) : null;
+  });
+  function restoreShiftRuntime() {
+    const saved = S.shiftRuntime;
+    SH.on = false;
+    SH.fin = false;
+    if (S.phase !== "sell") return false;
+    if (!saved || !saved.on || !Number.isFinite(saved.total) || saved.total <= 0 || !Number.isFinite(saved.t) || !Array.isArray(saved.queue) || !Array.isArray(saved.plan) || !Array.isArray(saved.jobs) || !Array.isArray(saved.tables) || !Array.isArray(saved.onlineQ)) {
+      S.phase = "home";
+      S.shiftRuntime = null;
+      return false;
+    }
+    Object.assign(SH, saved);
+    if (SH.board) SH.board.pouring = false;
+    onRestore();
+    cid = Math.max(cid, ...SH.queue.map((c) => c.id + 1), ...SH.onlineQ.map((c) => (c.id || 0) + 1));
+    return true;
+  }
+  registerRestoreHook(restoreShiftRuntime);
+  function spawnPlan(n, total) {
+    const seg = [[10, 11, 1], [11, 13, 1.7], [13, 17, 1], [17, 19, 1.7], [19, 22, 1.1]];
+    const tot = sum(seg, (s) => (s[1] - s[0]) * s[2]);
+    const hourAt = (q) => {
+      let r = q * tot;
+      for (const [a, b, w] of seg) {
+        const m = (b - a) * w;
+        if (r <= m) return a + r / w;
+        r -= m;
+      }
+      return 22;
+    };
+    const times = [];
+    const minGap = Math.max(3, total / Math.max(n, 1) * 0.3);
+    for (let i = 0; i < n; i++) {
+      const q = clamp((i + 0.5 + rand(-0.28, 0.28)) / n, 0, 0.999);
+      let t = (hourAt(q) - 10) / 12 * total * 0.94 + 1.5;
+      if (times.length && t - times[times.length - 1] < minGap) t = times[times.length - 1] + minGap;
+      times.push(t);
+    }
+    return times;
+  }
+  function makeOrder() {
+    const b = bonus();
+    const w = weatherOf();
+    const ev = eventOf();
+    const tw = {};
+    for (const t of TEAS) {
+      if (!S.onMenu[t] || !S.unlocked[t]) continue;
+      let x = priceWeight(t) * (stockQty(t) > 0 ? 1 : 0.2);
+      const tp = ITEMS[t].temp;
+      if ((w.coldBias || ev.coldBias) && tp === "cold") x *= 1.5;
+      if (w.warmBias && tp === "warm") x *= 1.8;
+      if (ev.hotItem === t) x *= 2;
+      tw[t] = x;
+    }
+    const tea = wpick(tw) || TEAS.find((t) => S.onMenu[t]) || "traSua";
+    const size = chance(0.3 * sizeLWeight() * (w.coldBias || ev.coldBias ? 1.5 : 1)) ? "L" : "M";
+    let flavor = null;
+    const fw = {};
+    for (const f of FLAVORS) if (S.onMenu[f] && S.unlocked[f]) fw[f] = priceWeight(f) * (stockQty(f) > 0 ? 1 : 0.15);
+    if (Object.keys(fw).length && chance(0.45)) flavor = wpick(fw) || null;
+    const tw2 = {};
+    for (const t of TOPS) if (S.onMenu[t] && S.unlocked[t]) tw2[t] = priceWeight(t) * (stockQty(t) > 0 ? 1 : 0.15);
+    const nT = Math.min(Object.keys(tw2).length, +wpick({ 0: 20, 1: 45, 2: 25, 3: 8, 4: 2 }));
+    const tops = [];
+    const pool = { ...tw2 };
+    for (let i = 0; i < nT; i++) {
+      const t = wpick(pool);
+      if (!t) break;
+      tops.push(t);
+      delete pool[t];
+    }
+    return { tea, size, flavor, tops };
+  }
+  function orderText(arch, o) {
+    const drink = ITEMS[o.tea].name.toLowerCase() + (o.flavor ? ` v\u1ECB ${ITEMS[o.flavor].name.toLowerCase()}` : "");
+    const tops = o.tops.length ? " v\u1EDBi " + o.tops.map((t) => ITEMS[t].name.toLowerCase()).join(" v\xE0 ") : "";
+    return pick(arch.lines).replace("{drink}", drink).replace("{size}", "size " + o.size).replace("{tops}", tops);
+  }
+  function orderPrice(o) {
+    return priceOf(o.tea) + (o.flavor ? priceOf(o.flavor) : 0) + sum(o.tops, (t) => priceOf(t)) + (o.size === "L" ? priceOf("sizeL") : 0);
+  }
+  var cid = 1;
+  function newCustomer(opts = {}) {
+    const b = bonus();
+    const keys = {};
+    for (const [k, a2] of Object.entries(ARCHETYPES)) {
+      if (k === "reviewer" && !opts.reviewer) continue;
+      keys[k] = a2.w * (eventOf().student && (k === "sinhVien" || k === "be") ? 2 : 1);
+    }
+    const key = opts.reviewer ? "reviewer" : wpick(keys);
+    const a = ARCHETYPES[key];
+    const order = makeOrder();
+    const maxP = 62 * a.patience * (1 + b.patience) * (opts.online ? 1.2 : 1);
+    return {
+      id: cid++,
+      key,
+      tag: a.tag,
+      avatar: pick(a.avatars),
+      order,
+      text: orderText(a, order),
+      p: maxP,
+      maxP,
+      online: !!opts.online,
+      app: opts.app || null,
+      hard: a.hard + b.hardCust - b.badRev,
+      born: SH.t
+    };
+  }
+  function startShift() {
+    if (SH.on) return "\u0110ang trong ca";
+    const chk = openMissing();
+    if (!chk.canOpen) return "Ch\u01B0a \u0111\u1EE7 nguy\xEAn li\u1EC7u \u0111\u1EC3 m\u1EDF c\u1EEDa";
+    const total = S.settings.shiftMin * 60;
+    const n = expectedCustomers();
+    Object.assign(SH, {
+      on: true,
+      total,
+      t: 0,
+      hour: SHIFT_START_H,
+      queue: [],
+      sel: null,
+      plan: spawnPlan(n, total),
+      pi: 0,
+      expected: n,
+      served: 0,
+      left: 0,
+      rev: 0,
+      tip: 0,
+      board: null,
+      onlineQ: [],
+      onlineNext: rand(12, 25),
+      tables: [],
+      view: "counter",
+      staffT: {},
+      jobs: [],
+      over: 0,
+      fb: [],
+      buyT: 0,
+      fin: false,
+      critic: eventOf().critic ? { at: total * rand(0.35, 0.6), done: false } : null,
+      sat: 0,
+      cupsDone: 0
+    });
+    if (S.settings.tut && S.settings.tut.sell === false) {
+      const c = newCustomer();
+      c.order.tops = [];
+      c.order.flavor = null;
+      c.text = orderText(ARCHETYPES[c.key], c.order);
+      SH.queue.push(c);
+      SH.pi = Math.min(SH.pi + 1, SH.plan.length);
+    }
+    const nt = bonus().tables;
+    for (let i = 0; i < nt; i++) SH.tables.push({ s: "free", t: 0 });
+    onShiftStart();
+    S.phase = "sell";
+    S.started = true;
+    markDirty("view", "hud");
+    emit("shift:start");
+    return null;
+  }
+  var frontCustomer = () => SH.queue.find((c) => c.id === SH.sel) || SH.queue[0] || null;
+  function selectCustomer(id) {
+    if (!SH.queue.some((c) => c.id === id)) return;
+    SH.sel = id;
+    emit("sel");
+  }
+  function removeCust(c) {
+    SH.queue = SH.queue.filter((x) => x !== c);
+    if (SH.sel === c.id) SH.sel = null;
+    SH.jobs = SH.jobs.filter((j) => j.cid !== c.id);
+    emit("queue");
+  }
+  function rejectCustomer() {
+    const c = frontCustomer();
+    if (!c) return "Ch\u01B0a c\xF3 kh\xE1ch \u0111\u1EC3 t\u1EEB ch\u1ED1i";
+    removeCust(c);
+    SH.left++;
+    S.today.left++;
+    if (chance(0.3)) pushReview(c, 3, "Qu\xE1n t\u1EEB ch\u1ED1i \u0111\u01A1n c\u1EE7a m\xECnh, h\u01A1i ti\u1EBFc.");
+    emit("rejected", c);
+    markDirty("hud");
+    return null;
+  }
+  function isWrongOrder(board, c) {
+    const o = c.order;
+    return board.tea !== o.tea || board.size !== o.size || (board.flavor || null) !== (o.flavor || null) || o.tops.some((t) => !board.tops.includes(t)) || board.tops.some((t) => !o.tops.includes(t));
+  }
+  function customerLeaves(c, why) {
+    removeCust(c);
+    SH.left++;
+    S.today.left++;
+    if (why === "patience") {
+      const stars = chance(0.5) ? 1 : 2;
+      pushReview(c, stars, "Ch\u1EDD l\xE2u qu\xE1 n\xEAn m\xECnh \u0111\xE0nh b\u1ECF v\u1EC1...");
+      emit("left", c);
+    }
+  }
+  var REV_TEXT = {
+    5: ["Ly tr\xE0 chu\u1EA9n v\u1ECB lu\xF4n, nh\xE2n vi\xEAn d\u1EC5 th\u01B0\u01A1ng, s\u1EBD quay l\u1EA1i nh\xE9!", "Pha nhanh, \u0111\xFAng order t\u1EEBng ch\xFAt m\u1ED9t. 10 \u0111i\u1EC3m!", "Qu\xE1n xinh, tr\xE0 ngon, topping t\u01B0\u01A1i. Ch\u1EA5m 5 sao!"],
+    4: ["Tr\xE0 ngon, ch\u1EDD h\u01A1i l\xE2u m\u1ED9t ch\xFAt nh\u01B0ng x\u1EE9ng \u0111\xE1ng.", "\u1ED4n \xE1p, l\u1EA7n sau m\xECnh s\u1EBD gh\xE9 ti\u1EBFp.", "Ly \u0111\u1EB9p, v\u1ECB \u1ED5n, gi\xE1 h\u1EE3p l\xFD."],
+    3: ["T\u1EA1m \u0111\u01B0\u1EE3c, mong l\u1EA7n sau chu\u1EA9n v\u1ECB h\u01A1n.", "H\u01A1i nh\u1EA1t so v\u1EDBi mong \u0111\u1EE3i, ly c\u0169ng ch\u01B0a \u0111\u1EA7y.", "B\xECnh th\u01B0\u1EDDng, kh\xF4ng c\xF3 g\xEC \u0111\u1EB7c bi\u1EC7t."],
+    2: ["Ly b\u1ECB sai so v\u1EDBi order c\u1EE7a m\xECnh r\u1ED3i \u{1F615}", "Ch\u1EDD kh\xE1 l\xE2u m\xE0 ly l\u1EA1i sai topping.", "H\u01A1i th\u1EA5t v\u1ECDng, qu\xE1n c\u1EA7n c\u1EA9n th\u1EADn h\u01A1n."],
+    1: ["Sai h\u1EB3n m\xF3n m\xECnh g\u1ECDi, bu\u1ED3n gh\xEA.", "Ch\u1EDD m\xE3i kh\xF4ng t\u1EDBi l\u01B0\u1EE3t, m\xECnh v\u1EC1 \u0111\xE2y.", "Tr\u1EA3i nghi\u1EC7m t\u1EC7, mong qu\xE1n r\xFAt kinh nghi\u1EC7m."]
+  };
+  function pushReview(c, stars, text) {
+    const weight = c.key === "reviewer" ? 3 : 1;
+    for (let i = 0; i < weight; i++) {
+      S.reviews.unshift({ stars, name: c.tag, av: c.avatar, text: text || pick(REV_TEXT[stars]), day: S.day });
+    }
+    if (S.reviews.length > 200) S.reviews.length = 200;
+    S.ratingCount += 1;
+    S.rating = clamp((40 + sum(S.reviews, (r) => r.stars)) / (10 + S.reviews.length), 1, 5);
+    S.today.stars.push(stars);
+    markDirty("hud");
+  }
+  function pickCup(size) {
+    if (!SH.on) return "Ch\u01B0a m\u1EDF c\u1EEDa";
+    if (SH.board) return "\u0110ang c\xF3 ly tr\xEAn th\u1EDBt";
+    const blk = blocked("cup");
+    if (blk) return blk;
+    const cupId = size === "L" ? "lyL" : "lyM";
+    if (stockQty(cupId) < 1) return `H\u1EBFt ly size ${size === "L" ? "L" : "M"} r\u1ED3i!`;
+    take(cupId, 1);
+    SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: "cup", sealT: 0, pouring: false, spill: 0, auto: null };
+    const staffPour = STAFF.filter((s) => S.staff[s.id] && (s.kind === "pour" || s.kind === "manager"));
+    if (staffPour.length) {
+      const c = frontCustomer();
+      if (c) SH.board.auto = { cid: c.id, t: 1.1, topsLeft: staffPour.some((s) => s.kind === "manager") ? [...c.order.tops] : [], st: staffPour[0] };
+    }
+    emit("cup:pick", size);
+    return null;
+  }
+  function startPour(tea) {
+    const b = SH.board;
+    if (!b || b.phase !== "cup") return "H\xE3y l\u1EA5y ly tr\u01B0\u1EDBc";
+    if (b.tea && b.tea !== tea) return "Ly \u0111\xE3 r\xF3t lo\u1EA1i tr\xE0 kh\xE1c";
+    if (b.fill >= 1.25) return "Ly \u0111\u1EA7y r\u1ED3i";
+    const blk = blocked("pump");
+    if (blk) return blk;
+    if (!b.tea) {
+      if (stockQty(tea) < 1) return `H\u1EBFt ${ITEMS[tea].name}!`;
+      take(tea, 1);
+      b.tea = tea;
+    }
+    b.pouring = true;
+    emit("pour:start", tea);
+    return null;
+  }
+  function stopPour() {
+    const b = SH.board;
+    if (!b || !b.pouring) return;
+    b.pouring = false;
+    emit("pour:stop");
+  }
+  function addFlavor(id) {
+    const b = SH.board;
+    if (!b || b.phase !== "cup") return "H\xE3y l\u1EA5y ly tr\u01B0\u1EDBc";
+    if (b.flavor) return "Ly \u0111\xE3 c\xF3 h\u01B0\u01A1ng";
+    if (stockQty(id) < 1) return `H\u1EBFt ${ITEMS[id].name}!`;
+    take(id, 1);
+    b.flavor = id;
+    emit("flavor", id);
+    return null;
+  }
+  function addTop(id) {
+    const b = SH.board;
+    if (!b || b.phase !== "cup") return "H\xE3y l\u1EA5y ly tr\u01B0\u1EDBc";
+    if (b.tops.includes(id)) return "Ly \u0111\xE3 c\xF3 topping n\xE0y";
+    if (b.tops.length >= 4) return "T\u1ED1i \u0111a 4 topping";
+    if (stockQty(id) < 1) return `H\u1EBFt ${ITEMS[id].name}!`;
+    take(id, 1);
+    b.tops.push(id);
+    emit("top", id);
+    return null;
+  }
+  function sealCup() {
+    const b = SH.board;
+    if (!b || b.phase !== "cup") return "Ch\u01B0a c\xF3 ly \u0111\u1EC3 \u0111\xF3ng n\u1EAFp";
+    if (!b.tea || b.fill < 0.2) return "Ly ch\u01B0a c\xF3 tr\xE0";
+    const blk = blocked("seal");
+    if (blk) return blk;
+    if (b.pouring) stopPour();
+    if (stockQty("da") > 0) take("da", 1);
+    if (stockQty("duong") > 0) take("duong", 1);
+    b.phase = "sealing";
+    b.sealT = 1.2 * (1 - bonus().seal);
+    b.sealMax = b.sealT;
+    emit("seal:start");
+    return null;
+  }
+  function trashCup() {
+    if (!SH.board) return;
+    SH.board = null;
+    S.today.waste += 3e3;
+    emit("trash");
+  }
+  function evaluate(board, c) {
+    const o = c.order;
+    const issues = [];
+    let stars = 5;
+    if (board.tea !== o.tea) {
+      stars -= 3;
+      issues.push("sai lo\u1EA1i tr\xE0");
+    }
+    if (board.size !== o.size) {
+      stars -= 2;
+      issues.push("sai size");
+    }
+    if ((board.flavor || null) !== (o.flavor || null)) {
+      stars -= 1;
+      issues.push(board.flavor ? "th\u1EEBa/sai h\u01B0\u01A1ng" : "thi\u1EBFu h\u01B0\u01A1ng");
+    }
+    const miss = o.tops.filter((t) => !board.tops.includes(t)).length;
+    const extra = board.tops.filter((t) => !o.tops.includes(t)).length;
+    if (miss + extra) {
+      stars -= Math.min(2, miss + extra);
+      issues.push("sai topping");
+    }
+    if (board.fill < 0.75) {
+      stars -= 1;
+      issues.push("ly l\u01B0ng");
+    }
+    if (board.spill > 0) {
+      stars -= 1;
+      issues.push("r\xF3t tr\xE0n");
+    }
+    if (c.p / c.maxP < 0.2) {
+      stars -= 1;
+      issues.push("ch\u1EDD l\xE2u");
+    }
+    if (stars >= 4 && chance(clamp(c.hard * 0.5, 0, 0.5))) {
+      stars -= 1;
+      issues.push("kh\xE1ch kh\xF3 t\xEDnh");
+    }
+    return { stars: clamp(stars, 1, 5), issues };
+  }
+  var PAY = { 1: 0.3, 2: 0.55, 3: 0.8, 4: 1, 5: 1 };
+  function serve(forced) {
+    const b = SH.board;
+    const c = (forced == null ? void 0 : forced.c) || frontCustomer();
+    if (!c) return "Ch\u01B0a c\xF3 kh\xE1ch";
+    const board = (forced == null ? void 0 : forced.board) || b;
+    if (!board || board.phase !== "ready" && !forced) return "Ly ch\u01B0a \u0111\xF3ng n\u1EAFp xong";
+    if (!forced) {
+      const blk = blocked("serve");
+      if (blk) return blk;
+    }
+    const ev = evaluate(board, c);
+    const wrong = !forced && isWrongOrder(board, c);
+    if (wrong) {
+      const refuseP = clamp(0.3 + c.hard * 0.6 + (ev.stars <= 2 ? 0.2 : 0), 0.25, 0.85);
+      if (chance(refuseP)) {
+        SH.board = null;
+        pushReview(c, 1, "Sai order r\u1ED3i, m\xECnh kh\xF4ng nh\u1EADn ly n\xE0y!");
+        removeCust(c);
+        SH.left++;
+        S.today.left++;
+        S.today.waste += 3e3;
+        const out = { stars: 1, pay: 0, tip: 0, issues: ev.issues, luck: false, seat: null, cust: c, byStaff: false, refused: true };
+        emit("served", out);
+        markDirty("hud");
+        requestSave();
+        return out;
+      }
+    }
+    const res = settle(c, board, ev.stars, ev.issues, !!forced, wrong);
+    if (!forced) SH.board = null;
+    return res;
+  }
+  function settle(c, board, stars, issues, byStaff, discount = false) {
+    const bn = bonus();
+    const unit = priceOf(board.tea) + (board.flavor ? priceOf(board.flavor) : 0) + sum(board.tops, (t) => priceOf(t)) + (board.size === "L" ? priceOf("sizeL") : 0);
+    const arch = ARCHETYPES[c.key];
+    let bill = unit * PAY[stars] * arch.bill * (1 + bn.bill + (bn.billTeas[board.tea] || 0));
+    if (SH.hour >= 20) bill *= 1 + bn.lateBill;
+    if (c.online) bill *= 1.15;
+    if (discount) bill *= 0.7;
+    let luck = false;
+    if (chance(0.015 + bn.lucky * 0.1)) {
+      bill *= 2;
+      luck = true;
+    }
+    let tip = 0;
+    if (stars >= 4) {
+      const coldPen = ITEMS[board.tea].temp === "cold" ? bn.coldTip : 0;
+      tip = bill * 0.12 * arch.tip * (stars === 5 ? 1.5 : 1) * Math.max(0, 1 + bn.tip + coldPen);
+      if (byStaff) tip *= 0.5;
+    }
+    let pay = Math.round(bill);
+    tip = Math.round(tip);
+    if (c.online) {
+      const fee = Math.round(pay * APP_FEE);
+      pay -= fee;
+      S.today.online += pay + tip;
+    }
+    S.money += pay + tip;
+    S.today.rev += pay;
+    S.today.tips += tip;
+    S.today.cups += 1;
+    SH.rev += pay + tip;
+    SH.tip += tip;
+    SH.served++;
+    SH.cupsDone++;
+    pushReview(c, stars, null);
+    S.followers += Math.round((stars >= 4 ? 3 : 0) + equipLevel("qcMxh") * 2);
+    removeCust(c);
+    let seat = null;
+    if (!c.online && !byStaff && chance(0.4)) {
+      const free = SH.tables.findIndex((t) => t.s === "free");
+      if (free >= 0) {
+        SH.tables[free] = { s: "busy", t: rand(16, 28), av: c.avatar };
+        seat = free;
+        const extra = Math.round(bill * 0.1);
+        S.money += extra;
+        S.today.rev += extra;
+        SH.rev += extra;
+      }
+    }
+    const out = { stars, pay, tip, issues, luck, seat, cust: c, byStaff, discount };
+    emit("served", out);
+    markDirty("hud");
+    requestSave();
+    return out;
+  }
+  function cleanTable(i) {
+    const t = SH.tables[i];
+    if (!t || t.s !== "dirty") return false;
+    SH.tables[i] = { s: "free", t: 0 };
+    const tip = randInt(1, 3) * 1e3;
+    S.money += tip;
+    S.today.tips += tip;
+    SH.tip += tip;
+    SH.rev += tip;
+    emit("table:clean", { i, tip });
+    markDirty("hud");
+    return true;
+  }
+  function spawnOnline() {
+    const open = APPS.filter((a) => S.apps[a.id]);
+    if (!open.length) return;
+    SH.onlineQ.push({ id: cid++, app: pick(open), exp: 22, o: makeOrder() });
+    emit("online:new");
+  }
+  function acceptOnline(id) {
+    const q = SH.onlineQ.find((x) => x.id === id);
+    if (!q) return "\u0110\u01A1n \u0111\xE3 h\u1EBFt h\u1EA1n";
+    if (SH.queue.length >= bonus().queue + 2) return "H\xE0ng ch\u1EDD \u0111\xE3 \u0111\u1EA7y";
+    SH.onlineQ = SH.onlineQ.filter((x) => x !== q);
+    const c = newCustomer({ online: true, app: q.app });
+    c.order = q.o;
+    c.avatar = "\u{1F4F1}";
+    c.tag = `\u{1F4F1} ${q.app.name}`;
+    c.text = `\u0110\u01A1n ${q.app.name}: ${ITEMS[q.o.tea].name} size ${q.o.size}${q.o.flavor ? " v\u1ECB " + ITEMS[q.o.flavor].name.toLowerCase() : ""}${q.o.tops.length ? " + " + q.o.tops.map((t) => ITEMS[t].name.toLowerCase()).join(", ") : ""}. Giao nhanh gi\xFAp nh\xE9!`;
+    SH.queue.push(c);
+    emit("queue");
+    return null;
+  }
+  function staffStep(dt) {
+    const b = bonus();
+    const speedMul = 1 / (1 + b.speedStaff) * (S.staff.meKetTinh ? 0.8 : 1);
+    for (const st of STAFF) {
+      if (!S.staff[st.id]) continue;
+      if (st.kind === "auto" || st.kind === "online") {
+        const key = st.id;
+        const busy = SH.jobs.find((j) => j.by === key);
+        if (busy) {
+          busy.t -= dt;
+          if (busy.t <= 0) {
+            finishJob(busy, st, b);
+            SH.jobs = SH.jobs.filter((j) => j !== busy);
+          }
+          continue;
+        }
+        const free = SH.queue.filter((c) => !SH.jobs.some((j) => j.cid === c.id));
+        const front = frontCustomer();
+        let cand = null;
+        if (st.kind === "online") cand = free.find((c) => c.online);
+        else if (SH.queue.length >= (st.minQueue || 1)) cand = free.filter((c) => !c.online && !(SH.board && c === front)).sort((x, y) => x.p - y.p)[0];
+        if (cand) {
+          const need = needs(cand.order);
+          if (!canTake(need)) continue;
+          SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul });
+          for (const [id, n] of need) take(id, n);
+        }
+      } else if (st.kind === "buyer") {
+        SH.buyT += dt;
+        if (SH.buyT >= 4) {
+          SH.buyT = 0;
+          const want = [...TEAS.filter((t) => S.onMenu[t]), ...TOPS.filter((t) => S.onMenu[t]), "lyM", "lyL", "da", "duong"];
+          for (const id of want) {
+            if (stockQty(id) === 0) {
+              const q = 8, cost = Math.round(unitCost(id) * q * 1.1);
+              if (S.money >= cost) {
+                S.money -= cost;
+                S.today.purchase += cost;
+                addStock(id, q);
+                emit("buyer", id);
+                markDirty("hud");
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  var needs = (o) => [[o.size === "L" ? "lyL" : "lyM", 1], [o.tea, 1], ...o.flavor ? [[o.flavor, 1]] : [], ...o.tops.map((t) => [t, 1]), ["da", 1], ["duong", 1]];
+  var canTake = (list) => list.every(([id, n]) => stockQty(id) >= n);
+  function finishJob(job, st, b) {
+    const c = SH.queue.find((x) => x.id === job.cid);
+    if (!c) return;
+    const err = clamp(st.err * (1 - b.errReduce), 0, 1);
+    const board = { tea: c.order.tea, size: c.order.size, flavor: c.order.flavor, tops: [...c.order.tops], fill: 1, spill: 0, phase: "ready" };
+    let forceStars = null;
+    if (chance(err)) {
+      board.size = board.size === "M" ? "L" : "M";
+      forceStars = 3;
+    }
+    serveStaff(c, board, forceStars);
+  }
+  function serveStaff(c, board, forceStars) {
+    const ev = evaluate(board, c);
+    settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
+  }
+  function updateShift(dt) {
+    if (!SH.on || S.phase !== "sell") return;
+    SH.t += dt;
+    SH.hour = SHIFT_START_H + Math.min(SH.t, SH.total) / SH.total * (SHIFT_END_H - SHIFT_START_H);
+    update(dt);
+    const b = bonus();
+    const maxQ = b.queue;
+    while (SH.pi < SH.plan.length && SH.t >= SH.plan[SH.pi] && SH.t < SH.total) {
+      SH.pi++;
+      if (SH.queue.length >= maxQ) {
+        SH.left++;
+        S.today.left++;
+        emit("balk");
+        continue;
+      }
+      SH.queue.push(newCustomer());
+      emit("queue");
+      emit("ding");
+    }
+    if (SH.critic && !SH.critic.done && SH.t >= SH.critic.at && SH.queue.length < maxQ) {
+      SH.critic.done = true;
+      SH.queue.push(newCustomer({ reviewer: true }));
+      emit("queue");
+    }
+    if (S.settings && onlineEnabled() && SH.t < SH.total * 0.95) {
+      SH.onlineNext -= dt;
+      if (SH.onlineNext <= 0) {
+        SH.onlineNext = rand(16, 34) / Math.max(0.3, 1 + b.online);
+        spawnOnline();
+      }
+    }
+    for (const q of SH.onlineQ) q.exp -= dt;
+    const before = SH.onlineQ.length;
+    SH.onlineQ = SH.onlineQ.filter((q) => q.exp > 0);
+    if (before !== SH.onlineQ.length) emit("online:new");
+    for (const c of [...SH.queue]) {
+      if (SH.jobs.some((j) => j.cid === c.id)) {
+        c.p -= dt * 0.4;
+      } else c.p -= dt;
+      if (c.p <= 0) customerLeaves(c, "patience");
+    }
+    const bd = SH.board;
+    if (bd) {
+      if (bd.pouring) {
+        const rate = 0.55 * (1 + b.pour + b.speedStaff);
+        bd.fill += rate * dt;
+        if (bd.fill > 1) {
+          bd.spill += (bd.fill - 1) * 0.5;
+        }
+        if (bd.fill >= 1.25) {
+          bd.fill = 1.25;
+          bd.pouring = false;
+          emit("pour:stop");
+        }
+      }
+      if (bd.phase === "sealing" && !blocked("seal")) {
+        bd.sealT -= dt;
+        if (bd.sealT <= 0) {
+          bd.phase = "ready";
+          emit("seal:done");
+        }
+      }
+      if (bd.auto && !blocked("pump")) {
+        const a = bd.auto;
+        a.t -= dt;
+        const c = SH.queue.find((x) => x.id === a.cid);
+        if (!c) bd.auto = null;
+        else if (a.t <= 0) {
+          if (!bd.tea && stockQty(c.order.tea) > 0) {
+            take(c.order.tea, 1);
+            bd.tea = c.order.tea;
+            const error = chance(a.st.err * (1 - b.errReduce));
+            bd.fill = error ? 0.6 : 0.95;
+            if (c.order.flavor && stockQty(c.order.flavor) > 0 && !bd.flavor) {
+              take(c.order.flavor, 1);
+              bd.flavor = c.order.flavor;
+            }
+            emit("auto:pour");
+            a.t = 0.7;
+          } else if (a.topsLeft.length) {
+            const t = a.topsLeft.shift();
+            if (stockQty(t) > 0 && !bd.tops.includes(t)) {
+              take(t, 1);
+              bd.tops.push(t);
+              emit("top", t);
+            }
+            a.t = 0.5;
+          } else bd.auto = null;
+        }
+      }
+    }
+    for (let i = 0; i < SH.tables.length; i++) {
+      const t = SH.tables[i];
+      if (t.s === "busy") {
+        t.t -= dt;
+        if (t.t <= 0) {
+          SH.tables[i] = { s: "dirty", t: 0 };
+          emit("tables");
+        }
+      }
+    }
+    if (!halted()) staffStep(dt);
+    if (SH.t >= SH.total) {
+      SH.over += dt;
+      if (SH.queue.length === 0 || SH.over > 22) finishShift(false);
+    }
+  }
+  function closeNow() {
+    if (!SH.on) return;
+    SH.queue.forEach((c) => {
+      SH.left++;
+      S.today.left++;
+    });
+    SH.queue = [];
+    finishShift(true);
+  }
+  function branchDaily() {
+    const bn = bonus();
+    let net = 0, rev = 0;
+    for (const [id, br] of Object.entries(S.branches)) {
+      const def = BRANCHES.find((x) => x.id === id);
+      if (!def) continue;
+      const adB = S.social.ad && S.day <= S.social.ad.endsDay ? ADS.find((a) => a.id === S.social.ad.id).branch : 0;
+      const r = rand(def.rev[0], def.rev[1]) * (0.8 + S.rating * 0.05) * (1 + bn.branch + adB) * (1 + 0.1 * (br.staff || 0));
+      const ing = r * rand(def.ing[0], def.ing[1]);
+      const wage = (br.staff || 0) * 15e4;
+      const p = r - ing - wage - def.rent;
+      br.profit = p;
+      br.rev = (br.rev || 0) + r;
+      br.days = (br.days || 0) + 1;
+      br.last = { r, ing, wage, rent: def.rent, p };
+      net += p;
+      rev += r;
+    }
+    return { net, rev };
+  }
+  function franchiseDaily() {
+    const n = S.franchise.count;
+    if (!n) return 0;
+    const bn = bonus();
+    return Math.round(sum(Array.from({ length: n }), () => rand(FRANCHISE.revRange[0], FRANCHISE.revRange[1]) * FRANCHISE.royalty * (1 + bn.branch)));
+  }
+  function finishShift(early) {
+    if (SH.fin) return;
+    SH.fin = true;
+    SH.on = false;
+    const T = S.today;
+    const ex = expireStock();
+    T.rent = rentToday();
+    T.util = utilityToday();
+    T.wage = staffWagePerDay() + (S.staff.chuBa ? Math.round(T.rev * 0.01) : 0);
+    const br = branchDaily();
+    T.branch = Math.round(br.net);
+    T.fran = franchiseDaily();
+    let interest = 0;
+    if (S.bank.balance > 0) {
+      interest = Math.round(S.bank.balance * BANK.interest * (S.rating >= 4.5 ? 1 + BANK.starBonus : 1));
+      S.bank.balance = Math.min(BANK.max, S.bank.balance + interest);
+      S.bank.shifts++;
+    }
+    T.interest = interest;
+    S.money = Math.max(0, S.money - T.rent - T.util - T.wage + T.branch + T.fran);
+    T.profit = T.rev + T.tips - T.cogs - T.rent - T.util - T.wage - T.tax - (T.fine || 0) + T.branch + T.fran + T.interest;
+    T.avgStars = T.stars.length ? sum(T.stars) / T.stars.length : 0;
+    T.expired = ex.list;
+    T.expiredCost = Math.round(ex.waste);
+    T.cash = S.money;
+    T.event = S.eventId;
+    T.weather = S.weather;
+    S.history.push({ day: S.day, rev: T.rev + T.tips, cogs: T.cogs, rent: T.rent, util: T.util, wage: T.wage, tax: T.tax, branch: T.branch, fran: T.fran, interest, profit: T.profit, cups: T.cups, left: T.left, stars: T.avgStars, online: T.online, event: S.eventId });
+    if (S.history.length > 400) S.history.shift();
+    S.kpi.shifts++;
+    for (const k of Object.keys(S.staff)) S.staff[k].shifts = (S.staff[k].shifts || 0) + 1;
+    S.phase = "end";
+    S.last = { early };
+    saveBackup();
+    saveGame();
+    markDirty("view", "hud");
+    emit("shift:end", T);
+  }
+  function nextDay() {
+    S.day++;
+    ensureForecast();
+    S.eventId = pickEvent();
+    S.today = freshToday();
+    S.lastUsed = {};
+    S.social.videosToday = 0;
+    S.pearl.playsDay = 0;
+    S.crush.playedToday = false;
+    const g = S.garden;
+    for (const p of g.plots) if (p.seed) {
+      if (g.watered) p.grown++;
+    }
+    g.watered = false;
+    if (S.pet) {
+      const decay = (k, v) => Math.max(0, S.pet[k] - v);
+      const d = (id, f) => S.petDecor[id] ? f : 1;
+      S.pet.hunger = decay("hunger", 25 * d("bat", 0.8));
+      S.pet.joy = decay("joy", 15 * d("xit", 0.75));
+      S.pet.clean = decay("clean", 12 * d("say", 0.75));
+      S.pet.energy = decay("energy", 20 * d("sofa", 0.75));
+    }
+    if (S.kpi.shifts >= 7) {
+      S.kpi.shifts = 0;
+      emit("kpi:cycle");
+    }
+    S.phase = "home";
+    S.plan = {};
+    Object.assign(SH, { on: false, fin: false });
+    markDirty("view", "hud", "panel", "cta");
+    emit("day:next");
+    saveGame();
+  }
+  function resetShiftRuntime() {
+    Object.assign(SH, { on: false, fin: false });
+    restoreShiftRuntime();
+  }
+  function genPost() {
+    const t = pick(FEED_POSTS), a = pick(FEED_AUTHORS);
+    return { ...t, author: a, day: S.day, views: randInt(20, 180) + "K", likes: randInt(2, 20) + "K" };
+  }
+
   // js/sell-art.js
   var DIR = "assets/sell/sprites/";
   var img = (name, cls = "") => `<img class="sale-art ${cls}" src="${DIR}${name}.png" alt="" draggable="false" decoding="async">`;
@@ -3135,7 +3534,12 @@
     vip: 8,
     macCa: 9,
     reviewer: 2,
-    be: 6
+    be: 6,
+    idol: 3,
+    gamer: 5,
+    congNhan: 7,
+    shipper: 1,
+    giaoVien: 8
   };
   var TEAS2 = ["traSua", "matcha", "hongTra", "lucTra", "olong", "traThai"];
   var TOPS2 = ["tcDen", "tcTrang", "tcVang", "tcSoi", "tcNo", "cuNang", "thachTc", "suongSao", "thachCf", "fCheese", "fMatcha", "fMuoi", "fUbe", "pmVien", "thachPm"];
@@ -3186,9 +3590,9 @@
     let n = 0;
     for (const c of tops) {
       for (let k = 0; k < 3; k++, n++) {
-        const row = Math.floor(n / 5), col = n % 5;
-        const yy = 91 - row * 6.6;
-        const xx = Math.max(wallL(yy) + 4.2, Math.min(wallR(yy) - 4.2, 39 + (col - 2) * 8.2 + (row % 2 ? 4.1 : 0)));
+        const row2 = Math.floor(n / 5), col = n % 5;
+        const yy = 91 - row2 * 6.6;
+        const xx = Math.max(wallL(yy) + 4.2, Math.min(wallR(yy) - 4.2, 39 + (col - 2) * 8.2 + (row2 % 2 ? 4.1 : 0)));
         balls.push(`<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="3.7" fill="${c}"/><circle cx="${(xx - 1.2).toFixed(1)}" cy="${(yy - 1.3).toFixed(1)}" r="1.1" fill="#fff" opacity=".55"/>`);
       }
     }
@@ -3197,9 +3601,10 @@
       ${flavor ? `<rect class="c-flav" x="0" y="64" width="78" height="40" fill="${flavor}" opacity=".5"/>` : ""}
       <ellipse class="c-surf" cx="39" cy="${y.toFixed(1)}" rx="31.5" ry="3.1" fill="#fff" fill-opacity=".38" style="opacity:${fill > 0.02 ? 1 : 0}"/>` : "";
     const lidSvg = lid ? `<g class="c-lidg ${lid === "drop" ? "drop" : ""}">
-      <path d="M8 10 Q39 -10 70 10 Z" fill="rgba(255,255,255,.62)" stroke="#cdbda7" stroke-width="1.2"/>
-      <path d="M17 8 Q27 -1 36 -1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/>
-      <rect x="3.5" y="8.2" width="71" height="6.2" rx="3.1" fill="#fffdf8" stroke="#cdbda7" stroke-width="1.2"/>
+      <path d="M7.5 9.8 Q39 -8.5 70.5 9.8 Z" fill="rgba(255,255,255,.72)" stroke="#cdbda7" stroke-width="1.1"/>
+      <path d="M16 8 Q26 0 36 -0.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+      <path d="M3.4 10 Q3.4 7.6 6 7.6 H72 Q74.6 7.6 74.6 10 L72.7 17.4 Q72.5 18.5 71.4 18.5 H6.6 Q5.5 18.5 5.3 17.4 Z" fill="#fffdf8" stroke="#cdbda7" stroke-width="1.2"/>
+      <path d="M6.2 12.4 H71.8" stroke="#e3d6c1" stroke-width="1"/>
     </g>` : "";
     const strawSvg = straw ? '<g class="c-strawg"><line x1="41" y1="92" x2="54" y2="-22" stroke="#ff7fa0" stroke-width="5" stroke-linecap="round"/><line x1="41" y1="92" x2="54" y2="-22" stroke="#fff" stroke-width="5" stroke-dasharray="4 5" opacity=".9"/></g>' : "";
     return `<svg class="cup-svg" viewBox="0 0 78 104" width="100%" height="100%" overflow="visible" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
@@ -3238,19 +3643,19 @@
   var brewFxGeneration = 0;
   function clearBrewFx() {
     brewFxGeneration++;
-    const layer = $("#brewfx");
-    if (layer) layer.textContent = "";
+    const layer2 = $("#brewfx");
+    if (layer2) layer2.textContent = "";
     $$(".fx-lid").forEach((el) => el.remove());
     const fx = $("#fx");
     if (fx) fx.textContent = "";
   }
   function brewFxLayer() {
-    let layer = $("#brewfx");
-    if (!layer) {
-      layer = h('<div id="brewfx" aria-hidden="true"></div>');
-      $("#app").appendChild(layer);
+    let layer2 = $("#brewfx");
+    if (!layer2) {
+      layer2 = h('<div id="brewfx" aria-hidden="true"></div>');
+      $("#app").appendChild(layer2);
     }
-    return layer;
+    return layer2;
   }
   var canShowBrewFx = () => S.phase === "sell" && SH.view === "counter" && !isModalOpen();
   on("modal:open", clearBrewFx);
@@ -3384,6 +3789,16 @@
         toast("\u0110\xE3 \u0111\u1ED5 ly", "");
       }
     },
+    reject: () => {
+      const c = frontCustomer();
+      const e = rejectCustomer();
+      if (e) {
+        toast(e, "err");
+        return;
+      }
+      sfx("sad");
+      toast(`\u0110\xE3 t\u1EEB ch\u1ED1i \u0111\u01A1n c\u1EE7a ${c.tag}`, "err", 1400);
+    },
     phone: () => openOnlineList(),
     lobby: () => {
       SH.view = "lobby";
@@ -3391,33 +3806,94 @@
     },
     sel: (t) => selectCustomer(+t.dataset.cid)
   };
+  var serveHold = false;
+  var THANKS = [
+    null,
+    ["\u{1F615}", "H\u01A1i th\u1EA5t v\u1ECDng..."],
+    ["\u{1F615}", "H\u01A1i th\u1EA5t v\u1ECDng..."],
+    ["\u{1F642}", "C\u0169ng \u0111\u01B0\u1EE3c, c\u1EA3m \u01A1n!"],
+    ["\u{1F60A}", "Ngon, c\u1EA3m \u01A1n b\u1EA1n!"],
+    ["\u{1F970}", "Ngon tuy\u1EC7t v\u1EDDi, c\u1EA3m \u01A1n!"]
+  ];
+  var REFUSED = ["\u{1F620}", "Sai m\xF3n r\u1ED3i, t\xF4i kh\xF4ng nh\u1EADn!"];
+  var DISCOUNTED = ["\u{1F612}", "Sai m\xF3n, th\xF4i b\xE1n r\u1EBB t\xF4i l\u1EA5y!"];
+  function floatText(text, x, y, cls = "") {
+    const el = h(`<div class="fx-float ${cls}" style="left:${x}px;top:${y}px">${esc(text)}</div>`);
+    brewFxLayer().appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+  function flyCoins(from, n) {
+    const money2 = $("[data-money]");
+    if (!money2) return;
+    const mr = money2.getBoundingClientRect(), tx = mr.left + mr.width / 2, ty = mr.top + mr.height / 2;
+    for (let i = 0; i < n; i++) {
+      const sx = from.x + rand(-16, 16), sy = from.y + rand(-8, 8);
+      const c = h(`<div class="fx-coin" style="left:${sx}px;top:${sy}px;--dx:${tx - sx}px;--dy:${ty - sy}px;animation-delay:${i * 50}ms">\u{1FA99}</div>`);
+      brewFxLayer().appendChild(c);
+      setTimeout(() => c.remove(), 1e3 + i * 50);
+    }
+  }
   function doServe() {
+    if (serveHold) return;
     const cupEl = $("#cupslot .cup");
-    const front = frontCustomer();
+    const av = $("#cav"), bub = $("#cbub");
+    const show2 = canShowBrewFx() && cupEl && av;
+    const from = cupEl ? cupEl.getBoundingClientRect() : null;
+    serveHold = true;
     const r = serve();
     if (typeof r === "string") {
+      serveHold = false;
       toast(r, "err");
       sfx("error");
       return;
     }
-    const target = $("#cav") || void 0;
-    if (cupEl && target) {
-      const a = cupEl.getBoundingClientRect(), b = target.getBoundingClientRect();
-      const clone = cupEl.cloneNode(true);
-      clone.style.cssText = `position:fixed;left:${a.left}px;top:${a.top}px;pointer-events:none`;
-      brewFxLayer().appendChild(clone);
-      clone.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: `translate(${b.left - a.left}px,${b.top - a.top + 20}px) scale(.5)`, opacity: 0.1 }], { duration: 480, easing: "ease-in" }).onfinish = () => clone.remove();
+    const finish2 = () => {
+      serveHold = false;
+      if (SH.on && S.phase === "sell" && SH.view === "counter") refreshCustomer();
+    };
+    if (!show2) {
+      finish2();
+      return;
     }
-    const anchor = target || $("#hud");
-    const star = "\u2605".repeat(r.stars) + "\u2606".repeat(5 - r.stars);
-    fxText(`+${fmtK(r.pay)}${r.tip ? " (+" + fmtK(r.tip) + " boa)" : ""}`, anchor, "");
-    setTimeout(() => fxText(star, anchor, r.stars >= 4 ? "g" : r.stars <= 2 ? "r" : ""), 220);
-    if (r.issues.length) setTimeout(() => fxText(r.issues.slice(0, 2).join(", "), anchor, "r"), 520);
-    if (r.luck) setTimeout(() => fxText("\u{1F340} MAY M\u1EAEN \xD72!", anchor, "g"), 700);
-    fxCoins(anchor, r.stars >= 4 ? 7 : 3);
-    if (r.stars >= 5) fxSpark(anchor, 10);
-    sfx(r.stars >= 4 ? "reward" : "sad");
-    void front;
+    const to = av.getBoundingClientRect();
+    const tx = to.left + to.width / 2, ty = to.top + to.height * 0.55;
+    const dx = tx - (from.left + from.width / 2), dy = ty - (from.top + from.height / 2);
+    const generation = brewFxGeneration;
+    const clone = cupEl.cloneNode(true);
+    clone.style.cssText = `position:fixed;left:${from.left}px;top:${from.top}px;width:${from.width}px;height:${from.height}px;margin:0;pointer-events:none;transition:none;will-change:transform,opacity`;
+    brewFxLayer().appendChild(clone);
+    const DUR = r.refused ? 900 : 640, STEPS2 = 22, frames2 = [];
+    for (let i = 0; i <= STEPS2; i++) {
+      const t = i / STEPS2, e = r.refused ? Math.sin(Math.PI * Math.min(1, t * 1.05)) * 0.9 : t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      frames2.push({ transform: `translate(${(dx * e).toFixed(1)}px,${(dy * e - 46 * 4 * t * (1 - t)).toFixed(1)}px) scale(${(1 - 0.4 * e).toFixed(3)}) rotate(${(-10 + 16 * e).toFixed(1)}deg)`, opacity: 1, offset: t });
+    }
+    clone.animate(frames2, { duration: DUR, easing: "linear", fill: "forwards" }).onfinish = () => {
+      if (!r.refused) clone.animate([{ transform: `translate(${dx}px,${dy}px) scale(.6) rotate(6deg)`, opacity: 1 }, { transform: `translate(${dx}px,${dy - 6}px) scale(.72) rotate(6deg)`, opacity: 0.9, offset: 0.4 }, { transform: `translate(${dx}px,${dy - 14}px) scale(.55) rotate(6deg)`, opacity: 0 }], { duration: 260, easing: "ease-out", fill: "forwards" }).onfinish = () => clone.remove();
+      else clone.remove();
+      if (generation !== brewFxGeneration) return;
+      const [emo, msg] = r.refused ? REFUSED : r.discount ? DISCOUNTED : THANKS[r.stars] || THANKS[3];
+      const face = $(".face", av);
+      if (face) {
+        face.classList.remove("thanks", "sad");
+        void face.offsetWidth;
+        face.classList.add(r.stars <= 2 ? "sad" : "thanks");
+      }
+      if (bub) bub.innerHTML = `<div class="thanks-msg"><span class="thanks-emo">${emo}</span><div><b>${msg}</b><small>${"\u2605".repeat(r.stars)}${"\u2606".repeat(5 - r.stars)}</small></div></div>`;
+      if (r.refused) {
+        floatText("\u274C Kh\xE1ch kh\xF4ng nh\u1EADn ly", tx, to.top + 6, "r");
+        sfx("sad");
+        setTimeout(finish2, 900);
+        return;
+      }
+      floatText(`+${fmtK(r.pay)}${r.tip ? " (+" + fmtK(r.tip) + " boa)" : ""}${r.discount ? " \xB7 b\xE1n r\u1EBB \u221230%" : ""}`, tx, to.top + 6, "");
+      setTimeout(() => floatText("\u2605".repeat(r.stars) + "\u2606".repeat(5 - r.stars), tx, to.top - 14, r.stars >= 4 ? "g" : r.stars <= 2 ? "r" : ""), 200);
+      if (r.issues.length) setTimeout(() => floatText(r.issues.slice(0, 2).join(", "), tx, to.top + 26, "r"), 480);
+      if (r.luck) setTimeout(() => floatText("\u{1F340} MAY M\u1EAEN \xD72!", tx, to.top + 44, "g"), 650);
+      flyCoins({ x: tx, y: ty }, r.stars >= 4 ? 7 : 3);
+      fxSpark({ x: tx, y: ty }, r.stars >= 5 ? 10 : 5);
+      sfx(r.stars >= 4 ? "reward" : "sad");
+      setTimeout(finish2, 900);
+    };
   }
   function dropFx(fromEl, color) {
     sfx("drop");
@@ -3566,7 +4042,7 @@
   on("served", () => {
     updateBoard(true);
     refreshQueue();
-    refreshCustomer();
+    if (!serveHold) refreshCustomer();
   });
   on("left", (c) => {
     toast(`${c.tag} b\u1ECF v\u1EC1 v\xEC ch\u1EDD qu\xE1 l\xE2u \u{1F622}`, "err", 1500);
@@ -3588,23 +4064,28 @@
     else updateLobbyBtn();
   });
   function refreshQueue() {
-    const row = $("#qrow");
-    if (!row) return;
+    const row2 = $("#qrow");
+    if (!row2) return;
     const front = frontCustomer();
-    row.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? "on" : ""}" data-act="sel" data-cid="${c.id}" aria-label="Kh\xE1ch ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b></button>`).join("") || '<span class="q-empty">Ch\u01B0a c\xF3 kh\xE1ch...</span>';
+    row2.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? "on" : ""}" data-act="sel" data-cid="${c.id}" aria-label="Kh\xE1ch ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b></button>`).join("") || '<span class="q-empty">Ch\u01B0a c\xF3 kh\xE1ch...</span>';
   }
   function refreshCustomer() {
     const av = $("#cav"), bub = $("#cbub");
-    if (!av) return;
+    if (!av || serveHold) return;
     const c = frontCustomer();
     if (!c) {
       av.innerHTML = '<span class="idle">\u2615</span>';
       bub.innerHTML = '<div class="btxt dim">Qu\u1EA7y \u0111ang v\u1EAFng... chu\u1EA9n b\u1ECB ly n\u01B0\u1EDBc th\u1EADt ngon nh\xE9!</div>';
       return;
     }
+    av.classList.remove("enter");
+    bub.classList.remove("enter");
+    void av.offsetWidth;
+    av.classList.add("enter");
+    bub.classList.add("enter");
     const o = c.order;
     av.innerHTML = `<span class="face">${c.online ? c.avatar : customerArt(c.key) || c.avatar}</span>`;
-    bub.innerHTML = `<div class="b-row">${orderCup(o)}<div><span class="atag">${esc(c.tag)}</span><div class="btxt">${esc(c.text)}</div></div></div>
+    bub.innerHTML = `<button class="rej" data-act="reject" aria-label="T\u1EEB ch\u1ED1i \u0111\u01A1n">\u2716 T\u1EEB ch\u1ED1i</button><div class="b-row">${orderCup(o)}<div><span class="atag">${esc(c.tag)}</span><div class="btxt">${esc(c.text)}</div></div></div>
     <div class="pat"><span>KI\xCAN NH\u1EAAN</span><div class="bar" id="patBar"><i style="width:${(c.p / c.maxP * 100).toFixed(0)}%"></i></div></div>`;
   }
   function updateBoard(force) {
@@ -3713,9 +4194,16 @@
         }
         const P3 = slot._pour;
         if (performance.now() - P3.t0 > 380) {
-          const mouth = slot.querySelector(".cup").getBoundingClientRect();
-          const dx = mouth.left + mouth.width / 2 - tapX, dy = mouth.top + 8 - a.bottom;
-          st.style.cssText = `display:block;left:${tapX - 4 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${Math.hypot(dx, dy)}px;transform-origin:50% 0;transform:rotate(${-Math.atan2(dx, dy) * 180 / Math.PI}deg);background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
+          const cupEl = slot.querySelector(".cup");
+          const mouth = cupEl.getBoundingClientRect();
+          const liq = cupEl.querySelector(".c-liq");
+          const lr = liq ? liq.getBoundingClientRect() : null;
+          const surfaceY = lr && lr.height > 2 ? lr.top + 2 : mouth.bottom - 8;
+          const rimY = mouth.top + mouth.height * 0.12;
+          const dx = mouth.left + mouth.width / 2 - tapX, dy = Math.max(10, surfaceY - a.bottom);
+          const len = Math.hypot(dx, dy);
+          const rim = clamp((rimY - a.bottom) / dy, 0, 1) * 100;
+          st.style.cssText = `display:block;left:${tapX - 3.5 - r0.left}px;top:${a.bottom - 2 - r0.top}px;height:${len}px;--rim:${rim.toFixed(1)}%;transform-origin:50% 0;transform:rotate(${-Math.atan2(dx, dy) * 180 / Math.PI}deg);background-color:${ITEMS[b.tea].color};color:${ITEMS[b.tea].color}`;
           if (performance.now() - P3.lastSfx > 1100) {
             P3.lastSfx = performance.now();
             sfx("pour");
@@ -3736,6 +4224,7 @@
         const id = el.dataset.cnt, q = stockQty(id);
         el.textContent = q;
         el.parentElement.classList.toggle("empty", q === 0);
+        el.parentElement.classList.toggle("exp-soon", q > 0 && expiringToday(id) > 0);
       }
       updatePhone();
       updateLobbyBtn();
@@ -4586,22 +5075,41 @@
     return `<circle cx="${vmF(x)}" cy="${vmF(y)}" r="${r}"/>`;
   };
   var VM_PIN_LBL = { goc: ["Ti\u1EC7m g\u1ED1c", "r"], hanoi: ["H\xE0 N\u1ED9i", "l"], sapa: ["Sa Pa", "r"], halong: ["H\u1EA1 Long", "r"], hue: ["Hu\u1EBF", "l"], danang: ["\u0110\xE0 N\u1EB5ng", "r"], bmt: ["Bu\xF4n Ma Thu\u1ED9t", "r"], hcm: ["TP.HCM", "r"], canTho: ["C\u1EA7n Th\u01A1", "l"], caMau: ["C\xE0 Mau", "r"], hoangSa: ["Ho\xE0ng Sa", "r"] };
+  var vmStar = (R) => Array.from({ length: 10 }, (_, i) => {
+    const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? R * 0.382 : R;
+    return vmF(Math.cos(a) * r) + "," + vmF(Math.sin(a) * r);
+  }).join(" ");
+  var vmFlag = (lo, la) => {
+    const [x, y] = vmXY([lo, la]);
+    return `<g class="vflag" transform="translate(${vmF(x)} ${vmF(y)})"><path d="M0 0V-4.2" class="pole"/><g><rect x="0" y="-4.2" width="3.4" height="2.3"/><polygon points="${vmStar(0.7).replace(/(-?[d.]+),(-?[d.]+)/g, (m, a, b) => vmF(+a + 1.7) + "," + vmF(+b - 3.05))}"/></g></g>`;
+  };
   var vmapSvg = () => `<svg viewBox="0 0 100 ${VM_H}" role="img" aria-label="B\u1EA3n \u0111\u1ED3 Vi\u1EC7t Nam">
-  <defs><pattern id="vwave" width="7" height="5" patternUnits="userSpaceOnUse"><path d="M0 1.6Q1.75 0 3.5 1.6T7 1.6M-3.5 4.1Q-1.75 2.5 0 4.1T3.5 4.1T7 4.1" class="vwv"/></pattern></defs>
+  <defs>
+    <linearGradient id="vfl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ee3a2f"/><stop offset="1" stop-color="#b3150f"/></linearGradient>
+    <linearGradient id="vsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8fb8"/><stop offset=".5" stop-color="#1b6a9c"/><stop offset="1" stop-color="#0d3a6b"/></linearGradient>
+    <clipPath id="vclip"><path d="${VM_SEA}"/></clipPath>
+    <pattern id="vwave" width="7" height="5" patternUnits="userSpaceOnUse"><path d="M0 1.6Q1.75 0 3.5 1.6T7 1.6M-3.5 4.1Q-1.75 2.5 0 4.1T3.5 4.1T7 4.1" class="vwv"/></pattern></defs>
   <rect width="100" height="${VM_H}" class="vnb"/>
   ${vmTxt(103.6, 23.3, "TRUNG QU\u1ED0C", "nb")}${vmTxt(105.3, 17.6, "L\xC0O", "nb", -62)}${vmTxt(102.95, 15.2, "TH\xC1I LAN", "nb", -90)}${vmTxt(105, 12.2, "CAMPUCHIA", "nb")}
-  <path d="${VM_SEA}" class="vsea"/><path d="${VM_SEA}" fill="url(#vwave)"/>
+  <path d="${VM_SEA}" class="vsea"/><g clip-path="url(#vclip)"><rect class="vwvm" x="-7" width="114" height="${VM_H}" fill="url(#vwave)"/></g>
+  <g class="vcloud c1"><ellipse cx="0" cy="0" rx="6" ry="1.8"/><ellipse cx="3" cy="-1.2" rx="3.6" ry="1.8"/><ellipse cx="-3" cy="-.8" rx="3" ry="1.4"/></g>
+  <g class="vcloud c2"><ellipse cx="0" cy="0" rx="5" ry="1.5"/><ellipse cx="2.4" cy="-1" rx="3" ry="1.5"/></g>
   <path d="${vmLoop(VM_HAINAN)}" class="vnb2"/>${vmTxt(109.7, 19.1, "H\u1EA3i Nam", "nb s")}
   ${vmTxt(112.3, 13.6, "BI\u1EC2N \u0110\xD4NG", "sea")}${vmTxt(107.35, 18.9, "V\u1ECBnh B\u1EAFc B\u1ED9", "sea s")}${vmTxt(103.2, 9.2, "V\u1ECBnh Th\xE1i Lan", "sea s")}
   <path d="${VM_LAND}" class="vglow"/>
   <path d="${VM_LAND}" class="land"/>
+  <g class="vstar" transform="translate(${vmF(vmXY([104.65, 19.4])[0])} ${vmF(vmXY([104.65, 19.4])[1])})"><polygon points="${vmStar(4.6)}"/></g>
   <path d="${vmLoop(VM_PQ)}" class="land isl-l"/><path d="${vmLoop(VM_CD)}" class="land isl-l"/>
   ${VM_RIVERS.map((r, i) => `<path d="${vmLine(r)}" class="river${i === 3 ? " dim" : ""}"/>`).join("")}
   <path d="${VM_MTS.map(vmMt).join("")}" class="mts"/>
   <g class="isl">${VM_ISL.map((p) => vmDot(p, 0.55)).join("")}</g><g class="isl">${VM_TS.map((p) => vmDot(p, 0.55)).join("")}</g>
+  ${vmFlag(111.6, 16.3)}${vmFlag(113.2, 9.6)}
+  <g class="vboat b1" transform="translate(${vmPt([111, 12.2])})"><g><path d="M-2.2 0.4H2.2L1.4 1.6H-1.4Z" class="hull"/><path d="M0 -3.4V.2M0.3 -3.2L2 0H0.3Z" class="sail"/></g></g>
+  <g class="vboat b2" transform="translate(${vmPt([103, 9.7])})"><g><path d="M-2.2 0.4H2.2L1.4 1.6H-1.4Z" class="hull"/><path d="M0 -3.4V.2M0.3 -3.2L2 0H0.3Z" class="sail"/></g></g>
+  <g class="vbird"><path d="M0 0Q1 -1.2 2 0Q3 -1.2 4 0"/><path d="M5 2Q5.8 1 6.6 2Q7.4 1 8.2 2"/></g>
   ${vmTxt(111.5, 15.3, "Q.\u0111 Ho\xE0ng Sa", "sea s")}${vmTxt(112.7, 8.55, "Q.\u0111 Tr\u01B0\u1EDDng Sa", "sea s")}
   ${vmTxt(103.3, 21.55, "Ho\xE0ng Li\xEAn S\u01A1n", "mt s", 0)}${vmTxt(107.2, 14.35, "Tr\u01B0\u1EDDng S\u01A1n", "mt s", -72)}${vmTxt(106.1, 21.7, "S. H\u1ED3ng", "rv s", -38)}${vmTxt(104.75, 11.15, "S. M\xEA K\xF4ng", "rv s", 0)}${vmTxt(103.6, 10.85, "Ph\xFA Qu\u1ED1c", "nb s")}
-  <g class="cmp" transform="translate(89 13)"><circle r="6.2" class="cmp-r"/><path d="M0 -6L1.5 0L0 6L-1.5 0Z" class="cmp-n"/><path d="M-6 0L0 -1.5L6 0L0 1.5Z" class="cmp-e"/><text y="-8" class="vt cmp-t">B</text></g>
+  <g class="cmp" transform="translate(89 13)"><circle r="6.2" class="cmp-r"/><g class="cmp-spin"><path d="M0 -6L1.5 0L0 6L-1.5 0Z" class="cmp-n"/><path d="M-6 0L0 -1.5L6 0L0 1.5Z" class="cmp-e"/></g><text y="-8" class="vt cmp-t">B</text></g>
   <g class="scl" transform="translate(36 131)"><path d="M0 0H14.4M0 -1V1M7.2 -.7V.7M14.4 -1V1"/><text x="7.2" y="-2" class="vt s">200 km</text></g>
 </svg>`;
   var VM_LEGEND = '<div class="vm-legend"><span><i class="lg-dot"></i>Qu\xE1n tr\xE0</span><span><i class="lg-isl"></i>\u0110\u1EA3o</span><span><i class="lg-rv"></i>S\xF4ng</span><span><i class="lg-mt"></i>N\xFAi</span></div>';
@@ -4700,12 +5208,35 @@
       }
     }
   };
+  var SHARE_BTNS = [["zalo", "\u{1F4AC}", "Zalo"], ["fb", "\u{1F4D8}", "Facebook"], ["x", "\u{1F426}", "X"], ["tg", "\u2708\uFE0F", "Telegram"], ["tt", "\u{1F3B5}", "TikTok"], ["ig", "\u{1F4F8}", "Instagram"], ["native", "\u{1F4E4}", "Chia s\u1EBB\u2026"], ["copy", "\u{1F517}", "Sao ch\xE9p"]];
+  function shareUrl() {
+    const { protocol, hostname, origin, pathname } = location;
+    return (protocol === "http:" || protocol === "https:") && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(hostname) && !/\.androidplatform\.net$/.test(hostname) ? origin + pathname : SHARE_URL;
+  }
+  var shareText = () => `\u{1F9CB} Gh\xE9 "${S.shopName}" trong game Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc nh\xE9! Nh\u1EADp m\xE3 b\u1EA1n b\xE8 ${S.friends.code} \u0111\u1EC3 c\xF9ng nh\u1EADn qu\xE0.`;
+  async function shareCopyFallback(msg) {
+    const full = shareText() + " " + shareUrl();
+    if (await copyText(full)) toast(msg, "ok");
+    else alertBox("N\u1ED9i dung chia s\u1EBB", `<input class="field" readonly value="${esc(full)}" aria-label="N\u1ED9i dung chia s\u1EBB">Nh\u1EA5n gi\u1EEF \u0111\u1EC3 sao ch\xE9p r\u1ED3i d\xE1n v\xE0o b\xE0i \u0111\u0103ng.`);
+  }
+  function shareReward() {
+    const f = S.friends;
+    if (f.shareDay === S.day) return;
+    f.shareDay = S.day;
+    S.money += 5e3;
+    sfx("coin");
+    markDirty("hud", "panel");
+    requestSave();
+    toast(`\u{1F381} Th\u01B0\u1EDFng chia s\u1EBB l\u1EA7n \u0111\u1EA7u trong ng\xE0y +${fmtK(5e3)}`, "gold");
+  }
   var banbe = {
     html() {
       const f = S.friends;
       const list = [...NPC_FRIENDS.map((x) => ({ ...x })), ...f.list];
       const board = [{ id: "me", name: S.shopName + " (B\u1EA1n)", av: "\u2B50", rich: S.money, rating: S.rating }, ...list].sort((a, b) => b.rich - a.rich);
       return `<div class="codecard"><small>M\xE3 m\u1EDDi c\u1EE7a b\u1EA1n</small><b>${f.code}</b><button class="btn soft sm" data-act="copycode">\u{1F4CB} Sao ch\xE9p</button></div>
+      <div class="sharebox"><h5>\u{1F4E3} Chia s\u1EBB tr\xF2 ch\u01A1i</h5><p>M\u1EDDi b\u1EA1n b\xE8 c\xF9ng m\u1EDF ti\u1EC7m tr\xE0! ${f.shareDay === S.day ? "H\xF4m nay b\u1EA1n \u0111\xE3 nh\u1EADn th\u01B0\u1EDFng chia s\u1EBB." : "Chia s\u1EBB l\u1EA7n \u0111\u1EA7u m\u1ED7i ng\xE0y nh\u1EADn +" + fmtK(5e3) + "."}</p>
+        <div class="sh-grid">${SHARE_BTNS.map(([id, ic, nm]) => `<button class="sh-btn ${id}" data-act="share" data-id="${id}"><i>${ic}</i>${nm}</button>`).join("")}</div></div>
       <div class="addf"><input id="friendCode" placeholder="Nh\u1EADp m\xE3 b\u1EA1n b\xE8 (TTN-XXXXX)" aria-label="M\xE3 b\u1EA1n b\xE8"><button class="btn pri sm" data-act="addf">Th\xEAm b\u1EA1n</button></div>
       <h5 class="grp">\u{1F465} Danh s\xE1ch b\u1EA1n b\xE8 (${list.length})</h5>
       ${list.map((x) => `<div class="frow"><span class="r-av">${x.av}</span><div class="grow"><b>${esc(x.name)}</b><small>\u2B50 ${x.rating.toFixed(1)} \xB7 \u{1F4B0} ${fmtK(x.rich)}</small></div><button class="btn ${f.gifted[x.id] === S.day ? "ghost" : "gold"} sm" data-act="visit" data-id="${x.id}" ${f.gifted[x.id] === S.day ? "disabled" : ""}>${f.gifted[x.id] === S.day ? "\u0110\xE3 th\u0103m" : "\u{1F381} Th\u0103m qu\xE1n"}</button></div>`).join("")}
@@ -4715,6 +5246,44 @@
       copycode: async () => {
         if (await copyText(S.friends.code)) toast("\u0110\xE3 sao ch\xE9p m\xE3 m\u1EDDi!", "ok");
         else alertBox("M\xE3 m\u1EDDi c\u1EE7a b\u1EA1n", `<input class="field" readonly value="${esc(S.friends.code)}" aria-label="M\xE3 m\u1EDDi">Nh\u1EA5n gi\u1EEF m\xE3 \u0111\u1EC3 sao ch\xE9p.`);
+      },
+      share: async (t) => {
+        const id = t.dataset.id, url = shareUrl(), txt = shareText(), eu = encodeURIComponent(url), et = encodeURIComponent(txt);
+        if (id === "copy") {
+          await shareCopyFallback("\u0110\xE3 sao ch\xE9p li\xEAn k\u1EBFt m\u1EDDi!");
+          return shareReward();
+        }
+        if (id === "native") {
+          if (!navigator.share) {
+            await shareCopyFallback("\u0110\xE3 sao ch\xE9p li\xEAn k\u1EBFt m\u1EDDi!");
+            return shareReward();
+          }
+          try {
+            await navigator.share({ title: "Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc", text: txt, url });
+            shareReward();
+          } catch (e) {
+          }
+          return;
+        }
+        if (id === "tt" || id === "ig") {
+          const nm = id === "tt" ? "TikTok" : "Instagram";
+          if (await copyText(txt + " " + url)) toast(`\u0110\xE3 sao ch\xE9p! M\u1EDF ${nm} v\xE0 d\xE1n v\xE0o b\xE0i \u0111\u0103ng.`, "ok");
+          else await shareCopyFallback("\u0110\xE3 sao ch\xE9p!");
+          try {
+            location.href = id === "tt" ? "snssdk1233://" : "instagram://app";
+          } catch (e) {
+          }
+          return shareReward();
+        }
+        const urls = {
+          zalo: `https://zalo.me/share?url=${eu}&text=${et}`,
+          fb: `https://www.facebook.com/sharer/sharer.php?u=${eu}&quote=${et}`,
+          x: `https://twitter.com/intent/tweet?url=${eu}&text=${et}`,
+          tg: `https://t.me/share/url?url=${eu}&text=${et}`
+        };
+        const w = window.open(urls[id], "_blank");
+        if (!w) await shareCopyFallback("Kh\xF4ng m\u1EDF \u0111\u01B0\u1EE3c \u1EE9ng d\u1EE5ng, \u0111\xE3 sao ch\xE9p li\xEAn k\u1EBFt \u2014 h\xE3y d\xE1n v\xE0o tin nh\u1EAFn.");
+        shareReward();
       },
       addf: () => {
         var _a;
@@ -5148,19 +5717,19 @@
     q.over = true;
     if (Q !== q) return;
     const L = S.crush.level;
-    let reward = "";
+    let reward2 = "";
     if (win) {
       S.crush.level = L + 1;
       S.crush.best = Math.max(S.crush.best || 0, L);
       S.crush.perm = Math.min(0.5, S.crush.perm + 0.01);
-      const money = 8e3 + L * 2e3;
-      S.money += money;
-      reward = `+1% doanh thu v\u0129nh vi\u1EC5n \xB7 +${fmtK(money)}`;
+      const money2 = 8e3 + L * 2e3;
+      S.money += money2;
+      reward2 = `+1% doanh thu v\u0129nh vi\u1EC5n \xB7 +${fmtK(money2)}`;
       if (L % 5 === 0) {
         S.collection.packs++;
         const ids = ["tcDen", "traSua", "lyM"];
         for (const id of ids) addStock(id, 3);
-        reward += " \xB7 \u{1F381} +1 t\xFAi qu\xE0 & 3 nguy\xEAn li\u1EC7u";
+        reward2 += " \xB7 \u{1F381} +1 t\xFAi qu\xE0 & 3 nguy\xEAn li\u1EC7u";
       }
       sfx("level");
     } else sfx("sad");
@@ -5168,7 +5737,7 @@
     requestSave();
     const ov = $("#crushOver");
     ov.hidden = false;
-    ov.innerHTML = `<div class="ov-card"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F63F}"}</div><h3>${win ? "Th\u1EAFng m\xE0n " + L + "!" : "H\u1EBFt l\u01B0\u1EE3t r\u1ED3i!"}</h3><p>${win ? esc(reward) : "Th\u1EED l\u1EA1i nh\xE9, b\u1EA1n s\u1EBD l\xE0m \u0111\u01B0\u1EE3c th\xF4i!"}</p><button class="btn pri block" data-act="${win ? "next" : "retry"}">${win ? "M\xE0n ti\u1EBFp theo \u279C" : "Ch\u01A1i l\u1EA1i"}</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button></div>`;
+    ov.innerHTML = `<div class="ov-card"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F63F}"}</div><h3>${win ? "Th\u1EAFng m\xE0n " + L + "!" : "H\u1EBFt l\u01B0\u1EE3t r\u1ED3i!"}</h3><p>${win ? esc(reward2) : "Th\u1EED l\u1EA1i nh\xE9, b\u1EA1n s\u1EBD l\xE0m \u0111\u01B0\u1EE3c th\xF4i!"}</p><button class="btn pri block" data-act="${win ? "next" : "retry"}">${win ? "M\xE0n ti\u1EBFp theo \u279C" : "Ch\u01A1i l\u1EA1i"}</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button></div>`;
   }
   function crushHTML() {
     const q = Q;
@@ -5267,18 +5836,18 @@
   var PCOL = PIDS.length;
   var P2 = null;
   function pearlBurst(el, color, big) {
-    const layer = $("#pFx"), stage = $("#pStage");
-    if (!layer || !stage) return;
+    const layer2 = $("#pFx"), stage = $("#pStage");
+    if (!layer2 || !stage) return;
     const origin = stage.getBoundingClientRect();
     const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
     const ring = h(`<span class="pfx-ring" style="left:${x - origin.left}px;top:${y - origin.top}px;border-color:${color}"></span>`);
-    layer.appendChild(ring);
+    layer2.appendChild(ring);
     ring.animate([{ transform: "translate(-50%,-50%) scale(.3)", opacity: 0.9 }, { transform: "translate(-50%,-50%) scale(1.9)", opacity: 0 }], { duration: 420, easing: "ease-out" }).onfinish = () => ring.remove();
     const n = big ? 7 : 5;
     for (let i = 0; i < n; i++) {
       const a = i / n * Math.PI * 2 + rand(-0.3, 0.3), d = rand(24, big ? 62 : 48), s = rand(5, 9);
       const f = h(`<span class="pfx-dot" style="left:${x - origin.left}px;top:${y - origin.top}px;width:${s}px;height:${s}px;background:${color}">${i % 3 === 0 ? "\u2726" : ""}</span>`);
-      layer.appendChild(f);
+      layer2.appendChild(f);
       f.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d + 14}px)) scale(.3)`, opacity: 0 }], { duration: rand(380, 560), easing: "cubic-bezier(.2,.7,.4,1)" }).onfinish = () => f.remove();
     }
   }
@@ -5318,11 +5887,11 @@
     }
     return fall;
   }
-  var pHas = (b) => b.some((row, r) => row.some((_, c) => pGroup(b, r, c).length >= 2));
+  var pHas = (b) => b.some((row2, r) => row2.some((_, c) => pGroup(b, r, c).length >= 2));
   function pRender(fall) {
     const el = $("#pBoard");
     if (!el || !P2) return;
-    el.innerHTML = P2.b.map((row, r) => row.map((v, c) => `<button class="pc pearl-cell p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="${esc(ITEMS[PIDS[v]].name)}"><span class="pb pearl-character" style="--pc:${ITEMS[PIDS[v]].color};--float-delay:${(r + c) * 0.13}s">${pearlIcon(v)}</span></button>`).join("")).join("");
+    el.innerHTML = P2.b.map((row2, r) => row2.map((v, c) => `<button class="pc pearl-cell p${v}" data-act="pop" data-r="${r}" data-c="${c}" aria-label="${esc(ITEMS[PIDS[v]].name)}"><span class="pb pearl-character" style="--pc:${ITEMS[PIDS[v]].color};--float-delay:${(r + c) * 0.13}s">${pearlIcon(v)}</span></button>`).join("")).join("");
     const balls = $$("#pBoard .pb");
     const step = el.firstElementChild ? el.firstElementChild.offsetHeight + 5 : 50;
     let maxFall = 0;
@@ -5359,16 +5928,16 @@
     (_a = $(".pg")) == null ? void 0 : _a.classList.toggle("time-warning", P2.t <= 8);
   }
   function pScoreFx(cell, gain, group, mul) {
-    const stage = $("#pStage"), layer = $("#pFx");
-    if (!stage || !layer) return;
+    const stage = $("#pStage"), layer2 = $("#pFx");
+    if (!stage || !layer2) return;
     const origin = stage.getBoundingClientRect(), r = cell.getBoundingClientRect();
     const x = r.left + r.width / 2 - origin.left, y = r.top + r.height / 2 - origin.top;
     const label = h(`<span class="pearl-gain" style="left:${x}px;top:${y}px">+${gain}<small>${group} vi\xEAn \xB7 \xD7${mul}</small></span>`);
-    layer.appendChild(label);
+    layer2.appendChild(label);
     label.animate([{ transform: "translate(-50%,-30%) scale(.5)", opacity: 0 }, { transform: "translate(-50%,-75%) scale(1.15)", opacity: 1, offset: 0.25 }, { transform: "translate(-50%,-140%) scale(1)", opacity: 0 }], { duration: 850, easing: "ease-out" }).onfinish = () => label.remove();
     const target = $("#pScore").getBoundingClientRect();
     const spark = h(`<span class="pearl-score-flight" style="left:${x}px;top:${y}px">\u2726</span>`);
-    layer.appendChild(spark);
+    layer2.appendChild(spark);
     spark.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 }, { transform: `translate(${target.left - origin.left - x}px,${target.top - origin.top - y}px) scale(.4)`, opacity: 0 }], { duration: 650, easing: "ease-in" }).onfinish = () => spark.remove();
     $("#pScore").animate([{ transform: "scale(1)" }, { transform: "scale(1.2)" }, { transform: "scale(1)" }], { duration: 320 });
   }
@@ -5387,14 +5956,14 @@
     P2.over = true;
     clearInterval(P2.timer);
     const win = P2.score >= PGOAL;
-    const money = P2.score * 60;
+    const money2 = P2.score * 60;
     const rewards = [];
     PIDS.forEach((id, i) => {
       const q = Math.floor(P2.cnt[i] / 4);
       if (q > 0) rewards.push([id, q]);
     });
     if (!rewards.length && P2.score >= 40) rewards.push(["tcDen", Math.floor(P2.score / 40)]);
-    S.money += money;
+    S.money += money2;
     for (const [id, q] of rewards) addStock(id, q);
     S.pearl.best = Math.max(S.pearl.best, P2.score);
     let extra = "";
@@ -5406,7 +5975,7 @@
     requestSave();
     sfx(win ? "win" : "lose");
     const rw = rewards.length ? rewards.map(([id, q]) => `<span class="prw">${pearlIcon(PIDS.indexOf(id), "reward-pearl")}+${q} ${esc(ITEMS[id].name)}</span>`).join("") : '<span class="muted">Ch\u01B0a \u0111\u1EE7 vi\xEAn \u0111\u1EC3 nh\u1EADn tr\xE2n ch\xE2u</span>';
-    $("#pBody").innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F642}"}</div><h3>${win ? "TH\xC0NH C\xD4NG!" : "C\u1ED1 l\xEAn l\u1EA7n sau!"}</h3><p>\u0110i\u1EC3m: <b>${P2.score}</b> \xB7 Combo cao nh\u1EA5t: <b>x${P2.maxMul}</b> (k\u1EF7 l\u1EE5c ${S.pearl.best})</p><p>Ti\u1EC1n th\u01B0\u1EDFng: <b class="money">+${fmtK(money)}</b></p><div class="prws">${rw}</div>${extra}<button class="btn pri block" data-act="x">Nh\u1EADn th\u01B0\u1EDFng \u{1F381}</button></div>`;
+    $("#pBody").innerHTML = `<div class="ov-card inline"><div class="ov-ico">${win ? "\u{1F3C6}" : "\u{1F642}"}</div><h3>${win ? "TH\xC0NH C\xD4NG!" : "C\u1ED1 l\xEAn l\u1EA7n sau!"}</h3><p>\u0110i\u1EC3m: <b>${P2.score}</b> \xB7 Combo cao nh\u1EA5t: <b>x${P2.maxMul}</b> (k\u1EF7 l\u1EE5c ${S.pearl.best})</p><p>Ti\u1EC1n th\u01B0\u1EDFng: <b class="money">+${fmtK(money2)}</b></p><div class="prws">${rw}</div>${extra}<button class="btn pri block" data-act="x">Nh\u1EADn th\u01B0\u1EDFng \u{1F381}</button></div>`;
   }
   function openPearl() {
     if (S.pearl.playsDay >= 3) return toast("H\xF4m nay b\u1EA1n \u0111\xE3 ch\u01A1i \u0111\u1EE7 3 l\u01B0\u1EE3t Tr\xE2n Ch\xE2u N\u1ED5", "err");
@@ -5532,11 +6101,74 @@
     const iconEl = icon2;
     return `<svg class="stamp-svg" width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="Tem th\u01B0\u01A1ng hi\u1EC7u">${frame2}${iconEl}${text}${slogan}</svg>`;
   }
+  function drawSquare(img2, size) {
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = size;
+    const ctx2 = cv.getContext("2d");
+    const w = img2.naturalWidth || img2.width, hh = img2.naturalHeight || img2.height;
+    const s = Math.min(w, hh);
+    ctx2.fillStyle = "#fff";
+    ctx2.fillRect(0, 0, size, size);
+    ctx2.drawImage(img2, (w - s) / 2, (hh - s) / 2, s, s, 0, 0, size, size);
+    return cv.toDataURL("image/jpeg", 0.82);
+  }
+  function loadImage(src) {
+    return new Promise((resolve2, reject) => {
+      const img2 = new Image();
+      img2.onload = () => resolve2(img2);
+      img2.onerror = () => reject(new Error("decode"));
+      img2.src = src;
+    });
+  }
+  async function fileToDataURL(file, size = 160) {
+    try {
+      const url = URL.createObjectURL(file);
+      try {
+        return drawSquare(await loadImage(url), size);
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    } catch (e) {
+      const data = await new Promise((resolve2, reject) => {
+        const fr = new FileReader();
+        fr.onload = () => resolve2(fr.result);
+        fr.onerror = () => reject(new Error("read"));
+        fr.readAsDataURL(file);
+      });
+      return drawSquare(await loadImage(data), size);
+    }
+  }
+  var fileBtn = (label, key, cls) => `<label class="btn ${cls} file-btn">${label}<input type="file" accept="image/*" data-pick="${key}" aria-label="${label}"></label>`;
+  function bindFiles(root2, onPick) {
+    root2.querySelectorAll("input[data-pick]").forEach((inp) => {
+      inp.addEventListener("change", async () => {
+        const f = inp.files && inp.files[0];
+        inp.value = "";
+        if (!f) return;
+        try {
+          onPick(inp.dataset.pick, await fileToDataURL(f));
+        } catch (e) {
+          toast("Kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c \u1EA3nh, h\xE3y th\u1EED \u1EA3nh kh\xE1c (JPG/PNG)", "err");
+        }
+      });
+    });
+  }
   function openLogoModal() {
     const m = openModal({ id: "logo", cls: "small", html: logoBody() });
     const refresh = () => {
       m.body.innerHTML = logoBody();
+      bindFiles(m.body, onPick);
     };
+    const onPick = (key, url) => {
+      S.logo.img = url;
+      S.stamp.img = url;
+      markDirty("view", "hud");
+      requestSave();
+      refresh();
+      toast("\u0110\xE3 \u0111\u1ED5i logo qu\xE1n!", "ok");
+      sfx("success");
+    };
+    bindFiles(m.body, onPick);
     bindActions(m.body, {
       design: () => {
         m.close();
@@ -5554,6 +6186,7 @@
   }
   var logoBody = () => `<h3 class="m-title">\u{1F3A8} Logo Qu\xE1n & Nh\u1EADn Di\u1EC7n Th\u01B0\u01A1ng Hi\u1EC7u</h3><p class="m-text center">Logo n\xE0y hi\u1EC3n th\u1ECB tr\u01B0\u1EDBc t\xEAn ti\u1EC7m, tr\xEAn trang M\u1EA1ng X\xE3 H\u1ED9i v\xE0 in tr\xEAn tem ly tr\xE0 c\u1EE7a b\u1EA1n!</p>
   <div class="logo-prev">${logoHTML(70)}<div><b>${esc(S.shopName)}</b><small>Bi\u1EC3n hi\u1EC7u \xB7 M\u1EA1ng X\xE3 H\u1ED9i \xB7 Tem in ly</small></div></div>
+  ${fileBtn("\u{1F4F7} T\u1EA3i \u1EA3nh t\u1EEB th\u01B0 vi\u1EC7n l\xE0m Logo", "logo", "pri block")}
   <button class="btn soft block" data-act="design">\u{1F3A8} Thi\u1EBFt k\u1EBF tem & Ch\u1ECDn m\u1EABu logo ly</button>
   ${S.logo.img ? '<button class="btn ghost block" data-act="reset">\u21A9\uFE0F D\xF9ng l\u1EA1i bi\u1EC3u t\u01B0\u1EE3ng m\u1EB7c \u0111\u1ECBnh</button>' : ""}
   <button class="btn ghost block" data-act="x">\u0110\xF3ng</button>`;
@@ -5566,7 +6199,7 @@
     <h5 class="grp c">M\xE0u n\u1EC1n tem</h5><div class="chips colors">${STAMP_COLORS.map((c) => `<button class="swatch ${d.bg === c ? "on" : ""}" style="background:${c}" data-act="bg" data-v="${c}" aria-label="M\xE0u ${c}"></button>`).join("")}</div>
     <h5 class="grp c">Kh\u1EA9u hi\u1EC7u (tu\u1EF3 ch\u1ECDn)</h5><input class="field" maxlength="26" value="${esc(d.slogan || "")}" data-slogan placeholder="vd: Tr\xE0 s\u1EEFa m\u1ED7i ng\xE0y" aria-label="Kh\u1EA9u hi\u1EC7u">
     <div class="chips">${SLOGANS.map((s) => `<button class="chip-s sm" data-act="slg" data-v="${esc(s)}">${esc(s)}</button>`).join("")}</div>
-    <div class="row-between"><h5 class="grp">H\xECnh logo</h5></div>
+    <div class="row-between"><h5 class="grp">H\xECnh logo</h5>${fileBtn("\u{1F4F7} T\u1EA3i \u1EA3nh t\u1EEB th\u01B0 vi\u1EC7n", "stamp", "soft sm")}</div>
     <div class="icons">${LOGO_ICONS.map((ic) => `<button class="ico-s ${!d.img && d.icon === ic ? "on" : ""}" data-act="ic" data-v="${ic}">${ic}</button>`).join("")}</div>
     <button class="btn pri block" data-act="save">L\u01B0u tem</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>`;
     const m = openModal({ id: "stamp", cls: "small tall", html: body() });
@@ -5575,6 +6208,11 @@
       m.body.innerHTML = body();
       m.body.scrollTop = sc;
       bindInput();
+      bindFiles(m.body, onPick);
+    };
+    const onPick = (key, url) => {
+      d.img = url;
+      redraw();
     };
     const bindInput = () => {
       var _a;
@@ -5584,6 +6222,7 @@
       });
     };
     bindInput();
+    bindFiles(m.body, onPick);
     bindActions(m.body, {
       frame: (t) => {
         d.frame = t.dataset.v;
@@ -5744,10 +6383,10 @@
     if (!el) return;
     const teas = TEAS.filter((t) => S.onMenu[t] && S.unlocked[t]);
     const tops = TOPS.filter((t) => S.onMenu[t] && S.unlocked[t]);
-    const row = (n, p) => `<div class="cr"><span>${esc(n)}</span><b>${p}</b></div>`;
+    const row2 = (n, p) => `<div class="cr"><span>${esc(n)}</span><b>${p}</b></div>`;
     el.innerHTML = `<h3>\u{1F964} Menu h\xF4m nay</h3>
-    <div class="cols">${teas.map((t) => row(ITEMS[t].name, fmtK(priceOf(t)))).join("") || "<em>Ch\u01B0a c\xF3 m\xF3n</em>"}</div>
-    ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row(ITEMS[t].name, "+" + fmtK(priceOf(t)))).join("")}</div>` : ""}
+    <div class="cols">${teas.map((t) => row2(ITEMS[t].name, fmtK(priceOf(t)))).join("") || "<em>Ch\u01B0a c\xF3 m\xF3n</em>"}</div>
+    ${tops.length ? `<h5>Topping</h5><div class="cols">${tops.map((t) => row2(ITEMS[t].name, "+" + fmtK(priceOf(t)))).join("")}</div>` : ""}
     <div class="sz">Size L +${fmtK(priceOf("sizeL"))}</div>`;
   }
   var tabScroll = {};
@@ -5758,12 +6397,12 @@
     const P3 = PANELS[S.tab] || PANELS.kho;
     el.innerHTML = `<div class="panel-in" data-tab="${S.tab}">${P3.html()}</div>`;
     (_a = P3.bind) == null ? void 0 : _a.call(P3, el);
-    const row = el.querySelector(".tabs.scroll");
-    if (row) {
-      const on2 = row.querySelector(".tab.on");
-      if (on2) row.scrollLeft = Math.max(0, on2.offsetLeft - (row.clientWidth - on2.offsetWidth) / 2);
-      row.addEventListener("scroll", () => {
-        tabScroll[S.tab] = row.scrollLeft;
+    const row2 = el.querySelector(".tabs.scroll");
+    if (row2) {
+      const on2 = row2.querySelector(".tab.on");
+      if (on2) row2.scrollLeft = Math.max(0, on2.offsetLeft - (row2.clientWidth - on2.offsetWidth) / 2);
+      row2.addEventListener("scroll", () => {
+        tabScroll[S.tab] = row2.scrollLeft;
       }, { passive: true });
     }
     renderEvent();
@@ -6125,6 +6764,7 @@
         emit("reset");
       },
       save: saveGame,
+      events: debugEvents,
       crush: crushDebug,
       pearl: pearlDebug
     };

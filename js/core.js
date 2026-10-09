@@ -76,7 +76,7 @@ export function newState() {
     rating: 4.0, reviews: [], ratingCount: 0, followers: 144,
     stock, unlocked, onMenu, prices, plan: {}, lastUsed: {},
     cat: { tra: 0, huong: 0, top: 0, nv: 0, online: 0 }, equip: {}, apps: {},
-    staff: {}, kpi: { shifts: 0 },
+    staff: {}, kpi: { shifts: 0 }, ev: { lic: 0, food: 0, blk: 0 },
     pet: null, petDecor: {},
     garden: { plots, unlocked: PLOTS_START, seeds: {}, watered: false },
     branches: {}, franchise: { count: 0 },
@@ -154,7 +154,7 @@ export function listBackups() {
 function normalize(raw) {
   const d = newState();
   const s = { ...d, ...raw };
-  for (const k of ['logo', 'stamp', 'cat', 'garden', 'social', 'tax', 'bank', 'collection', 'friends', 'crush', 'pearl', 'settings', 'kpi', 'forecast']) {
+  for (const k of ['logo', 'stamp', 'cat', 'garden', 'social', 'tax', 'bank', 'collection', 'friends', 'crush', 'pearl', 'settings', 'kpi', 'forecast', 'ev']) {
     if (d[k] && typeof d[k] === 'object' && !Array.isArray(d[k])) s[k] = { ...d[k], ...(raw[k] || {}) };
   }
   for (const k of ['stock', 'unlocked', 'onMenu', 'prices']) s[k] = { ...d[k], ...(raw[k] || {}) };
@@ -311,6 +311,7 @@ const SFX = {
   collect: () => { tone(1200, 0.06, 'sine', 0.3); tone(1600, 0.1, 'sine', 0.3, 0.06); },
   win: () => { [523, 659, 784, 1046, 784, 1046, 1318].forEach((f, i) => tone(f, 0.18, 'triangle', 0.55, i * 0.09)); tone(1568, 0.5, 'sine', 0.3, 0.65); },
   lose: () => { [440, 392, 330, 262].forEach((f, i) => tone(f, 0.2, 'sine', 0.5, i * 0.13)); },
+  alarm: () => { [880, 620, 880, 620].forEach((f, i) => tone(f, 0.16, 'square', 0.12, i * 0.18)); glide(180, 70, 0.5, 'sawtooth', 0.12, 0.05); },
 };
 const SFX_RULES = {
   click: [65, 0, 90, 0.48], pop: [90, 1, 140, 0.62], cup: [130, 2, 170, 0.62], pour: [650, 0, 180, 0.42],
@@ -319,14 +320,14 @@ const SFX_RULES = {
   sparkle: [150, 2, 230, 0.52], unlock: [300, 4, 470, 0.72], level: [350, 4, 610, 0.68], bell: [250, 3, 430, 0.68],
   match: [70, 1, 130, 0.58], boom: [260, 3, 430, 0.7], pearlPop: [70, 1, 170, 0.5], pearlPop2: [100, 2, 260, 0.58],
   pearlBoom: [280, 4, 440, 0.72], fly: [100, 1, 200, 0.48], swoosh: [130, 1, 230, 0.45], bounce: [100, 1, 160, 0.5],
-  combo: [180, 3, 360, 0.62], collect: [150, 2, 260, 0.6], win: [600, 5, 1450, 0.74], lose: [400, 3, 700, 0.62],
+  alarm: [600, 4, 900, 0.7], combo: [180, 3, 360, 0.62], collect: [150, 2, 260, 0.6], win: [600, 5, 1450, 0.74], lose: [400, 3, 700, 0.62],
 };
 /* ===== Rung (haptics): mức 0 tắt · 1 nhẹ · 2 vừa · 3 mạnh ===== */
 const HAPTIC_MUL = [0, 0.6, 1, 1.7];
 const HAPTIC = {
   click: 8, pop: 10, cup: 14, drop: 10, seal: [20, 30, 40], ding: 22, coin: 12, success: [15, 40, 25], error: [40, 30, 40], sad: 30,
   sparkle: 8, unlock: [20, 30, 20], level: [15, 30, 15, 30, 30], bell: 16, match: 12, boom: [40, 20, 60],
-  pour: 0, combo: [14, 24, 20], bounce: 8, fly: 6, swoosh: 8, collect: [10, 20, 10],
+  pour: 0, alarm: [50, 40, 50, 40, 90], combo: [14, 24, 20], bounce: 8, fly: 6, swoosh: 8, collect: [10, 20, 10],
 };
 // Động cơ rung cần tối thiểu ~15-30ms mới cảm nhận được, nên mỗi mức có ngưỡng sàn riêng.
 const HAPTIC_MIN = [0, 14, 22, 36];

@@ -71,7 +71,7 @@
 
 /* ---------- Hiệu ứng rót trà: dòng trà trong, có vệt sáng, gợn sóng ở miệng ly ---------- */
 .stream { width: 7px; margin-left: 0; border-radius: 4px; opacity: .96; box-shadow: none;
-  background-image: linear-gradient(90deg, rgba(255, 255, 255, .6) 0, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .14) 100%);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0) calc(var(--rim, 50%) - 3%), rgba(255, 255, 255, .34) var(--rim, 50%)), linear-gradient(90deg, rgba(255, 255, 255, .6) 0, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .14) 100%);
   background-size: 100% 100%; animation: none; }
 .stream::before { content: ''; position: absolute; inset: 0; border-radius: inherit; opacity: .5;
   background-image: repeating-linear-gradient(180deg, rgba(255, 255, 255, .45) 0 3px, rgba(255, 255, 255, 0) 3px 12px); background-size: 100% 24px; animation: streamFlow .38s linear infinite; }
@@ -94,3 +94,52 @@
   .bubble .btxt { font-size: 11.5px; line-height: 1.25; max-height: 3.75em; }
   .bubble .atag { font-size: 10.5px; }
 }
+
+/* Nút chọn ảnh từ thư viện: input file trong suốt phủ kín nút */
+.file-btn { position: relative; overflow: hidden; cursor: pointer; }
+.file-btn input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size: 0; }
+
+/* ---------- Giao ly cho khách: khách nhận ly, cảm ơn, rồi khách mới bước vào ---------- */
+.cust-av .face.thanks { animation: custThanks .7s cubic-bezier(.3, 1.4, .5, 1) both; }
+.cust-av .face.sad { animation: custSad .6s ease both; }
+@keyframes custThanks { 0% { transform: translateY(0) scale(1); } 30% { transform: translateY(-12px) scale(1.08, .94); } 55% { transform: translateY(0) scale(.96, 1.05); } 75% { transform: translateY(-5px) scale(1.03); } 100% { transform: none; } }
+@keyframes custSad { 0%, 100% { transform: none; } 20% { transform: translateX(-4px) rotate(-3deg); } 45% { transform: translateX(4px) rotate(3deg); } 70% { transform: translateX(-2px); } }
+.thanks-msg { display: flex; align-items: center; gap: 10px; height: 100%; animation: thanksIn .25s ease-out both; }
+.thanks-emo { font-size: 34px; line-height: 1; animation: thanksPop .5s cubic-bezier(.3, 1.6, .5, 1) both; }
+.thanks-msg b { display: block; font-size: 14px; font-weight: 700; } .thanks-msg small { display: block; color: #d9a441; font-size: 15px; letter-spacing: 1px; }
+@keyframes thanksIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes thanksPop { from { transform: scale(.2) rotate(-20deg); } to { transform: none; } }
+.cust-av.enter .face, .cust-av.enter .idle { animation: custEnter .42s cubic-bezier(.3, 1.2, .5, 1) both; }
+.bubble.enter { animation: bubbleEnter .38s ease-out both; }
+@keyframes custEnter { from { opacity: 0; transform: translateX(-22px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes bubbleEnter { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+#brewfx .fx-float { position: fixed; z-index: 3; transform: translateX(-50%); }
+
+/* dòng trà đi vào lòng ly: phần trong ly mờ nhẹ như nhìn qua thủy tinh, chạm mặt nước thì gợn sóng và bắn bọt */
+.stream::after { width: 34px; height: 12px; margin-left: -17px; bottom: -6px; }
+.stream { z-index: 7; }
+
+/* ---------- Quầy trà (v2): mỗi size một chồng ly, bình trà to hơn và sát nhau, số lượng bám vào bình ---------- */
+.shelf-row { grid-template-columns: auto minmax(0, 1fr); gap: 2px; align-items: end; }
+.stacks { gap: 0; flex: none; }
+.stack { width: 38px; padding: 0; }
+.stack.big { width: 38px; }
+.cupstack.image-stack.m { width: 36px; height: 72px; }
+.cupstack.image-stack.l { width: 33px; height: 78px; }
+.stack b { font-size: 14px; }
+.disps { gap: 0; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.disp { margin: 0 -1px; }
+.jar.image-jar { height: 88px; width: 100%; max-width: none; }
+.jar.image-jar .sale-art { object-position: center bottom; }
+.shelf .cnt { min-width: 18px; height: 18px; padding: 0 4px; font-size: 10.5px; border-width: 1.5px; }
+.disp .cnt { top: 4px; right: 1px; }
+.stack .cnt { top: 4px; right: -2px; }
+@media (max-width: 380px) { .jar.image-jar { height: 80px; } }
+@media (max-height: 800px) { .jar.image-jar { height: 74px; } .cupstack.image-stack.m { height: 62px; width: 31px; } .cupstack.image-stack.l { height: 68px; width: 29px; } .stack, .stack.big { width: 32px; } }
+@media (max-height: 690px) { .jar.image-jar { height: 62px; } }
+
+.toast.bump { animation: toastBump .25s ease; }
+@keyframes toastBump { 50% { transform: scale(1.04); } }
+.rej { position: absolute; top: 5px; right: 8px; z-index: 3; padding: 2px 9px; border-radius: 99px; font-size: 11px; font-weight: 600; color: var(--brown2); background: rgba(255, 255, 255, .85); border: 1px solid var(--line); }
+.rej:active { transform: scale(.94); }
+.bubble { position: relative; }

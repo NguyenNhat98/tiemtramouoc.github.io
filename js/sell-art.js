@@ -6,6 +6,7 @@ const img = (name, cls = '') => `<img class="sale-art ${cls}" src="${DIR}${name}
 const customerCells = {
   sinhVien: 1, vanPhong: 2, genZ: 0, bac: 4,
   vip: 8, macCa: 9, reviewer: 2, be: 6,
+  idol: 3, gamer: 5, congNhan: 7, shipper: 1, giaoVien: 8,
 };
 const TEAS = ['traSua', 'matcha', 'hongTra', 'lucTra', 'olong', 'traThai'];
 // Món chưa có hình riêng dùng hình gần giống (tên và luật tiêu hao vẫn theo dữ liệu game).
@@ -69,9 +70,10 @@ export function cupSvg(opts) {
       ${flavor ? `<rect class="c-flav" x="0" y="64" width="78" height="40" fill="${flavor}" opacity=".5"/>` : ''}
       <ellipse class="c-surf" cx="39" cy="${y.toFixed(1)}" rx="31.5" ry="3.1" fill="#fff" fill-opacity=".38" style="opacity:${fill > 0.02 ? 1 : 0}"/>` : '';
   const lidSvg = lid ? `<g class="c-lidg ${lid === 'drop' ? 'drop' : ''}">
-      <path d="M8 10 Q39 -10 70 10 Z" fill="rgba(255,255,255,.62)" stroke="#cdbda7" stroke-width="1.2"/>
-      <path d="M17 8 Q27 -1 36 -1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/>
-      <rect x="3.5" y="8.2" width="71" height="6.2" rx="3.1" fill="#fffdf8" stroke="#cdbda7" stroke-width="1.2"/>
+      <path d="M7.5 9.8 Q39 -8.5 70.5 9.8 Z" fill="rgba(255,255,255,.72)" stroke="#cdbda7" stroke-width="1.1"/>
+      <path d="M16 8 Q26 0 36 -0.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+      <path d="M3.4 10 Q3.4 7.6 6 7.6 H72 Q74.6 7.6 74.6 10 L72.7 17.4 Q72.5 18.5 71.4 18.5 H6.6 Q5.5 18.5 5.3 17.4 Z" fill="#fffdf8" stroke="#cdbda7" stroke-width="1.2"/>
+      <path d="M6.2 12.4 H71.8" stroke="#e3d6c1" stroke-width="1"/>
     </g>` : '';
   const strawSvg = straw ? '<g class="c-strawg"><line x1="41" y1="92" x2="54" y2="-22" stroke="#ff7fa0" stroke-width="5" stroke-linecap="round"/><line x1="41" y1="92" x2="54" y2="-22" stroke="#fff" stroke-width="5" stroke-dasharray="4 5" opacity=".9"/></g>' : '';
   return `<svg class="cup-svg" viewBox="0 0 78 104" width="100%" height="100%" overflow="visible" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">

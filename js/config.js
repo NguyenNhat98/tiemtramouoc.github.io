@@ -97,6 +97,7 @@ export const LOCATIONS = {
     pro: ['Tiền boa +40%', 'Khách kiên nhẫn +30%'], con: ['Chi phí nguyên liệu vận chuyển +30%', 'Lượng khách ghé quán −25%', 'Đơn trực tuyến không khả dụng (−100%)'], fx: { tip: 0.4, patience: 0.3, ingCost: 0.3, traffic: -0.25, online: -1 }, pool: { sunny: 35, rain: 30, hot: 20, cloudy: 15 }, map: [77.6, 44.1] },
 };
 export const LOCATION_COST = 1000000;
+export const SHARE_URL = 'https://nguyennhat98.github.io/';
 
 /* ========== Mùa, thời tiết, sự kiện ngày ========== */
 export const SEASONS = {
@@ -140,6 +141,16 @@ export const ARCHETYPES = {
     lines: ['Chủ quán ơi, cho 1 ly {drink} {size}{tops}, bớt cho tôi chút xíu nha?', 'Lấy 1 {drink} {size}{tops}, khách quen rồi, tính rẻ cho nhé!'] },
   reviewer: { name: 'Food reviewer', tag: '📸 Reviewer', avatars: ['🧑‍🍳', '📷'], patience: 0.8, bill: 1.1, tip: 1.5, hard: 0.5, w: 3,
     lines: ['Cho mình 1 ly {drink} {size}{tops}, mình đang quay review đó nha!', 'Mình lấy {drink} {size}{tops}, mình sẽ chấm điểm từng chi tiết nhé!'] },
+  idol: { name: 'Idol / Streamer', tag: '🎤 Idol', avatars: ['👩‍🎤', '🤳'], patience: 0.8, bill: 1.1, tip: 1.3, hard: 0.3, w: 7,
+    lines: ['Cho mình 1 ly {drink} {size}{tops} nha, mình đang livestream nên pha xinh xinh giúp mình!', 'Ly {drink} {size}{tops} nhé, nhớ cho ly đẹp để mình quay clip á!'] },
+  gamer: { name: 'Game thủ', tag: '🎧 Game thủ', avatars: ['🎧', '🎮'], patience: 0.85, bill: 1, tip: 0.6, hard: 0.25, w: 9,
+    lines: ['Cho mình 1 ly {drink} {size}{tops} nhé, đang kẹt trận, nhanh giúp mình!', 'Một {drink} {size}{tops} đi chủ quán, mình thức đêm leo rank đây.'] },
+  congNhan: { name: 'Thợ & công nhân', tag: '👷 Công nhân', avatars: ['👷', '🧑‍🔧'], patience: 0.9, bill: 0.95, tip: 0.9, hard: 0.1, w: 9,
+    lines: ['Cho anh 1 ly {drink} {size}{tops}, trời nóng quá, nhiều đá nha em!', 'Em ơi, một {drink} {size}{tops}, anh giải lao 10 phút thôi.'] },
+  shipper: { name: 'Shipper', tag: '🛵 Shipper', avatars: ['🛵', '🧢'], patience: 0.55, bill: 1, tip: 0.7, hard: 0.3, w: 8,
+    lines: ['Cho mình 1 ly {drink} {size}{tops}, nhanh nhanh giúp mình, còn đơn đang giao!', 'Một {drink} {size}{tops} mang đi, mình gấp lắm!'] },
+  giaoVien: { name: 'Cô giáo', tag: '📚 Cô giáo', avatars: ['👩‍🏫', '📚'], patience: 1.1, bill: 1, tip: 1, hard: 0.15, w: 7,
+    lines: ['Cô lấy 1 ly {drink} {size}{tops} nhé em, ít ngọt thôi.', 'Cho cô một {drink} {size}{tops}, cô nghỉ giữa tiết ghé qua.'] },
   be: { name: 'Bé tan học', tag: '🎈 Bé', avatars: ['🧒', '👧', '👦'], patience: 0.8, bill: 0.9, tip: 0.3, hard: 0.1, w: 8,
     lines: ['Cô/chú ơi cho con 1 ly {drink} {size}{tops} ạ!', 'Con muốn uống {drink} {size}{tops}, mẹ cho tiền rồi ạ!'] },
 };
@@ -171,6 +182,9 @@ export const EQUIP = [
   { id: 'mayLanh', icon: '🧊', name: 'Máy lạnh', tiers: [{ n: 'Quạt trần hơi nước', c: 1000000, d: 'Khách kiên nhẫn hơn 8%' }, { n: 'Máy lạnh treo tường', c: 8000000, d: 'Kiên nhẫn +15%' }, { n: 'Hệ thống điều hòa trung tâm', c: 30000000, d: 'Kiên nhẫn +25%' }], key: 'patience', vals: [0.08, 0.15, 0.25], util: [0.05, 0.1, 0.2] },
   { id: 'nhanDien', icon: '🏷️', name: 'Bộ nhận diện thương hiệu', tiers: [{ n: 'Tem ly & menu thương hiệu', c: 700000, d: 'Tiền boa +5%, tem ly in logo' }, { n: 'Đồng phục & túi giấy', c: 6000000, d: 'Tiền boa +10%, khách +3%' }, { n: 'Thương hiệu chuỗi', c: 25000000, d: 'Tiền boa +15%, khách +6%' }], key: 'brand', vals: [0.05, 0.1, 0.15] },
   { id: 'tablet', icon: '📟', name: 'Tablet nhận đơn online', tiers: [{ n: 'Tablet #1', c: 300000, d: 'Mở 1 app giao hàng' }, { n: 'Tablet #2', c: 600000, d: 'Mở thêm 1 app giao hàng' }, { n: 'Tablet #3', c: 1200000, d: 'Mở thêm 1 app giao hàng' }, { n: 'Tablet #4', c: 2400000, d: 'Mở thêm 1 app giao hàng' }], key: 'tablets', vals: [1, 2, 3, 4] },
+  { id: 'mayPhat', icon: '🔌', name: 'Máy phát điện', tiers: [{ n: 'Máy phát điện mini', c: 2500000, d: 'Mất điện: máy đóng nắp & đèn vẫn chạy (bình trà tạm ngưng)' }, { n: 'Máy phát điện công suất lớn', c: 12000000, d: 'Mất điện chỉ chập chờn 1–2 giây, mọi máy vẫn chạy' }], key: 'gen', vals: [1, 2] },
+  { id: 'giayPhep', icon: '📜', name: 'Giấy phép kinh doanh', tiers: [{ n: 'Giấy phép kinh doanh', c: 1500000, d: 'Qua kiểm tra giấy phép được thưởng, không bị phạt/đình chỉ' }], key: 'license', vals: [1] },
+  { id: 'attp', icon: '🧪', name: 'Chứng nhận ATTP', tiers: [{ n: 'Chứng nhận ATTP', c: 3000000, d: 'Kiểm tra vệ sinh: thưởng lớn hơn, giảm 50% tiền phạt' }], key: 'attp', vals: [1] },
 ];
 export const APPS = [
   { id: 'soppi', name: 'Soppi', color: '#ff7a3d' }, { id: 'topTop', name: 'Tóp Tóp', color: '#e8416a' },

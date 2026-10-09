@@ -27,10 +27,20 @@ export function toast(msg, type = '', dur = 2300) {
   if (S.phase === 'sell' && !isModalOpen() && type !== 'err') return;
   const root = $('#toasts');
   if (!root) return;
+  // cùng một nội dung đang hiện thì chỉ gia hạn, không chồng thêm dòng (bấm liên tục chỉ ra một thông báo)
+  for (const el of root.children) {
+    if (el.dataset.msg === msg && !el.classList.contains('out')) {
+      clearTimeout(el._tm);
+      el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+      el._tm = setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 260); }, dur);
+      return;
+    }
+  }
   const t = h(`<div class="toast ${type}">${esc(msg)}</div>`);
+  t.dataset.msg = msg;
   root.appendChild(t);
   while (root.children.length > 3) root.firstElementChild.remove();
-  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 260); }, dur);
+  t._tm = setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 260); }, dur);
 }
 
 /* ===== FX ===== */
@@ -255,6 +265,8 @@ export function openDaySummary() {
     <h2 class="day-title">Hết ngày ${S.day}</h2>
     <div class="day-stats"><div><b>${T.cups}</b><span>ly bán</span></div><div><b>${T.left}</b><span>khách bỏ về</span></div><div><b>${T.avgStars ? T.avgStars.toFixed(1) + '★' : '–'}</b><span>đánh giá</span></div></div>
     ${plHTML(agg, 'Ngày ' + S.day)}
+    ${T.expired && T.expired.length ? `<div class="exp-note">⚠️ ${sum(T.expired, (x) => x.q)} ${T.expired.every((x) => ITEMS[x.id].kind === 'top') ? 'topping' : 'phần nguyên liệu/topping'} đã hỏng, bị bỏ đi: −${fmtK(T.expiredCost || 0)}<small>${T.expired.map((x) => `${ITEMS[x.id].icon} ${esc(ITEMS[x.id].name)} ×${x.q}`).join(' · ')}</small></div>` : ''}
+    ${T.fine ? `<div class="exp-note">📋 Tiền phạt kiểm tra đột xuất: −${fmtK(T.fine)}</div>` : ''}
     <div class="day-cash"><span>🗄️ Số dư két</span><b>${fmtK(S.money)}</b></div>
     <div class="tomorrow">📅 <b>Ngày mai:</b> ${esc(tw.tip)}</div>
     <button class="btn ghost block" data-act="sum">📊 Tổng kết</button>
