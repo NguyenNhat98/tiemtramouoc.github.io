@@ -2,7 +2,7 @@
  * Dữ liệu cấu hình & cân bằng toàn game (viết mới, đối chiếu với KICH-BAN.md).
  */
 export const DEBUG = true;
-export const VERSION = '3.1.0';
+export const VERSION = '1.0.0';
 export const SAVE_KEY = 'tiemTraMoUoc3';
 export const SAVE_VERSION = 1;
 
@@ -327,8 +327,8 @@ export const STAMP_COLORS = ['#ffffff', '#fde8cf', '#ffd6e0', '#d6f2e4', '#8b5a3
 export const SLOGANS = ['Trà sữa mỗi ngày', 'Ngon từ giọt đầu', 'Pha bằng cả trái tim', 'Nhỏ mà có võ', 'Chill cùng trà sữa', 'Bỏ trống'];
 export const SHIFT_MINUTES = [3, 4, 5];
 export const CHANGELOG = [
-  'v3.1: Toàn màn hình, màn mở đầu gọn đẹp, hướng dẫn chi tiết + hướng dẫn lần đầu (có bỏ qua), quầy pha chế vẽ lại, bản đồ & thẻ địa điểm có hình nền, khách đến đều và chậm hơn, hiệu ứng nổ/combo mượt hơn, sửa tải logo.',
-  'v3.0: Làm lại toàn bộ giao diện & vòng chơi theo kịch bản chi tiết (15 menu, pha chế có hiệu ứng, sảnh trà, chi nhánh, nhân sự…).',
+  'v1.0: Toàn màn hình, màn mở đầu gọn đẹp, hướng dẫn chi tiết + hướng dẫn lần đầu (có bỏ qua), quầy pha chế vẽ lại, bản đồ & thẻ địa điểm có hình nền, khách đến đều và chậm hơn, hiệu ứng nổ/combo mượt hơn, sửa tải logo.',
+  'v0.9: Làm lại toàn bộ giao diện & vòng chơi theo kịch bản chi tiết (15 menu, pha chế có hiệu ứng, sảnh trà, chi nhánh, nhân sự…).',
   'Thêm 2 mini game: Milk Tea Crush và Trân Châu Nổ.',
   'Thêm khởi nghiệp xuyên Việt với 10 địa điểm, thú cưng, vườn cây 16 ô.',
 ];

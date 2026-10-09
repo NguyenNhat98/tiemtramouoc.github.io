@@ -7,7 +7,7 @@
 
   // js/config.js
   var DEBUG = true;
-  var VERSION = "3.1.0";
+  var VERSION = "1.0.0";
   var SAVE_KEY = "tiemTraMoUoc3";
   var SAVE_VERSION = 1;
   var SHIFT_START_H = 10;
@@ -545,8 +545,8 @@
   var SLOGANS = ["Tr\xE0 s\u1EEFa m\u1ED7i ng\xE0y", "Ngon t\u1EEB gi\u1ECDt \u0111\u1EA7u", "Pha b\u1EB1ng c\u1EA3 tr\xE1i tim", "Nh\u1ECF m\xE0 c\xF3 v\xF5", "Chill c\xF9ng tr\xE0 s\u1EEFa", "B\u1ECF tr\u1ED1ng"];
   var SHIFT_MINUTES = [3, 4, 5];
   var CHANGELOG = [
-    "v3.1: To\xE0n m\xE0n h\xECnh, m\xE0n m\u1EDF \u0111\u1EA7u g\u1ECDn \u0111\u1EB9p, h\u01B0\u1EDBng d\u1EABn chi ti\u1EBFt + h\u01B0\u1EDBng d\u1EABn l\u1EA7n \u0111\u1EA7u (c\xF3 b\u1ECF qua), qu\u1EA7y pha ch\u1EBF v\u1EBD l\u1EA1i, b\u1EA3n \u0111\u1ED3 & th\u1EBB \u0111\u1ECBa \u0111i\u1EC3m c\xF3 h\xECnh n\u1EC1n, kh\xE1ch \u0111\u1EBFn \u0111\u1EC1u v\xE0 ch\u1EADm h\u01A1n, hi\u1EC7u \u1EE9ng n\u1ED5/combo m\u01B0\u1EE3t h\u01A1n, s\u1EEDa t\u1EA3i logo.",
-    "v3.0: L\xE0m l\u1EA1i to\xE0n b\u1ED9 giao di\u1EC7n & v\xF2ng ch\u01A1i theo k\u1ECBch b\u1EA3n chi ti\u1EBFt (15 menu, pha ch\u1EBF c\xF3 hi\u1EC7u \u1EE9ng, s\u1EA3nh tr\xE0, chi nh\xE1nh, nh\xE2n s\u1EF1\u2026).",
+    "v1.0: To\xE0n m\xE0n h\xECnh, m\xE0n m\u1EDF \u0111\u1EA7u g\u1ECDn \u0111\u1EB9p, h\u01B0\u1EDBng d\u1EABn chi ti\u1EBFt + h\u01B0\u1EDBng d\u1EABn l\u1EA7n \u0111\u1EA7u (c\xF3 b\u1ECF qua), qu\u1EA7y pha ch\u1EBF v\u1EBD l\u1EA1i, b\u1EA3n \u0111\u1ED3 & th\u1EBB \u0111\u1ECBa \u0111i\u1EC3m c\xF3 h\xECnh n\u1EC1n, kh\xE1ch \u0111\u1EBFn \u0111\u1EC1u v\xE0 ch\u1EADm h\u01A1n, hi\u1EC7u \u1EE9ng n\u1ED5/combo m\u01B0\u1EE3t h\u01A1n, s\u1EEDa t\u1EA3i logo.",
+    "v0.9: L\xE0m l\u1EA1i to\xE0n b\u1ED9 giao di\u1EC7n & v\xF2ng ch\u01A1i theo k\u1ECBch b\u1EA3n chi ti\u1EBFt (15 menu, pha ch\u1EBF c\xF3 hi\u1EC7u \u1EE9ng, s\u1EA3nh tr\xE0, chi nh\xE1nh, nh\xE2n s\u1EF1\u2026).",
     "Th\xEAm 2 mini game: Milk Tea Crush v\xE0 Tr\xE2n Ch\xE2u N\u1ED5.",
     "Th\xEAm kh\u1EDFi nghi\u1EC7p xuy\xEAn Vi\u1EC7t v\u1EDBi 10 \u0111\u1ECBa \u0111i\u1EC3m, th\xFA c\u01B0ng, v\u01B0\u1EDDn c\xE2y 16 \xF4."
   ];
@@ -2432,7 +2432,9 @@
     } catch (e) {
     }
   }
+  var isEmbedded = () => /; wv\)/.test(navigator.userAgent) || !!(window.matchMedia && (window.matchMedia("(display-mode: fullscreen)").matches || window.matchMedia("(display-mode: standalone)").matches));
   function goFullscreen() {
+    if (isEmbedded()) return;
     try {
       const d = document.documentElement;
       if (document.fullscreenElement || document.webkitFullscreenElement) {
@@ -2465,38 +2467,36 @@
   };
   document.addEventListener("fullscreenchange", fullscreenChanged);
   document.addEventListener("webkitfullscreenchange", fullscreenChanged);
-  for (const ev of ["pointerup", "touchend", "click", "keydown"]) document.addEventListener(ev, () => {
-    if (!fsDone) goFullscreen();
-  }, { passive: true });
   function showIntro(onPlay) {
     const el = $("#intro");
     el.hidden = false;
-    goFullscreen();
     const hasSave = S.started;
     el.innerHTML = `
     <div class="intro-sky"><span class="star">\u2B50</span><span class="cloud c1">\u2601\uFE0F</span><span class="cloud c2">\u2601\uFE0F</span><span class="cloud c3">\u2601\uFE0F</span><span class="bubble-tea">\u{1F9CB}</span><span class="spark" style="left:12%;top:36%">\u2726</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">\u2726</span><span class="spark" style="left:46%;top:30%;animation-delay:-1.8s">\u2726</span></div>
     <div class="in-rays" aria-hidden="true"></div>
     <div class="in-fx" aria-hidden="true"><i class="bub" style="left:6%;--s:14px;--d:0.0s;--t:9.0s"></i><i class="bub" style="left:14%;--s:9px;--d:2.5s;--t:7.5s"></i><i class="bub" style="left:23%;--s:18px;--d:5.0s;--t:11.0s"></i><i class="bub" style="left:33%;--s:10px;--d:1.2s;--t:8.0s"></i><i class="bub" style="left:44%;--s:15px;--d:6.5s;--t:10.0s"></i><i class="bub" style="left:55%;--s:9px;--d:3.2s;--t:7.0s"></i><i class="bub" style="left:63%;--s:17px;--d:0.8s;--t:12.0s"></i><i class="bub" style="left:72%;--s:11px;--d:4.4s;--t:8.5s"></i><i class="bub" style="left:81%;--s:15px;--d:7.5s;--t:10.5s"></i><i class="bub" style="left:90%;--s:10px;--d:2.0s;--t:7.8s"></i><i class="bub" style="left:96%;--s:13px;--d:5.6s;--t:9.4s"></i> <i class="pet" style="left:8%;--d:0.0s;--t:11.0s;--x:40px">\u{1F338}</i><i class="pet" style="left:24%;--d:3.5s;--t:13.0s;--x:-30px">\u{1F338}</i><i class="pet" style="left:42%;--d:6.0s;--t:12.0s;--x:50px">\u{1F338}</i><i class="pet" style="left:61%;--d:1.5s;--t:14.0s;--x:-40px">\u{1F338}</i><i class="pet" style="left:78%;--d:8.0s;--t:11.5s;--x:30px">\u{1F338}</i><i class="pet" style="left:92%;--d:4.5s;--t:12.5s;--x:-35px">\u{1F338}</i></div>
     <div class="in-aw" aria-hidden="true"></div>
+    <div class="in-lights" aria-hidden="true"><i style="--c:#ff7aa2;--d:0.0s"></i><i style="--c:#ffd45e;--d:0.2s"></i><i style="--c:#7fd6ff;--d:0.5s"></i><i style="--c:#9fe39a;--d:0.7s"></i><i style="--c:#ffa86b;--d:0.9s"></i><i style="--c:#c9a0ff;--d:1.2s"></i><i style="--c:#ff7aa2;--d:1.4s"></i><i style="--c:#ffd45e;--d:1.6s"></i><i style="--c:#7fd6ff;--d:1.8s"></i><i style="--c:#9fe39a;--d:2.1s"></i><i style="--c:#ffa86b;--d:2.3s"></i><i style="--c:#c9a0ff;--d:2.5s"></i><i style="--c:#ff7aa2;--d:2.8s"></i><i style="--c:#ffd45e;--d:3.0s"></i><i style="--c:#7fd6ff;--d:3.2s"></i><i style="--c:#9fe39a;--d:3.5s"></i><i style="--c:#ffa86b;--d:3.7s"></i><i style="--c:#c9a0ff;--d:3.9s"></i></div>
+    <div class="in-birds" aria-hidden="true"><span class="b1">\u{1F54A}\uFE0F</span><span class="b2">\u{1F426}</span></div>
     <div class="in-lan" aria-hidden="true"><span>\u{1F3EE}</span><span>\u{1F390}</span><span>\u{1F3EE}</span></div>
-    <h1 class="intro-title">Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc</h1>
+    <div class="in-sign" aria-hidden="true">M\u1EDE C\u1EECA</div>
+    <h1 class="intro-title"><span class="tt-spk a">\u2728</span><span class="tt-spk b">\u2726</span><span class="tt-spk c">\u2728</span>Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc</h1>
     <p class="intro-tag">Pha tr\xE0, \u0111\xF3n kh\xE1ch, m\u1EDF ti\u1EC7m nh\u1ECF c\u1EE7a ri\xEAng b\u1EA1n</p>
     <div class="intro-info">${esc(S.shopName)} \xB7 Ng\xE0y ${S.day} \xB7 ${fmtK(S.money)}</div>
+    <div class="in-hero" aria-hidden="true"><span class="hero-glow"></span><span class="hero-cup">\u{1F9CB}</span><span class="hero-steam s1">\u2728</span><span class="hero-steam s2">\u2728</span><span class="hero-steam s3">\u{1F497}</span></div>
     <button class="btn pri big" data-act="play">${hasSave ? "Ch\u01A1i ti\u1EBFp" : "Ch\u01A1i m\u1EDBi"}</button>
     <button class="link" data-act="guide">H\u01B0\u1EDBng d\u1EABn</button>
-    <div class="in-hero" aria-hidden="true"><span class="hero-glow"></span><span class="hero-cup">\u{1F9CB}</span><span class="hero-steam s1">\u2728</span><span class="hero-steam s2">\u2728</span><span class="hero-steam s3">\u{1F497}</span></div>
+    <div class="in-queue" aria-hidden="true"><span class="q1">\u{1F9D1}\u200D\u{1F393}<b>\u{1F9CB}</b></span><span class="q2">\u{1F469}\u200D\u{1F4BC}<b>\u{1F375}</b></span><span class="q3">\u{1F475}<b>\u{1F9CB}</b></span><span class="q4">\u{1F466}<b>\u{1F964}</b></span></div>
     <div class="in-counter" aria-hidden="true"><span class="in-plant">\u{1F335}</span><div class="in-cups"><span>\u{1F9CB}</span><span>\u{1F964}</span><span>\u{1F9C3}</span><span>\u{1F375}</span></div><div class="in-cat">\u{1F431}<small>z z</small></div><span class="in-plant">\u{1FAB4}</span></div>
     <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="in-walk" aria-hidden="true"><span class="w1">\u{1F6B6}\u200D\u2640\uFE0F<i>\u{1F9CB}</i></span><span class="w2">\u{1F6F5}</span><span class="w3">\u{1F415}</span></div>
     <span class="in-corner l">\u{1F353}</span><span class="in-corner r">\u{1F343}</span>
     <small class="ver">${VERSION}</small>`;
     bindActions(el, { play: () => {
       goFullscreen();
       el.hidden = true;
       onPlay();
-    }, guide: () => {
-      goFullscreen();
-      openGuide();
-    } });
+    }, guide: () => openGuide() });
   }
 
   // js/events.js

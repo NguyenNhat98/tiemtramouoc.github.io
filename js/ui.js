@@ -473,7 +473,10 @@ let fsPending = false;
 function lockPortrait() {
   try { const result = screen.orientation?.lock?.('portrait'); result?.catch?.(() => {}); } catch (e) { /* Device controls orientation. */ }
 }
+/** Đang chạy trong ứng dụng bọc APK (WebView) hoặc app cài đặt: ứng dụng tự lo chế độ toàn màn hình, web không xin nữa. */
+const isEmbedded = () => /; wv\)/.test(navigator.userAgent) || !!(window.matchMedia && (window.matchMedia('(display-mode: fullscreen)').matches || window.matchMedia('(display-mode: standalone)').matches));
 export function goFullscreen() {
+  if (isEmbedded()) return;
   try {
     const d = document.documentElement;
     if (document.fullscreenElement || document.webkitFullscreenElement) { lockPortrait(); return; }
@@ -492,30 +495,34 @@ let fsDone = false;
 const fullscreenChanged = () => { if (document.fullscreenElement || document.webkitFullscreenElement) { fsDone = true; lockPortrait(); } };
 document.addEventListener('fullscreenchange', fullscreenChanged);
 document.addEventListener('webkitfullscreenchange', fullscreenChanged);
-for (const ev of ['pointerup', 'touchend', 'click', 'keydown']) document.addEventListener(ev, () => { if (!fsDone) goFullscreen(); }, { passive: true });
+// chỉ xin toàn màn hình khi bấm nút chơi (không xin ở mọi lần chạm, tránh màn hình giật khi chạm linh tinh)
 
 /* ===== Intro ===== */
 export function showIntro(onPlay) {
   const el = $('#intro');
   el.hidden = false;
-  goFullscreen();
   const hasSave = S.started;
   el.innerHTML = `
     <div class="intro-sky"><span class="star">⭐</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span><span class="cloud c3">☁️</span><span class="bubble-tea">🧋</span><span class="spark" style="left:12%;top:36%">✦</span><span class="spark" style="right:10%;top:44%;animation-delay:-1s">✦</span><span class="spark" style="left:46%;top:30%;animation-delay:-1.8s">✦</span></div>
     <div class="in-rays" aria-hidden="true"></div>
     <div class="in-fx" aria-hidden="true"><i class="bub" style="left:6%;--s:14px;--d:0.0s;--t:9.0s"></i><i class="bub" style="left:14%;--s:9px;--d:2.5s;--t:7.5s"></i><i class="bub" style="left:23%;--s:18px;--d:5.0s;--t:11.0s"></i><i class="bub" style="left:33%;--s:10px;--d:1.2s;--t:8.0s"></i><i class="bub" style="left:44%;--s:15px;--d:6.5s;--t:10.0s"></i><i class="bub" style="left:55%;--s:9px;--d:3.2s;--t:7.0s"></i><i class="bub" style="left:63%;--s:17px;--d:0.8s;--t:12.0s"></i><i class="bub" style="left:72%;--s:11px;--d:4.4s;--t:8.5s"></i><i class="bub" style="left:81%;--s:15px;--d:7.5s;--t:10.5s"></i><i class="bub" style="left:90%;--s:10px;--d:2.0s;--t:7.8s"></i><i class="bub" style="left:96%;--s:13px;--d:5.6s;--t:9.4s"></i> <i class="pet" style="left:8%;--d:0.0s;--t:11.0s;--x:40px">🌸</i><i class="pet" style="left:24%;--d:3.5s;--t:13.0s;--x:-30px">🌸</i><i class="pet" style="left:42%;--d:6.0s;--t:12.0s;--x:50px">🌸</i><i class="pet" style="left:61%;--d:1.5s;--t:14.0s;--x:-40px">🌸</i><i class="pet" style="left:78%;--d:8.0s;--t:11.5s;--x:30px">🌸</i><i class="pet" style="left:92%;--d:4.5s;--t:12.5s;--x:-35px">🌸</i></div>
     <div class="in-aw" aria-hidden="true"></div>
+    <div class="in-lights" aria-hidden="true"><i style="--c:#ff7aa2;--d:0.0s"></i><i style="--c:#ffd45e;--d:0.2s"></i><i style="--c:#7fd6ff;--d:0.5s"></i><i style="--c:#9fe39a;--d:0.7s"></i><i style="--c:#ffa86b;--d:0.9s"></i><i style="--c:#c9a0ff;--d:1.2s"></i><i style="--c:#ff7aa2;--d:1.4s"></i><i style="--c:#ffd45e;--d:1.6s"></i><i style="--c:#7fd6ff;--d:1.8s"></i><i style="--c:#9fe39a;--d:2.1s"></i><i style="--c:#ffa86b;--d:2.3s"></i><i style="--c:#c9a0ff;--d:2.5s"></i><i style="--c:#ff7aa2;--d:2.8s"></i><i style="--c:#ffd45e;--d:3.0s"></i><i style="--c:#7fd6ff;--d:3.2s"></i><i style="--c:#9fe39a;--d:3.5s"></i><i style="--c:#ffa86b;--d:3.7s"></i><i style="--c:#c9a0ff;--d:3.9s"></i></div>
+    <div class="in-birds" aria-hidden="true"><span class="b1">🕊️</span><span class="b2">🐦</span></div>
     <div class="in-lan" aria-hidden="true"><span>🏮</span><span>🎐</span><span>🏮</span></div>
-    <h1 class="intro-title">Tiệm Trà Mơ Ước</h1>
+    <div class="in-sign" aria-hidden="true">MỞ CỬA</div>
+    <h1 class="intro-title"><span class="tt-spk a">✨</span><span class="tt-spk b">✦</span><span class="tt-spk c">✨</span>Tiệm Trà Mơ Ước</h1>
     <p class="intro-tag">Pha trà, đón khách, mở tiệm nhỏ của riêng bạn</p>
     <div class="intro-info">${esc(S.shopName)} · Ngày ${S.day} · ${fmtK(S.money)}</div>
+    <div class="in-hero" aria-hidden="true"><span class="hero-glow"></span><span class="hero-cup">🧋</span><span class="hero-steam s1">✨</span><span class="hero-steam s2">✨</span><span class="hero-steam s3">💗</span></div>
     <button class="btn pri big" data-act="play">${hasSave ? 'Chơi tiếp' : 'Chơi mới'}</button>
     <button class="link" data-act="guide">Hướng dẫn</button>
-    <div class="in-hero" aria-hidden="true"><span class="hero-glow"></span><span class="hero-cup">🧋</span><span class="hero-steam s1">✨</span><span class="hero-steam s2">✨</span><span class="hero-steam s3">💗</span></div>
+    <div class="in-queue" aria-hidden="true"><span class="q1">🧑‍🎓<b>🧋</b></span><span class="q2">👩‍💼<b>🍵</b></span><span class="q3">👵<b>🧋</b></span><span class="q4">👦<b>🥤</b></span></div>
     <div class="in-counter" aria-hidden="true"><span class="in-plant">🌵</span><div class="in-cups"><span>🧋</span><span>🥤</span><span>🧃</span><span>🍵</span></div><div class="in-cat">🐱<small>z z</small></div><span class="in-plant">🪴</span></div>
     <div class="in-front" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="in-walk" aria-hidden="true"><span class="w1">🚶‍♀️<i>🧋</i></span><span class="w2">🛵</span><span class="w3">🐕</span></div>
     <span class="in-corner l">🍓</span><span class="in-corner r">🍃</span>
     <small class="ver">${VERSION}</small>`;
-  bindActions(el, { play: () => { goFullscreen(); el.hidden = true; onPlay(); }, guide: () => { goFullscreen(); openGuide(); } });
+  bindActions(el, { play: () => { goFullscreen(); el.hidden = true; onPlay(); }, guide: () => openGuide() });
 }
 void ITEMS; void SHIFT_START_H; void wait; void replaceState; void newState; void fmt; void on; void E;
