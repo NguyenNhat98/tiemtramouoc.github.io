@@ -2,12 +2,13 @@
  * Màn hình bán hàng: khách + bong bóng thoại, quầy trà, thớt pha ly, khay topping, máy đóng nắp,
  * sảnh bàn ghế. Mọi bước đều có hiệu ứng (lấy ly, rót trà, bỏ topping, đóng nắp, giao ly).
  */
-import { ITEMS, TEAS, FLAVORS, TOPS, SIZE_L_PRICE } from './config.js';
+import { ITEMS, TEAS, FLAVORS, TOPS, SIZE_L_PRICE, STAFF } from './config.js';
 import { S, on, emit, markDirty, $, $$, h, esc, fmtK, sfx, clamp, wait, sum, rand } from './core.js';
 import * as E from './econ.js';
 import * as G from './sell.js';
 import { SH } from './sell.js';
 import { toast, fxText, fxCoins, fxSpark, bindActions, logoHTML, openModal, isModalOpen, updateClock } from './ui.js';
+import { sellSceneHTML, updateSceneTime } from './scenes.js';
 import { teaArt, toppingArt, stackArt, sealerArt, cupSvg, setCupFill, customerArt } from './sell-art.js';
 
 /* ===== Hình ly ===== */
@@ -58,7 +59,8 @@ export function renderSell() {
   const view = $('#view');
   if (S.phase !== 'sell') return;
   if (SH.view === 'lobby') return renderLobby(view);
-  view.innerHTML = `<div class="sell" id="sell">
+  view.innerHTML = `<div class="sell" id="sell" data-night="${SH.hour >= 17 ? '1' : ''}">
+    ${sellSceneHTML(SH.hour)}
     <div class="queue-row" id="qrow"></div>
     <div class="cust-zone">
       <div class="cust-av" id="cav"></div>
@@ -66,7 +68,7 @@ export function renderSell() {
     </div>
     <div class="hint" id="hint"></div>
     <div class="shelf">
-      <div class="tag-w">QUẦY TRÀ</div>
+      <div class="shelf-head"><div class="tag-w">QUẦY TRÀ</div><div class="staff-strip" id="staffStrip">${staffStripHTML()}</div></div>
       <div class="shelf-row">
         <div class="stacks">
           <button class="stack" data-act="cup" data-size="M" aria-label="Lấy ly size M"><div class="cupstack image-stack m">${stackArt('M')}</div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
@@ -101,7 +103,30 @@ export function renderSell() {
   refreshQueue();
   refreshCustomer();
   bindActions(root, sellActs);
+  $('#staffStrip')?.addEventListener('click', (e) => { const b = e.target.closest('.stf'); if (!b) return; sfx('click'); b.classList.add('tip'); clearTimeout(b._tm); b._tm = setTimeout(() => b.classList.remove('tip'), 1800); });
   frameSell(0, true);
+}
+/* ===== Nhân viên đã thuê hiện ngay trên quầy: đang pha (vòng tiến độ) hay đang rảnh ===== */
+const STAFF_ICON = { thuViec: '🦊', phaChe: '🐰', online: '🐼', quanLy: '🐻', genZ: '🦄', svDem: '🦉', meKetTinh: '🦋', diCho: '🧺', chuBa: '👮' };
+const staffStripHTML = () => STAFF.filter((st) => S.staff[st.id]).map((st) => `<button class="stf idle" data-stf="${st.id}" data-tip="${esc(st.name)}" aria-label="${esc(st.name)}">${STAFF_ICON[st.id] || st.icon}<b></b></button>`).join('');
+function staffStatus(st) {
+  const job = SH.jobs.find((j) => j.by === st.id);
+  if (job) return { cls: 'work', p: clamp((1 - job.t / Math.max(0.5, st.sec)) * 100, 4, 100), txt: `${st.name}: đang pha món cho khách` };
+  if (st.kind === 'auto' || st.kind === 'online') return { cls: 'idle', p: 0, txt: `${st.name}: ${st.kind === 'online' ? 'chờ đơn online' : 'đang rảnh, chờ khách'}` };
+  if (st.kind === 'buyer') return { cls: 'idle', p: 0, txt: `${st.name}: canh kho, hết hàng sẽ đi chợ` };
+  if (st.id === 'chuBa') return { cls: 'idle', p: 0, txt: `${st.name}: đang canh gác quán` };
+  if (st.id === 'meKetTinh') return { cls: 'idle', p: 0, txt: `${st.name}: đang quay video quảng bá` };
+  return { cls: 'idle', p: 0, txt: st.name };
+}
+function updateStaffStrip() {
+  for (const el of $$('#staffStrip .stf')) {
+    const st = STAFF.find((x) => x.id === el.dataset.stf);
+    if (!st) continue;
+    const s = staffStatus(st);
+    el.classList.toggle('work', s.cls === 'work'); el.classList.toggle('idle', s.cls !== 'work');
+    el.style.setProperty('--p', s.p.toFixed(0));
+    el.dataset.tip = s.txt;
+  }
 }
 function dispHTML(t) {
   const it = ITEMS[t];
@@ -496,6 +521,8 @@ export function frameSell(dt, force) {
   }
   if (cntT <= 0 || force) {
     cntT = 0.25;
+    updateStaffStrip();
+    updateSceneTime(SH.hour);
     for (const el of $$('[data-cnt]', root)) {
       const id = el.dataset.cnt, q = E.stockQty(id);
       el.textContent = q; el.parentElement.classList.toggle('empty', q === 0);

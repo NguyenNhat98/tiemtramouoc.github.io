@@ -1971,12 +1971,16 @@
   };
   var isModalOpen = (id) => id ? stack.some((m) => m.id === id) : stack.length > 0;
   function confirmBox(title, msg, onYes, yes = "\u0110\u1ED3ng \xFD", danger = false) {
-    const m = openModal({ html: `<h3 class="m-title">${esc(title)}</h3><p class="m-text">${msg}</p>
-    <div class="m-row"><button class="btn ghost" data-act="no">H\u1EE7y</button><button class="btn ${danger ? "danger" : "pri"}" data-act="yes">${esc(yes)}</button></div>`, cls: "small" });
-    bindActions(m.body, { no: () => m.close(), yes: () => {
-      m.close();
-      onYes();
-    } });
+    const m = openModal({
+      html: `<h3 class="m-title">${esc(title)}</h3><p class="m-text">${msg}</p>
+    <div class="m-row"><button class="btn ghost" data-act="no">H\u1EE7y</button><button class="btn ${danger ? "danger" : "pri"}" data-act="yes">${esc(yes)}</button></div>`, cls: "small"
+    });
+    bindActions(m.body, {
+      no: () => m.close(), yes: () => {
+        m.close();
+        onYes();
+      }
+    });
     return m;
   }
   function alertBox(title, body, btn = "\u0110\xE3 hi\u1EC3u") {
@@ -2011,15 +2015,19 @@
   }
   function openChoice(title, opts, cur2, onPick) {
     const m = openModal({ cls: "small", html: `<h3 class="m-title">${title}</h3><div class="choice-list">${opts.map(([v, label], i) => `<button class="choice ${v === cur2 ? "on" : ""}" data-act="pick" data-i="${i}"><span>${label}</span><i>${v === cur2 ? "\u2713" : ""}</i></button>`).join("")}</div><button class="btn block" data-act="x">\u0110\xF3ng</button>` });
-    bindActions(m.body, { pick: (t) => {
-      onPick(opts[+t.dataset.i][0]);
-      m.close();
-    }, x: () => m.close() });
+    bindActions(m.body, {
+      pick: (t) => {
+        onPick(opts[+t.dataset.i][0]);
+        m.close();
+      }, x: () => m.close()
+    });
   }
   function openThemePicker(onDone) {
     const sw = (id, t) => `<button class="thm-it ${S.settings.theme === id ? "on" : ""}" data-act="pick" data-k="${id}"><i style="background:linear-gradient(135deg, ${t.bg} 50%, ${t.accent} 50%)"></i><b>${t.name}</b></button>`;
-    const m = openModal({ cls: "small", html: `<h3 class="m-title">M\xE0u giao di\u1EC7n</h3><p class="m-text center">Ch\u1ECDn m\xE0u b\u1EA1n th\xEDch, \u0111\u1ED5i l\xFAc n\xE0o c\u0169ng \u0111\u01B0\u1EE3c.</p>
-    <div class="thm-grid">${Object.entries(THEMES).map(([id, t]) => sw(id, t)).join("")}</div><button class="btn pri block" data-act="done">Xong</button>` });
+    const m = openModal({
+      cls: "small", html: `<h3 class="m-title">M\xE0u giao di\u1EC7n</h3><p class="m-text center">Ch\u1ECDn m\xE0u b\u1EA1n th\xEDch, \u0111\u1ED5i l\xFAc n\xE0o c\u0169ng \u0111\u01B0\u1EE3c.</p>
+    <div class="thm-grid">${Object.entries(THEMES).map(([id, t]) => sw(id, t)).join("")}</div><button class="btn pri block" data-act="done">Xong</button>`
+    });
     bindActions(m.body, {
       pick: (t) => {
         S.settings.theme = t.dataset.k;
@@ -2293,8 +2301,10 @@
   }
   function openExport() {
     const code = exportCode();
-    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F4E6} M\xE3 sao l\u01B0u</h3><p class="m-text">Sao ch\xE9p m\xE3 b\xEAn d\u01B0\u1EDBi v\xE0 c\u1EA5t \u1EDF n\u01A1i an to\xE0n. D\xE1n v\xE0o "Kh\xF4i ph\u1EE5c t\u1EEB m\xE3" \u0111\u1EC3 ch\u01A1i ti\u1EBFp tr\xEAn m\xE1y kh\xE1c.</p>
-    <textarea class="code" readonly data-code>${code}</textarea><button class="btn pri block" data-act="copy">\u{1F4CB} Sao ch\xE9p</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
+    const m = openModal({
+      cls: "small", html: `<h3 class="m-title">\u{1F4E6} M\xE3 sao l\u01B0u</h3><p class="m-text">Sao ch\xE9p m\xE3 b\xEAn d\u01B0\u1EDBi v\xE0 c\u1EA5t \u1EDF n\u01A1i an to\xE0n. D\xE1n v\xE0o "Kh\xF4i ph\u1EE5c t\u1EEB m\xE3" \u0111\u1EC3 ch\u01A1i ti\u1EBFp tr\xEAn m\xE1y kh\xE1c.</p>
+    <textarea class="code" readonly data-code>${code}</textarea><button class="btn pri block" data-act="copy">\u{1F4CB} Sao ch\xE9p</button><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>`
+    });
     bindActions(m.body, {
       copy: async () => {
         if (await copyText(code)) toast("\u0110\xE3 sao ch\xE9p m\xE3!", "ok");
@@ -2310,7 +2320,8 @@
     });
   }
   function openImport() {
-    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F511} Kh\xF4i ph\u1EE5c t\u1EEB m\xE3</h3><textarea class="code" data-code placeholder="D\xE1n m\xE3 TTM3.\u2026 v\xE0o \u0111\xE2y"></textarea>
+    const m = openModal({
+      cls: "small", html: `<h3 class="m-title">\u{1F511} Kh\xF4i ph\u1EE5c t\u1EEB m\xE3</h3><textarea class="code" data-code placeholder="D\xE1n m\xE3 TTM3.\u2026 v\xE0o \u0111\xE2y"></textarea>
     <button class="btn pri block" data-act="go">Kh\xF4i ph\u1EE5c</button><button class="btn ghost block" data-act="x">H\u1EE7y</button>` });
     bindActions(m.body, {
       go: () => {
@@ -2326,7 +2337,8 @@
   }
   function openBackups() {
     const list = listBackups();
-    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F5C2}\uFE0F B\u1EA3n t\u1EF1 l\u01B0u</h3>${list.length ? list.map((b) => `<button class="set-row" data-act="rb" data-i="${b.i}"><span class="si">\u{1F4BE}</span><b>Ng\xE0y ${b.day} \xB7 ${fmtK(b.money)}</b><em>${new Date(b.t).toLocaleString("vi-VN")}</em></button>`).join("") : '<p class="m-text center">Ch\u01B0a c\xF3 b\u1EA3n t\u1EF1 l\u01B0u n\xE0o. Game t\u1EF1 l\u01B0u v\xE0o cu\u1ED1i m\u1ED7i ng\xE0y.</p>'}
+    const m = openModal({
+      cls: "small", html: `<h3 class="m-title">\u{1F5C2}\uFE0F B\u1EA3n t\u1EF1 l\u01B0u</h3>${list.length ? list.map((b) => `<button class="set-row" data-act="rb" data-i="${b.i}"><span class="si">\u{1F4BE}</span><b>Ng\xE0y ${b.day} \xB7 ${fmtK(b.money)}</b><em>${new Date(b.t).toLocaleString("vi-VN")}</em></button>`).join("") : '<p class="m-text center">Ch\u01B0a c\xF3 b\u1EA3n t\u1EF1 l\u01B0u n\xE0o. Game t\u1EF1 l\u01B0u v\xE0o cu\u1ED1i m\u1ED7i ng\xE0y.</p>'}
     <button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, {
       rb: (t) => confirmBox("Kh\xF4i ph\u1EE5c b\u1EA3n n\xE0y?", "Ti\u1EBFn tr\xECnh hi\u1EC7n t\u1EA1i s\u1EBD b\u1ECB thay th\u1EBF.", () => {
@@ -2343,64 +2355,65 @@
   function openGuide() {
     const li = (ico, body) => `<li><span>${ico}</span><div>${body}</div></li>`;
     const sec = (ico, title, items, open) => `<details class="g-det"${open ? " open" : ""}><summary>${ico} ${title}</summary><ul class="g-list">${items.map((x) => li(x[0], x[1])).join("")}</ul></details>`;
-    const m = openModal({ id: "guide", cls: "settings", html: `<h2 class="set-title">\u{1F4D6} H\u01B0\u1EDBng d\u1EABn ch\u01A1i</h2>
+    const m = openModal({
+      id: "guide", cls: "settings", html: `<h2 class="set-title">\u{1F4D6} H\u01B0\u1EDBng d\u1EABn ch\u01A1i</h2>
     <div class="guide rich">
     ${sec("\u{1F3E0}", "M\xE0n chu\u1EA9n b\u1ECB", [
-      ["\u{1FAA7}", "<b>Bi\u1EC3n hi\u1EC7u</b>: ch\u1EA1m logo ho\u1EB7c t\xEAn ti\u1EC7m \u0111\u1EC3 \u0111\u1ED5i. Hai nh\xE3n nh\u1ECF d\u1EABn nhanh t\u1EDBi <b>Kh\u1EDFi nghi\u1EC7p</b> (\u0111\u1ECBa \u0111i\u1EC3m) v\xE0 <b>S\u1EA3nh Tr\xE0</b>."],
-      ["\u{1F964}", "<b>Menu h\xF4m nay</b>: c\xE1c m\xF3n \u0111ang b\xE1n k\xE8m gi\xE1, size L ph\u1EE5 thu th\xEAm. D\xF2ng s\u1EF1 ki\u1EC7n v\xE0 <b>\u{1F465} kh\xE1ch d\u1EF1 ki\u1EBFn</b> + th\u1EDDi ti\u1EBFt n\u1EB1m ngay b\xEAn d\u01B0\u1EDBi."],
-      ["\u{1F9ED}", "<b>Thanh d\u01B0\u1EDBi c\xF9ng</b> c\xF3 5 nh\xF3m: \u{1F3EA} Ti\u1EC7m \xB7 \u{1F4E6} Kho \xB7 \u{1F4C8} Ph\xE1t tri\u1EC3n \xB7 \u{1F465} X\xE3 h\u1ED9i \xB7 \u{1F380} Th\xEAm. Ch\u1ECDn nh\xF3m r\u1ED3i ch\u1EA1m \xF4 ch\u1EE9c n\u0103ng b\xEAn trong."],
-      ["\u2630", "N\xFAt <b>\u2261</b> g\xF3c tr\xE1i tr\xEAn l\xE0 C\xE0i \u0111\u1EB7t, n\xFAt \u{1F4D6} l\xE0 m\u1EDF l\u1EA1i H\u01B0\u1EDBng d\u1EABn, \u26C5 \u0111\u1EC3 xem d\u1EF1 b\xE1o th\u1EDDi ti\u1EBFt v\xE0 s\u1EF1 ki\u1EC7n."],
-      ["\u{1F3EE}", "N\xFAt h\u1ED3ng \u0111\xE1y m\xE0n h\xECnh \u0111\u1ED5i theo t\xECnh tr\u1EA1ng: <b>N\u1EA5u & nh\u1EADp</b> \u2192 <b>\u26A0\uFE0F Ch\u01B0a n\u1EA5u\u2026</b> (\u0111\u1ECF, thi\u1EBFu m\xF3n) \u2192 <b>M\u1EDF c\u1EEDa</b>."]
-    ], true)}
+        ["\u{1FAA7}", "<b>Bi\u1EC3n hi\u1EC7u</b>: ch\u1EA1m logo ho\u1EB7c t\xEAn ti\u1EC7m \u0111\u1EC3 \u0111\u1ED5i. Hai nh\xE3n nh\u1ECF d\u1EABn nhanh t\u1EDBi <b>Kh\u1EDFi nghi\u1EC7p</b> (\u0111\u1ECBa \u0111i\u1EC3m) v\xE0 <b>S\u1EA3nh Tr\xE0</b>."],
+        ["\u{1F964}", "<b>Menu h\xF4m nay</b>: c\xE1c m\xF3n \u0111ang b\xE1n k\xE8m gi\xE1, size L ph\u1EE5 thu th\xEAm. D\xF2ng s\u1EF1 ki\u1EC7n v\xE0 <b>\u{1F465} kh\xE1ch d\u1EF1 ki\u1EBFn</b> + th\u1EDDi ti\u1EBFt n\u1EB1m ngay b\xEAn d\u01B0\u1EDBi."],
+        ["\u{1F9ED}", "<b>Thanh d\u01B0\u1EDBi c\xF9ng</b> c\xF3 5 nh\xF3m: \u{1F3EA} Ti\u1EC7m \xB7 \u{1F4E6} Kho \xB7 \u{1F4C8} Ph\xE1t tri\u1EC3n \xB7 \u{1F465} X\xE3 h\u1ED9i \xB7 \u{1F380} Th\xEAm. Ch\u1ECDn nh\xF3m r\u1ED3i ch\u1EA1m \xF4 ch\u1EE9c n\u0103ng b\xEAn trong."],
+        ["\u2630", "N\xFAt <b>\u2261</b> g\xF3c tr\xE1i tr\xEAn l\xE0 C\xE0i \u0111\u1EB7t, n\xFAt \u{1F4D6} l\xE0 m\u1EDF l\u1EA1i H\u01B0\u1EDBng d\u1EABn, \u26C5 \u0111\u1EC3 xem d\u1EF1 b\xE1o th\u1EDDi ti\u1EBFt v\xE0 s\u1EF1 ki\u1EC7n."],
+        ["\u{1F3EE}", "N\xFAt h\u1ED3ng \u0111\xE1y m\xE0n h\xECnh \u0111\u1ED5i theo t\xECnh tr\u1EA1ng: <b>N\u1EA5u & nh\u1EADp</b> \u2192 <b>\u26A0\uFE0F Ch\u01B0a n\u1EA5u\u2026</b> (\u0111\u1ECF, thi\u1EBFu m\xF3n) \u2192 <b>M\u1EDF c\u1EEDa</b>."]
+      ], true)}
     ${sec("\u{1F4E6}", "Kho & nh\u1EADp h\xE0ng", [
-      ["\u{1FAD6}", "C\xE1c tab: <b>Tr\xE0</b>, <b>Topping</b>, <b>D\u1EE5ng c\u1EE5</b> (ly, \u0111\xE1, \u0111\u01B0\u1EDDng\u2026) v\xE0 <b>\u{1F353} H\u01B0\u01A1ng</b> (khi \u0111\xE3 m\u1EDF kh\xF3a)."],
-      ["\u{1F522}", "M\u1ED7i m\xF3n c\xF3 \xF4 s\u1ED1: g\xF5 th\u1EB3ng s\u1ED1 l\u01B0\u1EE3ng ho\u1EB7c b\u1EA5m <b>\u2212 / +</b> (m\u1ED7i l\u1EA7n 1). D\xF2ng xanh <b>+N</b> l\xE0 l\u01B0\u1EE3ng s\u1EBD nh\u1EADp, k\xE8m ti\u1EC1n v\u1ED1n."],
-      ["\u23F3", "<b>\u23F3 N ng\xE0y</b> l\xE0 h\u1EA1n d\xF9ng; <b>\u26A0\uFE0F</b> b\xE1o m\xF3n h\u1EBFt h\u1EA1n h\xF4m nay. Chai h\u01B0\u01A1ng = nhi\u1EC1u ly, d\xF9ng \u0111\u01B0\u1EE3c 7 ng\xE0y."],
-      ["\u{1F6D2}", "Xong th\xEC b\u1EA5m <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n. Thi\u1EBFu Tr\xE0 ho\u1EB7c D\u1EE5ng c\u1EE5 th\xEC ch\u01B0a m\u1EDF c\u1EEDa \u0111\u01B0\u1EE3c."],
-      ["\u{1FAB4}", "Nh\xF3m Kho c\xF2n c\xF3 <b>V\u01B0\u1EDDn c\xE2y</b> (tr\u1ED3ng nguy\xEAn li\u1EC7u) v\xE0 <b>Th\xFA c\u01B0ng</b> (\u{1F512} \u0111\u1EBFn khi nh\u1EADn nu\xF4i)."]
-    ])}
+        ["\u{1FAD6}", "C\xE1c tab: <b>Tr\xE0</b>, <b>Topping</b>, <b>D\u1EE5ng c\u1EE5</b> (ly, \u0111\xE1, \u0111\u01B0\u1EDDng\u2026) v\xE0 <b>\u{1F353} H\u01B0\u01A1ng</b> (khi \u0111\xE3 m\u1EDF kh\xF3a)."],
+        ["\u{1F522}", "M\u1ED7i m\xF3n c\xF3 \xF4 s\u1ED1: g\xF5 th\u1EB3ng s\u1ED1 l\u01B0\u1EE3ng ho\u1EB7c b\u1EA5m <b>\u2212 / +</b> (m\u1ED7i l\u1EA7n 1). D\xF2ng xanh <b>+N</b> l\xE0 l\u01B0\u1EE3ng s\u1EBD nh\u1EADp, k\xE8m ti\u1EC1n v\u1ED1n."],
+        ["\u23F3", "<b>\u23F3 N ng\xE0y</b> l\xE0 h\u1EA1n d\xF9ng; <b>\u26A0\uFE0F</b> b\xE1o m\xF3n h\u1EBFt h\u1EA1n h\xF4m nay. Chai h\u01B0\u01A1ng = nhi\u1EC1u ly, d\xF9ng \u0111\u01B0\u1EE3c 7 ng\xE0y."],
+        ["\u{1F6D2}", "Xong th\xEC b\u1EA5m <b>N\u1EA5u & nh\u1EADp</b> \u0111\u1EC3 tr\u1EA3 ti\u1EC1n. Thi\u1EBFu Tr\xE0 ho\u1EB7c D\u1EE5ng c\u1EE5 th\xEC ch\u01B0a m\u1EDF c\u1EEDa \u0111\u01B0\u1EE3c."],
+        ["\u{1FAB4}", "Nh\xF3m Kho c\xF2n c\xF3 <b>V\u01B0\u1EDDn c\xE2y</b> (tr\u1ED3ng nguy\xEAn li\u1EC7u) v\xE0 <b>Th\xFA c\u01B0ng</b> (\u{1F512} \u0111\u1EBFn khi nh\u1EADn nu\xF4i)."]
+      ])}
     ${sec("\u{1F9CB}", "M\xE0n b\xE1n h\xE0ng \u2013 t\u1EEBng b\u01B0\u1EDBc pha 1 ly", [
-      ["1\uFE0F\u20E3", "<b>\u0110\u1ECDc \u0111\u01A1n</b>: h\xE0ng \u0111\u1EE3i kh\xE1ch \u1EDF tr\xEAn c\xF9ng, kh\xE1ch \u0111ang ph\u1EE5c v\u1EE5 hi\u1EC7n <b>bong b\xF3ng</b> ghi size, tr\xE0, h\u01B0\u01A1ng, topping. V\xF2ng quanh avatar l\xE0 <b>ki\xEAn nh\u1EABn</b>, c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i. Ch\u1EA1m avatar kh\xE1c \u0111\u1EC3 \u0111\u1ED5i kh\xE1ch."],
-      ["2\uFE0F\u20E3", "<b>L\u1EA5y ly</b>: \u1EDF <b>QU\u1EA6Y TR\xC0</b>, ch\u1EA1m ch\u1ED3ng ly <b>M</b> ho\u1EB7c <b>L</b> \u0111\xFAng size (m\u1ED7i size c\xF3 s\u1ED1 l\u01B0\u1EE3ng ri\xEAng)."],
-      ["3\uFE0F\u20E3", "<b>R\xF3t tr\xE0</b>: ch\u1EA1m \u0111\xFAng <b>b\xECnh tr\xE0</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u r\xF3t, ch\u1EA1m l\u1EA1i \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>. Ly l\u01B0ng ho\u1EB7c tr\xE0n b\u1ECB tr\u1EEB sao."],
-      ["4\uFE0F\u20E3", "<b>H\u01B0\u01A1ng</b>: n\u1EBFu kh\xE1ch g\u1ECDi, ch\u1EA1m chai \u1EDF h\xE0ng <b>H\u01AF\u01A0NG</b> d\u01B0\u1EDBi b\xECnh tr\xE0."],
-      ["5\uFE0F\u20E3", "<b>Topping</b>: ch\u1EA1m c\xE1c khay topping kh\xE1ch y\xEAu c\u1EA7u, kh\xF4ng th\xEAm th\u1EEBa."],
-      ["6\uFE0F\u20E3", "<b>\u0110\xF3ng n\u1EAFp</b>: ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b>, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly tr\xEAn th\u1EDBt</b> (khu PHA LY)."],
-      ["7\uFE0F\u20E3", "<b>Giao kh\xE1ch</b>: ly xong s\u1EBD giao cho kh\xE1ch. \u0110\xFAng \u0111\u01A1n v\xE0 nhanh th\xEC 5 sao, kh\xE1ch h\xE0i l\xF2ng c\xF2n boa."],
-      ["\u{1F4F1}", "<b>\u0110i\u1EC7n tho\u1EA1i</b>: \u0111\u01A1n online (s\u1ED1 \u0111\u1ECF l\xE0 s\u1ED1 \u0111\u01A1n ch\u1EDD). Nh\u1EADn \u0111\u01A1n r\u1ED3i pha nh\u01B0 b\xECnh th\u01B0\u1EDDng."],
-      ["\u{1F5D1}\uFE0F", "<b>Th\xF9ng r\xE1c</b>: \u0111\u1ED5 ly b\u1ECB sai \u0111\u1EC3 pha l\u1EA1i."],
-      ["\u2B50", "Ch\u1EA5m sao: sai tr\xE0 \u22123, sai size \u22122, thi\u1EBFu/th\u1EEBa h\u01B0\u01A1ng \u22121, sai topping \u22121~2, ly l\u01B0ng \u22121, tr\xE0n \u22121, ch\u1EDD qu\xE1 l\xE2u \u22121."],
-      ["\u23F8\uFE0F", "N\xFAt <b>\u23F8</b> tr\xEAn c\xF9ng l\xE0 t\u1EA1m d\u1EEBng; n\xFAt b\xE1nh r\u0103ng b\xEAn ph\u1EA3i l\xE0 C\xE0i \u0111\u1EB7t."]
-    ], true)}
+        ["1\uFE0F\u20E3", "<b>\u0110\u1ECDc \u0111\u01A1n</b>: h\xE0ng \u0111\u1EE3i kh\xE1ch \u1EDF tr\xEAn c\xF9ng, kh\xE1ch \u0111ang ph\u1EE5c v\u1EE5 hi\u1EC7n <b>bong b\xF3ng</b> ghi size, tr\xE0, h\u01B0\u01A1ng, topping. V\xF2ng quanh avatar l\xE0 <b>ki\xEAn nh\u1EABn</b>, c\u1EA1n l\xE0 kh\xE1ch b\u1ECF \u0111i. Ch\u1EA1m avatar kh\xE1c \u0111\u1EC3 \u0111\u1ED5i kh\xE1ch."],
+        ["2\uFE0F\u20E3", "<b>L\u1EA5y ly</b>: \u1EDF <b>QU\u1EA6Y TR\xC0</b>, ch\u1EA1m ch\u1ED3ng ly <b>M</b> ho\u1EB7c <b>L</b> \u0111\xFAng size (m\u1ED7i size c\xF3 s\u1ED1 l\u01B0\u1EE3ng ri\xEAng)."],
+        ["3\uFE0F\u20E3", "<b>R\xF3t tr\xE0</b>: ch\u1EA1m \u0111\xFAng <b>b\xECnh tr\xE0</b> \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u r\xF3t, ch\u1EA1m l\u1EA1i \u0111\u1EC3 d\u1EEBng khi thanh ch\u1EA1y t\u1EDBi <b>v\xF9ng v\xE0ng</b>. Ly l\u01B0ng ho\u1EB7c tr\xE0n b\u1ECB tr\u1EEB sao."],
+        ["4\uFE0F\u20E3", "<b>H\u01B0\u01A1ng</b>: n\u1EBFu kh\xE1ch g\u1ECDi, ch\u1EA1m chai \u1EDF h\xE0ng <b>H\u01AF\u01A0NG</b> d\u01B0\u1EDBi b\xECnh tr\xE0."],
+        ["5\uFE0F\u20E3", "<b>Topping</b>: ch\u1EA1m c\xE1c khay topping kh\xE1ch y\xEAu c\u1EA7u, kh\xF4ng th\xEAm th\u1EEBa."],
+        ["6\uFE0F\u20E3", "<b>\u0110\xF3ng n\u1EAFp</b>: ch\u1EA1m <b>m\xE1y \u0111\xF3ng n\u1EAFp</b>, ch\u1EDD \u0111\xE8n READY r\u1ED3i ch\u1EA1m <b>ly tr\xEAn th\u1EDBt</b> (khu PHA LY)."],
+        ["7\uFE0F\u20E3", "<b>Giao kh\xE1ch</b>: ly xong s\u1EBD giao cho kh\xE1ch. \u0110\xFAng \u0111\u01A1n v\xE0 nhanh th\xEC 5 sao, kh\xE1ch h\xE0i l\xF2ng c\xF2n boa."],
+        ["\u{1F4F1}", "<b>\u0110i\u1EC7n tho\u1EA1i</b>: \u0111\u01A1n online (s\u1ED1 \u0111\u1ECF l\xE0 s\u1ED1 \u0111\u01A1n ch\u1EDD). Nh\u1EADn \u0111\u01A1n r\u1ED3i pha nh\u01B0 b\xECnh th\u01B0\u1EDDng."],
+        ["\u{1F5D1}\uFE0F", "<b>Th\xF9ng r\xE1c</b>: \u0111\u1ED5 ly b\u1ECB sai \u0111\u1EC3 pha l\u1EA1i."],
+        ["\u2B50", "Ch\u1EA5m sao: sai tr\xE0 \u22123, sai size \u22122, thi\u1EBFu/th\u1EEBa h\u01B0\u01A1ng \u22121, sai topping \u22121~2, ly l\u01B0ng \u22121, tr\xE0n \u22121, ch\u1EDD qu\xE1 l\xE2u \u22121."],
+        ["\u23F8\uFE0F", "N\xFAt <b>\u23F8</b> tr\xEAn c\xF9ng l\xE0 t\u1EA1m d\u1EEBng; n\xFAt b\xE1nh r\u0103ng b\xEAn ph\u1EA3i l\xE0 C\xE0i \u0111\u1EB7t."]
+      ], true)}
     ${sec("\u{1FA91}", "S\u1EA3nh & b\xE0n", [
-      ["\u27A1\uFE0F", "N\xFAt <b>Ra s\u1EA3nh</b> d\u01B0\u1EDBi c\xF9ng (k\xE8m s\u1ED1 b\xE0n) chuy\u1EC3n sang S\u1EA3nh Tr\xE0; quay l\u1EA1i qu\u1EA7y b\u1EB1ng n\xFAt t\u01B0\u01A1ng \u1EE9ng."],
-      ["\u{1F9F9}", "Kh\xE1ch \u0103n xong \u0111\u1EC3 l\u1EA1i b\xE0n b\u1EA9n, d\u1ECDn b\xE0n \u0111\u1EC3 c\xF3 ch\u1ED7 cho kh\xE1ch m\u1EDBi. Kh\xE1ch ng\u1ED3i h\xE0i l\xF2ng c\xF3 th\u1EC3 boa th\xEAm."]
-    ])}
+        ["\u27A1\uFE0F", "N\xFAt <b>Ra s\u1EA3nh</b> d\u01B0\u1EDBi c\xF9ng (k\xE8m s\u1ED1 b\xE0n) chuy\u1EC3n sang S\u1EA3nh Tr\xE0; quay l\u1EA1i qu\u1EA7y b\u1EB1ng n\xFAt t\u01B0\u01A1ng \u1EE9ng."],
+        ["\u{1F9F9}", "Kh\xE1ch \u0103n xong \u0111\u1EC3 l\u1EA1i b\xE0n b\u1EA9n, d\u1ECDn b\xE0n \u0111\u1EC3 c\xF3 ch\u1ED7 cho kh\xE1ch m\u1EDBi. Kh\xE1ch ng\u1ED3i h\xE0i l\xF2ng c\xF3 th\u1EC3 boa th\xEAm."]
+      ])}
     ${sec("\u{1F4CA}", "Cu\u1ED1i ng\xE0y & t\u1ED5ng k\u1EBFt", [
-      ["\u{1F514}", "H\u1EBFt gi\u1EDD ca, b\u1EA3ng <b>T\u1ED5ng k\u1EBFt ng\xE0y</b> cho doanh thu, boa, s\u1ED1 kh\xE1ch ph\u1EE5c v\u1EE5/b\u1ECF v\u1EC1 v\xE0 sao nh\u1EADn \u0111\u01B0\u1EE3c."],
-      ["\u2B50", "Tab <b>\u0110\xE1nh gi\xE1</b> (nh\xF3m Ti\u1EC7m) xem nh\u1EADn x\xE9t. Sao c\xE0ng cao th\xEC kh\xE1ch c\xE0ng \u0111\xF4ng."],
-      ["\u{1F4CA}", "Tab <b>T\u1ED5ng k\u1EBFt</b> xem l\u1EA1i s\u1ED1 li\u1EC7u c\xE1c ng\xE0y. Game t\u1EF1 l\u01B0u cu\u1ED1i m\u1ED7i ng\xE0y."]
-    ])}
+        ["\u{1F514}", "H\u1EBFt gi\u1EDD ca, b\u1EA3ng <b>T\u1ED5ng k\u1EBFt ng\xE0y</b> cho doanh thu, boa, s\u1ED1 kh\xE1ch ph\u1EE5c v\u1EE5/b\u1ECF v\u1EC1 v\xE0 sao nh\u1EADn \u0111\u01B0\u1EE3c."],
+        ["\u2B50", "Tab <b>\u0110\xE1nh gi\xE1</b> (nh\xF3m Ti\u1EC7m) xem nh\u1EADn x\xE9t. Sao c\xE0ng cao th\xEC kh\xE1ch c\xE0ng \u0111\xF4ng."],
+        ["\u{1F4CA}", "Tab <b>T\u1ED5ng k\u1EBFt</b> xem l\u1EA1i s\u1ED1 li\u1EC7u c\xE1c ng\xE0y. Game t\u1EF1 l\u01B0u cu\u1ED1i m\u1ED7i ng\xE0y."]
+      ])}
     ${sec("\u{1F4C8}", "Ph\xE1t tri\u1EC3n (n\xE2ng c\u1EA5p, nh\xE2n s\u1EF1, chi nh\xE1nh, kh\u1EDFi nghi\u1EC7p)", [
-      ["\u{1F4B5}", "<b>Gi\xE1 b\xE1n</b> (nh\xF3m Ti\u1EC7m): ch\u1EC9nh gi\xE1 Tr\xE0, H\u01B0\u01A1ng, Topping, Size. Tr\xE0 tr\xEAn 50k, topping tr\xEAn 20k d\u1EC5 l\xE0m kh\xE1ch b\u1ECF \u0111i."],
-      ["\u{1F6E0}\uFE0F", "<b>N\xE2ng c\u1EA5p</b>: m\u1EDF kh\xF3a tr\xE0/topping, c\u1EA3i thi\u1EC7n qu\u1EA7y, th\xEAm ti\u1EC7n \xEDch."],
-      ["\u{1F3C6}", "<b>Qu\u1EA3n l\xFD nh\xE2n s\u1EF1</b>: thu\xEA nh\xE2n vi\xEAn t\u1EF1 pha, qu\u1EA3n l\xFD h\u1ED7 tr\u1EE3 topping."],
-      ["\u{1F3E2}", "<b>Chi nh\xE1nh</b>: m\u1EDF th\xEAm ti\u1EC7m \u0111\u1EC3 c\xF3 thu nh\u1EADp. <b>\u{1F5FA}\uFE0F Kh\u1EDFi nghi\u1EC7p</b>: \u0111\u1ED5i \u0111\u1ECBa \u0111i\u1EC3m, m\u1EDF r\u1ED9ng xuy\xEAn Vi\u1EC7t."],
-      ["\u{1F4DC}", "<b>Thu\u1EBF & Bank</b> (nh\xF3m Th\xEAm): \u0111\xF3ng thu\u1EBF nh\u1EADn buff, g\u1EEDi ti\u1EBFt ki\u1EC7m."]
-    ])}
+        ["\u{1F4B5}", "<b>Gi\xE1 b\xE1n</b> (nh\xF3m Ti\u1EC7m): ch\u1EC9nh gi\xE1 Tr\xE0, H\u01B0\u01A1ng, Topping, Size. Tr\xE0 tr\xEAn 50k, topping tr\xEAn 20k d\u1EC5 l\xE0m kh\xE1ch b\u1ECF \u0111i."],
+        ["\u{1F6E0}\uFE0F", "<b>N\xE2ng c\u1EA5p</b>: m\u1EDF kh\xF3a tr\xE0/topping, c\u1EA3i thi\u1EC7n qu\u1EA7y, th\xEAm ti\u1EC7n \xEDch."],
+        ["\u{1F3C6}", "<b>Qu\u1EA3n l\xFD nh\xE2n s\u1EF1</b>: thu\xEA nh\xE2n vi\xEAn t\u1EF1 pha, qu\u1EA3n l\xFD h\u1ED7 tr\u1EE3 topping."],
+        ["\u{1F3E2}", "<b>Chi nh\xE1nh</b>: m\u1EDF th\xEAm ti\u1EC7m \u0111\u1EC3 c\xF3 thu nh\u1EADp. <b>\u{1F5FA}\uFE0F Kh\u1EDFi nghi\u1EC7p</b>: \u0111\u1ED5i \u0111\u1ECBa \u0111i\u1EC3m, m\u1EDF r\u1ED9ng xuy\xEAn Vi\u1EC7t."],
+        ["\u{1F4DC}", "<b>Thu\u1EBF & Bank</b> (nh\xF3m Th\xEAm): \u0111\xF3ng thu\u1EBF nh\u1EADn buff, g\u1EEDi ti\u1EBFt ki\u1EC7m."]
+      ])}
     ${sec("\u{1F465}", "X\xE3 h\u1ED9i", [
-      ["\u{1F4F1}", "<b>M\u1EA1ng X\xE3 H\u1ED9i</b>: \u0111\u0103ng b\xE0i, ch\u1EA1y qu\u1EA3ng c\xE1o \u0111\u1EC3 k\xE9o th\xEAm kh\xE1ch."],
-      ["\u{1F465}", "<b>B\u1EA1n b\xE8</b>: k\u1EBFt n\u1ED1i v\xE0 so s\xE1nh v\u1EDBi b\u1EA1n b\xE8."],
-      ["\u{1F3B4}", "<b>S\u01B0u t\u1EA7m</b> (nh\xF3m Th\xEAm) c\u0169ng m\u1EDF nhanh b\u1EB1ng n\xFAt \u1EDF g\xF3c ph\u1EA3i thanh \u0111\u1EA7u m\xE0n h\xECnh."]
-    ])}
+        ["\u{1F4F1}", "<b>M\u1EA1ng X\xE3 H\u1ED9i</b>: \u0111\u0103ng b\xE0i, ch\u1EA1y qu\u1EA3ng c\xE1o \u0111\u1EC3 k\xE9o th\xEAm kh\xE1ch."],
+        ["\u{1F465}", "<b>B\u1EA1n b\xE8</b>: k\u1EBFt n\u1ED1i v\xE0 so s\xE1nh v\u1EDBi b\u1EA1n b\xE8."],
+        ["\u{1F3B4}", "<b>S\u01B0u t\u1EA7m</b> (nh\xF3m Th\xEAm) c\u0169ng m\u1EDF nhanh b\u1EB1ng n\xFAt \u1EDF g\xF3c ph\u1EA3i thanh \u0111\u1EA7u m\xE0n h\xECnh."]
+      ])}
     ${sec("\u{1F36C}", "Mini game", [
-      ["\u{1F36C}", "<b>Milk Tea Crush</b> (nh\xF3m Th\xEAm): gh\xE9p 3 m\xF3n gi\u1ED1ng nhau \u0111\u1EC3 nh\u1EADn th\u01B0\u1EDFng."]
-    ])}
+        ["\u{1F36C}", "<b>Milk Tea Crush</b> (nh\xF3m Th\xEAm): gh\xE9p 3 m\xF3n gi\u1ED1ng nhau \u0111\u1EC3 nh\u1EADn th\u01B0\u1EDFng."]
+      ])}
     ${sec("\u2699\uFE0F", "C\xE0i \u0111\u1EB7t (m\xE0u, rung, nh\u1EA1c)", [
-      ["\u{1F3A8}", "B\u1EA5m <b>\u2261</b> (m\xE0n chu\u1EA9n b\u1ECB) ho\u1EB7c b\xE1nh r\u0103ng (khi b\xE1n) r\u1ED3i ch\u1ECDn <b>M\xE0u giao di\u1EC7n</b>."],
-      ["\u{1F4F3}", "<b>Rung</b>: ch\u1ECDn m\u1EE9c rung khi thao t\xE1c."],
-      ["\u{1F3B5}", "<b>Nh\u1EA1c n\u1EC1n</b> v\xE0 <b>SFX</b> ch\u1EC9nh \xE2m l\u01B0\u1EE3ng ri\xEAng; <b>\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a</b> \u0111\u1ED5i phong c\xE1ch nh\u1EA1c. C\xF2n c\xF3 \u23F1\uFE0F th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y v\xE0 \u{1F9ED} ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc."]
-    ])}
+        ["\u{1F3A8}", "B\u1EA5m <b>\u2261</b> (m\xE0n chu\u1EA9n b\u1ECB) ho\u1EB7c b\xE1nh r\u0103ng (khi b\xE1n) r\u1ED3i ch\u1ECDn <b>M\xE0u giao di\u1EC7n</b>."],
+        ["\u{1F4F3}", "<b>Rung</b>: ch\u1ECDn m\u1EE9c rung khi thao t\xE1c."],
+        ["\u{1F3B5}", "<b>Nh\u1EA1c n\u1EC1n</b> v\xE0 <b>SFX</b> ch\u1EC9nh \xE2m l\u01B0\u1EE3ng ri\xEAng; <b>\u{1F3BC} Nh\u1EA1c n\u1EC1n & M\xF9a</b> \u0111\u1ED5i phong c\xE1ch nh\u1EA1c. C\xF2n c\xF3 \u23F1\uFE0F th\u1EDDi gian b\xE1n m\u1ED7i ng\xE0y v\xE0 \u{1F9ED} ch\u1EC9 d\u1EABn t\u1EEBng b\u01B0\u1EDBc."]
+      ])}
     </div>
     <button class="btn pri block" data-act="x" style="margin-top:6px">\u0110\xE3 hi\u1EC3u</button>` });
     bindActions(m.body, { x: () => m.close() });
@@ -2408,12 +2421,13 @@
   function openForecast() {
     const ev = eventOf();
     const loc = LOCATIONS[S.location];
-    const m = openModal({ cls: "small", html: `<h3 class="m-title">\u{1F326}\uFE0F Th\u1EDDi ti\u1EBFt & M\xF9a</h3>
+    const m = openModal({
+      cls: "small", html: `<h3 class="m-title">\u{1F326}\uFE0F Th\u1EDDi ti\u1EBFt & M\xF9a</h3>
     <p class="m-text center">${loc.icon} ${esc(loc.name)} \xB7 ${SEASONS[S.season].icon} M\xF9a ${SEASONS[S.season].name}</p>
     ${S.forecast.slice(0, 4).map((f, i) => {
-      const w = WEATHERS[f.weather];
-      return `<div class="wx-row"><span class="wi">${w.icon}</span><div><b>${i === 0 ? "H\xF4m nay" : "Ng\xE0y " + f.day} \xB7 ${f.temp}\xB0C \u2014 ${w.name}</b><small>${esc(w.tip)}</small></div></div>`;
-    }).join("")}
+        const w = WEATHERS[f.weather];
+        return `<div class="wx-row"><span class="wi">${w.icon}</span><div><b>${i === 0 ? "H\xF4m nay" : "Ng\xE0y " + f.day} \xB7 ${f.temp}\xB0C \u2014 ${w.name}</b><small>${esc(w.tip)}</small></div></div>`;
+      }).join("")}
     <div class="wx-row ev"><span class="wi">${ev.icon}</span><div><b>S\u1EF1 ki\u1EC7n h\xF4m nay: ${esc(ev.name)}</b><small>${esc(ev.desc)}</small></div></div>
     <button class="btn pri block" data-act="x">\u0110\xF3ng</button>` });
     bindActions(m.body, { x: () => m.close() });
@@ -2488,11 +2502,13 @@
     <div class="in-walk" aria-hidden="true"><span class="w1"><em class="stp">\u{1F6B6}\u200D\u2640\uFE0F</em><i>\u{1F9CB}</i></span><span class="w2"><em class="rid">\u{1F6F5}</em></span><span class="w3"><em class="trt">\u{1F415}</em></span></div>
     <span class="in-corner l">\u{1F353}</span><span class="in-corner r">\u{1F343}</span>
     <small class="ver">${VERSION}</small>`;
-    bindActions(el, { play: () => {
-      goFullscreen();
-      el.hidden = true;
-      onPlay();
-    }, guide: () => openGuide() });
+    bindActions(el, {
+      play: () => {
+        goFullscreen();
+        el.hidden = true;
+        onPlay();
+      }, guide: () => openGuide()
+    });
   }
 
   // js/events.js
@@ -3521,6 +3537,161 @@
     return { ...t, author: a, day: S.day, views: randInt(20, 180) + "K", likes: randInt(2, 20) + "K" };
   }
 
+  // js/scenes.js
+  var W = 390;
+  var H = 200;
+  var cloud = (x, y, s = 1, o = 0.9) => `<g transform="translate(${x} ${y}) scale(${s})" fill="#fff" opacity="${o}"><ellipse cx="0" cy="0" rx="15" ry="6"/><ellipse cx="-10" cy="2" rx="10" ry="5"/><ellipse cx="12" cy="2" rx="11" ry="5"/></g>`;
+  var palm = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 Q3 -22 -2 -40" stroke="#8a5a34" stroke-width="3.2" fill="none" stroke-linecap="round"/><g fill="#3f9a4f"><path d="M-2 -40 Q-18 -48 -26 -38 Q-12 -42 -2 -40Z"/><path d="M-2 -40 Q14 -52 26 -40 Q12 -44 -2 -40Z"/><path d="M-2 -40 Q-10 -58 -22 -56 Q-10 -50 -2 -40Z"/><path d="M-2 -40 Q8 -60 20 -56 Q8 -50 -2 -40Z"/><path d="M-2 -40 Q-2 -56 -3 -62 Q4 -52 -2 -40Z"/></g></g>`;
+  var tree = (x, y, s = 1, c = "#4a9a55") => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-2" y="-14" width="4" height="14" fill="#7a5230"/><circle cx="0" cy="-22" r="12" fill="${c}"/><circle cx="-8" cy="-16" r="8" fill="${c}"/><circle cx="8" cy="-16" r="8" fill="${c}"/></g>`;
+  var SCENES = {
+    // Tiệm gốc: đồi xanh, nhà tranh, cây trà
+    goc: () => `
+    <path d="M0 150 Q70 110 150 140 T300 130 T390 140 V200 H0Z" fill="#9fd48a"/>
+    <path d="M0 170 Q90 140 200 165 T390 160 V200 H0Z" fill="#7fc070"/>
+    <g transform="translate(250 128)"><rect x="-26" y="0" width="52" height="32" fill="#f2d9a8"/><polygon points="-32,2 0,-26 32,2" fill="#b5663a"/><rect x="-6" y="12" width="12" height="20" fill="#8a5a34"/><rect x="-20" y="10" width="9" height="9" fill="#9bd6ee"/><rect x="11" y="10" width="9" height="9" fill="#9bd6ee"/></g>
+    ${tree(60, 150, 1.1)}${tree(110, 156, 0.8, "#5aa860")}${tree(335, 150, 1)}
+    <g fill="#2f7d3a"><ellipse cx="170" cy="168" rx="9" ry="6"/><ellipse cx="190" cy="172" rx="9" ry="6"/><ellipse cx="150" cy="172" rx="8" ry="5"/></g>
+    ${cloud(70, 40, 1)}${cloud(300, 28, 0.8)}`,
+    // Hà Nội: Tháp Rùa, Chùa Một Cột, phố cổ, liễu Hồ Gươm
+    hanoi: () => `
+    <g><rect x="150" y="112" width="26" height="40" fill="#f0cf72"/><rect x="178" y="124" width="30" height="28" fill="#e7a468"/><rect x="210" y="108" width="24" height="44" fill="#f2e2b4"/>
+    <polygon points="148,112 163,100 178,112" fill="#8a5a3a"/><polygon points="208,108 222,96 236,108" fill="#8a5a3a"/>
+    <g fill="#3f8a5a"><rect x="156" y="120" width="6" height="9"/><rect x="166" y="120" width="6" height="9"/><rect x="216" y="116" width="6" height="9"/><rect x="226" y="116" width="6" height="9"/><rect x="184" y="132" width="7" height="8"/><rect x="196" y="132" width="7" height="8"/></g></g>
+    <rect y="150" width="390" height="50" fill="#86cdc4"/><g stroke="#fff" opacity=".4" stroke-width="1.3" fill="none"><path d="M10 162 q8 -4 16 0 t16 0"/><path d="M150 176 q8 -4 16 0 t16 0"/><path d="M300 166 q8 -4 16 0 t16 0"/></g>
+    <g><ellipse cx="270" cy="152" rx="26" ry="6" fill="#5f8f55"/><rect x="259" y="120" width="22" height="32" fill="#dcc9a0"/><rect x="261" y="104" width="18" height="16" fill="#e9d8b0"/><rect x="264" y="92" width="12" height="12" fill="#dcc9a0"/>
+    <polygon points="256,120 270,111 284,120" fill="#8a6a4a"/><polygon points="258,104 270,96 282,104" fill="#8a6a4a"/><polygon points="262,92 270,83 278,92" fill="#8a6a4a"/><circle cx="270" cy="82" r="2.2" fill="#c8553d"/>
+    <g fill="#6a5a3a"><rect x="264" y="131" width="4" height="9" rx="2"/><rect x="272" y="131" width="4" height="9" rx="2"/><rect x="266" y="110" width="3" height="6" rx="1.5"/><rect x="271" y="110" width="3" height="6" rx="1.5"/></g></g>
+    <g><rect x="94" y="126" width="6" height="26" fill="#b0a088"/><rect x="76" y="112" width="42" height="14" fill="#c8553d"/><path d="M68 112 Q97 86 126 112Z" fill="#7a2f2f"/><path d="M68 112 q-2 -6 4 -8 M126 112 q2 -6 -4 -8" stroke="#7a2f2f" stroke-width="2" fill="none"/><rect x="86" y="116" width="22" height="9" fill="#e7b04a"/></g>
+    <g fill="#f4a6c0"><circle cx="82" cy="156" r="5"/><circle cx="94" cy="160" r="4"/><circle cx="110" cy="156" r="5"/></g><g fill="#3f9a4f"><ellipse cx="88" cy="159" rx="8" ry="2.5"/><ellipse cx="104" cy="161" rx="8" ry="2.5"/></g>
+    <g><rect x="28" y="108" width="5" height="46" fill="#7a5230"/><g stroke="#4fa760" stroke-width="2" fill="none" stroke-linecap="round"><path d="M30 108 q-22 4 -22 40"/><path d="M30 108 q-12 8 -12 44"/><path d="M30 108 q18 6 16 40"/><path d="M30 108 q30 6 28 36"/></g></g>
+    <g><rect x="350" y="116" width="5" height="38" fill="#7a5230"/><g stroke="#4fa760" stroke-width="2" fill="none" stroke-linecap="round"><path d="M352 116 q-24 6 -24 34"/><path d="M352 116 q-12 10 -10 38"/><path d="M352 116 q20 4 22 36"/></g></g>
+    ${cloud(60, 34)}${cloud(310, 26, 0.8)}`,
+    // TP.HCM: Landmark 81, Bitexco, Nhà thờ Đức Bà, Bưu điện
+    hcm: () => `
+    <g fill="#9fb8d0" opacity=".7"><rect x="0" y="128" width="26" height="72"/><rect x="28" y="118" width="20" height="82"/><rect x="50" y="134" width="30" height="66"/><rect x="330" y="124" width="22" height="76"/><rect x="354" y="136" width="36" height="64"/></g>
+    <g><polygon points="300,170 308,170 312,120 304,24 296,120 300,170" fill="url(#hcmg)"/><defs><linearGradient id="hcmg" x1="0" x2="1"><stop offset="0" stop-color="#7fb2e2"/><stop offset="1" stop-color="#3a64a8"/></linearGradient></defs>
+    <polygon points="300,170 318,170 312,120 304,26 292,120 284,170" fill="url(#hcmg)"/><rect x="302" y="8" width="3" height="18" fill="#3a64a8"/><g stroke="#fff" stroke-width=".8" opacity=".55"><path d="M295 60h18M293 80h22M291 100h26M289 120h30M287 140h34"/></g></g>
+    <g><polygon points="238,170 262,170 262,60 252,50 238,66" fill="#5f8fc0"/><polygon points="238,66 252,50 262,60" fill="#7fb2e2"/><ellipse cx="238" cy="62" rx="7" ry="2.6" fill="#d9e8f6" stroke="#3a64a8" stroke-width="1"/><g stroke="#fff" stroke-width=".8" opacity=".5"><path d="M240 80h20M240 100h20M240 120h20M240 140h20"/></g></g>
+    <g><rect x="64" y="128" width="62" height="42" fill="#c8664a"/><rect x="68" y="92" width="14" height="38" fill="#c8664a"/><rect x="108" y="92" width="14" height="38" fill="#c8664a"/><polygon points="66,92 75,64 84,92" fill="#a8503a"/><polygon points="106,92 115,64 124,92" fill="#a8503a"/><rect x="74.5" y="52" width="1.8" height="14" fill="#f2e2c4"/><rect x="70" y="58" width="11" height="1.8" fill="#f2e2c4"/><rect x="114.5" y="52" width="1.8" height="14" fill="#f2e2c4"/><rect x="110" y="58" width="11" height="1.8" fill="#f2e2c4"/><circle cx="95" cy="116" r="7" fill="#f2d9a8" stroke="#a8503a" stroke-width="1.5"/><rect x="90" y="140" width="10" height="30" rx="5" fill="#7a3a2a"/><g fill="#f2d9a8"><rect x="72" y="106" width="5" height="9" rx="2.5"/><rect x="113" y="106" width="5" height="9" rx="2.5"/></g></g>
+    <g><rect x="148" y="146" width="66" height="24" fill="#f2cd6a"/><polygon points="144,146 181,128 218,146" fill="#c8664a"/><g fill="#7a3a2a"><rect x="156" y="152" width="7" height="14" rx="3.5"/><rect x="170" y="152" width="7" height="14" rx="3.5"/><rect x="184" y="152" width="7" height="14" rx="3.5"/><rect x="198" y="152" width="7" height="14" rx="3.5"/></g><circle cx="181" cy="138" r="5" fill="#fff" stroke="#7a3a2a" stroke-width="1.2"/></g>
+    <path d="M0 170 H390 V200 H0Z" fill="#8f9aa6"/><path d="M0 172 H390" stroke="#fff" stroke-width="2" stroke-dasharray="10 8" opacity=".6"/>
+    <g fill="#4a9a55"><circle cx="30" cy="160" r="9"/><circle cx="130" cy="164" r="7"/><circle cx="355" cy="162" r="9"/></g>
+    ${cloud(180, 30, 0.9)}${cloud(40, 50, 0.7)}`,
+    // Huế: Ngọ Môn, Kỳ đài, sông Hương và thuyền rồng
+    hue: () => `
+    <g fill="#3c7f4a"><polygon points="20,150 30,96 40,150"/><polygon points="350,152 360,100 370,152"/><polygon points="40,150 52,110 64,150"/></g>
+    <g><polygon points="112,170 278,170 262,140 128,140" fill="#b9b2a2"/><rect x="128" y="138" width="134" height="6" fill="#9c9484"/>
+    <g fill="#5a4a3a"><path d="M150 170 v-14 a10 10 0 0 1 20 0 v14z"/><path d="M185 170 v-18 a10 10 0 0 1 20 0 v18z"/><path d="M220 170 v-14 a10 10 0 0 1 20 0 v14z"/></g>
+    <rect x="148" y="108" width="94" height="30" fill="#e7b64a"/><g fill="#b8392b"><rect x="154" y="110" width="5" height="28"/><rect x="170" y="110" width="5" height="28"/><rect x="186" y="110" width="5" height="28"/><rect x="202" y="110" width="5" height="28"/><rect x="218" y="110" width="5" height="28"/><rect x="233" y="110" width="5" height="28"/></g>
+    <path d="M138 110 Q195 86 252 110 L242 114 Q195 98 148 114Z" fill="#c8392b"/><path d="M162 92 Q195 70 228 92 L220 96 Q195 82 170 96Z" fill="#e0a83a"/><path d="M178 78 Q195 62 212 78 L206 82 Q195 72 184 82Z" fill="#c8392b"/></g>
+    <g><rect x="46" y="150" width="30" height="8" fill="#b9b2a2"/><rect x="52" y="140" width="18" height="10" fill="#c9c2b2"/><rect x="56" y="132" width="10" height="8" fill="#b9b2a2"/><rect x="60.5" y="80" width="2.4" height="52" fill="#7a5230"/><path d="M63 82 L88 88 L63 96Z" fill="#d83a2b"/><path d="M63 82 L88 88 L63 96Z" fill="none" stroke="#f5c542" stroke-width="1.4"/></g>
+    <rect y="170" width="390" height="30" fill="#78b8c4"/><g stroke="#fff" opacity=".4" stroke-width="1.3" fill="none"><path d="M20 180 q8 -4 16 0 t16 0"/><path d="M180 188 q8 -4 16 0 t16 0"/></g>
+    <g class="sc-boat" transform="translate(300 176)"><path d="M-30 0 Q0 14 34 -2 L40 -10 Q36 -4 24 -4 L-26 -4Z" fill="#e7b64a"/><path d="M34 -2 q8 -8 6 -16 q-6 4 -6 8" fill="#d83a2b"/><rect x="-14" y="-16" width="26" height="12" fill="#c8392b"/><polygon points="-18,-16 -1,-28 16,-16" fill="#e0a83a"/></g>
+    ${cloud(260, 36)}${cloud(50, 40, 0.8)}`,
+    // Đà Nẵng: Cầu Rồng, Cầu Vàng (Bà Nà), bãi biển Mỹ Khê, bánh xe Sun Wheel
+    danang: () => `
+    <path d="M200 160 L250 90 Q290 60 330 84 L390 160Z" fill="#4f8a68"/><path d="M260 160 L300 110 Q340 90 390 130 V160Z" fill="#5a9a74"/>
+    <g><path d="M300 116 Q330 82 362 116" stroke="#e7b64a" stroke-width="4" fill="none"/><g stroke="#e7b64a" stroke-width="1.4"><path d="M310 106v10M320 99v17M330 95v21M340 97v19M350 104v12"/></g>
+    <path d="M288 128 q-8 -14 4 -22 l8 4 -2 18z" fill="#a89a88"/><path d="M372 128 q8 -14 -4 -22 l-8 4 2 18z" fill="#a89a88"/></g>
+    <rect y="160" width="390" height="40" fill="#6fc0d4"/><g stroke="#fff" opacity=".45" stroke-width="1.3" fill="none"><path d="M10 172 q8 -4 16 0 t16 0"/><path d="M130 182 q8 -4 16 0 t16 0"/><path d="M250 174 q8 -4 16 0 t16 0"/></g>
+    <g><path d="M70 150 Q130 100 190 150" stroke="#f2a83a" stroke-width="5" fill="none"/><path d="M82 150 Q130 112 178 150" stroke="#e8923a" stroke-width="3" fill="none"/><g stroke="#f2a83a" stroke-width="2"><path d="M90 140v14M105 126v28M120 118v36M135 116v38M150 120v34M165 130v24M178 142v12"/></g><rect x="60" y="148" width="140" height="8" fill="#d9c6a0"/>
+    <path d="M62 150 q-20 -6 -22 -22 q4 -10 14 -8 q10 4 14 14z" fill="#5fb85a"/><circle cx="48" cy="124" r="2.4" fill="#fff"/><path d="M42 118 l6 -10 l6 10" fill="none" stroke="#e7d24a" stroke-width="2"/></g>
+    <g transform="translate(28 118)"><circle r="20" fill="none" stroke="#e8e8f0" stroke-width="2.4"/><g stroke="#e8e8f0" stroke-width="1.2"><path d="M-20 0h40M0 -20v40M-14 -14l28 28M14 -14l-28 28"/></g><g fill="#f5c542"><circle cx="-20" cy="0" r="2.4"/><circle cx="20" cy="0" r="2.4"/><circle cx="0" cy="-20" r="2.4"/><circle cx="0" cy="20" r="2.4"/></g><rect x="-2" y="20" width="4" height="22" fill="#cfcfe0"/></g>
+    ${palm(335, 172, 1.1)}${palm(362, 176, 0.9)}${cloud(200, 34)}${cloud(80, 50, 0.7)}`,
+    // Sa Pa: Fansipan, ruộng bậc thang, nhà sàn, sương mù
+    sapa: () => `
+    <polygon points="0,150 70,60 120,110 170,40 240,130 300,70 390,150" fill="#7c93b8"/><polygon points="170,40 150,70 162,68 170,76 180,68 192,72" fill="#fff"/><polygon points="70,60 58,80 68,78 74,84 82,78" fill="#fff"/><polygon points="300,70 288,90 298,88 304,94 312,88" fill="#fff"/>
+    <polygon points="0,170 90,100 160,150 250,96 330,150 390,120 390,200 0,200" fill="#5f8f6a"/>
+    <path d="M0 162 Q100 134 200 156 T390 150 V200 H0Z" fill="#8cc760"/><path d="M0 172 Q120 148 220 168 T390 164 V200 H0Z" fill="#b7d86a"/><path d="M0 184 Q130 164 230 182 T390 178 V200 H0Z" fill="#dcc95a"/><path d="M0 194 Q140 180 240 194 T390 192 V200 H0Z" fill="#8cc760"/>
+    <g stroke="#6a8a3a" stroke-width="1" fill="none" opacity=".6"><path d="M0 162 Q100 134 200 156 T390 150"/><path d="M0 172 Q120 148 220 168 T390 164"/><path d="M0 184 Q130 164 230 182 T390 178"/></g>
+    <g transform="translate(300 150)"><rect x="-16" y="0" width="32" height="18" fill="#a8764a"/><polygon points="-22,2 0,-16 22,2" fill="#4a6a9a"/><rect x="-4" y="6" width="8" height="12" fill="#6a4426"/><g stroke="#6a4426" stroke-width="2"><path d="M-14 18v8M14 18v8"/></g></g>
+    <g fill="#fff" opacity=".55"><ellipse cx="90" cy="128" rx="60" ry="8"/><ellipse cx="270" cy="140" rx="70" ry="9"/><ellipse cx="170" cy="112" rx="50" ry="6"/></g>${cloud(330, 36, 0.8)}`,
+    // Hạ Long: vịnh đá vôi, thuyền buồm
+    halong: () => `
+    <rect y="130" width="390" height="70" fill="#4fb3b8"/><g stroke="#fff" opacity=".4" stroke-width="1.3" fill="none"><path d="M10 150 q8 -4 16 0 t16 0"/><path d="M210 160 q8 -4 16 0 t16 0"/><path d="M110 176 q8 -4 16 0 t16 0"/><path d="M300 150 q8 -4 16 0 t16 0"/></g>
+    <g fill="#5d8f78"><path d="M10 138 Q16 96 34 104 Q48 70 62 100 Q80 92 86 138Z"/><path d="M120 138 Q128 80 146 92 Q160 58 176 96 Q194 90 202 138Z"/><path d="M250 138 Q258 98 274 106 Q290 76 304 104 Q324 98 330 138Z"/></g>
+    <g fill="#7fb092"><path d="M34 104 Q48 70 62 100 Q50 92 34 104Z"/><path d="M146 92 Q160 58 176 96 Q160 84 146 92Z"/><path d="M274 106 Q290 76 304 104 Q290 94 274 106Z"/></g>
+    <g fill="#4a7a66"><path d="M320 138 Q326 114 340 118 Q352 100 362 120 Q376 118 380 138Z"/><path d="M90 138 Q96 118 108 120 Q116 108 124 124 Q134 124 138 138Z"/></g>
+    <g class="sc-boat" transform="translate(190 168)"><path d="M-34 0 Q0 16 38 -2 L30 -8 L-28 -8Z" fill="#7a4a2a"/><g fill="#c2552c"><path d="M-16 -8 L-10 -50 L10 -44 L6 -8Z"/><path d="M6 -8 L12 -40 L30 -34 L24 -8Z"/></g><g stroke="#4a2a14" stroke-width="1.6"><path d="M-8 -52 v44M14 -42 v34"/></g></g>
+    ${cloud(60, 40)}${cloud(300, 30, 0.9)}`,
+    // Buôn Ma Thuột: đồi cà phê, nhà dài Ê Đê, voi
+    bmt: () => `
+    <path d="M0 140 Q80 90 170 130 T330 110 T390 130 V200 H0Z" fill="#7fb25a"/><g stroke="#5a8a3f" stroke-width="2" opacity=".6" fill="none"><path d="M0 150 Q80 104 170 140"/><path d="M0 162 Q80 118 170 152"/><path d="M180 140 Q260 104 330 126"/><path d="M180 152 Q260 118 340 138"/></g>
+    <path d="M0 176 Q120 150 240 172 T390 166 V200 H0Z" fill="#5f9a46"/>
+    <g><path d="M96 138 Q170 108 244 138 L236 162 H104Z" fill="#a8744a"/><path d="M84 140 Q170 96 256 140 Q170 116 84 140Z" fill="#7a5230"/><g fill="#5a3a22"><rect x="112" y="150" width="6" height="22"/><rect x="146" y="150" width="6" height="22"/><rect x="186" y="150" width="6" height="22"/><rect x="224" y="150" width="6" height="22"/></g><g fill="#3a2414"><rect x="120" y="128" width="14" height="10" rx="2"/><rect x="156" y="124" width="14" height="10" rx="2"/><rect x="196" y="124" width="14" height="10" rx="2"/></g></g>
+    <g transform="translate(332 160) scale(1.1)"><ellipse cx="0" cy="-10" rx="22" ry="14" fill="#8a8a96"/><circle cx="-22" cy="-14" r="9" fill="#8a8a96"/><path d="M-30 -10 q-8 10 -4 22" stroke="#8a8a96" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="-14" cy="-16" rx="6" ry="9" fill="#9a9aa6"/><g fill="#7a7a86"><rect x="-14" y="-2" width="7" height="14"/><rect x="2" y="-2" width="7" height="14"/><rect x="12" y="-2" width="7" height="14"/></g></g>
+    <g><g transform="translate(34 160)"><rect x="-1.5" y="-12" width="3" height="12" fill="#6a4426"/><circle cx="0" cy="-20" r="13" fill="#2f7d3a"/><g fill="#d8392b"><circle cx="-6" cy="-20" r="2"/><circle cx="3" cy="-14" r="2"/><circle cx="6" cy="-24" r="2"/><circle cx="-2" cy="-26" r="2"/></g></g><g transform="translate(66 168) scale(.8)"><rect x="-1.5" y="-12" width="3" height="12" fill="#6a4426"/><circle cx="0" cy="-20" r="13" fill="#2f7d3a"/><g fill="#d8392b"><circle cx="-6" cy="-20" r="2"/><circle cx="3" cy="-14" r="2"/><circle cx="6" cy="-24" r="2"/></g></g></g>
+    ${cloud(60, 36)}${cloud(290, 30, 0.8)}`,
+    // Cần Thơ: chợ nổi Cái Răng, cầu Cần Thơ, ghe trái cây
+    canTho: () => `
+    <g stroke="#d6dde6" stroke-width="1.6" fill="none"><path d="M70 130 L112 40 L154 130"/><path d="M112 40 L40 132 M112 40 L186 132 M112 56 L56 130 M112 56 L170 130 M112 72 L70 128 M112 72 L156 128"/></g><g stroke="#a8b4c4" stroke-width="2.2" fill="none"><path d="M0 132 H390"/></g>
+    <g stroke="#d6dde6" stroke-width="1.6" fill="none"><path d="M230 130 L272 46 L314 130"/><path d="M272 46 L200 132 M272 46 L346 132 M272 60 L216 130 M272 60 L330 130"/></g>
+    <g fill="#4a9a55"><ellipse cx="20" cy="144" rx="30" ry="10"/><ellipse cx="370" cy="146" rx="30" ry="10"/></g>
+    <rect y="150" width="390" height="50" fill="#8fbf9a"/><rect y="150" width="390" height="50" fill="#b5a078" opacity=".35"/><g stroke="#fff" opacity=".35" stroke-width="1.3" fill="none"><path d="M10 160 q8 -4 16 0 t16 0"/><path d="M200 190 q8 -4 16 0 t16 0"/></g>
+    <g class="sc-boat" transform="translate(80 172)"><path d="M-30 0 Q0 10 30 0 L26 -8 L-26 -8Z" fill="#8a5a34"/><g><circle cx="-14" cy="-14" r="6" fill="#f08a2a"/><circle cx="-4" cy="-14" r="6" fill="#f5c542"/><circle cx="6" cy="-14" r="6" fill="#f08a2a"/><ellipse cx="18" cy="-14" rx="4" ry="7" fill="#7ab23a"/></g><path d="M-6 -20 l6 -12 l6 12z" fill="#e8d28a"/></g>
+    <g transform="translate(200 178)"><path d="M-26 0 Q0 9 26 0 L22 -7 L-22 -7Z" fill="#6a8a9a"/><g fill="#d8392b"><circle cx="-10" cy="-12" r="5"/><circle cx="0" cy="-12" r="5"/><circle cx="10" cy="-12" r="5"/></g></g>
+    <g transform="translate(300 170)"><path d="M-30 0 Q0 10 30 0 L26 -8 L-26 -8Z" fill="#b5663a"/><g fill="#7ab23a"><ellipse cx="-12" cy="-14" rx="4" ry="8"/><ellipse cx="-2" cy="-14" rx="4" ry="8"/><ellipse cx="8" cy="-14" rx="4" ry="8"/></g><rect x="14" y="-34" width="2" height="28" fill="#6a4426"/><g fill="#f5c542"><circle cx="15" cy="-30" r="3"/><circle cx="15" cy="-22" r="3"/></g></g>
+    ${palm(30, 150, 1.1)}${palm(360, 152, 1.1)}${cloud(150, 28)}${cloud(310, 24, 0.7)}`,
+    // Cà Mau: Đất Mũi, rừng đước, cột mốc
+    caMau: () => `
+    <rect y="120" width="390" height="80" fill="#5fb0b8"/><g stroke="#fff" opacity=".4" stroke-width="1.3" fill="none"><path d="M10 140 q8 -4 16 0 t16 0"/><path d="M180 130 q8 -4 16 0 t16 0"/><path d="M290 150 q8 -4 16 0 t16 0"/></g>
+    <path d="M0 160 Q120 140 240 158 T390 154 V200 H0Z" fill="#d9c58a"/><path d="M0 178 Q140 164 260 176 T390 172 V200 H0Z" fill="#c2a96a"/>
+    <g fill="#3f8a4a"><circle cx="40" cy="128" r="16"/><circle cx="62" cy="134" r="13"/><circle cx="22" cy="138" r="12"/></g>
+    <g stroke="#6a4426" stroke-width="2" fill="none"><path d="M40 144 l-10 20 M40 144 l0 22 M40 144 l10 20 M62 148 l-8 18 M62 148 l8 18"/></g>
+    <g fill="#3f8a4a"><circle cx="340" cy="128" r="16"/><circle cx="318" cy="134" r="13"/><circle cx="360" cy="138" r="12"/></g>
+    <g stroke="#6a4426" stroke-width="2" fill="none"><path d="M340 144 l-10 20 M340 144 l0 22 M340 144 l10 20 M318 148 l-8 18 M318 148 l8 18"/></g>
+    <g transform="translate(196 140)"><polygon points="-22,30 -16,0 16,0 22,30" fill="#b9b2a2"/><rect x="-14" y="-30" width="28" height="30" fill="#cfc8b8"/><polygon points="-18,-30 0,-48 18,-30" fill="#c8392b"/><path d="M-6 -12 l6 -8 l6 8z" fill="#f5c542"/><rect x="-1" y="-70" width="2" height="24" fill="#6a4426"/><path d="M1 -70 L24 -63 L1 -56Z" fill="#d83a2b"/></g>
+    <g class="sc-boat" transform="translate(110 150)"><path d="M-22 0 Q0 9 24 0 L20 -7 L-18 -7Z" fill="#7a4a2a"/><path d="M-6 -7 L0 -24 L10 -7z" fill="#e8d28a"/></g>
+    <g fill="#fff"><path d="M140 40 q6 -6 12 0 q6 -6 12 0 q-6 2 -12 6 q-6 -4 -12 -6z"/><path d="M270 56 q6 -6 12 0 q6 -6 12 0 q-6 2 -12 6 q-6 -4 -12 -6z"/></g>${cloud(60, 36)}${cloud(320, 30, 0.8)}`,
+    // Hoàng Sa – Trường Sa: đảo, hải đăng, cờ Tổ quốc, tàu
+    hoangSa: () => `
+    <rect y="110" width="390" height="90" fill="#2f86c8"/><rect y="110" width="390" height="40" fill="#4aa6dc" opacity=".6"/>
+    <g stroke="#fff" opacity=".45" stroke-width="1.4" fill="none"><path d="M10 134 q8 -4 16 0 t16 0"/><path d="M120 150 q8 -4 16 0 t16 0"/><path d="M300 138 q8 -4 16 0 t16 0"/><path d="M60 176 q8 -4 16 0 t16 0"/><path d="M230 186 q8 -4 16 0 t16 0"/></g>
+    <g fill="#8a98a8"><path d="M40 114 h60 l-6 8 h-48z"/><rect x="62" y="104" width="22" height="10"/><rect x="70" y="96" width="3" height="10"/></g>
+    <ellipse cx="220" cy="160" rx="90" ry="16" fill="#f3e2a8"/><ellipse cx="220" cy="166" rx="90" ry="12" fill="#e6cf86"/>
+    <g transform="translate(200 128)"><polygon points="-9,32 -6,0 6,0 9,32" fill="#fff"/><rect x="-7" y="8" width="14" height="6" fill="#d83a2b"/><rect x="-6" y="20" width="12" height="6" fill="#d83a2b"/><rect x="-8" y="-10" width="16" height="10" fill="#f5e08a"/><polygon points="-10,-10 0,-20 10,-10" fill="#d83a2b"/></g>
+    <g transform="translate(260 124)"><rect x="-1" y="0" width="2.4" height="40" fill="#6a4426"/><rect x="1" y="2" width="30" height="20" fill="#da251d"/><polygon points="16,6 18.4,12.6 25.4,12.6 19.8,16.6 22,23.2 16,19 10,23.2 12.2,16.6 6.6,12.6 13.6,12.6" fill="#ffcd00" transform="translate(0 -3) scale(.9 .9) translate(1.5 1)"/></g>
+    ${palm(160, 164, 1)}${palm(180, 168, 0.8)}${palm(300, 164, 1.1)}${palm(325, 168, 0.8)}
+    ${cloud(60, 40)}${cloud(300, 30, 0.9)}${cloud(180, 56, 0.7)}`
+  };
+  var todOf = (hour) => hour >= 19.2 ? "night" : hour >= 17 ? "dusk" : hour < 10.6 ? "morning" : "day";
+  var SKY_CLASS = { morning: "morning", day: "day", dusk: "dusk", night: "night" };
+  function sellSceneHTML(hour = 10) {
+    const id = SCENES[S.location] ? S.location : "goc";
+    const tod = todOf(hour);
+    const lv = (k) => equipLevel(k);
+    const deco = [
+      lv("mascot") > 0 ? '<span class="sc-eq mascot">\u{1F43B}</span>' : "",
+      lv("led") > 0 ? `<span class="sc-eq led">LED${lv("led") > 1 ? " \u2726" : ""}</span>` : "",
+      lv("xeMay") > 0 ? '<span class="sc-eq moto">\u{1F6F5}</span>' : "",
+      lv("mayLanh") > 0 ? '<span class="sc-eq ac">\u2744\uFE0F</span>' : "",
+      lv("qcMxh") > 0 ? '<span class="sc-eq like">\u2764\uFE0F</span><span class="sc-eq like l2">\u{1F44D}</span>' : "",
+      S.staff && S.staff.chuBa ? '<span class="sc-eq guard">\u{1F46E}</span>' : ""
+    ].join("");
+    const wx = S.weather === "rain" ? "rain" : S.weather === "hot" ? "hot" : S.weather === "cold" ? "cold" : S.weather === "cloudy" ? "cloudy" : "sunny";
+    const celestial = tod === "night" ? '<span class="sc-sun moon">\u{1F319}</span>' : tod === "dusk" ? '<span class="sc-sun dusk">\u{1F305}</span>' : '<span class="sc-sun">\u2600\uFE0F</span>';
+    const rain = wx === "rain" ? `<div class="sc-rain">${Array.from({ length: 22 }, (_, i) => `<i style="left:${i * 4.7 % 100}%;animation-delay:${i % 7 * 0.13}s"></i>`).join("")}</div>` : "";
+    return `<div class="sell-scene" id="sellScene" data-loc="${id}" data-tod="${SKY_CLASS[tod]}" data-wx="${wx}" aria-hidden="true">
+    ${celestial}<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice">${SCENES[id]().replace(/(<g class="sc-boat" transform="[^"]*">)/g, '$1<animateTransform attributeName="transform" type="translate" additive="sum" values="-16 0;16 -2;-16 0" dur="12s" repeatCount="indefinite"/>')}</svg>${rain}${deco}
+    <span class="sc-clouds"><i>\u2601\uFE0F</i><i>\u2601\uFE0F</i></span></div>`;
+  }
+  function updateSceneTime(hour) {
+    const el = document.getElementById("sellScene");
+    if (!el) return;
+    const tod = SKY_CLASS[todOf(hour)];
+    const sell = document.getElementById("sell");
+    if (sell) sell.dataset.night = tod === "night" || tod === "dusk" ? "1" : "";
+    if (el.dataset.tod !== tod) {
+      el.dataset.tod = tod;
+      const sun = el.querySelector(".sc-sun");
+      if (sun) {
+        sun.textContent = tod === "night" ? "\u{1F319}" : tod === "dusk" ? "\u{1F305}" : "\u2600\uFE0F";
+        sun.className = `sc-sun ${tod === "night" ? "moon" : tod === "dusk" ? "dusk" : ""}`;
+      }
+    }
+  }
+  var SCENE_IDS = Object.keys(SCENES);
+
   // js/sell-art.js
   var DIR = "assets/sell/sprites/";
   var img = (name, cls = "") => `<img class="sale-art ${cls}" src="${DIR}${name}.png" alt="" draggable="false" decoding="async">`;
@@ -3685,11 +3856,13 @@
   on("modal:open", clearBrewFx);
   on("shift:end", clearBrewFx);
   function renderSell() {
+    var _a;
     clearBrewFx();
     const view = $("#view");
     if (S.phase !== "sell") return;
     if (SH.view === "lobby") return renderLobby(view);
-    view.innerHTML = `<div class="sell" id="sell">
+    view.innerHTML = `<div class="sell" id="sell" data-night="${SH.hour >= 17 ? "1" : ""}">
+    ${sellSceneHTML(SH.hour)}
     <div class="queue-row" id="qrow"></div>
     <div class="cust-zone">
       <div class="cust-av" id="cav"></div>
@@ -3697,7 +3870,7 @@
     </div>
     <div class="hint" id="hint"></div>
     <div class="shelf">
-      <div class="tag-w">QU\u1EA6Y TR\xC0</div>
+      <div class="shelf-head"><div class="tag-w">QU\u1EA6Y TR\xC0</div><div class="staff-strip" id="staffStrip">${staffStripHTML()}</div></div>
       <div class="shelf-row">
         <div class="stacks">
           <button class="stack" data-act="cup" data-size="M" aria-label="L\u1EA5y ly size M"><div class="cupstack image-stack m">${stackArt("M")}</div><b>M</b><span class="cnt" data-cnt="lyM">0</span></button>
@@ -3732,7 +3905,37 @@
     refreshQueue();
     refreshCustomer();
     bindActions(root, sellActs);
+    (_a = $("#staffStrip")) == null ? void 0 : _a.addEventListener("click", (e) => {
+      const b = e.target.closest(".stf");
+      if (!b) return;
+      sfx("click");
+      b.classList.add("tip");
+      clearTimeout(b._tm);
+      b._tm = setTimeout(() => b.classList.remove("tip"), 1800);
+    });
     frameSell(0, true);
+  }
+  var STAFF_ICON = { thuViec: "\u{1F98A}", phaChe: "\u{1F430}", online: "\u{1F43C}", quanLy: "\u{1F43B}", genZ: "\u{1F984}", svDem: "\u{1F989}", meKetTinh: "\u{1F98B}", diCho: "\u{1F9FA}", chuBa: "\u{1F46E}" };
+  var staffStripHTML = () => STAFF.filter((st) => S.staff[st.id]).map((st) => `<button class="stf idle" data-stf="${st.id}" data-tip="${esc(st.name)}" aria-label="${esc(st.name)}">${STAFF_ICON[st.id] || st.icon}<b></b></button>`).join("");
+  function staffStatus(st) {
+    const job = SH.jobs.find((j) => j.by === st.id);
+    if (job) return { cls: "work", p: clamp((1 - job.t / Math.max(0.5, st.sec)) * 100, 4, 100), txt: `${st.name}: \u0111ang pha m\xF3n cho kh\xE1ch` };
+    if (st.kind === "auto" || st.kind === "online") return { cls: "idle", p: 0, txt: `${st.name}: ${st.kind === "online" ? "ch\u1EDD \u0111\u01A1n online" : "\u0111ang r\u1EA3nh, ch\u1EDD kh\xE1ch"}` };
+    if (st.kind === "buyer") return { cls: "idle", p: 0, txt: `${st.name}: canh kho, h\u1EBFt h\xE0ng s\u1EBD \u0111i ch\u1EE3` };
+    if (st.id === "chuBa") return { cls: "idle", p: 0, txt: `${st.name}: \u0111ang canh g\xE1c qu\xE1n` };
+    if (st.id === "meKetTinh") return { cls: "idle", p: 0, txt: `${st.name}: \u0111ang quay video qu\u1EA3ng b\xE1` };
+    return { cls: "idle", p: 0, txt: st.name };
+  }
+  function updateStaffStrip() {
+    for (const el of $$("#staffStrip .stf")) {
+      const st = STAFF.find((x) => x.id === el.dataset.stf);
+      if (!st) continue;
+      const s = staffStatus(st);
+      el.classList.toggle("work", s.cls === "work");
+      el.classList.toggle("idle", s.cls !== "work");
+      el.style.setProperty("--p", s.p.toFixed(0));
+      el.dataset.tip = s.txt;
+    }
   }
   function dispHTML(t) {
     const it = ITEMS[t];
@@ -4287,6 +4490,8 @@
     }
     if (cntT <= 0 || force) {
       cntT = 0.25;
+      updateStaffStrip();
+      updateSceneTime(SH.hour);
       for (const el of $$("[data-cnt]", root)) {
         const id = el.dataset.cnt, q = stockQty(id);
         el.textContent = q;
@@ -4304,14 +4509,16 @@
       return SH.onlineQ.map((q) => `<div class="on-row"><span class="on-app" style="background:${q.app.color}">${q.app.name[0]}</span><div class="grow"><b>${q.app.name}</b><small>${ITEMS[q.o.tea].name} ${q.o.size}${q.o.flavor ? " \xB7 " + ITEMS[q.o.flavor].name : ""}${q.o.tops.length ? " \xB7 " + q.o.tops.length + " topping" : ""}</small></div><button class="btn pri sm" data-act="acc" data-id="${q.id}">Nh\u1EADn \xB7 ${Math.ceil(q.exp)}s</button></div>`).join("");
     };
     const m = openModal({ id: "online", cls: "small", html: `<h3 class="m-title">\u{1F4F1} \u0110\u01A1n online</h3><div id="onl">${draw()}</div><button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
-    bindActions(m.body, { acc: (t) => {
-      const e = acceptOnline(+t.dataset.id);
-      if (e) toast(e, "err");
-      else {
-        toast("\u0110\xE3 nh\u1EADn \u0111\u01A1n!", "ok");
-        $("#onl", m.body).innerHTML = draw();
-      }
-    }, x: () => m.close() });
+    bindActions(m.body, {
+      acc: (t) => {
+        const e = acceptOnline(+t.dataset.id);
+        if (e) toast(e, "err");
+        else {
+          toast("\u0110\xE3 nh\u1EADn \u0111\u01A1n!", "ok");
+          $("#onl", m.body).innerHTML = draw();
+        }
+      }, x: () => m.close()
+    });
   }
   function renderLobby(view) {
     const busy = SH.tables.filter((t) => t.s === "busy").length;
@@ -4609,7 +4816,8 @@
   }
   function taxReceipt(amount) {
     const until = new Date(S.tax.until);
-    const m = openModal({ cls: "small", html: `<div class="receipt"><div class="r-ico">\u{1F3DB}\uFE0F\u{1F4DC}</div><h3>BI\xCAN LAI \u0110\xD3NG THU\u1EBE TR\u1EF0C TUY\u1EBEN 72H</h3>
+    const m = openModal({
+      cls: "small", html: `<div class="receipt"><div class="r-ico">\u{1F3DB}\uFE0F\u{1F4DC}</div><h3>BI\xCAN LAI \u0110\xD3NG THU\u1EBE TR\u1EF0C TUY\u1EBEN 72H</h3>
     <div class="r-box"><p>\u2705 <b>Tr\u1EA1ng th\xE1i:</b> \u0110\xC3 N\u1ED8P THU\u1EBE TH\xC0NH C\xD4NG</p><p>\u{1F4B0} <b>S\u1ED1 ti\u1EC1n n\u1ED9p:</b> ${fmtK(amount)} (${Math.round(S.tax.rate * 100)}% k\xE9t)</p><p>\u23F1\uFE0F <b>Th\u1EDDi h\u1EA1n b\u1EA3o h\u1ED9:</b> 72 Gi\u1EDD Th\u1EF1c T\u1EBF (3 ng\xE0y) (\u0111\u1EBFn ${until.toLocaleString("vi-VN")})</p>
     <p>\u2728 <b>Hi\u1EC7u \u1EE9ng k\xEDch ho\u1EA1t:</b></p><p>\u2022 T\u0103ng +15% kh\xE1ch h\xE0ng gh\xE9 qu\xE1n.</p><p>\u2022 T\u0103ng +15% t\u1ED1c \u0111\u1ED9 l\xE0m vi\u1EC7c c\u1EE7a to\xE0n b\u1ED9 nh\xE2n vi\xEAn.</p><p>\u2022 Gi\u1EA3m 15% nguy c\u01A1 tr\u1ED9m c\u1EAFp, ti\u1EC1n gi\u1EA3 v\xE0 b\xF9ng ti\u1EC1n!</p><p>\u2022 T\u0103ng +15% t\u1EC9 l\u1EC7 may m\u1EAFn x2 ti\u1EC1n bill m\u1ED7i ly n\u01B0\u1EDBc!</p></div></div>
     <button class="btn pri block" data-act="ok">\u0110\xE3 hi\u1EC3u & X\xE1c nh\u1EADn</button>` });
@@ -4980,16 +5188,18 @@
       },
       shop: () => {
         const m = openModal({ id: "seedshop", cls: "small", html: `<h3 class="m-title">\u{1F6D2} C\u1EEDa h\xE0ng h\u1EA1t gi\u1ED1ng</h3>${SEEDS.map((s) => `<div class="nrow"><span class="k-ico">${s.icon}</span><div class="k-main"><b>${s.name}</b><small>L\u1EDBn trong ${s.days} ng\xE0y \xB7 thu ${s.yield[0]}-${s.yield[1]} ph\u1EA7n ${ITEMS[s.gives].name}</small></div><button class="btn gold sm" data-act="buy" data-id="${s.id}">${fmtK(s.price)}</button></div>`).join("")}<button class="btn ghost block" data-act="x">\u0110\xF3ng</button>` });
-        bindActions(m.body, { buy: (t) => {
-          const s = seedDef(t.dataset.id);
-          if (S.money < s.price) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n", "err");
-          S.money -= s.price;
-          S.garden.seeds[s.id] = (S.garden.seeds[s.id] || 0) + 1;
-          sfx("coin");
-          markDirty("hud", "panel");
-          toast(`+1 ${s.name}`, "ok");
-          requestSave();
-        }, x: () => m.close() });
+        bindActions(m.body, {
+          buy: (t) => {
+            const s = seedDef(t.dataset.id);
+            if (S.money < s.price) return toast("Kh\xF4ng \u0111\u1EE7 ti\u1EC1n", "err");
+            S.money -= s.price;
+            S.garden.seeds[s.id] = (S.garden.seeds[s.id] || 0) + 1;
+            sfx("coin");
+            markDirty("hud", "panel");
+            toast(`+1 ${s.name}`, "ok");
+            requestSave();
+          }, x: () => m.close()
+        });
       }
     }
   };
@@ -5075,7 +5285,7 @@
     ${l.con.length ? `<div class="con"><b>\u{1F534} Th\u1EED Th\xE1ch V\u1EADn H\xE0nh (Kh\xF3 Kh\u0103n):</b>${l.con.map((x) => `<p>\u2022 ${esc(x)}</p>`).join("")}</div>` : ""}</details>
     <button class="btn ${here ? "ghost" : "pri"} block" data-act="startup" data-id="${id}" ${here ? "disabled" : ""}>${here ? "\u2705 \u0110ang \u0110\u1EB7t Qu\xE1n T\u1EA1i \u0110\xE2y" : `\u{1F680} Kh\u1EDFi Nghi\u1EC7p T\u1EA1i ${l.name} \xB7 ${fmtK(LOCATION_COST)}`}</button></div></div>`;
   }
-  var SCENES = {
+  var SCENES2 = {
     goc: [["\u{1F3E1}", 46, 64, 8], ["\u{1F333}", 16, 44, 8], ["\u{1FAB4}", 80, 34, 8], ["\u{1F9CB}", 30, 30, 6]],
     hanoi: [["\u{1F3EF}", 60, 60, 10], ["\u{1F338}", 14, 36, 10], ["\u{1F6D5}", 82, 44, 10], ["\u{1F3EE}", 38, 26, 60], ["\u{1FAB7}", 46, 28, 4]],
     hcm: [["\u{1F3D9}\uFE0F", 58, 74, 8], ["\u{1F307}", 16, 50, 12], ["\u{1F6F5}", 36, 30, 4], ["\u{1F306}", 84, 46, 8]],
@@ -5088,7 +5298,7 @@
     caMau: [["\u{1F980}", 22, 38, 6], ["\u{1F333}", 54, 54, 8], ["\u{1F990}", 80, 30, 6], ["\u{1F30A}", 38, 28, 2]],
     hoangSa: [["\u{1F3DD}\uFE0F", 46, 66, 6], ["\u{1F334}", 22, 46, 8], ["\u2693", 82, 34, 6], ["\u{1F6A2}", 66, 36, 34]]
   };
-  var sceneHTML = (id) => `<div class="loc-scene" aria-hidden="true">${(SCENES[id] || []).map(([e, x, sz, b]) => `<span style="left:${x}%;font-size:${sz}px;bottom:${b}px">${e}</span>`).join("")}</div>`;
+  var sceneHTML = (id) => `<div class="loc-scene" aria-hidden="true">${(SCENES2[id] || []).map(([e, x, sz, b]) => `<span style="left:${x}%;font-size:${sz}px;bottom:${b}px">${e}</span>`).join("")}</div>`;
   var VM_H = 136;
   var vmXY = ([lo, la]) => [(lo - 102) * 8, (24 - la) * 8];
   var vmF = (n) => +n.toFixed(1);
@@ -5225,10 +5435,12 @@
         <div class="tables">${Array.from({ length: b.tables }, (_, i) => `<div class="tbl free"><span class="t-ico">\u2728</span><small>B\xE0n ${i + 1}</small></div>`).join("")}</div>
         <button class="btn gold block" data-act="goto" data-to="nangcap">\u{1F6E0}\uFE0F N\xE2ng c\u1EA5p b\xE0n gh\u1EBF</button></div>`;
     },
-    acts: { goto: (t) => {
-      S.subtab.nc = "trangbi";
-      emit("goto", t.dataset.to);
-    } }
+    acts: {
+      goto: (t) => {
+        S.subtab.nc = "trangbi";
+        emit("goto", t.dataset.to);
+      }
+    }
   };
   var danhgia = {
     html() {
@@ -5760,9 +5972,11 @@
     const cfg = levelCfg(S.crush.level);
     Q = { cfg, g: null, moves: cfg.moves, score: 0, got: 0, busy: false, over: false, sel: null, types: cfg.types, used: {}, made: {} };
     Q.g = newGrid(cfg);
-    const m = openModal({ id: "crush", cls: "crush-m", html: crushHTML(), onClose: () => {
-      Q = null;
-    } });
+    const m = openModal({
+      id: "crush", cls: "crush-m", html: crushHTML(), onClose: () => {
+        Q = null;
+      }
+    });
     paint(Q, true);
     updateHud(Q);
     const restart = () => {
@@ -5831,9 +6045,11 @@
     }
   }
   function crushDebug() {
-    return { get Q() {
-      return Q;
-    }, swap, N, open: openCrush };
+    return {
+      get Q() {
+        return Q;
+      }, swap, N, open: openCrush
+    };
   }
   var PN = 6;
   var PDUR = 30;
@@ -5986,10 +6202,12 @@
   }
   function openPearl() {
     if (S.pearl.playsDay >= 3) return toast("H\xF4m nay b\u1EA1n \u0111\xE3 ch\u01A1i \u0111\u1EE7 3 l\u01B0\u1EE3t Tr\xE2n Ch\xE2u N\u1ED5", "err");
-    const m = openModal({ id: "pearl", cls: "pearl-modal", onClose: () => {
-      if (P2 == null ? void 0 : P2.timer) clearInterval(P2.timer);
-      P2 = null;
-    }, html: `<div id="pBody"><h3 class="m-title">\u2728 Tr\xE2n Ch\xE2u N\u1ED5</h3><div class="pearl-preview">${PIDS.map((_, i) => pearlIcon(i)).join("")}</div><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Nh\xF3m c\xE0ng l\u1EDBn \u0111i\u1EC3m c\xE0ng cao, n\u1ED5 li\xEAn ti\u1EBFp trong ${PCOMBO_MS / 1e3}s = nh\xE2n combo! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y. Cu\u1ED1i v\xE1n nh\u1EADn th\xEAm tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u cho kho.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>` });
+    const m = openModal({
+      id: "pearl", cls: "pearl-modal", onClose: () => {
+        if (P2 == null ? void 0 : P2.timer) clearInterval(P2.timer);
+        P2 = null;
+      }, html: `<div id="pBody"><h3 class="m-title">\u2728 Tr\xE2n Ch\xE2u N\u1ED5</h3><div class="pearl-preview">${PIDS.map((_, i) => pearlIcon(i)).join("")}</div><p class="m-text center">Ch\u1EA1m nh\xF3m \u2265 2 tr\xE2n ch\xE2u c\xF9ng m\xE0u k\u1EC1 nhau \u0111\u1EC3 l\xE0m n\u1ED5. Nh\xF3m c\xE0ng l\u1EDBn \u0111i\u1EC3m c\xE0ng cao, n\u1ED5 li\xEAn ti\u1EBFp trong ${PCOMBO_MS / 1e3}s = nh\xE2n combo! M\u1EE5c ti\xEAu <b>${PGOAL}</b> \u0111i\u1EC3m trong ${PDUR} gi\xE2y. Cu\u1ED1i v\xE1n nh\u1EADn th\xEAm tr\xE2n ch\xE2u nguy\xEAn li\u1EC7u cho kho.</p><p class="m-text center muted">L\u01B0\u1EE3t h\xF4m nay: ${S.pearl.playsDay}/3 \xB7 K\u1EF7 l\u1EE5c: ${S.pearl.best}</p><button class="btn pri block" data-act="start">\u25B6 B\u1EAFt \u0111\u1EA7u</button></div>`
+    });
     bindActions(m.body, {
       x: () => m.close(),
       start: () => {
@@ -6073,9 +6291,11 @@
     });
   }
   function pearlDebug() {
-    return { get state() {
-      return P2;
-    }, open: openPearl, group: pGroup, render: pRender, end: pEnd };
+    return {
+      get state() {
+        return P2;
+      }, open: openPearl, group: pGroup, render: pRender, end: pEnd
+    };
   }
   var crush = {
     html() {
@@ -6325,12 +6545,14 @@
       tile: (t) => goTab(t.dataset.tab, false)
     });
     bindNav();
-    const panelActs = new Proxy({}, { get: (_, k) => (t, e) => {
-      var _a, _b;
-      const fn = (_b = (_a = PANELS[S.tab]) == null ? void 0 : _a.acts) == null ? void 0 : _b[k];
-      if (fn) fn(t, e);
-      else if (k === "goto") goTab(t.dataset.to);
-    } });
+    const panelActs = new Proxy({}, {
+      get: (_, k) => (t, e) => {
+        var _a, _b;
+        const fn = (_b = (_a = PANELS[S.tab]) == null ? void 0 : _a.acts) == null ? void 0 : _b[k];
+        if (fn) fn(t, e);
+        else if (k === "goto") goTab(t.dataset.to);
+      }
+    });
     bindActions($("#panel"), panelActs);
   }
   function goTab(tab, scroll = true) {
@@ -6495,14 +6717,16 @@
       m.body.innerHTML = `<div class="panel-in">${P3.html()}</div>`;
       (_a2 = P3.bind) == null ? void 0 : _a2.call(P3, m.body);
     };
-    bindActions(m.body, new Proxy({}, { get: (_, k) => (t, e) => {
-      var _a2;
-      const fn = (_a2 = P3.acts) == null ? void 0 : _a2[k];
-      if (fn) {
-        fn(t, e);
-        setTimeout(redraw, 20);
+    bindActions(m.body, new Proxy({}, {
+      get: (_, k) => (t, e) => {
+        var _a2;
+        const fn = (_a2 = P3.acts) == null ? void 0 : _a2[k];
+        if (fn) {
+          fn(t, e);
+          setTimeout(redraw, 20);
+        }
       }
-    } }));
+    }));
     (_a = P3.bind) == null ? void 0 : _a.call(P3, m.body);
     return m;
   }

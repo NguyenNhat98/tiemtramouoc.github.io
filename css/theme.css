@@ -434,3 +434,21 @@ body { background: color-mix(in srgb, var(--bg) 85%, #7a5a3a); }
 .work { position: relative; z-index: 3; }
 .cupslot { position: relative; transition: transform .38s cubic-bezier(.25, .9, .35, 1); will-change: transform; }
 .cupslot.under-tap { z-index: 6; pointer-events: none; }
+
+/* ---------- Sửa chồng lấn: hàng tab, dòng kho/hương ---------- */
+.tabs:not(.scroll) { flex-wrap: wrap; row-gap: 6px; }
+.tabs:not(.scroll) .tab { flex: 1 1 auto; text-align: center; padding: 8px 10px; }
+.krow { align-items: flex-start; min-height: 0; padding: 10px; }
+.krow .k-ico { margin-top: 2px; }
+.krow .k-main { min-width: 0; flex: 1 1 0; gap: 3px; justify-content: flex-start; }
+.krow .k-t { gap: 5px; }
+.krow .k-t b { white-space: normal; }
+.krow .sale { white-space: nowrap; font-size: 11px; padding: 0 7px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; align-self: flex-start; }
+.krow small { display: block; line-height: 1.35; word-break: break-word; }
+.krow .plan { min-height: 0; line-height: 1.3; }
+.krow .stepper { align-self: center; min-width: 0; gap: 3px; }
+.krow .stepper button { width: 32px; height: 34px; }
+.krow .stepper input.num { width: 46px; }
+.home .panel, .panel-in { min-width: 0; }
+.panel-in > * { max-width: 100%; }
+.krow .plan { min-height: 1.3em; }
