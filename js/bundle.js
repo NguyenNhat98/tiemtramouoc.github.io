@@ -203,7 +203,6 @@
     }
   };
   var LOCATION_COST = 1e6;
-  var SHARE_URL = "https://nguyennhat98.github.io/";
   var SEASONS = {
     spring: { name: "Xu\xE2n", icon: "\u{1F338}", temp: [20, 28], pool: { sunny: 40, cloudy: 30, rain: 25, hot: 0, cold: 5 } },
     summer: { name: "H\u1EA1", icon: "\u{1F31E}", temp: [28, 38], pool: { sunny: 35, cloudy: 15, rain: 18, hot: 32, cold: 0 } },
@@ -3556,7 +3555,21 @@
     return img(`top-${TOPS2.includes(k) ? k : "tcDen"}`);
   }
   function stackArt(size) {
-    return img(size === "L" ? "stack-L" : "stack-M");
+    const L = size === "L";
+    const rims = L ? [46, 52, 58, 64, 70, 76, 82] : [48, 54, 60, 66, 72, 78];
+    const wl = (y) => 6.5 + 6.5 * (y - 34) / 60;
+    const lines = rims.map((y) => `<path d="M${wl(y).toFixed(1)} ${y} Q30 ${y + 3.4} ${(60 - wl(y)).toFixed(1)} ${y}" fill="none" stroke="rgba(122,90,62,.5)" stroke-width="1.1"/>`).join("");
+    const id = `stk${cupUid++}`;
+    return `<svg class="sale-art stack-svg" viewBox="0 0 60 104" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
+    <defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#e6cfa8"/><stop offset=".35" stop-color="#fbf0dc"/><stop offset=".7" stop-color="#f1dfc0"/><stop offset="1" stop-color="#d9bf94"/></linearGradient></defs>
+    <ellipse cx="30" cy="99" rx="21" ry="3.6" fill="rgba(60,35,10,.2)"/>
+    <path d="M6.5 34 L13 93 Q30 98.5 47 93 L53.5 34 Z" fill="url(#${id})" stroke="#7a5a3e" stroke-width="1.8" stroke-linejoin="round"/>
+    ${lines}
+    <path d="M6.5 34 Q30 26 53.5 34" fill="none" stroke="#7a5a3e" stroke-width="1.8"/>
+    <ellipse cx="30" cy="34" rx="23.5" ry="6.4" fill="#fffaf0" stroke="#7a5a3e" stroke-width="1.8"/>
+    <ellipse cx="30" cy="35.2" rx="19.5" ry="4.2" fill="#e4cda6"/>
+    <path d="M12 44 L16.5 86" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
+  </svg>`;
   }
   function sealerArt() {
     return img("sealer");
@@ -3700,7 +3713,7 @@
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra s\u1EA3nh \u2192 <span id="lobbyCnt">0/0</span></button></div>
-    <div class="stream" id="stream"></div>
+    <div class="stream" id="stream"><i class="st-gloss"></i><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></div>
   </div>`;
     root = $("#sell");
     fillTrays();
@@ -5208,35 +5221,12 @@
       }
     }
   };
-  var SHARE_BTNS = [["zalo", "\u{1F4AC}", "Zalo"], ["fb", "\u{1F4D8}", "Facebook"], ["x", "\u{1F426}", "X"], ["tg", "\u2708\uFE0F", "Telegram"], ["tt", "\u{1F3B5}", "TikTok"], ["ig", "\u{1F4F8}", "Instagram"], ["native", "\u{1F4E4}", "Chia s\u1EBB\u2026"], ["copy", "\u{1F517}", "Sao ch\xE9p"]];
-  function shareUrl() {
-    const { protocol, hostname, origin, pathname } = location;
-    return (protocol === "http:" || protocol === "https:") && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(hostname) && !/\.androidplatform\.net$/.test(hostname) ? origin + pathname : SHARE_URL;
-  }
-  var shareText = () => `\u{1F9CB} Gh\xE9 "${S.shopName}" trong game Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc nh\xE9! Nh\u1EADp m\xE3 b\u1EA1n b\xE8 ${S.friends.code} \u0111\u1EC3 c\xF9ng nh\u1EADn qu\xE0.`;
-  async function shareCopyFallback(msg) {
-    const full = shareText() + " " + shareUrl();
-    if (await copyText(full)) toast(msg, "ok");
-    else alertBox("N\u1ED9i dung chia s\u1EBB", `<input class="field" readonly value="${esc(full)}" aria-label="N\u1ED9i dung chia s\u1EBB">Nh\u1EA5n gi\u1EEF \u0111\u1EC3 sao ch\xE9p r\u1ED3i d\xE1n v\xE0o b\xE0i \u0111\u0103ng.`);
-  }
-  function shareReward() {
-    const f = S.friends;
-    if (f.shareDay === S.day) return;
-    f.shareDay = S.day;
-    S.money += 5e3;
-    sfx("coin");
-    markDirty("hud", "panel");
-    requestSave();
-    toast(`\u{1F381} Th\u01B0\u1EDFng chia s\u1EBB l\u1EA7n \u0111\u1EA7u trong ng\xE0y +${fmtK(5e3)}`, "gold");
-  }
   var banbe = {
     html() {
       const f = S.friends;
       const list = [...NPC_FRIENDS.map((x) => ({ ...x })), ...f.list];
       const board = [{ id: "me", name: S.shopName + " (B\u1EA1n)", av: "\u2B50", rich: S.money, rating: S.rating }, ...list].sort((a, b) => b.rich - a.rich);
       return `<div class="codecard"><small>M\xE3 m\u1EDDi c\u1EE7a b\u1EA1n</small><b>${f.code}</b><button class="btn soft sm" data-act="copycode">\u{1F4CB} Sao ch\xE9p</button></div>
-      <div class="sharebox"><h5>\u{1F4E3} Chia s\u1EBB tr\xF2 ch\u01A1i</h5><p>M\u1EDDi b\u1EA1n b\xE8 c\xF9ng m\u1EDF ti\u1EC7m tr\xE0! ${f.shareDay === S.day ? "H\xF4m nay b\u1EA1n \u0111\xE3 nh\u1EADn th\u01B0\u1EDFng chia s\u1EBB." : "Chia s\u1EBB l\u1EA7n \u0111\u1EA7u m\u1ED7i ng\xE0y nh\u1EADn +" + fmtK(5e3) + "."}</p>
-        <div class="sh-grid">${SHARE_BTNS.map(([id, ic, nm]) => `<button class="sh-btn ${id}" data-act="share" data-id="${id}"><i>${ic}</i>${nm}</button>`).join("")}</div></div>
       <div class="addf"><input id="friendCode" placeholder="Nh\u1EADp m\xE3 b\u1EA1n b\xE8 (TTN-XXXXX)" aria-label="M\xE3 b\u1EA1n b\xE8"><button class="btn pri sm" data-act="addf">Th\xEAm b\u1EA1n</button></div>
       <h5 class="grp">\u{1F465} Danh s\xE1ch b\u1EA1n b\xE8 (${list.length})</h5>
       ${list.map((x) => `<div class="frow"><span class="r-av">${x.av}</span><div class="grow"><b>${esc(x.name)}</b><small>\u2B50 ${x.rating.toFixed(1)} \xB7 \u{1F4B0} ${fmtK(x.rich)}</small></div><button class="btn ${f.gifted[x.id] === S.day ? "ghost" : "gold"} sm" data-act="visit" data-id="${x.id}" ${f.gifted[x.id] === S.day ? "disabled" : ""}>${f.gifted[x.id] === S.day ? "\u0110\xE3 th\u0103m" : "\u{1F381} Th\u0103m qu\xE1n"}</button></div>`).join("")}
@@ -5246,44 +5236,6 @@
       copycode: async () => {
         if (await copyText(S.friends.code)) toast("\u0110\xE3 sao ch\xE9p m\xE3 m\u1EDDi!", "ok");
         else alertBox("M\xE3 m\u1EDDi c\u1EE7a b\u1EA1n", `<input class="field" readonly value="${esc(S.friends.code)}" aria-label="M\xE3 m\u1EDDi">Nh\u1EA5n gi\u1EEF m\xE3 \u0111\u1EC3 sao ch\xE9p.`);
-      },
-      share: async (t) => {
-        const id = t.dataset.id, url = shareUrl(), txt = shareText(), eu = encodeURIComponent(url), et = encodeURIComponent(txt);
-        if (id === "copy") {
-          await shareCopyFallback("\u0110\xE3 sao ch\xE9p li\xEAn k\u1EBFt m\u1EDDi!");
-          return shareReward();
-        }
-        if (id === "native") {
-          if (!navigator.share) {
-            await shareCopyFallback("\u0110\xE3 sao ch\xE9p li\xEAn k\u1EBFt m\u1EDDi!");
-            return shareReward();
-          }
-          try {
-            await navigator.share({ title: "Ti\u1EC7m Tr\xE0 M\u01A1 \u01AF\u1EDBc", text: txt, url });
-            shareReward();
-          } catch (e) {
-          }
-          return;
-        }
-        if (id === "tt" || id === "ig") {
-          const nm = id === "tt" ? "TikTok" : "Instagram";
-          if (await copyText(txt + " " + url)) toast(`\u0110\xE3 sao ch\xE9p! M\u1EDF ${nm} v\xE0 d\xE1n v\xE0o b\xE0i \u0111\u0103ng.`, "ok");
-          else await shareCopyFallback("\u0110\xE3 sao ch\xE9p!");
-          try {
-            location.href = id === "tt" ? "snssdk1233://" : "instagram://app";
-          } catch (e) {
-          }
-          return shareReward();
-        }
-        const urls = {
-          zalo: `https://zalo.me/share?url=${eu}&text=${et}`,
-          fb: `https://www.facebook.com/sharer/sharer.php?u=${eu}&quote=${et}`,
-          x: `https://twitter.com/intent/tweet?url=${eu}&text=${et}`,
-          tg: `https://t.me/share/url?url=${eu}&text=${et}`
-        };
-        const w = window.open(urls[id], "_blank");
-        if (!w) await shareCopyFallback("Kh\xF4ng m\u1EDF \u0111\u01B0\u1EE3c \u1EE9ng d\u1EE5ng, \u0111\xE3 sao ch\xE9p li\xEAn k\u1EBFt \u2014 h\xE3y d\xE1n v\xE0o tin nh\u1EAFn.");
-        shareReward();
       },
       addf: () => {
         var _a;

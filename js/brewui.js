@@ -85,7 +85,7 @@ export function renderSell() {
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra sảnh → <span id="lobbyCnt">0/0</span></button></div>
-    <div class="stream" id="stream"></div>
+    <div class="stream" id="stream"><i class="st-gloss"></i><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></div>
   </div>`;
   root = $('#sell');
   fillTrays();

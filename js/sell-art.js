@@ -22,7 +22,24 @@ export function toppingArt(id) {
   const k = TOP_ALIAS[id] || id;
   return img(`top-${TOPS.includes(k) ? k : 'tcDen'}`);
 }
-export function stackArt(size) { return img(size === 'L' ? 'stack-L' : 'stack-M'); }
+/** Chồng ly giấy một cột (vẽ SVG: sạch nét, đúng tỉ lệ M nhỏ / L lớn). */
+export function stackArt(size) {
+  const L = size === 'L';
+  const rims = L ? [46, 52, 58, 64, 70, 76, 82] : [48, 54, 60, 66, 72, 78];
+  const wl = (y) => 6.5 + 6.5 * (y - 34) / 60;
+  const lines = rims.map((y) => `<path d="M${wl(y).toFixed(1)} ${y} Q30 ${y + 3.4} ${(60 - wl(y)).toFixed(1)} ${y}" fill="none" stroke="rgba(122,90,62,.5)" stroke-width="1.1"/>`).join('');
+  const id = `stk${cupUid++}`;
+  return `<svg class="sale-art stack-svg" viewBox="0 0 60 104" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
+    <defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#e6cfa8"/><stop offset=".35" stop-color="#fbf0dc"/><stop offset=".7" stop-color="#f1dfc0"/><stop offset="1" stop-color="#d9bf94"/></linearGradient></defs>
+    <ellipse cx="30" cy="99" rx="21" ry="3.6" fill="rgba(60,35,10,.2)"/>
+    <path d="M6.5 34 L13 93 Q30 98.5 47 93 L53.5 34 Z" fill="url(#${id})" stroke="#7a5a3e" stroke-width="1.8" stroke-linejoin="round"/>
+    ${lines}
+    <path d="M6.5 34 Q30 26 53.5 34" fill="none" stroke="#7a5a3e" stroke-width="1.8"/>
+    <ellipse cx="30" cy="34" rx="23.5" ry="6.4" fill="#fffaf0" stroke="#7a5a3e" stroke-width="1.8"/>
+    <ellipse cx="30" cy="35.2" rx="19.5" ry="4.2" fill="#e4cda6"/>
+    <path d="M12 44 L16.5 86" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".55"/>
+  </svg>`;
+}
 export function sealerArt() { return img('sealer'); }
 const POUR = { traSua: 'brown', matcha: 'green', hongTra: 'orange', lucTra: 'green', olong: 'yellow', traThai: 'orange' };
 export function pourArt(tea) { return img(`pour-${POUR[tea] || 'brown'}`, 'pour-sprite'); }

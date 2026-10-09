@@ -316,30 +316,12 @@ const tongket = {
 };
 
 /* ===== BẠN BÈ ===== */
-const SHARE_BTNS = [['zalo', '💬', 'Zalo'], ['fb', '📘', 'Facebook'], ['x', '🐦', 'X'], ['tg', '✈️', 'Telegram'], ['tt', '🎵', 'TikTok'], ['ig', '📸', 'Instagram'], ['native', '📤', 'Chia sẻ…'], ['copy', '🔗', 'Sao chép']];
-function shareUrl() {
-  const { protocol, hostname, origin, pathname } = location;
-  return (protocol === 'http:' || protocol === 'https:') && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(hostname) && !/\.androidplatform\.net$/.test(hostname) ? origin + pathname : SHARE_URL;
-}
-const shareText = () => `🧋 Ghé "${S.shopName}" trong game Tiệm Trà Mơ Ước nhé! Nhập mã bạn bè ${S.friends.code} để cùng nhận quà.`;
-async function shareCopyFallback(msg) {
-  const full = shareText() + ' ' + shareUrl();
-  if (await copyText(full)) toast(msg, 'ok'); else alertBox('Nội dung chia sẻ', `<input class="field" readonly value="${esc(full)}" aria-label="Nội dung chia sẻ">Nhấn giữ để sao chép rồi dán vào bài đăng.`);
-}
-function shareReward() {
-  const f = S.friends;
-  if (f.shareDay === S.day) return;
-  f.shareDay = S.day; S.money += 5000; sfx('coin'); markDirty('hud', 'panel'); requestSave();
-  toast(`🎁 Thưởng chia sẻ lần đầu trong ngày +${fmtK(5000)}`, 'gold');
-}
 const banbe = {
   html() {
     const f = S.friends;
     const list = [...NPC_FRIENDS.map((x) => ({ ...x })), ...f.list];
     const board = [{ id: 'me', name: S.shopName + ' (Bạn)', av: '⭐', rich: S.money, rating: S.rating }, ...list].sort((a, b) => b.rich - a.rich);
     return `<div class="codecard"><small>Mã mời của bạn</small><b>${f.code}</b><button class="btn soft sm" data-act="copycode">📋 Sao chép</button></div>
-      <div class="sharebox"><h5>📣 Chia sẻ trò chơi</h5><p>Mời bạn bè cùng mở tiệm trà! ${f.shareDay === S.day ? 'Hôm nay bạn đã nhận thưởng chia sẻ.' : 'Chia sẻ lần đầu mỗi ngày nhận +' + fmtK(5000) + '.'}</p>
-        <div class="sh-grid">${SHARE_BTNS.map(([id, ic, nm]) => `<button class="sh-btn ${id}" data-act="share" data-id="${id}"><i>${ic}</i>${nm}</button>`).join('')}</div></div>
       <div class="addf"><input id="friendCode" placeholder="Nhập mã bạn bè (TTN-XXXXX)" aria-label="Mã bạn bè"><button class="btn pri sm" data-act="addf">Thêm bạn</button></div>
       <h5 class="grp">👥 Danh sách bạn bè (${list.length})</h5>
       ${list.map((x) => `<div class="frow"><span class="r-av">${x.av}</span><div class="grow"><b>${esc(x.name)}</b><small>⭐ ${x.rating.toFixed(1)} · 💰 ${fmtK(x.rich)}</small></div><button class="btn ${f.gifted[x.id] === S.day ? 'ghost' : 'gold'} sm" data-act="visit" data-id="${x.id}" ${f.gifted[x.id] === S.day ? 'disabled' : ''}>${f.gifted[x.id] === S.day ? 'Đã thăm' : '🎁 Thăm quán'}</button></div>`).join('')}
@@ -347,30 +329,6 @@ const banbe = {
   },
   acts: {
     copycode: async () => { if (await copyText(S.friends.code)) toast('Đã sao chép mã mời!', 'ok'); else alertBox('Mã mời của bạn', `<input class="field" readonly value="${esc(S.friends.code)}" aria-label="Mã mời">Nhấn giữ mã để sao chép.`); },
-    share: async (t) => {
-      const id = t.dataset.id, url = shareUrl(), txt = shareText(), eu = encodeURIComponent(url), et = encodeURIComponent(txt);
-      if (id === 'copy') { await shareCopyFallback('Đã sao chép liên kết mời!'); return shareReward(); }
-      if (id === 'native') {
-        if (!navigator.share) { await shareCopyFallback('Đã sao chép liên kết mời!'); return shareReward(); }
-        try { await navigator.share({ title: 'Tiệm Trà Mơ Ước', text: txt, url }); shareReward(); } catch (e) { /* người dùng huỷ */ }
-        return;
-      }
-      if (id === 'tt' || id === 'ig') {
-        const nm = id === 'tt' ? 'TikTok' : 'Instagram';
-        if (await copyText(txt + ' ' + url)) toast(`Đã sao chép! Mở ${nm} và dán vào bài đăng.`, 'ok'); else await shareCopyFallback('Đã sao chép!');
-        try { location.href = id === 'tt' ? 'snssdk1233://' : 'instagram://app'; } catch (e) { /* không có app */ }
-        return shareReward();
-      }
-      const urls = {
-        zalo: `https://zalo.me/share?url=${eu}&text=${et}`,
-        fb: `https://www.facebook.com/sharer/sharer.php?u=${eu}&quote=${et}`,
-        x: `https://twitter.com/intent/tweet?url=${eu}&text=${et}`,
-        tg: `https://t.me/share/url?url=${eu}&text=${et}`,
-      };
-      const w = window.open(urls[id], '_blank');
-      if (!w) await shareCopyFallback('Không mở được ứng dụng, đã sao chép liên kết — hãy dán vào tin nhắn.');
-      shareReward();
-    },
     addf: () => {
       const v = ($('#friendCode')?.value || '').trim().toUpperCase();
       if (!/^TTN-[A-Z0-9]{3,8}$/.test(v)) return toast('Mã bạn bè không hợp lệ (dạng TTN-XXXXX)', 'err');
