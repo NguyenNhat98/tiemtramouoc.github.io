@@ -3,7 +3,7 @@
  * Trạng thái chạy nằm trong SH.ev (được lưu cùng snapshot ca); sự kiện đang chạy khi thoát app sẽ bị hủy an toàn.
  */
 import { ITEMS, IDS } from './config.js';
-import { S, on, markDirty, requestSave, sfx, buzz, rand, randInt, chance, clamp, sum, wpick, setPaused, $, h, esc, fmtK } from './core.js';
+import { S, on, markDirty, requestSave, sfx, buzz, rand, randInt, chance, clamp, sum, wpick, setPaused, isPaused, $, h, esc, fmtK } from './core.js';
 import * as E from './econ.js';
 import { SH, pushReview, stopPour } from './sell.js';
 import { openModal, isModalOpen, bindActions } from './ui.js';
@@ -42,7 +42,7 @@ export function onShiftStart() {
 /** Khôi phục ca từ snapshot: hủy mọi sự kiện đang chạy dở. */
 export function onRestore() {
   const ev = ensureEv();
-  Object.assign(ev, { off: 0, flick: 0, halt: 0, mode: '', pending: null });
+  Object.assign(ev, { off: 0, flick: 0, halt: 0, mode: '', pending: null, generatorPending: false });
   ev.bo = Array.isArray(ev.bo) ? ev.bo : []; ev.ins = Array.isArray(ev.ins) ? ev.ins : [];
   clearUi();
 }
@@ -54,7 +54,7 @@ export function blocked(kind) {
   if (!ev || !SH.on) return null;
   if (ev.halt > 0) return 'Quán đang bị đình chỉ!';
   if (ev.off > 0) {
-    if (kind === 'pump') return 'Đang mất điện!';
+    if (kind === 'pump' && ev.mode !== 'gen2') return 'Đang mất điện!';
     if (kind === 'seal' && ev.mode === 'full') return 'Đang mất điện!';
   }
   return null;
@@ -73,6 +73,7 @@ export function update(dt) {
     const due = ev.ins.find((x) => !x.done && SH.t >= x.at && SH.t < SH.total - 8);
     if (due) { due.done = true; ev.pending = due.k; }
   }
+  if (ev.generatorPending && ev.off > 0 && !isModalOpen()) offerGenerator();
   if (ev.pending && ev.off <= 0 && !ev.halt && !isModalOpen()) openInspection(ev.pending);
   sync();
 }
@@ -83,21 +84,42 @@ function startBlackout(sec) {
   const gen = E.equipLevel('mayPhat');
   buzz([60, 40, 60, 40, 120]);
   sfx('alarm');
-  if (gen >= 2) {
-    ev.flick = rand(1, 2);
-    note('⚡ Mất điện! Máy phát điện đã chạy', 'ok');
-  } else {
-    ev.off = sec || rand(15, 25);
-    ev.mode = gen === 1 ? 'gen1' : 'full';
-    ev.flick = 1.2;
-    if (SH.board?.pouring) stopPour();
-    note(gen === 1 ? '⚡ Mất điện! Máy phát điện đã chạy: bình trà tạm ngưng' : '⚡ Mất điện! Bình trà và máy đóng nắp ngưng hoạt động', gen === 1 ? 'ok' : 'err');
-  }
+  if (ev.off > 0) return;
+  ev.off = sec || rand(15, 25);
+  ev.mode = 'full'; ev.flick = 1.2;
+  if (SH.board?.pouring) stopPour();
+  ev.generatorPending = gen > 0;
+  note('⚡ Mất điện! Bình trà và máy đóng nắp tạm ngừng', 'err');
+  if (ev.generatorPending && !isModalOpen()) offerGenerator();
   sync();
+}
+export function requestGenerator() {
+  const ev = ensureEv();
+  if (!SH.on || ev.off <= 0) return 'Điện lưới đang hoạt động, chưa cần máy phát';
+  if (!E.equipLevel('mayPhat')) return 'Chưa mua máy phát điện';
+  if (ev.mode !== 'full') return 'Máy phát đang chạy';
+  ev.generatorPending = true;
+  if (!isModalOpen()) offerGenerator();
+  return null;
+}
+function offerGenerator() {
+  const ev = ensureEv(), gen = E.equipLevel('mayPhat');
+  ev.generatorPending = false;
+  if (!gen || ev.off <= 0) return;
+  const wasPaused = isPaused();
+  setPaused(true);
+  const m = openModal({ id: 'generator', cls: 'small ev-modal', closable: false, title: 'Dùng máy phát điện',
+    onClose: () => { setPaused(wasPaused); requestSave(); },
+    html: `<div class="ev-ico">🔌</div><h3 class="m-title">Mất điện — bật máy phát?</h3><p class="m-text">${gen >= 2 ? 'Máy công suất lớn cấp điện cho bình trà, máy đóng nắp và đèn. Bạn tiếp tục pha và bán hàng.' : 'Máy mini cấp điện cho máy đóng nắp và đèn. Bình trà chờ điện lưới; nâng C2 để chạy toàn bộ quầy.'}</p><div class="m-row"><button class="btn ghost" data-act="no">Chờ điện lưới</button><button class="btn pri" data-act="yes">🔌 Đồng ý sử dụng</button></div>` });
+  let decided = false;
+  bindActions(m.body, {
+    yes: () => { if (decided) return; decided = true; if (ev.off > 0) { ev.mode = gen >= 2 ? 'gen2' : 'gen1'; ev.flick = gen >= 2 ? rand(1, 2) : 0; } sync(); m.close(); note('🔌 Máy phát điện đang chạy', 'ok'); },
+    no: () => { if (decided) return; decided = true; m.close(); },
+  });
 }
 function endBlackout() {
   const ev = ensureEv();
-  ev.off = 0; ev.mode = '';
+  ev.off = 0; ev.mode = ''; ev.generatorPending = false;
   note('💡 Đã có điện trở lại', 'ok');
   sfx('success');
   sync();
@@ -126,7 +148,7 @@ function sync() {
   app.classList.toggle('ev-halt', halt);
   if (!off && !halt && !flick) { $('#evlayer')?.remove(); return; }
   const badge = $('.ev-badge', layer());
-  if (off) badge.textContent = ev.mode === 'gen1' ? `🔌 Máy phát điện · bình trà tạm ngưng · ${Math.ceil(ev.off)}s` : `⚡ MẤT ĐIỆN · ${Math.ceil(ev.off)}s`;
+  if (off) badge.textContent = ev.mode === 'gen2' ? `🔌 Máy phát đang chạy · ${Math.ceil(ev.off)}s` : ev.mode === 'gen1' ? `🔌 Máy phát mini · bình trà chờ điện · ${Math.ceil(ev.off)}s` : `⚡ MẤT ĐIỆN · ${Math.ceil(ev.off)}s`;
   else if (halt) badge.textContent = `🚫 Quán bị đình chỉ · ${Math.ceil(ev.halt)}s`;
   else badge.textContent = '';
   badge.style.display = badge.textContent ? '' : 'none';
@@ -222,15 +244,20 @@ function openInspection(kind) {
   sfx('alarm'); buzz([40, 30, 40]);
   const lic = kind === 'lic';
   const title = lic ? 'Kiểm tra giấy phép kinh doanh' : 'Kiểm tra vệ sinh ATTP';
+  const hasLicense = E.equipLevel('giayPhep') > 0;
+  let checked = false;
   const m = openModal({
     id: 'inspect', cls: 'small ev-modal', closable: false, title,
     onClose: () => { if (!isModalOpen('pause')) setPaused(false); markDirty('hud'); requestSave(); },
     html: `<div class="ev-ico">🕵️</div><h3 class="m-title">Đoàn kiểm tra đang tới!</h3>
       <p class="m-text center">${lic ? 'Đoàn thanh tra yêu cầu xuất trình giấy phép kinh doanh của quán.' : 'Đoàn kiểm tra vệ sinh an toàn thực phẩm đang xem xét quầy, sảnh và kho nguyên liệu.'}</p>
-      <button class="btn pri block" data-act="go">Tiếp đón đoàn</button>`,
+      ${lic ? `<p class="m-text center">${hasLicense ? '📜 Giấy phép đã mua đang có tại quán.' : '⚠️ Quán chưa có giấy phép kinh doanh.'}</p>` : ''}
+      <button class="btn pri block" data-act="go">${lic ? hasLicense ? '📜 Xuất trình giấy phép' : 'Xác nhận chưa có giấy phép' : '🧪 Xác nhận kiểm tra vệ sinh'}</button>`,
   });
   bindActions(m.body, {
     go: () => {
+      if (checked) return;
+      checked = true;
       const r = lic ? licenseResult() : foodResult();
       m.body.innerHTML = `<div class="ev-ico">${lic ? '📜' : '🧪'}</div><h3 class="m-title">${title}</h3>
         <div class="ev-list">${r.rows}</div>${r.v}<button class="btn pri block" data-act="ok">Đã hiểu</button>`;

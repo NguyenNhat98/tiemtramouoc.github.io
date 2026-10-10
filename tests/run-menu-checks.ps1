@@ -10,7 +10,7 @@ $baseUri = ([Uri]($projectRoot + '\')).AbsoluteUri
 $page = [IO.File]::ReadAllText((Join-Path $projectRoot 'index.html'))
 $page = $page.Replace('<head>', '<head><base href="' + $baseUri + '">')
 try {
-  foreach ($test in @('menu-contracts', 'menu-ui', 'tutorial-ui', 'counter-ui', 'guide-ui')) {
+  foreach ($test in @('menu-contracts', 'menu-ui', 'tutorial-ui', 'counter-ui', 'guide-ui', 'doc-fixes-ui')) {
     $script = '<script>setTimeout(()=>{const s=document.createElement("script");s.src="tests/' + $test + '.js";document.body.appendChild(s);},300);</script>'
     $harness = Join-Path $runDir ($test + '.html')
     [IO.File]::WriteAllText($harness, $page.Replace('</body>', $script + '</body>'), $utf)
@@ -32,6 +32,9 @@ try {
       $failed = @($results | Where-Object { !$_.ok })
       if ($failed.Count) { throw ($failed | ConvertTo-Json -Compress) }
       Write-Output "Contracts: $($results.Count)/$($results.Count) passed"
+    } elseif ($test -eq 'doc-fixes-ui') {
+      if ($html -notmatch 'data-doc-fixes-passed="20"') { $failure = [regex]::Match($html, 'data-doc-fixes-error="([^"]+)"'); throw "Document fixes failed: $($failure.Groups[1].Value)" }
+      Write-Output 'Document fixes: 20/20 checks passed'
     } elseif ($test -eq 'guide-ui') {
       if ($html -notmatch 'data-guide-passed="11"') { $failure = [regex]::Match($html, 'data-guide-error="([^"]+)"'); throw "Guide checks failed: $($failure.Groups[1].Value)" }
       Write-Output 'Guide: 11/11 checks passed'

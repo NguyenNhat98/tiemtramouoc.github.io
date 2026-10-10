@@ -164,6 +164,43 @@
     stocked(); S.staff.meKetTinh={shifts:0}; G.pushReview(G.frontCustomer(),3,'Góp ý');
     assert(S.reviews[0].stars===4 && S.reviews[0].reply, 'reply and review');
   });
+  test('Kho theo lô: chuyển ngày giữ tồn cũ, hạn thật và lượng đã dùng', () => {
+    S.stock.da=[]; E.addStock('da',10); E.take('da',3);
+    const expiry=S.stock.da[0].exp; G.nextDay();
+    assert(S.previousUsed.da===3 && !S.lastUsed.da, 'previous usage');
+    E.addStock('da',5); const b=E.stockBreakdown('da');
+    assert(b.old===7 && b.fresh===5 && b.unknown===0, 'old and new lots');
+    assert(S.stock.da[0].exp===expiry && E.nearestExpiry('da')===1, 'real remaining expiry');
+    E.take('da',7); assert(E.stockBreakdown('da').old===0 && E.stockQty('da')===5, 'FIFO');
+    S.stock.lyM=[]; E.addStock('lyM',2); G.nextDay(); E.addStock('lyM',3);
+    assert(E.stockBreakdown('lyM').old===2 && E.stockBreakdown('lyM').fresh===3, 'non-expiring lots separated');
+  });
+  test('Lô lưu cũ không bịa ngày nhập hoặc đổi hạn khi nâng tủ lạnh', () => {
+    S.stock.dau=[{q:12,exp:S.day+2}]; S.equip.tuLanh=3;
+    assert(E.stockBreakdown('dau').unknown===12 && E.nearestExpiry('dau')===3, 'legacy expiry');
+    E.addStock('dau',45); assert(S.stock.dau.length===2 && S.stock.dau[1].exp===S.day+9, 'new refrigerated lot');
+  });
+  test('Khôi phục ly của Lâm Phước không được thêm topping của quản lý', () => {
+    S.staff={}; stocked(); S.staff.thuViec={shifts:0}; const c=G.frontCustomer(); c.order.tops=['tcDen'];
+    G.pickCup(c.order.size); SH.board.auto.st={...SH.board.auto.st,kind:'manager'}; SH.board.auto.topsLeft=['tcDen'];
+    for(let i=0;i<240;i++)G.updateShift(.05);
+    assert(SH.board.tops.length===0 && !SH.board.auto, 'restored permissions');
+  });
+  test('Dữ liệu có hai phụ pha chỉ quản lý nhận phần topping', () => {
+    S.staff={}; stocked(); S.staff.thuViec={shifts:0}; S.staff.quanLy={shifts:0};
+    const c=G.frontCustomer(); c.order.tops=['tcDen']; G.pickCup(c.order.size);
+    assert(SH.board.auto.st.id==='quanLy', 'choose actual manager');
+    for(let i=0;i<240;i++)G.updateShift(.05);
+    assert(SH.board.tops.includes('tcDen'), 'manager toppings');
+  });
+  test('Đường/đá một phần mỗi ly, thiếu kho không trừ dở khi đóng nắp', () => {
+    S.staff={}; stocked(); G.pickCup('M'); G.startPour('traSua'); G.stopPour(); SH.board.fill=.95;
+    const ice=E.stockQty('da'); S.stock.duong=[];
+    assert(G.sealCup() && SH.board.phase==='cup' && E.stockQty('da')===ice, 'atomic missing supply');
+    E.addStock('duong',3); assert(!G.addSupply('da') && G.addSupply('da'), 'single ice');
+    assert(!G.addSupply('duong') && G.addSupply('duong'), 'single sugar');
+    assert(!G.sealCup() && E.stockQty('da')===ice-1 && E.stockQty('duong')===2, 'no repeat at seal');
+  });
   reset();
   document.body.dataset.contractResults=JSON.stringify(results);
   document.body.dataset.contractPassed=String(results.filter(x=>x.ok).length);

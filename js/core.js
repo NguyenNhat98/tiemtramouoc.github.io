@@ -74,7 +74,7 @@ export function newState() {
     day: 1, money: START_MONEY, phase: 'home', tab: 'kho', subtab: {},
     location: 'goc', season: 'spring', weather: 'sunny', temp: 25, eventId: 'trend', forecast: [],
     rating: 4.0, reviews: [], ratingCount: 0, followers: 144,
-    stock, unlocked, onMenu, prices, plan: {}, lastUsed: {},
+    stock, unlocked, onMenu, prices, plan: {}, lastUsed: {}, previousUsed: {},
     cat: { tra: 0, huong: 0, top: 0, nv: 0, online: 0 }, equip: {}, apps: {},
     staff: {}, kpi: { shifts: 0 }, ev: { lic: 0, food: 0, blk: 0 },
     pet: null, petDecor: {},

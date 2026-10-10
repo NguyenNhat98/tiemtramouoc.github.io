@@ -20,14 +20,20 @@ function khoRow(id) {
   const unit = E.unitSize(id);
   const exp = E.expiringToday(id);
   const life = E.lifeDays(id);
+  const remaining = E.nearestExpiry(id), stock = E.stockBreakdown(id);
+  const expiryText = remaining === null ? (life ? `Lô mới: ${life} ngày` : '') : remaining <= 0 ? 'Quá hạn' : remaining === 1 ? 'Hết hạn hôm nay' : `Còn ${remaining} ngày`;
   const profit = it.price ? E.priceOf(id) - E.costOf(id) : 0;
   const pctMargin = it.price ? Math.round((profit / E.priceOf(id)) * 100) : 0;
   const step = 1;
   return `<div class="krow">
     <span class="k-ico" style="background:${it.color}33">${it.icon}</span>
-    <div class="k-main"><div class="k-t"><b>${it.name}</b>${life ? `<span class="life">⏳ ${life} ngày</span>` : ''}</div>
+    <div class="k-main"><div class="k-t"><b>${it.name}</b>${expiryText ? `<span class="life">⏳ ${expiryText}</span>` : ''}</div>
       ${it.price && it.kind !== 'supply' ? `<span class="sale">💵 Bán ${pctMargin}% (+${fmtK(profit)})</span>` : ''}
-      <small>📦 ${qty}${it.kind === 'flavor' ? ' ly' : ''} · ${fmtK(E.costOf(id) * (it.kind === 'flavor' ? FLAVOR_BOTTLE : 1))}${it.kind === 'flavor' ? '/chai' : '/ly'}${exp ? ` · <em class="warn">⚠️ ${exp} hết hạn hôm nay</em>` : ''}${S.lastUsed[id] ? ` · 🏭 dùng ${S.lastUsed[id]}` : ''}</small>
+      <small>📦 Tồn ${qty}${it.kind === 'flavor' ? ' ly' : ''} · ${fmtK(E.costOf(id) * (it.kind === 'flavor' ? FLAVOR_BOTTLE : 1))}${it.kind === 'flavor' ? '/chai' : '/ly'}${exp ? ` · <em class="warn">⚠️ ${exp} hết hạn hôm nay</em>` : ''}</small>
+      <small>Từ hôm trước: ${stock.old} · Nhập hôm nay còn: ${stock.fresh}${stock.unknown ? ` · Lô cũ chưa rõ ngày nhập: ${stock.unknown}` : ''}</small>
+      ${(S.previousUsed?.[id] || S.lastUsed[id]) ? `<small>🏭 Hôm qua dùng: ${S.previousUsed?.[id] || 0} · Hôm nay dùng: ${S.lastUsed[id] || 0}</small>` : ''}
+      ${stock.lots.length ? `<details class="stock-lots"><summary>Hạn dùng từng lô</summary>${stock.lots.map(l => `<small>${l.q} phần · ${l.days === null ? 'Không hết hạn' : l.days <= 0 ? 'Quá hạn' : l.days === 1 ? 'Hết hạn hôm nay' : `Còn ${l.days} ngày (tính cả hôm nay)`}</small>`).join('')}</details>` : ''}
+      ${id === 'da' || id === 'duong' ? `<small class="supply-help">${id === 'da' ? '🧊 Làm lạnh ly' : '🍯 Tạo độ ngọt'}: 1 phần/ly. Thêm ở PHA LY; khi đóng nắp sẽ tự thêm phần còn thiếu.</small>` : ''}
       <small class="plan">${plan ? `+${plan * unit}${it.kind === 'flavor' ? ` ly (${plan} chai)` : ''} · ${fmtK(E.unitCost(id) * plan)}` : '&nbsp;'}</small></div>
     <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Giảm">−</button><input class="num" type="number" inputmode="numeric" min="0" max="999" value="${plan}" data-plan="${id}" aria-label="Số lượng ${it.name}"><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="Tăng">+</button></div>
   </div>`;
@@ -39,7 +45,7 @@ const kho = {
     let head = '';
     if (t === 'tra') list = TEAS.filter((i) => S.unlocked[i]);
     else if (t === 'dc') list = SUPPLIES;
-    else if (t === 'huong') { list = FLAVORS.filter((i) => S.unlocked[i]); head = `<p class="note">🍓 1 chai = ${FLAVOR_BOTTLE} ly, dùng được 7 ngày tính cả ngày mua. Hết chai thì phải mua chai mới.</p>`; }
+    else if (t === 'huong') { list = FLAVORS.filter((i) => S.unlocked[i]); head = `<p class="note">🍓 1 chai = ${FLAVOR_BOTTLE} ly. Hạn lô mới tăng theo tủ lạnh; hạn còn lại của từng lô hiển thị bên dưới. Hết chai thì cần mua thêm.</p>`; }
     else {
       return `${tabs('kho', KHO_TABS(), 'tra')}${TOP_GROUPS.map((g) => { const items = TOPS.filter((i) => ITEMS[i].group === g && S.unlocked[i]); return items.length ? `<h5 class="grp">${g}</h5>${items.map(khoRow).join('')}` : ''; }).join('')}${khoLegend()}`;
     }
@@ -56,7 +62,7 @@ const kho = {
     }
   },
 };
-const khoLegend = () => '<div class="legend">📦 đang có · 🏭 hôm qua dùng · ⚠️ hết hạn hôm nay</div>';
+const khoLegend = () => '<div class="legend">📦 Tồn từ hôm trước là phần còn lại chưa dùng · ưu tiên dùng lô sắp hết hạn · hàng hết hạn hôm nay được bỏ cuối ca.</div>';
 
 /* ===== GIÁ BÁN ===== */
 const GIA_TABS = () => [['tra', '🫖 Trà'], ['huong', '🍓 Hương'], ['top', '🧋 Topping'], ['size', '⬆️ Size']];

@@ -203,10 +203,10 @@ export function pickCup(size) {
   if (E.stockQty(cupId) < 1) return `Hết ly size ${size === 'L' ? 'L' : 'M'} rồi!`;
   E.take(cupId, 1);
   SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: 'cup', sealT: 0, pouring: false, spill: 0, auto: null };
-  const staffPour = STAFF.filter((s) => S.staff[s.id] && (s.kind === 'pour' || s.kind === 'manager'));
-  if (staffPour.length) {
+  const st = counterAssistant();
+  if (st) {
     const c = frontCustomer();
-    if (c) SH.board.auto = { cid: c.id, t: 1.1, topsLeft: staffPour.some((s) => s.kind === 'manager') ? [...c.order.tops] : [], st: staffPour[0] };
+    if (c) SH.board.auto = { cid: c.id, t: 1.1, topsLeft: st.kind === 'manager' ? [...c.order.tops] : [], st };
   }
   emit('cup:pick', size);
   return null;
@@ -259,13 +259,28 @@ export function sealCup() {
   if (!b.tea || b.fill < 0.2) return 'Ly chưa có trà';
   const blk = EV.blocked('seal'); if (blk) return blk;
   if (b.auto) return 'Nhân viên đang pha, hãy đợi hoàn tất';
+  for (const [id, flag] of [['da', 'iceAdded'], ['duong', 'sugarAdded']]) {
+    if (!b[flag] && E.stockQty(id) < 1) return `Hết ${ITEMS[id].name}, cần nhập thêm trước khi đóng nắp`;
+  }
   if (b.pouring) stopPour();
-  if (!b.iceAdded && E.stockQty('da') > 0) { E.take('da', 1); b.iceAdded = true; }
-  if (!b.sugarAdded && E.stockQty('duong') > 0) { E.take('duong', 1); b.sugarAdded = true; }
+  if (!b.iceAdded) addSupply('da');
+  if (!b.sugarAdded) addSupply('duong');
   b.phase = 'sealing';
   b.sealT = 1.2 * (1 - E.bonus().seal);
   b.sealMax = b.sealT;
   emit('seal:start');
+  return null;
+}
+/** Một phần đá và một phần đường cho mỗi ly, không trừ lại khi đóng nắp. */
+export function addSupply(id) {
+  const flag = id === 'da' ? 'iceAdded' : id === 'duong' ? 'sugarAdded' : null;
+  if (!flag) return 'Nguyên liệu không hợp lệ';
+  const b = SH.board;
+  if (!b || b.phase !== 'cup') return 'Hãy lấy ly trước';
+  if (b[flag]) return `Ly đã thêm ${ITEMS[id].name}`;
+  if (!E.take(id, 1)) return `Hết ${ITEMS[id].name}!`;
+  b[flag] = true;
+  emit('staff:ingredient', id);
   return null;
 }
 export function trashCup() {
@@ -410,6 +425,7 @@ function staffStep(dt) {
       }
     } else if (st.kind === 'auto' || st.kind === 'online' || st.kind === 'night') {
       const key = st.id;
+      if (EV.blocked('pump') || EV.blocked('seal')) continue;
       if (st.kind === 'online' && E.onlineEnabled() && SH.onlineQ.length) acceptOnline(SH.onlineQ[0].id);
       const runtime = SH.staffT[key] || (SH.staffT[key] = {done: 0, sulk: 0});
       if (runtime.sulk > 0) { runtime.sulk -= dt; if (runtime.sulk <= 0) { E.fire(key); emit('staff:quit', st); } continue; }
@@ -474,18 +490,24 @@ function serveStaff(c, board, forceStars, st) {
   return settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
 }
 
+// Prefer the manager for legacy saves containing both mutually exclusive helpers.
+const counterAssistant = () => STAFF.find(s => S.staff[s.id] && s.kind === 'manager')
+  || STAFF.find(s => S.staff[s.id] && s.kind === 'pour');
 // The counter assistant works on this cup's customer, never the next selected order.
 function advanceCounterStaff(bd, dt, bonus) {
   if (bd.phase !== 'cup') { bd.auto = null; return; }
   if (!bd.auto && !bd.autoDone) {
-    const st = STAFF.find(s => S.staff[s.id] && (s.kind === 'manager' || s.kind === 'pour'));
+    const st = counterAssistant();
     const c = frontCustomer();
     if (st && c) bd.auto = { cid: c.id, t: 0.6, st, topsLeft: st.kind === 'manager' ? [...c.order.tops] : [] };
   }
   const a = bd.auto;
   if (!a) return;
   const c = SH.queue.find(c => c.id === a.cid);
-  if (!c || !S.staff[a.st.id]) { if (bd.pouring) stopPour(); bd.auto = null; bd.autoDone = true; return; }
+  const st = STAFF.find(s => s.id === a.st?.id);
+  if (!c || !st || !S.staff[st.id] || !['pour', 'manager'].includes(st.kind)) { if (bd.pouring) stopPour(); bd.auto = null; bd.autoDone = true; return; }
+  a.st = st; // Never trust role/permissions saved inside an unfinished cup.
+  if (st.kind !== 'manager') a.topsLeft = [];
   a.stage = a.stage || 'tea';
   if (a.stage === 'tea' && EV.blocked('pump')) { bd.pouring = false; return; }
   a.t -= dt;
@@ -498,7 +520,9 @@ function advanceCounterStaff(bd, dt, bonus) {
   const takeOnce = (id, flag) => {
     if (bd[flag]) return true;
     if (E.stockQty(id) < 1) { a.waiting = ITEMS[id].name; return false; }
-    E.take(id, 1); bd[flag] = true; a.waiting = null; return true;
+    const err = addSupply(id);
+    if (err) { a.waiting = err; return false; }
+    a.waiting = null; return true;
   };
   if (a.stage === 'tea') {
     if (!bd.tea) { const err = startPour(c.order.tea); if (err) { a.waiting = err; return; } }
@@ -509,12 +533,12 @@ function advanceCounterStaff(bd, dt, bonus) {
     a.stage = 'sugar'; a.t = 0.45;
   } else if (a.stage === 'sugar') {
     if (!takeOnce('duong', 'sugarAdded')) return;
-    emit('staff:ingredient', 'duong'); a.stage = 'ice'; a.t = 0.45;
+    a.stage = 'ice'; a.t = 0.45;
   } else if (a.stage === 'ice') {
     if (!takeOnce('da', 'iceAdded')) return;
-    emit('staff:ingredient', 'da'); a.stage = 'topping'; a.t = 0.45;
+    a.stage = 'topping'; a.t = 0.45;
   } else if (a.stage === 'topping') {
-    const id = a.topsLeft[0];
+    const id = st.kind === 'manager' ? a.topsLeft?.[0] : null;
     if (id) {
       if (!bd.tops.includes(id)) { const err = addTop(id); if (err) { a.waiting = err; return; } }
       a.topsLeft.shift(); a.t = 0.45;
@@ -659,6 +683,10 @@ function finishShift(early) {
 
 /** Sang ngày mới. */
 export function nextDay() {
+  S.previousUsed = { ...S.lastUsed };
+  for (const lots of Object.values(S.stock)) for (const lot of lots) {
+    if (!Number.isFinite(lot.receivedDay)) lot.receivedDay = S.day;
+  }
   S.day++;
   E.ensureForecast();
   S.eventId = E.pickEvent();

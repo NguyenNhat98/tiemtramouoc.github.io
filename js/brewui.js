@@ -3,11 +3,12 @@ import { staffArt } from './sell-art.js';
  * Màn hình bán hàng: khách + bong bóng thoại, quầy trà, thớt pha ly, khay topping, máy đóng nắp,
  * sảnh bàn ghế. Mọi bước đều có hiệu ứng (lấy ly, rót trà, bỏ topping, đóng nắp, giao ly).
  */
-import { ITEMS, TEAS, FLAVORS, TOPS, SIZE_L_PRICE, STAFF } from './config.js';
+import { ITEMS, TEAS, FLAVORS, TOPS, SIZE_L_PRICE, STAFF, EQUIP } from './config.js';
 import { S, on, emit, markDirty, $, $$, h, esc, fmtK, sfx, clamp, wait, sum, rand } from './core.js';
 import * as E from './econ.js';
 import * as G from './sell.js';
 import { SH } from './sell.js';
+import { requestGenerator } from './events.js';
 import { toast, fxText, fxCoins, fxSpark, bindActions, logoHTML, openModal, isModalOpen, updateClock } from './ui.js';
 import { sellSceneHTML, updateSceneTime } from './scenes.js';
 import { teaArt, toppingArt, stackArt, sealerArt, cupSvg, setCupFill, customerArt } from './sell-art.js';
@@ -93,6 +94,8 @@ export function renderSell() {
           <button class="trash" data-act="trash" aria-label="Thùng rác">🗑️</button>
         </div>
       </div>
+      <div class="supply-row">${['da', 'duong'].map(id => `<button class="supply-btn" data-act="supply" data-id="${id}">${ITEMS[id].icon} ${id === 'da' ? 'Đá' : 'Đường'} <span data-cnt="${id}">0</span><small class="supply-state">1 phần/ly</small></button>`).join('')}</div>
+      <div class="equip-strip" aria-label="Trang bị đang sử dụng">${EQUIP.filter(eq => E.equipLevel(eq.id) > 0).map(eq => `<button class="equip-chip" data-act="equipment" data-id="${eq.id}" aria-label="${esc(eq.name)}">${eq.icon} ${esc(eq.name)} <b>C${E.equipLevel(eq.id)}</b></button>`).join('')}</div>
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra sảnh → <span id="lobbyCnt">0/0</span></button></div>
@@ -156,6 +159,15 @@ function fillTrays() {
 
 /* ===== Hành động ===== */
 const sellActs = {
+  supply: (t) => { const err = G.addSupply(t.dataset.id); if (err) { toast(err, 'err'); sfx('error'); } },
+  equipment: (t) => {
+    const eq = EQUIP.find(eq => eq.id === t.dataset.id);
+    if (!eq) return;
+    if (eq.id === 'mayPhat' && SH.ev?.off > 0 && SH.ev.mode === 'full') { const err = requestGenerator(); if (err) toast(err, 'err'); return; }
+    const tier = eq.tiers[Math.min(E.equipLevel(eq.id), eq.tiers.length) - 1];
+    const extra = eq.id === 'tuLanh' ? 'Áp dụng cho lô nhập mới; hạn của lô đã nhập giữ nguyên.' : eq.id === 'tablet' ? 'Cần mở ứng dụng trong Nâng cấp › Online và đạt điều kiện nhận đơn.' : eq.id === 'giayPhep' ? 'Khi đoàn kiểm tra đến, chạm Xuất trình giấy phép để xác nhận.' : eq.id === 'attp' ? 'Vẫn cần dọn bàn và dùng nguyên liệu còn hạn; chứng nhận không thay việc giữ vệ sinh.' : eq.id === 'mayPhat' ? (SH.ev?.mode?.startsWith('gen') ? '🔌 Đang cấp điện dự phòng.' : 'Điện lưới đang hoạt động. Khi mất điện, xác nhận bật máy phát.') : 'Hiệu quả cấp hiện tại được áp dụng trong ca bán hàng.';
+    openModal({ id: 'equipment', cls: 'small', title: eq.name, html: `<h3 class="m-title">${eq.icon} ${esc(eq.name)} · C${E.equipLevel(eq.id)}</h3><p class="m-text"><b>${esc(tier.n)}</b><br>${esc(tier.d)}</p><p class="m-text">${extra}</p>` });
+  },
   cup: (t) => { const e = G.pickCup(t.dataset.size); if (e) { toast(e, 'err'); sfx('error'); } },
   disp: (t) => {
     const id = t.dataset.tea;
@@ -379,7 +391,7 @@ on('seal:start', () => { updateBoard(true); sealAnim(); });
 on('seal:done', () => { sfx('ding'); updateBoard(true); const cs = $('#cupslot'); if (cs) { fxSpark({ x: cs.getBoundingClientRect().left + cs.offsetWidth / 2, y: cs.getBoundingClientRect().top + cs.offsetHeight * 0.35 }, 6); cs.classList.remove('plop'); void cs.offsetWidth; cs.classList.add('plop'); } const s = $('#sealer'); s?.classList.add('ding'); setTimeout(() => s?.classList.remove('ding'), 600); });
 on('top', () => updateBoard(true));
 on('flavor', () => updateBoard(true));
-on("staff:ingredient", (id) => { dropFx(document.querySelector("#staffStrip .stf.work") || document.querySelector("#sealer"), ITEMS[id].color); sfx("plop"); });
+on('staff:ingredient', (id) => { if (!canShowBrewFx()) return; dropFx($(`[data-act="supply"][data-id="${id}"]`) || $('#staffStrip .stf.work') || $('#sealer'), ITEMS[id].color); sfx('plop'); });
 on('auto:pour', () => updateBoard(true));
 on('trash', () => updateBoard(true));
 on('queue', () => { if (SH.on && S.phase === 'sell' && SH.view === 'counter') { refreshQueue(); refreshCustomer(); } });
@@ -530,6 +542,18 @@ export function frameSell(dt, force) {
   if (cntT <= 0 || force) {
     cntT = 0.25;
     updateStaffStrip();
+    for (const el of $$('.supply-btn', root)) {
+      const added = !!b?.[el.dataset.id === 'da' ? 'iceAdded' : 'sugarAdded'];
+      el.classList.toggle('added', added);
+      $('.supply-state', el).textContent = added ? '✓ Đã thêm' : '1 phần/ly';
+      el.disabled = !b || b.phase !== 'cup' || added;
+    }
+    const generator = $('.equip-chip[data-id="mayPhat"]', root);
+    if (generator) {
+      const running = SH.ev?.off > 0 && SH.ev.mode?.startsWith('gen');
+      generator.classList.toggle('running', !!running);
+      $('b', generator).textContent = running ? 'ĐANG CHẠY' : `C${E.equipLevel('mayPhat')}`;
+    }
     updateSceneTime(SH.hour);
     for (const el of $$('[data-cnt]', root)) {
       const id = el.dataset.cnt, q = E.stockQty(id);

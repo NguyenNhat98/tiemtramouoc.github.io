@@ -190,9 +190,9 @@ export function addStock(id, q) {
   const it = ITEMS[id];
   if (!it || q <= 0) return;
   const exp = it.life ? S.day + it.life - 1 + lifeBonus() : -1;
-  let lot = S.stock[id].find((l) => l.exp === exp);
+  let lot = S.stock[id].find((l) => l.exp === exp && l.receivedDay === S.day);
   if (lot) lot.q += q;
-  else S.stock[id].push({ q, exp });
+  else S.stock[id].push({ q, exp, receivedDay: S.day });
   S.stock[id].sort((a, b) => (a.exp === -1 ? 1e9 : a.exp) - (b.exp === -1 ? 1e9 : b.exp));
 }
 /** Lấy hàng (lô sắp hết hạn trước). */
@@ -232,6 +232,16 @@ export function nearestExpiry(id) {
   return Math.min(...lots.map((l) => l.exp)) - S.day + 1;
 }
 export const lifeDays = (id) => (ITEMS[id].life ? ITEMS[id].life + lifeBonus() : 0);
+/** Existing saves keep their real expiry; missing receipt dates are shown as unknown. */
+export function stockBreakdown(id) {
+  const lots = (S.stock[id] || []).filter(l => l.q > 0);
+  return {
+    old: sum(lots.filter(l => Number.isFinite(l.receivedDay) && l.receivedDay < S.day), l => l.q),
+    fresh: sum(lots.filter(l => l.receivedDay === S.day), l => l.q),
+    unknown: sum(lots.filter(l => !Number.isFinite(l.receivedDay)), l => l.q),
+    lots: lots.map(l => ({ q: l.q, days: l.exp === -1 ? null : l.exp - S.day + 1 })),
+  };
+}
 
 /* ===== Mở khóa & nhập hàng ===== */
 export function unlockItem(id) {

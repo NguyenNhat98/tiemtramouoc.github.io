@@ -9,7 +9,7 @@ export const SAVE_VERSION = 1;
 export const SHIFT_START_H = 10;
 export const SHIFT_END_H = 22;
 export const QUEUE_BASE = 5;
-export const START_MONEY = 400000;
+export const START_MONEY = 10000000000;
 export const BASE_RENT = 40000;
 export const BASE_UTILITY = 28000;
 export const DAYS_PER_SEASON = 7;
@@ -169,7 +169,7 @@ export const catCost = (lvl) => Math.round((1000 * Math.pow(1.55, lvl)) / 100) *
 export const EQUIP = [
   { id: 'binhRot', icon: '🏺', name: 'Bình rót trà', tiers: [{ n: 'Bình rót thủy tinh', c: 0, d: 'Rót trà nhanh hơn 10%' }, { n: 'Bình rót inox', c: 10000000, d: 'Rót nhanh hơn 25%' }, { n: 'Bình rót tự động', c: 35000000, d: 'Rót nhanh hơn 45%, ít tràn' }], key: 'pour', vals: [0.1, 0.25, 0.45] },
   { id: 'mayNap', icon: '🏭', name: 'Máy đóng nắp', tiers: [{ n: 'Máy đóng nắp bán tự động', c: 0, d: 'Đóng nắp 1,2 giây' }, { n: 'Máy đóng nắp tự động', c: 12000000, d: 'Đóng nắp nhanh hơn 30%' }, { n: 'Máy đóng nắp 2 đầu', c: 40000000, d: 'Đóng nắp nhanh hơn 55%' }], key: 'seal', vals: [0, 0.3, 0.55] },
-  { id: 'khayTop', icon: '🧰', name: 'Khay topping', tiers: [{ n: 'Khay inox', c: 0, d: 'Tiết kiệm 3% topping' }, { n: 'Khay giữ nhiệt', c: 8000000, d: 'Tiết kiệm 8% topping, hạn dùng +0' }, { n: 'Khay bảo quản', c: 30000000, d: 'Tiết kiệm 15% topping' }], key: 'topSave', vals: [0.03, 0.08, 0.15] },
+  { id: 'khayTop', icon: '🧰', name: 'Khay topping', tiers: [{ n: 'Khay inox', c: 0, d: 'Giảm 3% chi phí topping mỗi phần' }, { n: 'Khay giữ nhiệt', c: 8000000, d: 'Giảm 8% chi phí topping mỗi phần' }, { n: 'Khay bảo quản', c: 30000000, d: 'Giảm 15% chi phí topping mỗi phần' }], key: 'topSave', vals: [0.03, 0.08, 0.15] },
   { id: 'boDungCu', icon: '🥄', name: 'Ly, đường, đá', tiers: [{ n: 'Bộ dụng cụ tiêu chuẩn', c: 0, d: 'Khách hài lòng +5% tiền boa' }, { n: 'Bộ định lượng chuẩn', c: 6000000, d: 'Tiền boa +12%' }, { n: 'Bộ pha chế chuyên nghiệp', c: 25000000, d: 'Tiền boa +25%' }], key: 'tip', vals: [0.05, 0.12, 0.25] },
   { id: 'tuLanh', icon: '❄️', name: 'Tủ lạnh', tiers: [{ n: 'Tủ lạnh thường', c: 500000, d: 'Hạn dùng nguyên liệu +1 ngày' }, { n: 'Tủ lạnh inverter', c: 3000000, d: 'Hạn dùng +2 ngày' }, { n: 'Kho lạnh mini', c: 15000000, d: 'Hạn dùng +3 ngày' }], key: 'life', vals: [1, 2, 3] },
   { id: 'mascot', icon: '🐻', name: 'Mascot quán', tiers: [{ n: 'Gấu bông mascot', c: 600000, d: 'Thêm 3% khách' }, { n: 'Mascot nhún nhảy', c: 5000000, d: 'Thêm 6% khách' }, { n: 'Mascot người đi phát tờ rơi', c: 20000000, d: 'Thêm 10% khách' }], key: 'traffic', vals: [0.03, 0.06, 0.1] },
@@ -206,7 +206,7 @@ export const PET_DECOR = [
   { id: 'app', icon: '📱', name: 'App Smart Pet Spa Booking', desc: 'Đặt lịch spa thú cưng thông minh.', cost: 4200000, fx: '+30% tốc độ chăm sóc' },
 ];
 export const PETS = {
-  shiba: { name: 'Tó Shiba Vàng', icon: '🐕', adopt: 10000000, desc: 'Thần tài Quán chính, check-in hút khách, kiên nhẫn.',
+  shiba: { name: 'Chó Shiba Vàng', icon: '🐕', adopt: 10000000, desc: 'Thần tài Quán chính, check-in hút khách, kiên nhẫn.',
     buffs: ['💰 Thần tài Quán chính: tăng +15% → +25% doanh thu & tiền Tip trên mỗi bill bán trực tiếp.', '🌟 Check-in hút khách: khách thích check-in cùng cún, tăng điểm đánh giá 5★.', '💗 Kiên nhẫn: khách kiên nhẫn đợi thêm +15% thời gian khi thấy bé cún vui.'], fx: { bill: 0.2, patience: 0.15, tip: 0.1 } },
   meo: { name: 'Mèo Mướp Chiêu Tài', icon: '🐈', adopt: 10000000, desc: 'Thần tài chi nhánh & nhượng quyền, giảm rủi ro.',
     buffs: ['🏢 Thần tài Chi nhánh: tăng +20% → +35% doanh thu các chi nhánh trực thuộc & nhượng quyền.', '📈 Vượng khí chuỗi tiền: tiếng lành đồn xa, các đối tác kinh doanh phải trả phí lạc.', '🛡️ Bảo vệ chi nhánh: giảm 50% nguy cơ thua lỗ của chuỗi chi nhánh nhượng quyền.'], fx: { branch: 0.25 } },

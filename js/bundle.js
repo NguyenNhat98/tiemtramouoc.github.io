@@ -13,7 +13,7 @@
   var SHIFT_START_H = 10;
   var SHIFT_END_H = 22;
   var QUEUE_BASE = 5;
-  var START_MONEY = 4e5;
+  var START_MONEY = 1e10;
   var BASE_RENT = 4e4;
   var BASE_UTILITY = 28e3;
   var DAYS_PER_SEASON = 7;
@@ -384,7 +384,7 @@
   var EQUIP = [
     { id: "binhRot", icon: "\u{1F3FA}", name: "B\xECnh r\xF3t tr\xE0", tiers: [{ n: "B\xECnh r\xF3t th\u1EE7y tinh", c: 0, d: "R\xF3t tr\xE0 nhanh h\u01A1n 10%" }, { n: "B\xECnh r\xF3t inox", c: 1e7, d: "R\xF3t nhanh h\u01A1n 25%" }, { n: "B\xECnh r\xF3t t\u1EF1 \u0111\u1ED9ng", c: 35e6, d: "R\xF3t nhanh h\u01A1n 45%, \xEDt tr\xE0n" }], key: "pour", vals: [0.1, 0.25, 0.45] },
     { id: "mayNap", icon: "\u{1F3ED}", name: "M\xE1y \u0111\xF3ng n\u1EAFp", tiers: [{ n: "M\xE1y \u0111\xF3ng n\u1EAFp b\xE1n t\u1EF1 \u0111\u1ED9ng", c: 0, d: "\u0110\xF3ng n\u1EAFp 1,2 gi\xE2y" }, { n: "M\xE1y \u0111\xF3ng n\u1EAFp t\u1EF1 \u0111\u1ED9ng", c: 12e6, d: "\u0110\xF3ng n\u1EAFp nhanh h\u01A1n 30%" }, { n: "M\xE1y \u0111\xF3ng n\u1EAFp 2 \u0111\u1EA7u", c: 4e7, d: "\u0110\xF3ng n\u1EAFp nhanh h\u01A1n 55%" }], key: "seal", vals: [0, 0.3, 0.55] },
-    { id: "khayTop", icon: "\u{1F9F0}", name: "Khay topping", tiers: [{ n: "Khay inox", c: 0, d: "Ti\u1EBFt ki\u1EC7m 3% topping" }, { n: "Khay gi\u1EEF nhi\u1EC7t", c: 8e6, d: "Ti\u1EBFt ki\u1EC7m 8% topping, h\u1EA1n d\xF9ng +0" }, { n: "Khay b\u1EA3o qu\u1EA3n", c: 3e7, d: "Ti\u1EBFt ki\u1EC7m 15% topping" }], key: "topSave", vals: [0.03, 0.08, 0.15] },
+    { id: "khayTop", icon: "\u{1F9F0}", name: "Khay topping", tiers: [{ n: "Khay inox", c: 0, d: "Gi\u1EA3m 3% chi ph\xED topping m\u1ED7i ph\u1EA7n" }, { n: "Khay gi\u1EEF nhi\u1EC7t", c: 8e6, d: "Gi\u1EA3m 8% chi ph\xED topping m\u1ED7i ph\u1EA7n" }, { n: "Khay b\u1EA3o qu\u1EA3n", c: 3e7, d: "Gi\u1EA3m 15% chi ph\xED topping m\u1ED7i ph\u1EA7n" }], key: "topSave", vals: [0.03, 0.08, 0.15] },
     { id: "boDungCu", icon: "\u{1F944}", name: "Ly, \u0111\u01B0\u1EDDng, \u0111\xE1", tiers: [{ n: "B\u1ED9 d\u1EE5ng c\u1EE5 ti\xEAu chu\u1EA9n", c: 0, d: "Kh\xE1ch h\xE0i l\xF2ng +5% ti\u1EC1n boa" }, { n: "B\u1ED9 \u0111\u1ECBnh l\u01B0\u1EE3ng chu\u1EA9n", c: 6e6, d: "Ti\u1EC1n boa +12%" }, { n: "B\u1ED9 pha ch\u1EBF chuy\xEAn nghi\u1EC7p", c: 25e6, d: "Ti\u1EC1n boa +25%" }], key: "tip", vals: [0.05, 0.12, 0.25] },
     { id: "tuLanh", icon: "\u2744\uFE0F", name: "T\u1EE7 l\u1EA1nh", tiers: [{ n: "T\u1EE7 l\u1EA1nh th\u01B0\u1EDDng", c: 5e5, d: "H\u1EA1n d\xF9ng nguy\xEAn li\u1EC7u +1 ng\xE0y" }, { n: "T\u1EE7 l\u1EA1nh inverter", c: 3e6, d: "H\u1EA1n d\xF9ng +2 ng\xE0y" }, { n: "Kho l\u1EA1nh mini", c: 15e6, d: "H\u1EA1n d\xF9ng +3 ng\xE0y" }], key: "life", vals: [1, 2, 3] },
     { id: "mascot", icon: "\u{1F43B}", name: "Mascot qu\xE1n", tiers: [{ n: "G\u1EA5u b\xF4ng mascot", c: 6e5, d: "Th\xEAm 3% kh\xE1ch" }, { n: "Mascot nh\xFAn nh\u1EA3y", c: 5e6, d: "Th\xEAm 6% kh\xE1ch" }, { n: "Mascot ng\u01B0\u1EDDi \u0111i ph\xE1t t\u1EDD r\u01A1i", c: 2e7, d: "Th\xEAm 10% kh\xE1ch" }], key: "traffic", vals: [0.03, 0.06, 0.1] },
@@ -422,7 +422,7 @@
   ];
   var PETS = {
     shiba: {
-      name: "T\xF3 Shiba V\xE0ng",
+      name: "Ch\xF3 Shiba V\xE0ng",
       icon: "\u{1F415}",
       adopt: 1e7,
       desc: "Th\u1EA7n t\xE0i Qu\xE1n ch\xEDnh, check-in h\xFAt kh\xE1ch, ki\xEAn nh\u1EABn.",
@@ -645,6 +645,7 @@
       prices,
       plan: {},
       lastUsed: {},
+      previousUsed: {},
       cat: { tra: 0, huong: 0, top: 0, nv: 0, online: 0 },
       equip: {},
       apps: {},
@@ -874,6 +875,7 @@
   var setPaused = (v) => {
     paused = !!v;
   };
+  var isPaused = () => paused;
   var setSpeed = (v) => {
     speed = v;
   };
@@ -1346,6 +1348,7 @@
     staffCount: () => staffCount,
     staffWagePerDay: () => staffWagePerDay,
     startAd: () => startAd,
+    stockBreakdown: () => stockBreakdown,
     stockQty: () => stockQty,
     tabletsOwned: () => tabletsOwned,
     take: () => take,
@@ -1584,9 +1587,9 @@
     const it = ITEMS[id];
     if (!it || q <= 0) return;
     const exp = it.life ? S.day + it.life - 1 + lifeBonus() : -1;
-    let lot = S.stock[id].find((l) => l.exp === exp);
+    let lot = S.stock[id].find((l) => l.exp === exp && l.receivedDay === S.day);
     if (lot) lot.q += q;
-    else S.stock[id].push({ q, exp });
+    else S.stock[id].push({ q, exp, receivedDay: S.day });
     S.stock[id].sort((a, b) => (a.exp === -1 ? 1e9 : a.exp) - (b.exp === -1 ? 1e9 : b.exp));
   }
   function take(id, n = 1) {
@@ -1628,6 +1631,15 @@
     return Math.min(...lots.map((l) => l.exp)) - S.day + 1;
   }
   var lifeDays = (id) => ITEMS[id].life ? ITEMS[id].life + lifeBonus() : 0;
+  function stockBreakdown(id) {
+    const lots = (S.stock[id] || []).filter((l) => l.q > 0);
+    return {
+      old: sum(lots.filter((l) => Number.isFinite(l.receivedDay) && l.receivedDay < S.day), (l) => l.q),
+      fresh: sum(lots.filter((l) => l.receivedDay === S.day), (l) => l.q),
+      unknown: sum(lots.filter((l) => !Number.isFinite(l.receivedDay)), (l) => l.q),
+      lots: lots.map((l) => ({ q: l.q, days: l.exp === -1 ? null : l.exp - S.day + 1 }))
+    };
+  }
   function unlockItem(id) {
     const it = ITEMS[id];
     if (!it || S.unlocked[id]) return "\u0110\xE3 m\u1EDF kh\xF3a";
@@ -1954,6 +1966,7 @@
     SH: () => SH,
     acceptOnline: () => acceptOnline,
     addFlavor: () => addFlavor,
+    addSupply: () => addSupply,
     addTop: () => addTop,
     cleanTable: () => cleanTable,
     closeNow: () => closeNow,
@@ -2168,7 +2181,7 @@
       { id: "stock", ico: "\u{1F4E6}", title: "Kho & nh\u1EADp h\xE0ng", rows: [
         ["\u{1FAD6}", "<b>Kho</b> c\xF3 tab \u{1FAD6} Tr\xE0, \u{1F9CB} Topping, \u{1F964} D\u1EE5ng c\u1EE5 v\xE0 \u{1F353} H\u01B0\u01A1ng khi c\xF3 h\u01B0\u01A1ng \u0111\u01B0\u1EE3c m\u1EDF kh\xF3a. C\xE1c d\xF2ng h\xE0ng hi\u1EC3n th\u1ECB t\xEAn, t\u1ED3n kho, gi\xE1 nh\u1EADp v\xE0 h\u1EA1n d\xF9ng.", '.panel-in[data-tab="kho"]'],
         ["\u{1F522}", "<b>\xD4 s\u1ED1 0\u2013999</b> l\xE0 l\u01B0\u1EE3ng mu\u1ED1n mua th\xEAm, kh\xF4ng ph\u1EA3i t\u1ED3n kho. G\xF5 s\u1ED1 ho\u1EB7c b\u1EA5m \u2212/+ \u0111\u1EC3 thay \u0111\u1ED5i 1 \u0111\u01A1n v\u1ECB; s\u1ED1 0 b\u1ECF m\xF3n kh\u1ECFi k\u1EBF ho\u1EA1ch. D\xF2ng +N v\xE0 chi ph\xED l\xE0 ph\u1EA7n d\u1EF1 \u0111\u1ECBnh nh\u1EADp.", ".krow .stepper"],
-        ["\u23F3", `<b>H\u1EA1n d\xF9ng</b>: \u23F3 N ng\xE0y l\xE0 s\u1ED1 ng\xE0y d\xF9ng \u0111\u01B0\u1EE3c; \u26A0\uFE0F b\xE1o l\xF4 h\u1EBFt h\u1EA1n h\xF4m nay. H\u01B0\u01A1ng mua theo chai: <b>1 chai pha ${FLAVOR_BOTTLE} ly</b>; h\u1EA1n th\u1EF1c t\u1EBF theo d\xF2ng h\xE0ng v\xE0 c\xE1c n\xE2ng c\u1EA5p b\u1EA3o qu\u1EA3n.`, ".krow .life"],
+        ["\u23F3", `<b>H\u1EA1n d\xF9ng</b>: d\xF2ng h\xE0ng ghi h\u1EA1n c\xF2n l\u1EA1i c\u1EE7a l\xF4 g\u1EA7n h\u1EBFt h\u1EA1n nh\u1EA5t; m\u1EDF <b>H\u1EA1n d\xF9ng t\u1EEBng l\xF4</b> \u0111\u1EC3 xem chi ti\u1EBFt. T\u1ED3n t\u1EEB h\xF4m tr\u01B0\u1EDBc v\xE0 ph\u1EA7n nh\u1EADp h\xF4m nay \u0111\u01B0\u1EE3c t\xE1ch ri\xEAng. H\u01B0\u01A1ng: <b>1 chai pha ${FLAVOR_BOTTLE} ly</b>; t\u1EE7 l\u1EA1nh k\xE9o d\xE0i h\u1EA1n cho l\xF4 nh\u1EADp m\u1EDBi.`, ".krow .life"],
         ["\u{1F6D2}", "<b>N\u1EA5u & nh\u1EADp</b> x\xE1c nh\u1EADn to\xE0n b\u1ED9 k\u1EBF ho\u1EA1ch, tr\u1EEB t\u1ED5ng ti\u1EC1n v\xE0 th\xEAm h\xE0ng v\xE0o kho. N\u1EBFu thi\u1EBFu ti\u1EC1n, giao d\u1ECBch kh\xF4ng th\u1EF1c hi\u1EC7n. \u0110\u1ED5i s\u1ED1 l\u01B0\u1EE3ng tr\u01B0\u1EDBc khi x\xE1c nh\u1EADn ch\u01B0a ti\xEAu ti\u1EC1n.", '#cta [data-act="plan"]'],
         ["\u2705", "<b>\u0110i\u1EC1u ki\u1EC7n m\u1EDF c\u1EEDa</b>: c\xF3 \xEDt nh\u1EA5t m\u1ED9t lo\u1EA1i tr\xE0 \u0111ang b\u1EADt trong menu, ly M ho\u1EB7c ly L, \u0111\xE1 v\xE0 \u0111\u01B0\u1EDDng. <b>Topping kh\xF4ng b\u1EAFt bu\u1ED9c</b>; mu\u1ED1n b\xE1n topping th\xEC c\u1EA7n c\xF3 h\xE0ng v\xE0 b\u1EADt trong menu.", '#cta [data-act="open"]'],
         ["\u{1FAB4}", "<b>V\u01B0\u1EDDn c\xE2y</b>: m\u1EDF \xF4 \u0111\u1EA5t, ch\u1ECDn c\xE2y, t\u01B0\u1EDBi v\xE0 thu ho\u1EA1ch khi \u0111\u1EE7 ti\u1EBFn \u0111\u1ED9. <b>Th\xFA c\u01B0ng</b>: nh\u1EADn nu\xF4i v\xE0 ch\u0103m s\xF3c b\u1EB1ng c\xE1c n\xFAt trong panel.", '.tile[data-tab="vuon"], .tile[data-tab="thucung"]']
@@ -2180,7 +2193,7 @@
         [teaArt("traSua"), "<b>3. Ch\u1ECDn tr\xE0 v\xE0 r\xF3t</b>: ch\u1EA1m b\xECnh \u0111\u1EC3 b\u1EAFt \u0111\u1EA7u, ch\u1EA1m l\u1EA1i khi \u0111ang r\xF3t \u0111\u1EC3 d\u1EEBng. Ly \u0111i d\u01B0\u1EDBi v\xF2i; d\xF2ng tr\xE0 v\xE0 m\u1EE9c n\u01B0\u1EDBc t\u0103ng theo thao t\xE1c. Canh thanh r\xF3t t\u1EDBi v\xF9ng v\xE0ng, tr\xE1nh thi\u1EBFu ho\u1EB7c tr\xE0n.", "#disps, #stream, #pourbar"],
         ["\u{1F353}", "<b>4. Th\xEAm h\u01B0\u01A1ng</b>: n\u1EBFu \u0111\u01A1n c\xF3 y\xEAu c\u1EA7u, ch\u1EA1m n\xFAt h\u01B0\u01A1ng trong h\xE0ng H\u01AF\u01A0NG <b>d\u01B0\u1EDBi khu PHA LY, ph\xEDa tr\xEAn c\xE1c khay topping</b>. M\u1ED7i ly ch\u1ECDn m\u1ED9t h\u01B0\u01A1ng v\xE0 ti\xEAu hao m\u1ED9t ph\u1EA7n nguy\xEAn li\u1EC7u.", "#flavs"],
         [toppingArt("tcDen"), "<b>5. Th\xEAm topping</b>: ch\u1EA1m khay \u0111\xFAng m\xF3n; h\u1EA1t bay v\xE0o ly v\xE0 kho gi\u1EA3m m\u1ED9t ph\u1EA7n. Kh\xF4ng th\xEAm tr\xF9ng m\u1ED9t lo\u1EA1i, t\u1ED1i \u0111a <b>4 lo\u1EA1i topping</b> m\u1ED7i ly. M\xF3n kh\xF3a ho\u1EB7c t\u1EAFt menu kh\xF4ng d\xF9ng \u0111\u01B0\u1EE3c.", "#trays"],
-        [sealerArt(), "<b>6. \u0110\xF3ng n\u1EAFp</b>: khi ly \u0111\xE3 c\xF3 tr\xE0, ch\u1EA1m m\xE1y \u0111\u1EC3 \xE9p n\u1EAFp. N\u1EBFu \u0111ang r\xF3t, m\xE1y d\u1EEBng r\xF3t tr\u01B0\u1EDBc; ch\u1EDD hi\u1EC7u \u1EE9ng \u0111\xF3ng n\u1EAFp ho\xE0n t\u1EA5t. \u0110\xE1 v\xE0 \u0111\u01B0\u1EDDng \u0111\u01B0\u1EE3c th\xEAm khi \u0111\xF3ng n\u1EAFp n\u1EBFu ch\u01B0a \u0111\u01B0\u1EE3c nh\xE2n vi\xEAn th\xEAm.", "#sealer"],
+        [sealerArt(), "<b>6. \u0110\xF3ng n\u1EAFp</b>: m\u1ED7i ly d\xF9ng m\u1ED9t ph\u1EA7n \u0111\xE1 v\xE0 m\u1ED9t ph\u1EA7n \u0111\u01B0\u1EDDng. C\xF3 th\u1EC3 ch\u1EA1m n\xFAt \u0110\xE1/\u0110\u01B0\u1EDDng d\u01B0\u1EDBi PHA LY; khi \u0111\xF3ng n\u1EAFp t\u1EF1 th\xEAm ph\u1EA7n c\xF2n thi\u1EBFu, kh\xF4ng tr\u1EEB l\u1EA1i ph\u1EA7n \u0111\xE3 th\xEAm. Thi\u1EBFu kho th\xEC ch\u01B0a \u0111\xF3ng \u0111\u01B0\u1EE3c. Khi \u0111\xE3 c\xF3 tr\xE0, ch\u1EA1m m\xE1y \u0111\u1EC3 \xE9p n\u1EAFp; ch\u1EDD ho\xE0n t\u1EA5t.", "#sealer"],
         [cup(), "<b>7. Giao kh\xE1ch</b>: ly ho\xE0n th\xE0nh c\xF3 n\u1EAFp v\xE0 \u1ED1ng h\xFAt; <b>ch\u1EA1m ly</b> tr\xEAn PHA LY \u0111\u1EC3 giao kh\xE1ch \u0111ang ch\u1ECDn. Ly bay t\u1EDBi kh\xE1ch, ti\u1EC1n v\xE0 \u0111\xE1nh gi\xE1 c\u1EADp nh\u1EADt theo k\u1EBFt qu\u1EA3. Ly sai c\xF3 th\u1EC3 b\u1ECB t\u1EEB ch\u1ED1i ho\u1EB7c mua gi\xE1 th\u1EA5p.", '#cupslot[data-act="boardTap"]'],
         ["\u{1F5D1}\uFE0F", "<b>Pha sai</b>: ch\u1EA1m th\xF9ng r\xE1c \u0111\u1EC3 b\u1ECF ly r\u1ED3i l\u1EA5y ly m\u1EDBi. Nguy\xEAn li\u1EC7u \u0111\xE3 d\xF9ng kh\xF4ng \u0111\u01B0\u1EE3c ho\xE0n l\u1EA1i; thao t\xE1c \u0111\u01B0\u1EE3c ghi v\xE0o hao ph\xED.", '[data-act="trash"]'],
         ["\u{1F4F1}", "<b>Online</b>: s\u1ED1 tr\xEAn \u0111i\u1EC7n tho\u1EA1i l\xE0 s\u1ED1 \u0111\u01A1n ch\u1EDD. Ch\u1EA1m \u0111\u1EC3 xem v\xE0 nh\u1EADn \u0111\u01A1n. Kh\u1EA3 n\u0103ng nh\u1EADn \u0111\u01A1n ph\u1EE5 thu\u1ED9c m\u1EDF kh\xF3a \u1EE9ng d\u1EE5ng, \u0111\xE1nh gi\xE1 v\xE0 \u0111\u1ECBa \u0111i\u1EC3m; nh\xE2n vi\xEAn online ch\u1EC9 x\u1EED l\xFD \u0111\u01A1n online.", '[data-act="phone"]'],
@@ -2194,6 +2207,7 @@
       ] },
       { id: "development", ico: "\u{1F4C8}", title: "Ph\xE1t tri\u1EC3n", rows: [
         ["\u{1F6E0}\uFE0F", "<b>N\xE2ng c\u1EA5p</b>: m\u1EDF kh\xF3a nguy\xEAn li\u1EC7u, n\xE2ng trang b\u1ECB v\xE0 decor. M\u1ED7i m\u1EE5c ghi gi\xE1, c\u1EA5p hi\u1EC7n t\u1EA1i v\xE0 t\xE1c d\u1EE5ng; \u0111\u1EA1t c\u1EA5p t\u1ED1i \u0111a th\xEC kh\xF4ng th\u1EC3 mua th\xEAm.", '.tile[data-tab="nangcap"]'],
+        ["\u{1F50C}", "<b>Trang b\u1ECB tr\xEAn qu\u1EA7y</b>: k\xE9o h\xE0ng icon d\u01B0\u1EDBi \u0110\xE1/\u0110\u01B0\u1EDDng v\xE0 ch\u1EA1m \u0111\u1EC3 xem t\xE1c d\u1EE5ng c\u1EA5p hi\u1EC7n t\u1EA1i. Khi m\u1EA5t \u0111i\u1EC7n, x\xE1c nh\u1EADn b\u1EADt m\xE1y ph\xE1t: C1 ch\u1EA1y \u0111\xE8n v\xE0 m\xE1y \u0111\xF3ng n\u1EAFp; C2 ch\u1EA1y c\u1EA3 b\xECnh tr\xE0. Khi \u0111o\xE0n ki\u1EC3m tra \u0111\u1EBFn, x\xE1c nh\u1EADn xu\u1EA5t tr\xECnh gi\u1EA5y ph\xE9p ho\u1EB7c ki\u1EC3m tra v\u1EC7 sinh.", ".equip-strip"],
         [staffArt("thuViec"), "<b>Nh\xE2n s\u1EF1 h\u1ED7 tr\u1EE3</b>: L\xE2m Ph\u01B0\u1EDBc r\xF3t tr\xE0, th\xEAm h\u01B0\u01A1ng/\u0111\u01B0\u1EDDng/\u0111\xE1; b\u1EA1n l\u1EA5y ly, th\xEAm topping v\xE0 \u0111\xF3ng n\u1EAFp. \u0110inh Nh\xE2n th\xEAm c\u1EA3 topping; b\u1EA1n l\u1EA5y ly v\xE0 \u0111\xF3ng n\u1EAFp. H\xE3y \u0111\u1EE3i nh\xE2n vi\xEAn pha xong r\u1ED3i thao t\xE1c.", '.tile[data-tab="nhansu"]'],
         [staffArt("online"), "<b>Nh\xE2n s\u1EF1 t\u1EF1 ph\u1EE5c v\u1EE5</b>: nh\xE2n vi\xEAn pha ch\u1EBF, Gen Z v\xE0 ca \u0111\xEAm x\u1EED l\xFD tr\u1ECDn \u0111\u01A1n theo \u0111i\u1EC1u ki\u1EC7n ri\xEAng; nh\xE2n vi\xEAn online ch\u1EC9 l\xE0m \u0111\u01A1n online. \u0110i\u1EC1u ki\u1EC7n thu\xEA, l\u01B0\u01A1ng v\xE0 c\xE1c gi\u1EDBi h\u1EA1n \u0111\u01B0\u1EE3c ghi t\u1EA1i t\u1EEBng th\u1EBB.", '.panel-in[data-tab="nhansu"]'],
         ["\u{1F3E2}", "<b>Chi nh\xE1nh</b>: thu\xEA m\u1EDF chi nh\xE1nh, \u0111i\u1EC1u ch\u1EC9nh nh\xE2n vi\xEAn v\xE0 xem b\xE1o c\xE1o. Nh\u01B0\u1EE3ng quy\u1EC1n c\xF3 \u0111i\u1EC1u ki\u1EC7n \u0111\xE1nh gi\xE1/followers ri\xEAng. Thu nh\u1EADp v\xE0 chi ph\xED chu\u1ED7i c\u1EADp nh\u1EADt theo ng\xE0y.", '.tile[data-tab="chinhanh"]'],
@@ -2857,7 +2871,7 @@
   }
   function onRestore() {
     const ev = ensureEv();
-    Object.assign(ev, { off: 0, flick: 0, halt: 0, mode: "", pending: null });
+    Object.assign(ev, { off: 0, flick: 0, halt: 0, mode: "", pending: null, generatorPending: false });
     ev.bo = Array.isArray(ev.bo) ? ev.bo : [];
     ev.ins = Array.isArray(ev.ins) ? ev.ins : [];
     clearUi();
@@ -2867,7 +2881,7 @@
     if (!ev || !SH.on) return null;
     if (ev.halt > 0) return "Qu\xE1n \u0111ang b\u1ECB \u0111\xECnh ch\u1EC9!";
     if (ev.off > 0) {
-      if (kind === "pump") return "\u0110ang m\u1EA5t \u0111i\u1EC7n!";
+      if (kind === "pump" && ev.mode !== "gen2") return "\u0110ang m\u1EA5t \u0111i\u1EC7n!";
       if (kind === "seal" && ev.mode === "full") return "\u0110ang m\u1EA5t \u0111i\u1EC7n!";
     }
     return null;
@@ -2895,6 +2909,7 @@
         ev.pending = due.k;
       }
     }
+    if (ev.generatorPending && ev.off > 0 && !isModalOpen()) offerGenerator();
     if (ev.pending && ev.off <= 0 && !ev.halt && !isModalOpen()) openInspection(ev.pending);
     sync();
   }
@@ -2904,22 +2919,67 @@
     const gen = equipLevel("mayPhat");
     buzz([60, 40, 60, 40, 120]);
     sfx("alarm");
-    if (gen >= 2) {
-      ev.flick = rand(1, 2);
-      note("\u26A1 M\u1EA5t \u0111i\u1EC7n! M\xE1y ph\xE1t \u0111i\u1EC7n \u0111\xE3 ch\u1EA1y", "ok");
-    } else {
-      ev.off = sec || rand(15, 25);
-      ev.mode = gen === 1 ? "gen1" : "full";
-      ev.flick = 1.2;
-      if ((_a = SH.board) == null ? void 0 : _a.pouring) stopPour();
-      note(gen === 1 ? "\u26A1 M\u1EA5t \u0111i\u1EC7n! M\xE1y ph\xE1t \u0111i\u1EC7n \u0111\xE3 ch\u1EA1y: b\xECnh tr\xE0 t\u1EA1m ng\u01B0ng" : "\u26A1 M\u1EA5t \u0111i\u1EC7n! B\xECnh tr\xE0 v\xE0 m\xE1y \u0111\xF3ng n\u1EAFp ng\u01B0ng ho\u1EA1t \u0111\u1ED9ng", gen === 1 ? "ok" : "err");
-    }
+    if (ev.off > 0) return;
+    ev.off = sec || rand(15, 25);
+    ev.mode = "full";
+    ev.flick = 1.2;
+    if ((_a = SH.board) == null ? void 0 : _a.pouring) stopPour();
+    ev.generatorPending = gen > 0;
+    note("\u26A1 M\u1EA5t \u0111i\u1EC7n! B\xECnh tr\xE0 v\xE0 m\xE1y \u0111\xF3ng n\u1EAFp t\u1EA1m ng\u1EEBng", "err");
+    if (ev.generatorPending && !isModalOpen()) offerGenerator();
     sync();
+  }
+  function requestGenerator() {
+    const ev = ensureEv();
+    if (!SH.on || ev.off <= 0) return "\u0110i\u1EC7n l\u01B0\u1EDBi \u0111ang ho\u1EA1t \u0111\u1ED9ng, ch\u01B0a c\u1EA7n m\xE1y ph\xE1t";
+    if (!equipLevel("mayPhat")) return "Ch\u01B0a mua m\xE1y ph\xE1t \u0111i\u1EC7n";
+    if (ev.mode !== "full") return "M\xE1y ph\xE1t \u0111ang ch\u1EA1y";
+    ev.generatorPending = true;
+    if (!isModalOpen()) offerGenerator();
+    return null;
+  }
+  function offerGenerator() {
+    const ev = ensureEv(), gen = equipLevel("mayPhat");
+    ev.generatorPending = false;
+    if (!gen || ev.off <= 0) return;
+    const wasPaused = isPaused();
+    setPaused(true);
+    const m = openModal({
+      id: "generator",
+      cls: "small ev-modal",
+      closable: false,
+      title: "D\xF9ng m\xE1y ph\xE1t \u0111i\u1EC7n",
+      onClose: () => {
+        setPaused(wasPaused);
+        requestSave();
+      },
+      html: `<div class="ev-ico">\u{1F50C}</div><h3 class="m-title">M\u1EA5t \u0111i\u1EC7n \u2014 b\u1EADt m\xE1y ph\xE1t?</h3><p class="m-text">${gen >= 2 ? "M\xE1y c\xF4ng su\u1EA5t l\u1EDBn c\u1EA5p \u0111i\u1EC7n cho b\xECnh tr\xE0, m\xE1y \u0111\xF3ng n\u1EAFp v\xE0 \u0111\xE8n. B\u1EA1n ti\u1EBFp t\u1EE5c pha v\xE0 b\xE1n h\xE0ng." : "M\xE1y mini c\u1EA5p \u0111i\u1EC7n cho m\xE1y \u0111\xF3ng n\u1EAFp v\xE0 \u0111\xE8n. B\xECnh tr\xE0 ch\u1EDD \u0111i\u1EC7n l\u01B0\u1EDBi; n\xE2ng C2 \u0111\u1EC3 ch\u1EA1y to\xE0n b\u1ED9 qu\u1EA7y."}</p><div class="m-row"><button class="btn ghost" data-act="no">Ch\u1EDD \u0111i\u1EC7n l\u01B0\u1EDBi</button><button class="btn pri" data-act="yes">\u{1F50C} \u0110\u1ED3ng \xFD s\u1EED d\u1EE5ng</button></div>`
+    });
+    let decided = false;
+    bindActions(m.body, {
+      yes: () => {
+        if (decided) return;
+        decided = true;
+        if (ev.off > 0) {
+          ev.mode = gen >= 2 ? "gen2" : "gen1";
+          ev.flick = gen >= 2 ? rand(1, 2) : 0;
+        }
+        sync();
+        m.close();
+        note("\u{1F50C} M\xE1y ph\xE1t \u0111i\u1EC7n \u0111ang ch\u1EA1y", "ok");
+      },
+      no: () => {
+        if (decided) return;
+        decided = true;
+        m.close();
+      }
+    });
   }
   function endBlackout() {
     const ev = ensureEv();
     ev.off = 0;
     ev.mode = "";
+    ev.generatorPending = false;
     note("\u{1F4A1} \u0110\xE3 c\xF3 \u0111i\u1EC7n tr\u1EDF l\u1EA1i", "ok");
     sfx("success");
     sync();
@@ -2950,7 +3010,7 @@
       return;
     }
     const badge = $(".ev-badge", layer());
-    if (off) badge.textContent = ev.mode === "gen1" ? `\u{1F50C} M\xE1y ph\xE1t \u0111i\u1EC7n \xB7 b\xECnh tr\xE0 t\u1EA1m ng\u01B0ng \xB7 ${Math.ceil(ev.off)}s` : `\u26A1 M\u1EA4T \u0110I\u1EC6N \xB7 ${Math.ceil(ev.off)}s`;
+    if (off) badge.textContent = ev.mode === "gen2" ? `\u{1F50C} M\xE1y ph\xE1t \u0111ang ch\u1EA1y \xB7 ${Math.ceil(ev.off)}s` : ev.mode === "gen1" ? `\u{1F50C} M\xE1y ph\xE1t mini \xB7 b\xECnh tr\xE0 ch\u1EDD \u0111i\u1EC7n \xB7 ${Math.ceil(ev.off)}s` : `\u26A1 M\u1EA4T \u0110I\u1EC6N \xB7 ${Math.ceil(ev.off)}s`;
     else if (halt) badge.textContent = `\u{1F6AB} Qu\xE1n b\u1ECB \u0111\xECnh ch\u1EC9 \xB7 ${Math.ceil(ev.halt)}s`;
     else badge.textContent = "";
     badge.style.display = badge.textContent ? "" : "none";
@@ -3054,6 +3114,8 @@
     buzz([40, 30, 40]);
     const lic = kind === "lic";
     const title = lic ? "Ki\u1EC3m tra gi\u1EA5y ph\xE9p kinh doanh" : "Ki\u1EC3m tra v\u1EC7 sinh ATTP";
+    const hasLicense = equipLevel("giayPhep") > 0;
+    let checked = false;
     const m = openModal({
       id: "inspect",
       cls: "small ev-modal",
@@ -3066,10 +3128,13 @@
       },
       html: `<div class="ev-ico">\u{1F575}\uFE0F</div><h3 class="m-title">\u0110o\xE0n ki\u1EC3m tra \u0111ang t\u1EDBi!</h3>
       <p class="m-text center">${lic ? "\u0110o\xE0n thanh tra y\xEAu c\u1EA7u xu\u1EA5t tr\xECnh gi\u1EA5y ph\xE9p kinh doanh c\u1EE7a qu\xE1n." : "\u0110o\xE0n ki\u1EC3m tra v\u1EC7 sinh an to\xE0n th\u1EF1c ph\u1EA9m \u0111ang xem x\xE9t qu\u1EA7y, s\u1EA3nh v\xE0 kho nguy\xEAn li\u1EC7u."}</p>
-      <button class="btn pri block" data-act="go">Ti\u1EBFp \u0111\xF3n \u0111o\xE0n</button>`
+      ${lic ? `<p class="m-text center">${hasLicense ? "\u{1F4DC} Gi\u1EA5y ph\xE9p \u0111\xE3 mua \u0111ang c\xF3 t\u1EA1i qu\xE1n." : "\u26A0\uFE0F Qu\xE1n ch\u01B0a c\xF3 gi\u1EA5y ph\xE9p kinh doanh."}</p>` : ""}
+      <button class="btn pri block" data-act="go">${lic ? hasLicense ? "\u{1F4DC} Xu\u1EA5t tr\xECnh gi\u1EA5y ph\xE9p" : "X\xE1c nh\u1EADn ch\u01B0a c\xF3 gi\u1EA5y ph\xE9p" : "\u{1F9EA} X\xE1c nh\u1EADn ki\u1EC3m tra v\u1EC7 sinh"}</button>`
     });
     bindActions(m.body, {
       go: () => {
+        if (checked) return;
+        checked = true;
         const r = lic ? licenseResult() : foodResult();
         m.body.innerHTML = `<div class="ev-ico">${lic ? "\u{1F4DC}" : "\u{1F9EA}"}</div><h3 class="m-title">${title}</h3>
         <div class="ev-list">${r.rows}</div>${r.v}<button class="btn pri block" data-act="ok">\u0110\xE3 hi\u1EC3u</button>`;
@@ -3329,10 +3394,10 @@
     if (stockQty(cupId) < 1) return `H\u1EBFt ly size ${size === "L" ? "L" : "M"} r\u1ED3i!`;
     take(cupId, 1);
     SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: "cup", sealT: 0, pouring: false, spill: 0, auto: null };
-    const staffPour = STAFF.filter((s) => S.staff[s.id] && (s.kind === "pour" || s.kind === "manager"));
-    if (staffPour.length) {
+    const st = counterAssistant();
+    if (st) {
       const c = frontCustomer();
-      if (c) SH.board.auto = { cid: c.id, t: 1.1, topsLeft: staffPour.some((s) => s.kind === "manager") ? [...c.order.tops] : [], st: staffPour[0] };
+      if (c) SH.board.auto = { cid: c.id, t: 1.1, topsLeft: st.kind === "manager" ? [...c.order.tops] : [], st };
     }
     emit("cup:pick", size);
     return null;
@@ -3387,19 +3452,27 @@
     const blk = blocked("seal");
     if (blk) return blk;
     if (b.auto) return "Nh\xE2n vi\xEAn \u0111ang pha, h\xE3y \u0111\u1EE3i ho\xE0n t\u1EA5t";
+    for (const [id, flag] of [["da", "iceAdded"], ["duong", "sugarAdded"]]) {
+      if (!b[flag] && stockQty(id) < 1) return `H\u1EBFt ${ITEMS[id].name}, c\u1EA7n nh\u1EADp th\xEAm tr\u01B0\u1EDBc khi \u0111\xF3ng n\u1EAFp`;
+    }
     if (b.pouring) stopPour();
-    if (!b.iceAdded && stockQty("da") > 0) {
-      take("da", 1);
-      b.iceAdded = true;
-    }
-    if (!b.sugarAdded && stockQty("duong") > 0) {
-      take("duong", 1);
-      b.sugarAdded = true;
-    }
+    if (!b.iceAdded) addSupply("da");
+    if (!b.sugarAdded) addSupply("duong");
     b.phase = "sealing";
     b.sealT = 1.2 * (1 - bonus().seal);
     b.sealMax = b.sealT;
     emit("seal:start");
+    return null;
+  }
+  function addSupply(id) {
+    const flag = id === "da" ? "iceAdded" : id === "duong" ? "sugarAdded" : null;
+    if (!flag) return "Nguy\xEAn li\u1EC7u kh\xF4ng h\u1EE3p l\u1EC7";
+    const b = SH.board;
+    if (!b || b.phase !== "cup") return "H\xE3y l\u1EA5y ly tr\u01B0\u1EDBc";
+    if (b[flag]) return `Ly \u0111\xE3 th\xEAm ${ITEMS[id].name}`;
+    if (!take(id, 1)) return `H\u1EBFt ${ITEMS[id].name}!`;
+    b[flag] = true;
+    emit("staff:ingredient", id);
     return null;
   }
   function trashCup() {
@@ -3590,6 +3663,7 @@
         }
       } else if (st.kind === "auto" || st.kind === "online" || st.kind === "night") {
         const key = st.id;
+        if (blocked("pump") || blocked("seal")) continue;
         if (st.kind === "online" && onlineEnabled() && SH.onlineQ.length) acceptOnline(SH.onlineQ[0].id);
         const runtime = SH.staffT[key] || (SH.staffT[key] = { done: 0, sulk: 0 });
         if (runtime.sulk > 0) {
@@ -3681,25 +3755,33 @@
     const ev = evaluate(board, c);
     return settle(c, board, forceStars ? Math.min(forceStars, ev.stars) : Math.min(ev.stars, 5), ev.issues, true);
   }
+  var counterAssistant = () => STAFF.find((s) => S.staff[s.id] && s.kind === "manager") || STAFF.find((s) => S.staff[s.id] && s.kind === "pour");
   function advanceCounterStaff(bd, dt, bonus2) {
+    var _a;
     if (bd.phase !== "cup") {
       bd.auto = null;
       return;
     }
     if (!bd.auto && !bd.autoDone) {
-      const st = STAFF.find((s) => S.staff[s.id] && (s.kind === "manager" || s.kind === "pour"));
+      const st2 = counterAssistant();
       const c2 = frontCustomer();
-      if (st && c2) bd.auto = { cid: c2.id, t: 0.6, st, topsLeft: st.kind === "manager" ? [...c2.order.tops] : [] };
+      if (st2 && c2) bd.auto = { cid: c2.id, t: 0.6, st: st2, topsLeft: st2.kind === "manager" ? [...c2.order.tops] : [] };
     }
     const a = bd.auto;
     if (!a) return;
     const c = SH.queue.find((c2) => c2.id === a.cid);
-    if (!c || !S.staff[a.st.id]) {
+    const st = STAFF.find((s) => {
+      var _a2;
+      return s.id === ((_a2 = a.st) == null ? void 0 : _a2.id);
+    });
+    if (!c || !st || !S.staff[st.id] || !["pour", "manager"].includes(st.kind)) {
       if (bd.pouring) stopPour();
       bd.auto = null;
       bd.autoDone = true;
       return;
     }
+    a.st = st;
+    if (st.kind !== "manager") a.topsLeft = [];
     a.stage = a.stage || "tea";
     if (a.stage === "tea" && blocked("pump")) {
       bd.pouring = false;
@@ -3726,8 +3808,11 @@
         a.waiting = ITEMS[id].name;
         return false;
       }
-      take(id, 1);
-      bd[flag] = true;
+      const err = addSupply(id);
+      if (err) {
+        a.waiting = err;
+        return false;
+      }
       a.waiting = null;
       return true;
     };
@@ -3755,16 +3840,14 @@
       a.t = 0.45;
     } else if (a.stage === "sugar") {
       if (!takeOnce("duong", "sugarAdded")) return;
-      emit("staff:ingredient", "duong");
       a.stage = "ice";
       a.t = 0.45;
     } else if (a.stage === "ice") {
       if (!takeOnce("da", "iceAdded")) return;
-      emit("staff:ingredient", "da");
       a.stage = "topping";
       a.t = 0.45;
     } else if (a.stage === "topping") {
-      const id = a.topsLeft[0];
+      const id = st.kind === "manager" ? (_a = a.topsLeft) == null ? void 0 : _a[0] : null;
       if (id) {
         if (!bd.tops.includes(id)) {
           const err = addTop(id);
@@ -3957,6 +4040,10 @@
     emit("shift:end", T);
   }
   function nextDay() {
+    S.previousUsed = { ...S.lastUsed };
+    for (const lots of Object.values(S.stock)) for (const lot of lots) {
+      if (!Number.isFinite(lot.receivedDay)) lot.receivedDay = S.day;
+    }
     S.day++;
     ensureForecast();
     S.eventId = pickEvent();
@@ -4248,6 +4335,8 @@
           <button class="trash" data-act="trash" aria-label="Th\xF9ng r\xE1c">\u{1F5D1}\uFE0F</button>
         </div>
       </div>
+      <div class="supply-row">${["da", "duong"].map((id) => `<button class="supply-btn" data-act="supply" data-id="${id}">${ITEMS[id].icon} ${id === "da" ? "\u0110\xE1" : "\u0110\u01B0\u1EDDng"} <span data-cnt="${id}">0</span><small class="supply-state">1 ph\u1EA7n/ly</small></button>`).join("")}</div>
+      <div class="equip-strip" aria-label="Trang b\u1ECB \u0111ang s\u1EED d\u1EE5ng">${EQUIP.filter((eq) => equipLevel(eq.id) > 0).map((eq) => `<button class="equip-chip" data-act="equipment" data-id="${eq.id}" aria-label="${esc(eq.name)}">${eq.icon} ${esc(eq.name)} <b>C${equipLevel(eq.id)}</b></button>`).join("")}</div>
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra s\u1EA3nh \u2192 <span id="lobbyCnt">0/0</span></button></div>
@@ -4319,6 +4408,26 @@
     }).join("");
   }
   var sellActs = {
+    supply: (t) => {
+      const err = addSupply(t.dataset.id);
+      if (err) {
+        toast(err, "err");
+        sfx("error");
+      }
+    },
+    equipment: (t) => {
+      var _a, _b, _c;
+      const eq = EQUIP.find((eq2) => eq2.id === t.dataset.id);
+      if (!eq) return;
+      if (eq.id === "mayPhat" && ((_a = SH.ev) == null ? void 0 : _a.off) > 0 && SH.ev.mode === "full") {
+        const err = requestGenerator();
+        if (err) toast(err, "err");
+        return;
+      }
+      const tier = eq.tiers[Math.min(equipLevel(eq.id), eq.tiers.length) - 1];
+      const extra = eq.id === "tuLanh" ? "\xC1p d\u1EE5ng cho l\xF4 nh\u1EADp m\u1EDBi; h\u1EA1n c\u1EE7a l\xF4 \u0111\xE3 nh\u1EADp gi\u1EEF nguy\xEAn." : eq.id === "tablet" ? "C\u1EA7n m\u1EDF \u1EE9ng d\u1EE5ng trong N\xE2ng c\u1EA5p \u203A Online v\xE0 \u0111\u1EA1t \u0111i\u1EC1u ki\u1EC7n nh\u1EADn \u0111\u01A1n." : eq.id === "giayPhep" ? "Khi \u0111o\xE0n ki\u1EC3m tra \u0111\u1EBFn, ch\u1EA1m Xu\u1EA5t tr\xECnh gi\u1EA5y ph\xE9p \u0111\u1EC3 x\xE1c nh\u1EADn." : eq.id === "attp" ? "V\u1EABn c\u1EA7n d\u1ECDn b\xE0n v\xE0 d\xF9ng nguy\xEAn li\u1EC7u c\xF2n h\u1EA1n; ch\u1EE9ng nh\u1EADn kh\xF4ng thay vi\u1EC7c gi\u1EEF v\u1EC7 sinh." : eq.id === "mayPhat" ? ((_c = (_b = SH.ev) == null ? void 0 : _b.mode) == null ? void 0 : _c.startsWith("gen")) ? "\u{1F50C} \u0110ang c\u1EA5p \u0111i\u1EC7n d\u1EF1 ph\xF2ng." : "\u0110i\u1EC7n l\u01B0\u1EDBi \u0111ang ho\u1EA1t \u0111\u1ED9ng. Khi m\u1EA5t \u0111i\u1EC7n, x\xE1c nh\u1EADn b\u1EADt m\xE1y ph\xE1t." : "Hi\u1EC7u qu\u1EA3 c\u1EA5p hi\u1EC7n t\u1EA1i \u0111\u01B0\u1EE3c \xE1p d\u1EE5ng trong ca b\xE1n h\xE0ng.";
+      openModal({ id: "equipment", cls: "small", title: eq.name, html: `<h3 class="m-title">${eq.icon} ${esc(eq.name)} \xB7 C${equipLevel(eq.id)}</h3><p class="m-text"><b>${esc(tier.n)}</b><br>${esc(tier.d)}</p><p class="m-text">${extra}</p>` });
+    },
     cup: (t) => {
       const e = pickCup(t.dataset.size);
       if (e) {
@@ -4658,7 +4767,8 @@
   on("top", () => updateBoard(true));
   on("flavor", () => updateBoard(true));
   on("staff:ingredient", (id) => {
-    dropFx(document.querySelector("#staffStrip .stf.work") || document.querySelector("#sealer"), ITEMS[id].color);
+    if (!canShowBrewFx()) return;
+    dropFx($(`[data-act="supply"][data-id="${id}"]`) || $("#staffStrip .stf.work") || $("#sealer"), ITEMS[id].color);
     sfx("plop");
   });
   on("auto:pour", () => updateBoard(true));
@@ -4782,7 +4892,7 @@
   }
   var cntT = 0;
   function frameSell(dt, force) {
-    var _a;
+    var _a, _b, _c;
     if (S.phase !== "sell") return;
     updateClock();
     if (SH.view === "lobby") {
@@ -4861,6 +4971,18 @@
     if (cntT <= 0 || force) {
       cntT = 0.25;
       updateStaffStrip();
+      for (const el of $$(".supply-btn", root)) {
+        const added = !!(b == null ? void 0 : b[el.dataset.id === "da" ? "iceAdded" : "sugarAdded"]);
+        el.classList.toggle("added", added);
+        $(".supply-state", el).textContent = added ? "\u2713 \u0110\xE3 th\xEAm" : "1 ph\u1EA7n/ly";
+        el.disabled = !b || b.phase !== "cup" || added;
+      }
+      const generator = $('.equip-chip[data-id="mayPhat"]', root);
+      if (generator) {
+        const running2 = ((_b = SH.ev) == null ? void 0 : _b.off) > 0 && ((_c = SH.ev.mode) == null ? void 0 : _c.startsWith("gen"));
+        generator.classList.toggle("running", !!running2);
+        $("b", generator).textContent = running2 ? "\u0110ANG CH\u1EA0Y" : `C${equipLevel("mayPhat")}`;
+      }
       updateSceneTime(SH.hour);
       for (const el of $$("[data-cnt]", root)) {
         const id = el.dataset.cnt, q = stockQty(id);
@@ -4927,19 +5049,26 @@
   };
   var KHO_TABS = () => [["tra", "\u{1FAD6} Tr\xE0"], ["top", "\u{1F9CB} Topping"], ["dc", "\u{1F964} D\u1EE5ng c\u1EE5"], ...FLAVORS.some((f) => S.unlocked[f]) ? [["huong", "\u{1F353} H\u01B0\u01A1ng"]] : []];
   function khoRow(id) {
+    var _a, _b;
     const it = ITEMS[id];
     const qty = stockQty(id), plan = S.plan[id] || 0;
     const unit = unitSize(id);
     const exp = expiringToday(id);
     const life = lifeDays(id);
+    const remaining = nearestExpiry(id), stock = stockBreakdown(id);
+    const expiryText = remaining === null ? life ? `L\xF4 m\u1EDBi: ${life} ng\xE0y` : "" : remaining <= 0 ? "Qu\xE1 h\u1EA1n" : remaining === 1 ? "H\u1EBFt h\u1EA1n h\xF4m nay" : `C\xF2n ${remaining} ng\xE0y`;
     const profit = it.price ? priceOf(id) - costOf(id) : 0;
     const pctMargin = it.price ? Math.round(profit / priceOf(id) * 100) : 0;
     const step = 1;
     return `<div class="krow">
     <span class="k-ico" style="background:${it.color}33">${it.icon}</span>
-    <div class="k-main"><div class="k-t"><b>${it.name}</b>${life ? `<span class="life">\u23F3 ${life} ng\xE0y</span>` : ""}</div>
+    <div class="k-main"><div class="k-t"><b>${it.name}</b>${expiryText ? `<span class="life">\u23F3 ${expiryText}</span>` : ""}</div>
       ${it.price && it.kind !== "supply" ? `<span class="sale">\u{1F4B5} B\xE1n ${pctMargin}% (+${fmtK(profit)})</span>` : ""}
-      <small>\u{1F4E6} ${qty}${it.kind === "flavor" ? " ly" : ""} \xB7 ${fmtK(costOf(id) * (it.kind === "flavor" ? FLAVOR_BOTTLE : 1))}${it.kind === "flavor" ? "/chai" : "/ly"}${exp ? ` \xB7 <em class="warn">\u26A0\uFE0F ${exp} h\u1EBFt h\u1EA1n h\xF4m nay</em>` : ""}${S.lastUsed[id] ? ` \xB7 \u{1F3ED} d\xF9ng ${S.lastUsed[id]}` : ""}</small>
+      <small>\u{1F4E6} T\u1ED3n ${qty}${it.kind === "flavor" ? " ly" : ""} \xB7 ${fmtK(costOf(id) * (it.kind === "flavor" ? FLAVOR_BOTTLE : 1))}${it.kind === "flavor" ? "/chai" : "/ly"}${exp ? ` \xB7 <em class="warn">\u26A0\uFE0F ${exp} h\u1EBFt h\u1EA1n h\xF4m nay</em>` : ""}</small>
+      <small>T\u1EEB h\xF4m tr\u01B0\u1EDBc: ${stock.old} \xB7 Nh\u1EADp h\xF4m nay c\xF2n: ${stock.fresh}${stock.unknown ? ` \xB7 L\xF4 c\u0169 ch\u01B0a r\xF5 ng\xE0y nh\u1EADp: ${stock.unknown}` : ""}</small>
+      ${((_a = S.previousUsed) == null ? void 0 : _a[id]) || S.lastUsed[id] ? `<small>\u{1F3ED} H\xF4m qua d\xF9ng: ${((_b = S.previousUsed) == null ? void 0 : _b[id]) || 0} \xB7 H\xF4m nay d\xF9ng: ${S.lastUsed[id] || 0}</small>` : ""}
+      ${stock.lots.length ? `<details class="stock-lots"><summary>H\u1EA1n d\xF9ng t\u1EEBng l\xF4</summary>${stock.lots.map((l) => `<small>${l.q} ph\u1EA7n \xB7 ${l.days === null ? "Kh\xF4ng h\u1EBFt h\u1EA1n" : l.days <= 0 ? "Qu\xE1 h\u1EA1n" : l.days === 1 ? "H\u1EBFt h\u1EA1n h\xF4m nay" : `C\xF2n ${l.days} ng\xE0y (t\xEDnh c\u1EA3 h\xF4m nay)`}</small>`).join("")}</details>` : ""}
+      ${id === "da" || id === "duong" ? `<small class="supply-help">${id === "da" ? "\u{1F9CA} L\xE0m l\u1EA1nh ly" : "\u{1F36F} T\u1EA1o \u0111\u1ED9 ng\u1ECDt"}: 1 ph\u1EA7n/ly. Th\xEAm \u1EDF PHA LY; khi \u0111\xF3ng n\u1EAFp s\u1EBD t\u1EF1 th\xEAm ph\u1EA7n c\xF2n thi\u1EBFu.</small>` : ""}
       <small class="plan">${plan ? `+${plan * unit}${it.kind === "flavor" ? ` ly (${plan} chai)` : ""} \xB7 ${fmtK(unitCost(id) * plan)}` : "&nbsp;"}</small></div>
     <div class="stepper"><button data-act="k-" data-id="${id}" data-step="${step}" aria-label="Gi\u1EA3m">\u2212</button><input class="num" type="number" inputmode="numeric" min="0" max="999" value="${plan}" data-plan="${id}" aria-label="S\u1ED1 l\u01B0\u1EE3ng ${it.name}"><button data-act="k+" data-id="${id}" data-step="${step}" aria-label="T\u0103ng">+</button></div>
   </div>`;
@@ -4953,7 +5082,7 @@
       else if (t === "dc") list = SUPPLIES;
       else if (t === "huong") {
         list = FLAVORS.filter((i) => S.unlocked[i]);
-        head = `<p class="note">\u{1F353} 1 chai = ${FLAVOR_BOTTLE} ly, d\xF9ng \u0111\u01B0\u1EE3c 7 ng\xE0y t\xEDnh c\u1EA3 ng\xE0y mua. H\u1EBFt chai th\xEC ph\u1EA3i mua chai m\u1EDBi.</p>`;
+        head = `<p class="note">\u{1F353} 1 chai = ${FLAVOR_BOTTLE} ly. H\u1EA1n l\xF4 m\u1EDBi t\u0103ng theo t\u1EE7 l\u1EA1nh; h\u1EA1n c\xF2n l\u1EA1i c\u1EE7a t\u1EEBng l\xF4 hi\u1EC3n th\u1ECB b\xEAn d\u01B0\u1EDBi. H\u1EBFt chai th\xEC c\u1EA7n mua th\xEAm.</p>`;
       } else {
         return `${tabs("kho", KHO_TABS(), "tra")}${TOP_GROUPS.map((g) => {
           const items = TOPS.filter((i) => ITEMS[i].group === g && S.unlocked[i]);
@@ -4979,7 +5108,7 @@
       }
     }
   };
-  var khoLegend = () => '<div class="legend">\u{1F4E6} \u0111ang c\xF3 \xB7 \u{1F3ED} h\xF4m qua d\xF9ng \xB7 \u26A0\uFE0F h\u1EBFt h\u1EA1n h\xF4m nay</div>';
+  var khoLegend = () => '<div class="legend">\u{1F4E6} T\u1ED3n t\u1EEB h\xF4m tr\u01B0\u1EDBc l\xE0 ph\u1EA7n c\xF2n l\u1EA1i ch\u01B0a d\xF9ng \xB7 \u01B0u ti\xEAn d\xF9ng l\xF4 s\u1EAFp h\u1EBFt h\u1EA1n \xB7 h\xE0ng h\u1EBFt h\u1EA1n h\xF4m nay \u0111\u01B0\u1EE3c b\u1ECF cu\u1ED1i ca.</div>';
   var GIA_TABS = () => [["tra", "\u{1FAD6} Tr\xE0"], ["huong", "\u{1F353} H\u01B0\u01A1ng"], ["top", "\u{1F9CB} Topping"], ["size", "\u2B06\uFE0F Size"]];
   var giaRow = (id) => {
     const it = ITEMS[id];
@@ -5532,17 +5661,21 @@
   };
   var bar = (v) => `<div class="bar ${v < 30 ? "danger" : v < 60 ? "warn" : ""}"><i style="width:${Math.round(v)}%"></i></div>`;
   function petCard(k) {
+    var _a;
     const p = PETS[k];
     const can = k === "capybara" ? secretCount() >= p.secret : true;
-    const sel = (S.subtab.pet || "shiba") === k;
+    const sel = (S.subtab.pet || ((_a = S.pet) == null ? void 0 : _a.kind) || "shiba") === k;
     return `<button class="petchip ${sel ? "on" : ""}" data-act="petsel" data-k="${k}">${p.icon} ${p.name.split(" ").slice(0, 2).join(" ")} ${can ? "" : "<em>(Ch\u01B0a m\u1EDF)</em>"}</button>`;
   }
   var thucung = {
     html() {
-      if (S.pet) {
+      var _a;
+      const selected = S.subtab.pet || ((_a = S.pet) == null ? void 0 : _a.kind) || "shiba";
+      const nav = `<div class="petrow pet-tabs">${["shiba", "meo", "capybara"].map(petCard).join("")}</div>`;
+      if (S.pet && (selected === S.pet.kind || selected === "capybara" && S.pet2)) {
         const p2 = S.pet, info = PETS[p2.kind];
         const act = petActive();
-        return `<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? "\u2705 Buff \u0111ang k\xEDch ho\u1EA1t (m\u1ECDi ch\u1EC9 s\u1ED1 \u2265 60 trung b\xECnh)" : "\u26A0\uFE0F C\u1EA7n ch\u0103m s\xF3c \u0111\u1EC3 k\xEDch ho\u1EA1t buff (trung b\xECnh \u2265 60)"}</p>
+        return `${nav}<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? "\u2705 Buff \u0111ang k\xEDch ho\u1EA1t (m\u1ECDi ch\u1EC9 s\u1ED1 \u2265 60 trung b\xECnh)" : "\u26A0\uFE0F C\u1EA7n ch\u0103m s\xF3c \u0111\u1EC3 k\xEDch ho\u1EA1t buff (trung b\xECnh \u2265 60)"}</p>
         <div class="pstats">${[["hunger", "\u{1F356} No"], ["joy", "\u{1F497} Vui v\u1EBB"], ["clean", "\u{1F6C1} S\u1EA1ch s\u1EBD"], ["energy", "\u{1F634} Kh\u1ECFe"]].map(([k2, l]) => `<div class="ps"><span>${l}</span>${bar(p2[k2])}<b>${Math.round(p2[k2])}</b></div>`).join("")}</div>
         <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ""}</button>`).join("")}</div>
         <div class="buffs">${info.buffs.map((b) => `<p>${b}</p>`).join("")}</div>
@@ -5550,17 +5683,17 @@
         ${S.pet2 ? `<div class="petcard owned"><div class="pet-big">\u{1F9AB}</div><h4>${PETS.capybara.name} <span class="chip green">Nu\xF4i chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join("")}</div>` : ""}
         ${!S.pet2 && secretCount() >= 7 ? '<button class="btn pri block" data-act="capy">\u{1F9AB} Nh\u1EADn nu\xF4i C\xE1p Bi (mi\u1EC5n ph\xED)</button>' : ""}`;
       }
-      const k = S.subtab.pet || "shiba";
+      const k = selected;
       const p = PETS[k];
       const sc = secretCount();
-      const body = k === "capybara" ? `<div class="petcard cap"><div class="pet-big">\u{1F9AB}</div><h4>\u{1F9AB} C\xC1P BI \u0110I\u1EC0M \u0110\u1EA0M (CAPYBARA)</h4><p>Th\xFA c\u01B0ng \u0111\u1ED9c b\u1EA3n qu\xFD hi\u1EBFm d\xE0nh ri\xEAng cho Nh\xE0 S\xE1ng T\u1EA1o Ti\u1EC7m Tr\xE0 S\u1EEFa Tinh Hoa! <b>K\u1EBFt h\u1EE3p tr\u1ECDn v\u1EB9n c\u1EA3 s\u1EE9c m\u1EA1nh c\u1EE7a Ch\xF3 v\xE0 M\xE8o</b>, \u0111\u1EB7c bi\u1EC7t c\xF3 th\u1EC3 nu\xF4i chung song song c\xF9ng 1 T\xF3 ho\u1EB7c 1 M\xE8o!</p>
-        <div class="buffs"><b>4 \u0110\u1EB6C QUY\u1EC0N T\u1ED0I TH\u01AF\u1EE2NG C\u1EE6A C\xC1P PI:</b>${p.buffs.map((b) => `<p>${b}</p>`).join("")}</div>
+      const body = k === "capybara" ? `<div class="petcard cap"><div class="pet-big">\u{1F9AB}</div><h4>\u{1F9AB} C\xC1P BI \u0110I\u1EC0M \u0110\u1EA0M (CAPYBARA)</h4><p>Th\xFA c\u01B0ng \u0111\u1ED9c b\u1EA3n qu\xFD hi\u1EBFm d\xE0nh ri\xEAng cho Nh\xE0 S\xE1ng T\u1EA1o Ti\u1EC7m Tr\xE0 S\u1EEFa Tinh Hoa! <b>K\u1EBFt h\u1EE3p tr\u1ECDn v\u1EB9n c\u1EA3 s\u1EE9c m\u1EA1nh c\u1EE7a Ch\xF3 v\xE0 M\xE8o</b>, \u0111\u1EB7c bi\u1EC7t c\xF3 th\u1EC3 nu\xF4i chung song song c\xF9ng 1 Ch\xF3 ho\u1EB7c 1 M\xE8o!</p>
+        <div class="buffs"><b>4 \u0110\u1EB6C QUY\u1EC0N T\u1ED0I TH\u01AF\u1EE2NG C\u1EE6A C\xC1P BI:</b>${p.buffs.map((b) => `<p>${b}</p>`).join("")}</div>
         <div class="cond"><b>\u2B50 \u0110i\u1EC1u ki\u1EC7n m\u1EDF kh\xF3a: ${p.secret} C\xF4ng th\u1EE9c \u0111\u1ED9c b\u1EA3n</b><div class="bar"><i style="width:${sc / p.secret * 100}%"></i></div><small>B\u1EA1n \u0111\xE3 s\xE1ng t\u1EA1o ${sc}/${p.secret} c\xF4ng th\u1EE9c \u0111\u1ED9c b\u1EA3n trong S\u1ED5 Tay S\u01B0u T\u1EA7m. C\u1EA7n th\xEAm ${Math.max(0, p.secret - sc)} c\xF4ng th\u1EE9c n\u1EEFa \u0111\u1EC3 m\u1EDF kh\xF3a C\xE1p Bi!</small></div>
-        <button class="btn ${sc >= p.secret ? "pri" : "soft"} block" data-act="${sc >= p.secret ? "capy" : "goto"}" data-to="suutam">${sc >= p.secret ? "\u{1F9AB} Nh\u1EADn nu\xF4i C\xE1p Bi" : "\u{1F4D6} \u0110\u1EBFn M\u1EE5c S\u01B0u T\u1EA7m S\xE1ng T\u1EA1o C\xF4ng Th\u1EE9c (" + sc + "/" + p.secret + ")"}</button></div>` : `<div class="petcard"><div class="pet-big">${p.icon}</div><h4>\u{1F3E1} C\u0102N PH\xD2NG TH\xDA C\u01AFNG M\u01A0 \u01AF\u1EDAC</h4><p>B\u1EA1n \u0111\u01B0\u1EE3c ch\u1ECDn <b>1 trong 2 b\xE9 c\u01B0ng</b> \u0111\u1EC3 \u0111\u1ED3ng h\xE0nh c\xF9ng ti\u1EC7m c\u1EE7a m\xECnh. H\xE3y ch\u1ECDn ng\u01B0\u1EDDi b\u1EA1n ph\xF9 h\u1EE3p nh\u1EA5t v\u1EDBi chi\u1EBFn l\u01B0\u1EE3c kinh doanh c\u1EE7a b\u1EA1n! <small>Sau khi ch\u1ECDn, b\u1EA1n c\xF3 th\u1EC3 \u0111\u1ED5i l\u1EA1i b\xE9 kia nh\u01B0ng c\u1EA5p th\xFA c\u01B0ng s\u1EBD b\u1ECB reset v\u1EC1 c\u1EA5p 1!</small></p>
+        <button class="btn ${sc >= p.secret ? "pri" : "soft"} block" data-act="${sc >= p.secret ? "capy" : "goto"}" data-to="suutam">${sc >= p.secret ? "\u{1F9AB} Nh\u1EADn nu\xF4i C\xE1p Bi" : "\u{1F4D6} \u0110\u1EBFn M\u1EE5c S\u01B0u T\u1EA7m S\xE1ng T\u1EA1o C\xF4ng Th\u1EE9c (" + sc + "/" + p.secret + ")"}</button></div>` : `<div class="petcard"><div class="pet-big">${p.icon}</div><h4>\u{1F3E1} C\u0102N PH\xD2NG TH\xDA C\u01AFNG M\u01A0 \u01AF\u1EDAC</h4><p>B\u1EA1n \u0111\u01B0\u1EE3c ch\u1ECDn <b>1 trong 2 b\xE9 c\u01B0ng</b> \u0111\u1EC3 \u0111\u1ED3ng h\xE0nh c\xF9ng ti\u1EC7m c\u1EE7a m\xECnh. H\xE3y ch\u1ECDn ng\u01B0\u1EDDi b\u1EA1n ph\xF9 h\u1EE3p nh\u1EA5t v\u1EDBi chi\u1EBFn l\u01B0\u1EE3c kinh doanh c\u1EE7a b\u1EA1n! <small>Sau khi ch\u1ECDn, b\u1EA1n c\xF3 th\u1EC3 \u0111\u1ED5i l\u1EA1i b\xE9 kia v\xE0 c\xE1c ch\u1EC9 s\u1ED1 ch\u0103m s\xF3c tr\u1EDF v\u1EC1 80!</small></p>
         <div class="buffs"><h5>${p.icon} ${p.name}</h5>${p.buffs.map((b) => `<p>${b}</p>`).join("")}</div>
         <div class="adopt"><b>Ph\xED nh\u1EADn nu\xF4i ${p.icon} ${p.name}:</b> <span class="money">${fmt(p.adopt)}</span><p>Ti\u1EC1n k\xE9t qu\xE1n hi\u1EC7n c\xF3: ${fmtK(S.money)} ${S.money >= p.adopt ? "\u2705" : `\u274C (C\u1EA7n th\xEAm ${fmtK(p.adopt - S.money)})`}</p></div>
         <button class="btn ${S.money >= p.adopt ? "pri" : "ghost"} block" data-act="adopt" data-k="${k}">\u{1F43E} Nh\u1EADn Nu\xF4i ${p.name} (${fmtK(p.adopt)})</button></div>`;
-      return `<div class="petrow">${["shiba", "meo", "capybara"].map(petCard).join("")}</div>${body}`;
+      return `${nav}${body}`;
     },
     acts: {
       petsel: (t) => {
@@ -5574,6 +5707,7 @@
         confirmBox("Nh\u1EADn nu\xF4i " + p.name + "?", `Ph\xED ${fmtK(p.adopt)}. Ch\u1EC9 s\u1ED1 ch\u0103m s\xF3c b\xE9 ch\xEDnh tr\u1EDF v\u1EC1 80; C\xE1p Bi nu\xF4i chung \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.`, () => {
           const error = adoptPet(k);
           if (error) return toast(error, "err");
+          S.subtab.pet = k;
           sfx("level");
           toast("\u{1F43E} Ch\xE0o m\u1EEBng th\xE0nh vi\xEAn m\u1EDBi!", "gold");
         }, "Nh\u1EADn nu\xF4i");

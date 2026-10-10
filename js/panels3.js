@@ -92,15 +92,17 @@ const bar = (v) => `<div class="bar ${v < 30 ? 'danger' : v < 60 ? 'warn' : ''}"
 function petCard(k) {
   const p = PETS[k];
   const can = k === 'capybara' ? E.secretCount() >= p.secret : true;
-  const sel = (S.subtab.pet || 'shiba') === k;
+  const sel = (S.subtab.pet || S.pet?.kind || 'shiba') === k;
   return `<button class="petchip ${sel ? 'on' : ''}" data-act="petsel" data-k="${k}">${p.icon} ${p.name.split(' ').slice(0, 2).join(' ')} ${can ? '' : '<em>(Chưa mở)</em>'}</button>`;
 }
 const thucung = {
   html() {
-    if (S.pet) {
+    const selected = S.subtab.pet || S.pet?.kind || 'shiba';
+    const nav = `<div class="petrow pet-tabs">${['shiba', 'meo', 'capybara'].map(petCard).join('')}</div>`;
+    if (S.pet && (selected === S.pet.kind || (selected === 'capybara' && S.pet2))) {
       const p = S.pet, info = PETS[p.kind];
       const act = E.petActive();
-      return `<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? '✅ Buff đang kích hoạt (mọi chỉ số ≥ 60 trung bình)' : '⚠️ Cần chăm sóc để kích hoạt buff (trung bình ≥ 60)'}</p>
+      return `${nav}<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? '✅ Buff đang kích hoạt (mọi chỉ số ≥ 60 trung bình)' : '⚠️ Cần chăm sóc để kích hoạt buff (trung bình ≥ 60)'}</p>
         <div class="pstats">${[['hunger', '🍖 No'], ['joy', '💗 Vui vẻ'], ['clean', '🛁 Sạch sẽ'], ['energy', '😴 Khỏe']].map(([k, l]) => `<div class="ps"><span>${l}</span>${bar(p[k])}<b>${Math.round(p[k])}</b></div>`).join('')}</div>
         <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ''}</button>`).join('')}</div>
         <div class="buffs">${info.buffs.map((b) => `<p>${b}</p>`).join('')}</div>
@@ -108,18 +110,18 @@ const thucung = {
         ${S.pet2 ? `<div class="petcard owned"><div class="pet-big">🦫</div><h4>${PETS.capybara.name} <span class="chip green">Nuôi chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join('')}</div>` : ''}
         ${!S.pet2 && E.secretCount() >= 7 ? '<button class="btn pri block" data-act="capy">🦫 Nhận nuôi Cáp Bi (miễn phí)</button>' : ''}`;
     }
-    const k = S.subtab.pet || 'shiba';
+    const k = selected;
     const p = PETS[k];
     const sc = E.secretCount();
-    const body = k === 'capybara' ? `<div class="petcard cap"><div class="pet-big">🦫</div><h4>🦫 CÁP BI ĐIỀM ĐẠM (CAPYBARA)</h4><p>Thú cưng độc bản quý hiếm dành riêng cho Nhà Sáng Tạo Tiệm Trà Sữa Tinh Hoa! <b>Kết hợp trọn vẹn cả sức mạnh của Chó và Mèo</b>, đặc biệt có thể nuôi chung song song cùng 1 Tó hoặc 1 Mèo!</p>
-        <div class="buffs"><b>4 ĐẶC QUYỀN TỐI THƯỢNG CỦA CÁP PI:</b>${p.buffs.map((b) => `<p>${b}</p>`).join('')}</div>
+    const body = k === 'capybara' ? `<div class="petcard cap"><div class="pet-big">🦫</div><h4>🦫 CÁP BI ĐIỀM ĐẠM (CAPYBARA)</h4><p>Thú cưng độc bản quý hiếm dành riêng cho Nhà Sáng Tạo Tiệm Trà Sữa Tinh Hoa! <b>Kết hợp trọn vẹn cả sức mạnh của Chó và Mèo</b>, đặc biệt có thể nuôi chung song song cùng 1 Chó hoặc 1 Mèo!</p>
+        <div class="buffs"><b>4 ĐẶC QUYỀN TỐI THƯỢNG CỦA CÁP BI:</b>${p.buffs.map((b) => `<p>${b}</p>`).join('')}</div>
         <div class="cond"><b>⭐ Điều kiện mở khóa: ${p.secret} Công thức độc bản</b><div class="bar"><i style="width:${sc / p.secret * 100}%"></i></div><small>Bạn đã sáng tạo ${sc}/${p.secret} công thức độc bản trong Sổ Tay Sưu Tầm. Cần thêm ${Math.max(0, p.secret - sc)} công thức nữa để mở khóa Cáp Bi!</small></div>
         <button class="btn ${sc >= p.secret ? 'pri' : 'soft'} block" data-act="${sc >= p.secret ? 'capy' : 'goto'}" data-to="suutam">${sc >= p.secret ? '🦫 Nhận nuôi Cáp Bi' : '📖 Đến Mục Sưu Tầm Sáng Tạo Công Thức (' + sc + '/' + p.secret + ')'}</button></div>`
-      : `<div class="petcard"><div class="pet-big">${p.icon}</div><h4>🏡 CĂN PHÒNG THÚ CƯNG MƠ ƯỚC</h4><p>Bạn được chọn <b>1 trong 2 bé cưng</b> để đồng hành cùng tiệm của mình. Hãy chọn người bạn phù hợp nhất với chiến lược kinh doanh của bạn! <small>Sau khi chọn, bạn có thể đổi lại bé kia nhưng cấp thú cưng sẽ bị reset về cấp 1!</small></p>
+      : `<div class="petcard"><div class="pet-big">${p.icon}</div><h4>🏡 CĂN PHÒNG THÚ CƯNG MƠ ƯỚC</h4><p>Bạn được chọn <b>1 trong 2 bé cưng</b> để đồng hành cùng tiệm của mình. Hãy chọn người bạn phù hợp nhất với chiến lược kinh doanh của bạn! <small>Sau khi chọn, bạn có thể đổi lại bé kia và các chỉ số chăm sóc trở về 80!</small></p>
         <div class="buffs"><h5>${p.icon} ${p.name}</h5>${p.buffs.map((b) => `<p>${b}</p>`).join('')}</div>
         <div class="adopt"><b>Phí nhận nuôi ${p.icon} ${p.name}:</b> <span class="money">${fmt(p.adopt)}</span><p>Tiền két quán hiện có: ${fmtK(S.money)} ${S.money >= p.adopt ? '✅' : `❌ (Cần thêm ${fmtK(p.adopt - S.money)})`}</p></div>
         <button class="btn ${S.money >= p.adopt ? 'pri' : 'ghost'} block" data-act="adopt" data-k="${k}">🐾 Nhận Nuôi ${p.name} (${fmtK(p.adopt)})</button></div>`;
-    return `<div class="petrow">${['shiba', 'meo', 'capybara'].map(petCard).join('')}</div>${body}`;
+    return `${nav}${body}`;
   },
   acts: {
     petsel: (t) => { S.subtab.pet = t.dataset.k; markDirty('panel'); },
@@ -127,7 +129,7 @@ const thucung = {
     adopt: (t) => {
       const k = t.dataset.k, p = PETS[k];
       if (S.money < p.adopt) return toast('Không đủ tiền nhận nuôi', 'err');
-      confirmBox('Nhận nuôi ' + p.name + '?', `Phí ${fmtK(p.adopt)}. Chỉ số chăm sóc bé chính trở về 80; Cáp Bi nuôi chung được giữ lại.`, () => { const error = E.adoptPet(k); if (error) return toast(error, 'err'); sfx('level'); toast('🐾 Chào mừng thành viên mới!', 'gold'); }, 'Nhận nuôi');
+      confirmBox('Nhận nuôi ' + p.name + '?', `Phí ${fmtK(p.adopt)}. Chỉ số chăm sóc bé chính trở về 80; Cáp Bi nuôi chung được giữ lại.`, () => { const error = E.adoptPet(k); if (error) return toast(error, 'err'); S.subtab.pet = k; sfx('level'); toast('🐾 Chào mừng thành viên mới!', 'gold'); }, 'Nhận nuôi');
     },
     capy: () => { const error = E.adoptPet('capybara'); if (error) return toast(error, 'err'); sfx('level'); toast('🦫 Cáp Bi đã về quán!', 'gold'); },
     care: (t) => {
