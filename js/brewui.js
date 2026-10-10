@@ -103,8 +103,7 @@ export function renderSell() {
           <button class="trash" data-act="trash" aria-label="Thùng rác">🗑️</button>
         </div>
       </div>
-      <div class="supply-row">${['da', 'duong'].map(id => `<button class="supply-btn" data-act="supply" data-id="${id}">${ITEMS[id].icon} ${id === 'da' ? 'Đá' : 'Đường'} <span data-cnt="${id}">0</span><small class="supply-state">1 phần/ly</small></button>`).join('')}</div>
-      <div class="equip-strip" aria-label="Trang bị đang sử dụng">${EQUIP.filter(eq => E.equipLevel(eq.id) > 0).map(eq => `<button class="equip-chip" data-act="equipment" data-id="${eq.id}" aria-label="${esc(eq.name)}">${eq.icon} ${esc(eq.name)} <b>C${E.equipLevel(eq.id)}</b></button>`).join('')}</div>
+      <div class="supply-row">${['da', 'duong'].map(id => `<button class="supply-btn" data-act="supply" data-id="${id}">${ITEMS[id].icon} ${id === 'da' ? 'Đá' : 'Đường'} <span data-cnt="${id}">0</span><small class="supply-state">1 phần/ly</small></button>`).join('')}<button class="supply-btn upgrade-shortcut" data-act="upgrade-menu" aria-label="Xem trang bị và nâng cấp">🛠️</button></div>
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra sảnh → <span id="lobbyCnt">0/0</span></button></div>
@@ -145,6 +144,29 @@ function updateStaffStrip() {
     el.style.setProperty('--p', s.p.toFixed(0));
     el.dataset.tip = s.txt;
   }
+  updateStaffJobs();
+}
+function updateStaffJobs() {
+  const row = $('#qrow'); if (!row) return;
+  for (const card of $$('.qav', row)) {
+    const job = SH.jobs.find((j) => String(j.cid) === card.dataset.cid && j.by === 'genZ');
+    let status = card.querySelector('.genz-job');
+    if (!job) { status?.remove(); card.classList.remove('genz-working'); continue; }
+    card.classList.add('genz-working');
+    if (!status) { status = h('<span class="genz-job"><b>✨</b><i></i></span>'); card.appendChild(status); }
+    const staff = STAFF.find((s) => s.id === job.by), total = job.total || staff?.sec || 1;
+    status.style.setProperty('--job-progress', `${clamp((1 - job.t / total) * 100, 4, 100)}%`);
+    status.setAttribute('aria-label', `Gen Z đang pha đơn cho khách, còn ${Math.ceil(job.t * 10) / 10} giây`);
+  }
+}
+function openUpgradeMenu() {
+  const rows = EQUIP.map((eq) => {
+    const level = E.equipLevel(eq.id), tier = eq.tiers[Math.max(0, Math.min(level, eq.tiers.length) - 1)];
+    const next = eq.tiers[Math.min(level, eq.tiers.length - 1)];
+    return `<button class="upgrade-item" data-act="equipment" data-id="${eq.id}"><span class="upgrade-icon">${eq.icon}</span><span><b>${esc(eq.name)} · C${level}</b><small>${level < eq.tiers.length - 1 ? `Hiện tại: ${esc(tier.d)} · Tiếp theo: ${esc(next.d)}` : esc(tier.d)}</small></span><span class="upgrade-arrow">›</span></button>`;
+  }).join('');
+  const modal = openModal({ id: 'counter-upgrades', cls: 'small counter-upgrade-modal', title: '🛠️ Trang bị & nâng cấp', html: `<div class="upgrade-list">${rows}</div>` });
+  bindActions(modal.body, { equipment: (button) => sellActs.equipment(button) });
 }
 function dispHTML(t) {
   const it = ITEMS[t];
@@ -156,7 +178,7 @@ function dispHTML(t) {
 }
 function fillFlavors() {
   const list = FLAVORS.filter((f) => S.unlocked[f] && S.onMenu[f]);
-  $('#flavs').innerHTML = list.length ? `<span class="tag-w sm">HƯƠNG</span>` + list.map((f) => `<button class="fbtn" data-act="flav" data-f="${f}" aria-label="${ITEMS[f].name}"><i style="background:${ITEMS[f].color}"></i><b>${ITEMS[f].icon}</b><span class="cnt" data-cnt="${f}">0</span></button>`).join('') : '';
+  $('#flavs').innerHTML = list.length ? `<span class="tag-w sm">HƯƠNG</span>` + list.map((f) => `<button class="fbtn" data-act="flav" data-f="${f}" aria-label="${ITEMS[f].name}"><i style="background:${ITEMS[f].color}"></i><b>${ITEMS[f].icon}</b><small>${esc(ITEMS[f].name)}</small><span class="cnt" data-cnt="${f}">0</span></button>`).join('') : '';
 }
 function fillTrays() {
   const order = [...TOPS].sort((a, b) => (S.unlocked[b] && S.onMenu[b] ? 1 : 0) - (S.unlocked[a] && S.onMenu[a] ? 1 : 0));
@@ -170,6 +192,7 @@ function fillTrays() {
 
 /* ===== Hành động ===== */
 const sellActs = {
+  'upgrade-menu': () => openUpgradeMenu(),
   supply: (t) => { const err = G.addSupply(t.dataset.id); if (err) { toast(err, 'err'); sfx('error'); } },
   equipment: (t) => {
     const eq = EQUIP.find(eq => eq.id === t.dataset.id);
@@ -433,6 +456,7 @@ on('staff:ingredient', (id) => {
 on('auto:pour', () => updateBoard(true));
 on('trash', () => updateBoard(true));
 on('queue', () => { if (SH.on && S.phase === 'sell' && SH.view === 'counter') { refreshQueue(); refreshCustomer(); } });
+on('staff:job', () => { if (SH.view === 'counter') { refreshQueue(); refreshCustomer(); } });
 on('sel', () => { refreshQueue(); refreshCustomer(); });
 on('served', () => { updateBoard(true); refreshQueue(); if (!serveHold) refreshCustomer(); });
 on('left', (c) => { toast(`${c.tag} bỏ về vì chờ quá lâu 😢`, 'err', 1500); sfx('sad'); });
@@ -448,7 +472,7 @@ function refreshQueue() {
   const row = $('#qrow');
   if (!row) return;
   const front = G.frontCustomer();
-  row.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? 'on' : ''}" data-act="sel" data-cid="${c.id}" aria-label="Khách ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b></button>`).join('') || '<span class="q-empty">Chưa có khách...</span>';
+  row.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? 'on' : ''}" data-act="sel" data-cid="${c.id}" aria-label="Khách ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b>${SH.jobs.some((j) => j.cid === c.id && j.by === 'genZ') ? '<span class="genz-job"><b>⚡</b><i></i></span>' : ''}</button>`).join('') || '<span class="q-empty">Chưa có khách...</span>';
 }
 function refreshCustomer() {
   const av = $('#cav'), bub = $('#cbub');
@@ -461,8 +485,9 @@ function refreshCustomer() {
   }
   av.classList.remove('enter'); bub.classList.remove('enter'); void av.offsetWidth; av.classList.add('enter'); bub.classList.add('enter');
   const o = c.order;
+  const workerJob = SH.jobs.find((j) => j.cid === c.id && j.by === 'genZ');
   av.innerHTML = `<span class="face">${c.online ? c.avatar : customerArt(c.key) || c.avatar}</span>`;
-  bub.innerHTML = `<div class="order-head"><span class="atag">${esc(c.tag)}</span><button class="rej" data-act="reject" aria-label="Từ chối đơn của ${esc(c.tag)}">✖ Từ chối</button></div><div class="b-row">${orderCup(o)}<div><div class="btxt" tabindex="0" aria-label="Nội dung đơn hàng">${esc(c.text)}</div></div></div>
+  bub.innerHTML = `<div class="order-head"><span class="atag">${esc(c.tag)}</span><button class="rej" data-act="reject" aria-label="Từ chối đơn của ${esc(c.tag)}">✖ Từ chối</button></div>${workerJob ? `<div class="genz-order-status">✨ Gen Z đang xử lý đơn này</div>` : ''}<div class="b-row">${orderCup(o)}<div><div class="btxt" tabindex="0" aria-label="Nội dung đơn hàng">${esc(c.text)}</div></div></div>
     <div class="pat"><span>KIÊN NHẪN</span><div class="bar" id="patBar"><i style="width:${(c.p / c.maxP * 100).toFixed(0)}%"></i></div></div>`;
 }
 function updateBoard(force) {
@@ -581,7 +606,7 @@ export function frameSell(dt, force) {
   if (cntT <= 0 || force) {
     cntT = 0.25;
     updateStaffStrip();
-    for (const el of $$('.supply-btn', root)) {
+    for (const el of $$('.supply-btn[data-id]', root)) {
       const added = !!b?.[el.dataset.id === 'da' ? 'iceAdded' : 'sugarAdded'];
       el.classList.toggle('added', added);
       $('.supply-state', el).textContent = added ? '✓ Đã thêm' : '1 phần/ly';

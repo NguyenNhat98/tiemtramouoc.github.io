@@ -444,7 +444,9 @@ function staffStep(dt) {
       if (cand) {
         const need = needs(cand.order);
         if (!canTake(need)) continue;
-        SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 0.005)) });
+        const total = st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 0.005));
+        SH.jobs.push({ by: key, cid: cand.id, t: total, total, stage: 'đang pha trọn đơn' });
+        if (key === 'genZ') emit('staff:job', { cid: cand.id, by: key });
         for (const [id, n] of need) E.take(id, n);
       }
     } else if (st.kind === 'buyer') {
@@ -529,7 +531,7 @@ function advanceCounterStaff(bd, dt, bonus) {
     a.target = chance(a.st.err * (1 - bonus.errReduce)) ? 0.6 : 0.95;
     a.stage = 'pour'; bd.pouring = true; a.waiting = null;
   } else if (a.stage === 'flavor') {
-    if (c.order.flavor && !bd.flavor) { const err = addFlavor(c.order.flavor); if (err) { a.waiting = err; return; } }
+    if (c.order.flavor && !bd.flavor) { const err = addFlavor(c.order.flavor); if (err) { a.waiting = err; return; } emit('staff:flavor', c.order.flavor); }
     a.stage = 'sugar'; a.t = 0.45;
   } else if (a.stage === 'sugar') {
     if (!takeOnce('duong', 'sugarAdded')) return;
@@ -540,7 +542,7 @@ function advanceCounterStaff(bd, dt, bonus) {
   } else if (a.stage === 'topping') {
     const id = st.kind === 'manager' ? a.topsLeft?.[0] : null;
     if (id) {
-      if (!bd.tops.includes(id)) { const err = addTop(id); if (err) { a.waiting = err; return; } }
+      if (!bd.tops.includes(id)) { const err = addTop(id); if (err) { a.waiting = err; return; } emit('staff:top', { id, staff: st.id }); }
       a.topsLeft.shift(); a.t = 0.45;
     } else { bd.auto = null; bd.autoDone = true; emit('auto:pour'); }
   }

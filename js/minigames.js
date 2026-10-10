@@ -155,7 +155,7 @@ const tileCenter = (r, c) => ({ x: (c + 0.5) * 100 / N, y: (r + 0.5) * 100 / N }
 function burst(board, r, c, icon, big = false) {
   if (!board || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const { x, y } = tileCenter(r, c);
-  const n = big ? 10 : 6;
+  const n = big ? 14 : 7;
   const w = board.clientWidth || 300;
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2 + rand(-0.3, 0.3), d = rand(0.45, big ? 1.5 : 1.0) * w / N * 1.5;
@@ -169,6 +169,10 @@ function burst(board, r, c, icon, big = false) {
   }
   const ring = h(`<span class="mfx-ring" style="left:${x}%;top:${y}%"></span>`);
   board.appendChild(ring); setTimeout(() => ring.remove(), 420);
+  if (big) {
+    const halo = h(`<span class="mfx-ring mfx-halo" style="left:${x}%;top:${y}%"></span>`);
+    board.appendChild(halo); setTimeout(() => halo.remove(), 620);
+  }
 }
 /** Hiệu ứng riêng cho thẻ đặc biệt khi kích hoạt. */
 function specialFx(board, sp, r, c) {
@@ -379,7 +383,12 @@ function pearlBurst(el, color, big) {
   const ring = h(`<span class="pfx-ring" style="left:${x - origin.left}px;top:${y - origin.top}px;border-color:${color}"></span>`);
   layer.appendChild(ring);
   ring.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: .9 }, { transform: 'translate(-50%,-50%) scale(1.9)', opacity: 0 }], { duration: 420, easing: 'ease-out' }).onfinish = () => ring.remove();
-  const n = big ? 7 : 5;
+  if (big) {
+    const halo = h(`<span class="pfx-ring pfx-mega" style="left:${x - origin.left}px;top:${y - origin.top}px;border-color:${color}"></span>`);
+    layer.appendChild(halo);
+    halo.animate([{ transform: 'translate(-50%,-50%) scale(.15)', opacity: .95 }, { transform: 'translate(-50%,-50%) scale(2.8)', opacity: 0 }], { duration: 680, easing: 'cubic-bezier(.16,.72,.32,1)' }).onfinish = () => halo.remove();
+  }
+  const n = big ? 10 : 6;
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2 + rand(-0.3, 0.3), d = rand(24, big ? 62 : 48), s = rand(5, 9);
     const f = h(`<span class="pfx-dot" style="left:${x - origin.left}px;top:${y - origin.top}px;width:${s}px;height:${s}px;background:${color}">${i % 3 === 0 ? '✦' : ''}</span>`);

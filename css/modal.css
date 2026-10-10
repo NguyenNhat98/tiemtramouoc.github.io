@@ -97,6 +97,7 @@
 .mfx { position: absolute; z-index: 6; pointer-events: none; line-height: 1; will-change: transform; }
 .mfx-fix { position: fixed; z-index: 120; pointer-events: none; font-size: 15px; line-height: 1; }
 .mfx-ring { position: absolute; z-index: 5; width: 14%; height: 14%; margin: -7% 0 0 -7%; border-radius: 50%; border: 3px solid #fff3a0; box-shadow: 0 0 10px #ffd54a; pointer-events: none; animation: ringOut .4s ease-out forwards; }
+.mfx-halo { width: 25%; height: 25%; margin: -12.5% 0 0 -12.5%; border-width: 2px; border-color: #fff4be; box-shadow: 0 0 18px #ffad36, inset 0 0 12px #fff5c7; }
 @keyframes ringOut { from { transform: scale(.3); opacity: 1 } to { transform: scale(2.2); opacity: 0 } }
 .mbeam { position: absolute; z-index: 5; pointer-events: none; background: linear-gradient(90deg, transparent, #fff7b0, #ffb300, #fff7b0, transparent); box-shadow: 0 0 14px #ffb300; animation: beamOn .5s ease-out forwards; }
 .mbeam.hz { left: 0; right: 0; height: 9%; margin-top: -4.5%; transform-origin: center; }
@@ -109,6 +110,7 @@
 .mflash { position: absolute; inset: 0; z-index: 5; pointer-events: none; background: conic-gradient(from 0deg, #ff6b6b, #ffd93d, #6bcf7f, #4dabf7, #b197fc, #ff6b6b); mix-blend-mode: screen; opacity: 0; animation: rainFlash .6s ease-out; }
 @keyframes rainFlash { 0% { opacity: 0 } 30% { opacity: .75 } 100% { opacity: 0 } }
 .mcombo { position: absolute; left: 50%; top: 42%; z-index: 8; pointer-events: none; white-space: nowrap; font-weight: 900; font-size: 30px; color: #fff; letter-spacing: 1px; -webkit-text-stroke: 1.5px var(--pink); text-shadow: 0 3px 0 var(--pink), 0 0 18px rgba(255, 255, 255, .9); animation: comboIn .9s cubic-bezier(.2, 1.4, .4, 1) forwards; }
+.mcombo { filter: drop-shadow(0 4px 7px rgba(117,48,91,.45)); }
 .mcombo.c3 { color: #fff3a0; font-size: 34px; } .mcombo.c4, .mcombo.c5 { color: #ffd54a; font-size: 38px; -webkit-text-stroke-color: #c0307a; }
 @keyframes comboIn { 0% { transform: translate(-50%, -50%) scale(.2) rotate(-12deg); opacity: 0 } 25% { transform: translate(-50%, -50%) scale(1.25) rotate(4deg); opacity: 1 } 70% { transform: translate(-50%, -60%) scale(1) rotate(0); opacity: 1 } 100% { transform: translate(-50%, -110%) scale(1); opacity: 0 } }
 .crush-board.shake { animation: boardShake .35s ease; }

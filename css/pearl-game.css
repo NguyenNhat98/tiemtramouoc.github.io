@@ -27,6 +27,7 @@
 .pearl-popping .pearl-character { animation: pearlPopOut .16s ease-in forwards; }
 .pearl-fx { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
 .pearl-fx .pfx-ring, .pearl-fx .pfx-dot { position: absolute; z-index: 1; }
+.pearl-fx .pfx-mega { width: 30px; height: 30px; border: 2px solid; border-radius: 50%; box-shadow: 0 0 15px currentColor, inset 0 0 10px currentColor; }
 .pearl-fx .pfx-dot { color: #fff0b4; font-size: 13px; line-height: 1; }
 .pearl-gain { position: absolute; z-index: 3; font-size: 29px; font-weight: 900; color: #fff5bc; text-shadow: 0 2px 0 #ab6441,1px 0 #ab6441,-1px 0 #ab6441; white-space: nowrap; }
 .pearl-gain small { display: block; font-size: 11px; text-align: center; color: white; }

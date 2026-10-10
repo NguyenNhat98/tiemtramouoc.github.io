@@ -3696,7 +3696,9 @@
         if (cand) {
           const need = needs(cand.order);
           if (!canTake(need)) continue;
-          SH.jobs.push({ by: key, cid: cand.id, t: st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 5e-3)) });
+          const total = st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 5e-3));
+          SH.jobs.push({ by: key, cid: cand.id, t: total, total, stage: "\u0111ang pha tr\u1ECDn \u0111\u01A1n" });
+          if (key === "genZ") emit("staff:job", { cid: cand.id, by: key });
           for (const [id, n] of need) take(id, n);
         }
       } else if (st.kind === "buyer") {
@@ -3839,6 +3841,7 @@
           a.waiting = err;
           return;
         }
+        emit("staff:flavor", c.order.flavor);
       }
       a.stage = "sugar";
       a.t = 0.45;
@@ -3859,6 +3862,7 @@
             a.waiting = err;
             return;
           }
+          emit("staff:top", { id, staff: st.id });
         }
         a.topsLeft.shift();
         a.t = 0.45;
@@ -4348,8 +4352,7 @@
           <button class="trash" data-act="trash" aria-label="Th\xF9ng r\xE1c">\u{1F5D1}\uFE0F</button>
         </div>
       </div>
-      <div class="supply-row">${["da", "duong"].map((id) => `<button class="supply-btn" data-act="supply" data-id="${id}">${ITEMS[id].icon} ${id === "da" ? "\u0110\xE1" : "\u0110\u01B0\u1EDDng"} <span data-cnt="${id}">0</span><small class="supply-state">1 ph\u1EA7n/ly</small></button>`).join("")}</div>
-      <div class="equip-strip" aria-label="Trang b\u1ECB \u0111ang s\u1EED d\u1EE5ng">${EQUIP.filter((eq) => equipLevel(eq.id) > 0).map((eq) => `<button class="equip-chip" data-act="equipment" data-id="${eq.id}" aria-label="${esc(eq.name)}">${eq.icon} ${esc(eq.name)} <b>C${equipLevel(eq.id)}</b></button>`).join("")}</div>
+      <div class="supply-row">${["da", "duong"].map((id) => `<button class="supply-btn" data-act="supply" data-id="${id}">${ITEMS[id].icon} ${id === "da" ? "\u0110\xE1" : "\u0110\u01B0\u1EDDng"} <span data-cnt="${id}">0</span><small class="supply-state">1 ph\u1EA7n/ly</small></button>`).join("")}<button class="supply-btn upgrade-shortcut" data-act="upgrade-menu" aria-label="Xem trang b\u1ECB v\xE0 n\xE2ng c\u1EA5p">\u{1F6E0}\uFE0F</button></div>
       <div class="flav-row" id="flavs"></div><div class="trays" id="trays"></div>
     </div>
     <div class="foot"><button class="btn pri lobby-go" data-act="lobby" id="lobbyGo">Ra s\u1EA3nh \u2192 <span id="lobbyCnt">0/0</span></button></div>
@@ -4400,6 +4403,37 @@
       el.style.setProperty("--p", s.p.toFixed(0));
       el.dataset.tip = s.txt;
     }
+    updateStaffJobs();
+  }
+  function updateStaffJobs() {
+    const row2 = $("#qrow");
+    if (!row2) return;
+    for (const card of $$(".qav", row2)) {
+      const job = SH.jobs.find((j) => String(j.cid) === card.dataset.cid && j.by === "genZ");
+      let status = card.querySelector(".genz-job");
+      if (!job) {
+        status == null ? void 0 : status.remove();
+        card.classList.remove("genz-working");
+        continue;
+      }
+      card.classList.add("genz-working");
+      if (!status) {
+        status = h('<span class="genz-job"><b>\u2728</b><i></i></span>');
+        card.appendChild(status);
+      }
+      const staff = STAFF.find((s) => s.id === job.by), total = job.total || (staff == null ? void 0 : staff.sec) || 1;
+      status.style.setProperty("--job-progress", `${clamp((1 - job.t / total) * 100, 4, 100)}%`);
+      status.setAttribute("aria-label", `Gen Z \u0111ang pha \u0111\u01A1n cho kh\xE1ch, c\xF2n ${Math.ceil(job.t * 10) / 10} gi\xE2y`);
+    }
+  }
+  function openUpgradeMenu() {
+    const rows = EQUIP.map((eq) => {
+      const level = equipLevel(eq.id), tier = eq.tiers[Math.max(0, Math.min(level, eq.tiers.length) - 1)];
+      const next = eq.tiers[Math.min(level, eq.tiers.length - 1)];
+      return `<button class="upgrade-item" data-act="equipment" data-id="${eq.id}"><span class="upgrade-icon">${eq.icon}</span><span><b>${esc(eq.name)} \xB7 C${level}</b><small>${level < eq.tiers.length - 1 ? `Hi\u1EC7n t\u1EA1i: ${esc(tier.d)} \xB7 Ti\u1EBFp theo: ${esc(next.d)}` : esc(tier.d)}</small></span><span class="upgrade-arrow">\u203A</span></button>`;
+    }).join("");
+    const modal = openModal({ id: "counter-upgrades", cls: "small counter-upgrade-modal", title: "\u{1F6E0}\uFE0F Trang b\u1ECB & n\xE2ng c\u1EA5p", html: `<div class="upgrade-list">${rows}</div>` });
+    bindActions(modal.body, { equipment: (button) => sellActs.equipment(button) });
   }
   function dispHTML(t) {
     const it = ITEMS[t];
@@ -4411,7 +4445,7 @@
   }
   function fillFlavors() {
     const list = FLAVORS.filter((f) => S.unlocked[f] && S.onMenu[f]);
-    $("#flavs").innerHTML = list.length ? `<span class="tag-w sm">H\u01AF\u01A0NG</span>` + list.map((f) => `<button class="fbtn" data-act="flav" data-f="${f}" aria-label="${ITEMS[f].name}"><i style="background:${ITEMS[f].color}"></i><b>${ITEMS[f].icon}</b><span class="cnt" data-cnt="${f}">0</span></button>`).join("") : "";
+    $("#flavs").innerHTML = list.length ? `<span class="tag-w sm">H\u01AF\u01A0NG</span>` + list.map((f) => `<button class="fbtn" data-act="flav" data-f="${f}" aria-label="${ITEMS[f].name}"><i style="background:${ITEMS[f].color}"></i><b>${ITEMS[f].icon}</b><small>${esc(ITEMS[f].name)}</small><span class="cnt" data-cnt="${f}">0</span></button>`).join("") : "";
   }
   function fillTrays() {
     const order = [...TOPS].sort((a, b) => (S.unlocked[b] && S.onMenu[b] ? 1 : 0) - (S.unlocked[a] && S.onMenu[a] ? 1 : 0));
@@ -4423,6 +4457,7 @@
     }).join("");
   }
   var sellActs = {
+    "upgrade-menu": () => openUpgradeMenu(),
     supply: (t) => {
       const err = addSupply(t.dataset.id);
       if (err) {
@@ -4829,6 +4864,12 @@
       refreshCustomer();
     }
   });
+  on("staff:job", () => {
+    if (SH.view === "counter") {
+      refreshQueue();
+      refreshCustomer();
+    }
+  });
   on("sel", () => {
     refreshQueue();
     refreshCustomer();
@@ -4861,7 +4902,7 @@
     const row2 = $("#qrow");
     if (!row2) return;
     const front = frontCustomer();
-    row2.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? "on" : ""}" data-act="sel" data-cid="${c.id}" aria-label="Kh\xE1ch ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b></button>`).join("") || '<span class="q-empty">Ch\u01B0a c\xF3 kh\xE1ch...</span>';
+    row2.innerHTML = SH.queue.map((c) => `<button class="qav ${front === c ? "on" : ""}" data-act="sel" data-cid="${c.id}" aria-label="Kh\xE1ch ${esc(c.tag)}"><span class="ring" data-ring="${c.id}" style="--p:${(c.p / c.maxP * 100).toFixed(0)}"></span><b>${c.online ? c.avatar : customerArt(c.key) || c.avatar}</b>${SH.jobs.some((j) => j.cid === c.id && j.by === "genZ") ? '<span class="genz-job"><b>\u26A1</b><i></i></span>' : ""}</button>`).join("") || '<span class="q-empty">Ch\u01B0a c\xF3 kh\xE1ch...</span>';
   }
   function refreshCustomer() {
     const av = $("#cav"), bub = $("#cbub");
@@ -4878,8 +4919,9 @@
     av.classList.add("enter");
     bub.classList.add("enter");
     const o = c.order;
+    const workerJob = SH.jobs.find((j) => j.cid === c.id && j.by === "genZ");
     av.innerHTML = `<span class="face">${c.online ? c.avatar : customerArt(c.key) || c.avatar}</span>`;
-    bub.innerHTML = `<div class="order-head"><span class="atag">${esc(c.tag)}</span><button class="rej" data-act="reject" aria-label="T\u1EEB ch\u1ED1i \u0111\u01A1n c\u1EE7a ${esc(c.tag)}">\u2716 T\u1EEB ch\u1ED1i</button></div><div class="b-row">${orderCup(o)}<div><div class="btxt" tabindex="0" aria-label="N\u1ED9i dung \u0111\u01A1n h\xE0ng">${esc(c.text)}</div></div></div>
+    bub.innerHTML = `<div class="order-head"><span class="atag">${esc(c.tag)}</span><button class="rej" data-act="reject" aria-label="T\u1EEB ch\u1ED1i \u0111\u01A1n c\u1EE7a ${esc(c.tag)}">\u2716 T\u1EEB ch\u1ED1i</button></div>${workerJob ? `<div class="genz-order-status">\u2728 Gen Z \u0111ang x\u1EED l\xFD \u0111\u01A1n n\xE0y</div>` : ""}<div class="b-row">${orderCup(o)}<div><div class="btxt" tabindex="0" aria-label="N\u1ED9i dung \u0111\u01A1n h\xE0ng">${esc(c.text)}</div></div></div>
     <div class="pat"><span>KI\xCAN NH\u1EAAN</span><div class="bar" id="patBar"><i style="width:${(c.p / c.maxP * 100).toFixed(0)}%"></i></div></div>`;
   }
   function updateBoard(force) {
@@ -5022,7 +5064,7 @@
     if (cntT <= 0 || force) {
       cntT = 0.25;
       updateStaffStrip();
-      for (const el of $$(".supply-btn", root)) {
+      for (const el of $$(".supply-btn[data-id]", root)) {
         const added = !!(b == null ? void 0 : b[el.dataset.id === "da" ? "iceAdded" : "sugarAdded"]);
         el.classList.toggle("added", added);
         $(".supply-state", el).textContent = added ? "\u2713 \u0110\xE3 th\xEAm" : "1 ph\u1EA7n/ly";
@@ -6267,7 +6309,7 @@
   function burst(board, r, c, icon2, big = false) {
     if (!board || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const { x, y } = tileCenter(r, c);
-    const n = big ? 10 : 6;
+    const n = big ? 14 : 7;
     const w = board.clientWidth || 300;
     for (let i = 0; i < n; i++) {
       const a = i / n * Math.PI * 2 + rand(-0.3, 0.3), d = rand(0.45, big ? 1.5 : 1) * w / N * 1.5;
@@ -6282,6 +6324,11 @@
     const ring = h(`<span class="mfx-ring" style="left:${x}%;top:${y}%"></span>`);
     board.appendChild(ring);
     setTimeout(() => ring.remove(), 420);
+    if (big) {
+      const halo = h(`<span class="mfx-ring mfx-halo" style="left:${x}%;top:${y}%"></span>`);
+      board.appendChild(halo);
+      setTimeout(() => halo.remove(), 620);
+    }
   }
   function specialFx(board, sp, r, c) {
     if (!board) return;
@@ -6558,7 +6605,12 @@
     const ring = h(`<span class="pfx-ring" style="left:${x - origin.left}px;top:${y - origin.top}px;border-color:${color}"></span>`);
     layer2.appendChild(ring);
     ring.animate([{ transform: "translate(-50%,-50%) scale(.3)", opacity: 0.9 }, { transform: "translate(-50%,-50%) scale(1.9)", opacity: 0 }], { duration: 420, easing: "ease-out" }).onfinish = () => ring.remove();
-    const n = big ? 7 : 5;
+    if (big) {
+      const halo = h(`<span class="pfx-ring pfx-mega" style="left:${x - origin.left}px;top:${y - origin.top}px;border-color:${color}"></span>`);
+      layer2.appendChild(halo);
+      halo.animate([{ transform: "translate(-50%,-50%) scale(.15)", opacity: 0.95 }, { transform: "translate(-50%,-50%) scale(2.8)", opacity: 0 }], { duration: 680, easing: "cubic-bezier(.16,.72,.32,1)" }).onfinish = () => halo.remove();
+    }
+    const n = big ? 10 : 6;
     for (let i = 0; i < n; i++) {
       const a = i / n * Math.PI * 2 + rand(-0.3, 0.3), d = rand(24, big ? 62 : 48), s = rand(5, 9);
       const f = h(`<span class="pfx-dot" style="left:${x - origin.left}px;top:${y - origin.top}px;width:${s}px;height:${s}px;background:${color}">${i % 3 === 0 ? "\u2726" : ""}</span>`);
