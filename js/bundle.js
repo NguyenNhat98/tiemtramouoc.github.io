@@ -2116,10 +2116,12 @@
     }
     const bubbles = cupEl.querySelector(".c-pour-bubbles");
     if (bubbles) bubbles.setAttribute("transform", `translate(0 ${y.toFixed(1)})`);
+    const ice = cupEl.querySelector(".c-ice");
+    if (ice) ice.setAttribute("transform", `translate(0 ${Math.min(78, y + 6).toFixed(1)})`);
   }
   function cupSvg(opts) {
     var _a;
-    const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = "", straw = false } = opts;
+    const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = "", straw = false, ice = false, sugar = false } = opts;
     const id = `cup${cupUid++}`;
     const y = surfaceOf(tea ? fill : 0);
     const balls = [];
@@ -2150,7 +2152,9 @@
       <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <linearGradient id="${id}tea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${teaTone(tea, 15)}"/><stop offset=".35" stop-color="${tea || "#fff"}"/><stop offset="1" stop-color="${teaTone(tea, -28)}"/></linearGradient></defs>
     <ellipse cx="39" cy="100" rx="25" ry="3.2" fill="rgba(60,35,10,.16)"/>
-    <g clip-path="url(#${id}c)">${liquid}${balls.join("")}</g>
+    <g clip-path="url(#${id}c)">${liquid}${sugar ? '<g class="c-sugar" fill="none" stroke="#cd8b25" stroke-width="2" opacity=".32"><path d="M33 31 Q52 47 29 64 Q24 76 46 91"/><path d="M43 34 Q26 49 48 67 Q53 80 34 94"/></g>' : ""}${balls.join("")}
+      ${ice ? `<g class="c-ice" transform="translate(0 ${Math.min(78, y + 6).toFixed(1)})">${[23, 36, 48].map((x, i) => `<g transform="translate(${x} ${i % 2 * 6})"><path d="M0 3 L6 0 L12 3 L6 6 Z" fill="#e6faff" stroke="#8bc6e7" stroke-width=".7"/><path d="M0 3 L6 6 L6 14 L0 11 Z" fill="#bce4f7" stroke="#8bc6e7" stroke-width=".7"/><path d="M6 6 L12 3 L12 11 L6 14 Z" fill="#8dcce9" stroke="#75b9db" stroke-width=".7"/><path d="M2 4 L5 5" stroke="#fff" stroke-width="1.2"/></g>`).join("")}</g>` : ""}
+    </g>
     ${strawSvg}
     <path d="M6 12 L16 96 Q39 103 62 96 L72 12" fill="rgba(235,245,252,.2)" stroke="rgba(121,88,64,.9)" stroke-width="2" stroke-linejoin="round"/>
     <path d="M12.5 20 L19 82" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".55"/>
@@ -4267,7 +4271,7 @@
     const fl = c.flavor ? ITEMS[c.flavor] : null;
     const fill = clamp((_a = c.fill) != null ? _a : 0, 0, 1.15);
     const lid = c.phase === "ready" ? "on" : c.phase === "sealing" ? "drop" : "";
-    const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), shown: shownFor(c), lid, straw: c.phase === "ready" });
+    const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), shown: shownFor(c), lid, straw: c.phase === "ready", ice: c.iceAdded, sugar: c.sugarAdded });
     const st = stamp && !mini && equipLevel("nhanDien") > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : "";
     const seal = Math.round(Math.max(500, (c.sealMax || 1.2) * 1e3 * 0.8));
     return `<div class="cup ${c.phase || ""}" style="width:${w * k}px;height:${hgt * k}px;--seal-ms:${seal}ms">${svg}${st}</div>`;
@@ -4276,6 +4280,14 @@
     return cupHTML({ size: o.size, tea: o.tea, flavor: o.flavor, tops: o.tops, fill: 0.95, phase: "ready" }, { mini: true, stamp: false });
   }
   var root = null;
+  var counterHeight = -1;
+  function fitCounter() {
+    if (!(root == null ? void 0 : root.isConnected) || SH.view !== "counter") return;
+    const height = root.clientHeight - Math.max(0, parseFloat(getComputedStyle(root).paddingBottom) - 4);
+    if (height === counterHeight) return;
+    counterHeight = height;
+    root.style.setProperty("--counter-u", `${Math.max(1, (height - 32) / 100)}px`);
+  }
   var brewFxGeneration = 0;
   function clearBrewFx() {
     brewFxGeneration++;
@@ -4301,6 +4313,7 @@
     clearBrewFx();
     const view = $("#view");
     if (S.phase !== "sell") return;
+    view.classList.toggle("counter-view", SH.view === "counter");
     if (SH.view === "lobby") return renderLobby(view);
     view.innerHTML = `<div class="sell" id="sell" data-night="${SH.hour >= 17 ? "1" : ""}">
     ${sellSceneHTML(SH.hour)}
@@ -4343,6 +4356,8 @@
     <div class="stream" id="stream" aria-hidden="true"><span class="st-jet"><i class="st-gloss"></i></span><span class="st-impact"><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></span></div>
   </div>`;
     root = $("#sell");
+    counterHeight = -1;
+    fitCounter();
     fillTrays();
     fillFlavors();
     refreshQueue();
@@ -4623,7 +4638,7 @@
       setTimeout(finish2, 900);
     });
   }
-  function dropFx(fromEl, color, idx = -1) {
+  function dropFx(fromEl, color, idx = -1, ingredient = "") {
     sfx("drop");
     const slot = $("#cupslot");
     const reveal = (count) => {
@@ -4642,7 +4657,7 @@
     const balls = [];
     for (let k = 0; k < n; k++) {
       const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
-      const el = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color};opacity:0"></div>`);
+      const el = h(`<div class="${ingredient === "da" ? "fx-ice" : "fx-ball"}" style="left:${sx - 7}px;top:${sy - 7}px;${ingredient === "da" ? "" : `background-color:${color};`}opacity:0">${ingredient === "da" ? "\u{1F9CA}" : ""}</div>`);
       brewFxLayer().appendChild(el);
       balls.push({ el, k, sx, sy, jit: rand(-9, 9), rise: 34 + rand(0, 22), done: false });
     }
@@ -4697,10 +4712,43 @@
           op = w > 0.85 ? 1 - (w - 0.85) / 0.15 : 1;
         }
         o.el.style.opacity = op;
-        o.el.style.transform = `translate(${(x - o.sx).toFixed(1)}px,${(y - o.sy).toFixed(1)}px) scale(${sc.toFixed(2)})`;
+        o.el.style.transform = `translate(${(x - o.sx).toFixed(1)}px,${(y - o.sy).toFixed(1)}px) scale(${sc.toFixed(2)})${ingredient === "da" ? ` rotate(${Math.round(u * 180 + o.k * 30)}deg)` : ""}`;
       }
       if (alive) requestAnimationFrame(frame2);
     };
+    requestAnimationFrame(frame2);
+  }
+  function sugarFx(fromEl) {
+    const slot = $("#cupslot"), board = SH.board, generation = brewFxGeneration;
+    if (!fromEl || !slot || !canShowBrewFx()) return;
+    const from = fromEl.getBoundingClientRect(), sx = from.left + from.width / 2, sy = from.top;
+    const el = h('<svg class="fx-sugar-stream" aria-hidden="true"><path class="syrup-shadow"/><path class="syrup-body"/><path class="syrup-gloss"/></svg>');
+    brewFxLayer().appendChild(el);
+    const start = performance.now();
+    const frame2 = (now) => {
+      const u = (now - start) / 950;
+      if (u >= 1 || generation !== brewFxGeneration || SH.board !== board || !slot.isConnected || !canShowBrewFx()) {
+        el.remove();
+        return;
+      }
+      const cup2 = slot.querySelector(".cup"), r = cup2 == null ? void 0 : cup2.getBoundingClientRect();
+      if (!r) {
+        el.remove();
+        return;
+      }
+      const tx = r.left + r.width / 2, ty = r.top + 9;
+      const bend = Math.min(sy, ty) - 38;
+      const path = `M${sx} ${sy} Q${(sx + tx) / 2} ${bend} ${tx} ${ty}`;
+      for (const p of el.children) {
+        p.setAttribute("d", path);
+        p.style.strokeDasharray = "1";
+        p.style.strokeDashoffset = `${1 - Math.min(1, u * 3)}`;
+        p.setAttribute("pathLength", "1");
+      }
+      el.style.opacity = `${Math.min(1, (1 - u) * 5)}`;
+      requestAnimationFrame(frame2);
+    };
+    sfx("drop");
     requestAnimationFrame(frame2);
   }
   function splash(cup2, color, atY) {
@@ -4767,9 +4815,11 @@
   on("top", () => updateBoard(true));
   on("flavor", () => updateBoard(true));
   on("staff:ingredient", (id) => {
+    updateBoard(true);
     if (!canShowBrewFx()) return;
-    dropFx($(`[data-act="supply"][data-id="${id}"]`) || $("#staffStrip .stf.work") || $("#sealer"), ITEMS[id].color);
-    sfx("plop");
+    const from = $(`[data-act="supply"][data-id="${id}"]`) || $("#staffStrip .stf.work") || $("#sealer");
+    if (id === "duong") sugarFx(from);
+    else dropFx(from, ITEMS[id].color, -1, id);
   });
   on("auto:pour", () => updateBoard(true));
   on("trash", () => updateBoard(true));
@@ -4844,7 +4894,7 @@
     }
     txt.style.display = "none";
     bar2.classList.add("on");
-    const sig = `${b.phase}|${b.tea}|${b.flavor}|${b.tops.join(",")}|${b.size}`;
+    const sig = `${b.phase}|${b.tea}|${b.flavor}|${b.tops.join(",")}|${b.size}|${!!b.iceAdded}|${!!b.sugarAdded}`;
     if (force || slot.dataset.sig !== sig) {
       slot.dataset.sig = sig;
       slot.innerHTML = cupHTML(b);
@@ -4900,6 +4950,7 @@
       return;
     }
     if (!root || !root.isConnected) return;
+    fitCounter();
     cntT -= dt;
     const front = frontCustomer();
     const bar2 = $("#patBar > i");

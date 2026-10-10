@@ -24,9 +24,12 @@
   }
   // A fixed app height also works when dvh is unsupported or the keyboard opens.
   function resize() {
-    document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+    var viewport = window.visualViewport;
+    var height = viewport ? Math.min(window.innerHeight, viewport.height) : window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', height + 'px');
   }
   resize();
   window.addEventListener('resize', resize);
   window.addEventListener('orientationchange', resize);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
 }());

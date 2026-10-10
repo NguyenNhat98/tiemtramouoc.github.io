@@ -69,11 +69,13 @@ export function setCupFill(cupEl, fill) {
   if (surf) { surf.setAttribute('cy', y.toFixed(1)); surf.style.opacity = fill > 0.02 ? 1 : 0; }
   const bubbles = cupEl.querySelector('.c-pour-bubbles');
   if (bubbles) bubbles.setAttribute('transform', `translate(0 ${y.toFixed(1)})`);
+  const ice = cupEl.querySelector('.c-ice');
+  if (ice) ice.setAttribute('transform', `translate(0 ${Math.min(78, y + 6).toFixed(1)})`);
 }
 
 /** opts: { fill, tea (màu), flavor (màu), tops: [màu...], lid: '' | 'drop' | 'on', straw: bool } */
 export function cupSvg(opts) {
-  const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = '', straw = false } = opts;
+  const { fill = 0, tea = null, flavor = null, tops = [], shown = [], lid = '', straw = false, ice = false, sugar = false } = opts;
   const id = `cup${cupUid++}`;
   const y = surfaceOf(tea ? fill : 0);
   // topping xếp từ đáy lên, mỗi hàng 5 viên so le
@@ -105,7 +107,9 @@ export function cupSvg(opts) {
       <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <linearGradient id="${id}tea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${teaTone(tea, 15)}"/><stop offset=".35" stop-color="${tea || '#fff'}"/><stop offset="1" stop-color="${teaTone(tea, -28)}"/></linearGradient></defs>
     <ellipse cx="39" cy="100" rx="25" ry="3.2" fill="rgba(60,35,10,.16)"/>
-    <g clip-path="url(#${id}c)">${liquid}${balls.join('')}</g>
+    <g clip-path="url(#${id}c)">${liquid}${sugar ? '<g class="c-sugar" fill="none" stroke="#cd8b25" stroke-width="2" opacity=".32"><path d="M33 31 Q52 47 29 64 Q24 76 46 91"/><path d="M43 34 Q26 49 48 67 Q53 80 34 94"/></g>' : ''}${balls.join('')}
+      ${ice ? `<g class="c-ice" transform="translate(0 ${Math.min(78, y + 6).toFixed(1)})">${[23, 36, 48].map((x, i) => `<g transform="translate(${x} ${i % 2 * 6})"><path d="M0 3 L6 0 L12 3 L6 6 Z" fill="#e6faff" stroke="#8bc6e7" stroke-width=".7"/><path d="M0 3 L6 6 L6 14 L0 11 Z" fill="#bce4f7" stroke="#8bc6e7" stroke-width=".7"/><path d="M6 6 L12 3 L12 11 L6 14 Z" fill="#8dcce9" stroke="#75b9db" stroke-width=".7"/><path d="M2 4 L5 5" stroke="#fff" stroke-width="1.2"/></g>`).join('')}</g>` : ''}
+    </g>
     ${strawSvg}
     <path d="M6 12 L16 96 Q39 103 62 96 L72 12" fill="rgba(235,245,252,.2)" stroke="rgba(121,88,64,.9)" stroke-width="2" stroke-linejoin="round"/>
     <path d="M12.5 20 L19 82" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".55"/>

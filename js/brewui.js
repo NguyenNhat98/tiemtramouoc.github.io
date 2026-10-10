@@ -30,7 +30,7 @@ export function cupHTML(c, { mini = false, stamp = true } = {}) {
   const fl = c.flavor ? ITEMS[c.flavor] : null;
   const fill = clamp(c.fill ?? 0, 0, 1.15);
   const lid = c.phase === 'ready' ? 'on' : c.phase === 'sealing' ? 'drop' : '';
-  const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), shown: shownFor(c), lid, straw: c.phase === 'ready' });
+  const svg = cupSvg({ fill, tea: tea ? tea.color : null, flavor: fl ? fl.color : null, tops: (c.tops || []).map((t) => ITEMS[t].color), shown: shownFor(c), lid, straw: c.phase === 'ready', ice: c.iceAdded, sugar: c.sugarAdded });
   const st = stamp && !mini && E.equipLevel('nhanDien') > 0 ? `<span class="c-stamp">${logoHTML(20)}</span>` : '';
   const seal = Math.round(Math.max(500, (c.sealMax || 1.2) * 1000 * 0.8));
   return `<div class="cup ${c.phase || ''}" style="width:${w * k}px;height:${hgt * k}px;--seal-ms:${seal}ms">${svg}${st}</div>`;
@@ -41,6 +41,14 @@ function orderCup(o) {
 
 /* ===== Dựng màn hình ===== */
 let root = null;
+let counterHeight = -1;
+function fitCounter() {
+  if (!root?.isConnected || SH.view !== 'counter') return;
+  const height = root.clientHeight - Math.max(0, parseFloat(getComputedStyle(root).paddingBottom) - 4);
+  if (height === counterHeight) return;
+  counterHeight = height;
+  root.style.setProperty('--counter-u', `${Math.max(1, (height - 32) / 100)}px`);
+}
 let brewFxGeneration = 0;
 function clearBrewFx() {
   brewFxGeneration++;
@@ -60,6 +68,7 @@ export function renderSell() {
   clearBrewFx();
   const view = $('#view');
   if (S.phase !== 'sell') return;
+  view.classList.toggle('counter-view', SH.view === 'counter');
   if (SH.view === 'lobby') return renderLobby(view);
   view.innerHTML = `<div class="sell" id="sell" data-night="${SH.hour >= 17 ? '1' : ''}">
     ${sellSceneHTML(SH.hour)}
@@ -102,6 +111,8 @@ export function renderSell() {
     <div class="stream" id="stream" aria-hidden="true"><span class="st-jet"><i class="st-gloss"></i></span><span class="st-impact"><span class="st-spl"><i></i><i></i><i></i><i></i><i></i></span><span class="st-ring"></span><span class="st-ring r2"></span></span></div>
   </div>`;
   root = $('#sell');
+  counterHeight = -1;
+  fitCounter();
   fillTrays();
   fillFlavors();
   refreshQueue();
@@ -285,7 +296,7 @@ function doServe() {
 }
 
 /* ===== Hiệu ứng bước ===== */
-function dropFx(fromEl, color, idx = -1) {
+function dropFx(fromEl, color, idx = -1, ingredient = '') {
   sfx('drop');
   const slot = $('#cupslot');
   const reveal = (count) => {
@@ -300,7 +311,7 @@ function dropFx(fromEl, color, idx = -1) {
   const balls = [];
   for (let k = 0; k < n; k++) {
     const sx = a.left + a.width / 2 + rand(-10, 10), sy = a.top + a.height / 2;
-    const el = h(`<div class="fx-ball" style="left:${sx - 7}px;top:${sy - 7}px;background-color:${color};opacity:0"></div>`);
+    const el = h(`<div class="${ingredient === 'da' ? 'fx-ice' : 'fx-ball'}" style="left:${sx - 7}px;top:${sy - 7}px;${ingredient === 'da' ? '' : `background-color:${color};`}opacity:0">${ingredient === 'da' ? '🧊' : ''}</div>`);
     brewFxLayer().appendChild(el);
     balls.push({ el, k, sx, sy, jit: rand(-9, 9), rise: 34 + rand(0, 22), done: false });
   }
@@ -343,11 +354,33 @@ function dropFx(fromEl, color, idx = -1) {
         sc = 1 - 0.25 * w; op = w > 0.85 ? 1 - (w - 0.85) / 0.15 : 1;
       }
       o.el.style.opacity = op;
-      o.el.style.transform = `translate(${(x - o.sx).toFixed(1)}px,${(y - o.sy).toFixed(1)}px) scale(${sc.toFixed(2)})`;
+      o.el.style.transform = `translate(${(x - o.sx).toFixed(1)}px,${(y - o.sy).toFixed(1)}px) scale(${sc.toFixed(2)})${ingredient === 'da' ? ` rotate(${Math.round(u * 180 + o.k * 30)}deg)` : ''}`;
     }
     if (alive) requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
+}
+/** Amber syrup flows in a ribbon, rather than bouncing like tapioca pearls. */
+function sugarFx(fromEl) {
+  const slot = $('#cupslot'), board = SH.board, generation = brewFxGeneration;
+  if (!fromEl || !slot || !canShowBrewFx()) return;
+  const from = fromEl.getBoundingClientRect(), sx = from.left + from.width / 2, sy = from.top;
+  const el = h('<svg class="fx-sugar-stream" aria-hidden="true"><path class="syrup-shadow"/><path class="syrup-body"/><path class="syrup-gloss"/></svg>');
+  brewFxLayer().appendChild(el);
+  const start = performance.now();
+  const frame = now => {
+    const u = (now - start) / 950;
+    if (u >= 1 || generation !== brewFxGeneration || SH.board !== board || !slot.isConnected || !canShowBrewFx()) { el.remove(); return; }
+    const cup = slot.querySelector('.cup'), r = cup?.getBoundingClientRect();
+    if (!r) { el.remove(); return; }
+    const tx = r.left + r.width / 2, ty = r.top + 9;
+    const bend = Math.min(sy, ty) - 38;
+    const path = `M${sx} ${sy} Q${(sx + tx) / 2} ${bend} ${tx} ${ty}`;
+    for (const p of el.children) { p.setAttribute('d', path); p.style.strokeDasharray = '1'; p.style.strokeDashoffset = `${1 - Math.min(1, u * 3)}`; p.setAttribute('pathLength', '1'); }
+    el.style.opacity = `${Math.min(1, (1 - u) * 5)}`;
+    requestAnimationFrame(frame);
+  };
+  sfx('drop'); requestAnimationFrame(frame);
 }
 /** Vòng sóng + giọt bắn tại miệng ly. */
 function splash(cup, color, atY) {
@@ -391,7 +424,12 @@ on('seal:start', () => { updateBoard(true); sealAnim(); });
 on('seal:done', () => { sfx('ding'); updateBoard(true); const cs = $('#cupslot'); if (cs) { fxSpark({ x: cs.getBoundingClientRect().left + cs.offsetWidth / 2, y: cs.getBoundingClientRect().top + cs.offsetHeight * 0.35 }, 6); cs.classList.remove('plop'); void cs.offsetWidth; cs.classList.add('plop'); } const s = $('#sealer'); s?.classList.add('ding'); setTimeout(() => s?.classList.remove('ding'), 600); });
 on('top', () => updateBoard(true));
 on('flavor', () => updateBoard(true));
-on('staff:ingredient', (id) => { if (!canShowBrewFx()) return; dropFx($(`[data-act="supply"][data-id="${id}"]`) || $('#staffStrip .stf.work') || $('#sealer'), ITEMS[id].color); sfx('plop'); });
+on('staff:ingredient', (id) => {
+  updateBoard(true);
+  if (!canShowBrewFx()) return;
+  const from = $(`[data-act="supply"][data-id="${id}"]`) || $('#staffStrip .stf.work') || $('#sealer');
+  if (id === 'duong') sugarFx(from); else dropFx(from, ITEMS[id].color, -1, id);
+});
 on('auto:pour', () => updateBoard(true));
 on('trash', () => updateBoard(true));
 on('queue', () => { if (SH.on && S.phase === 'sell' && SH.view === 'counter') { refreshQueue(); refreshCustomer(); } });
@@ -434,7 +472,7 @@ function updateBoard(force) {
   if (!b) { slot.innerHTML = ''; txt.style.display = ''; bar.classList.remove('on'); return; }
   txt.style.display = 'none';
   bar.classList.add('on');
-  const sig = `${b.phase}|${b.tea}|${b.flavor}|${b.tops.join(',')}|${b.size}`;
+  const sig = `${b.phase}|${b.tea}|${b.flavor}|${b.tops.join(',')}|${b.size}|${!!b.iceAdded}|${!!b.sugarAdded}`;
   if (force || slot.dataset.sig !== sig) {
     slot.dataset.sig = sig;
     slot.innerHTML = cupHTML(b);
@@ -482,6 +520,7 @@ export function frameSell(dt, force) {
   updateClock();
   if (SH.view === 'lobby') { lobbyFrame(); return; }
   if (!root || !root.isConnected) return;
+  fitCounter();
   cntT -= dt;
   const front = G.frontCustomer();
   const bar = $('#patBar > i');
