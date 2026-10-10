@@ -458,7 +458,7 @@
     { id: "phaChe", name: "L\xFD Gia Huy", role: "Nh\xE2n vi\xEAn pha ch\u1EBF", icon: "\u{1F98A}", hire: 2e6, wage: 2e5, sec: 1.5, err: 0.08, desc: "Nh\u1EADn tr\u1ECDn \u0111\u01A1n c\u1EE7a kh\xE1ch ch\u1EDD l\xE2u nh\u1EA5t v\xE0 pha h\u1EBFt c\xE1c ly khi qu\u1EA7y c\xF3 t\u1EEB 2 kh\xE1ch tr\u1EDF l\xEAn. H\u01B0\u1EDFng to\xE0n b\u1ED9 ti\u1EC1n tip khi k\xEDch ho\u1EA1t. L\u01B0\u01A1ng 200k/ng\xE0y + 40k/h sau 22h. T\u1ED1c \u0111\u1ED9: 1500ms/ly.", need: { day: 30 }, kind: "auto", minQueue: 2 },
     { id: "online", name: "Ho\xE0ng Minh", role: "Nh\xE2n vi\xEAn \u0111\u01A1n online", icon: "\u{1F98A}", hire: 15e5, wage: 25e4, sec: 1, err: 0.01, desc: "Ch\u1EC9 l\xE0m \u0111\u01A1n online: nh\u1EADn tr\u1ECDn \u0111\u01A1n v\xE0 pha h\u1EBFt c\xE1c ly. \u0110\xF4i khi l\xE0m h\u1ECFng ly 1%, h\u1ECFng th\xEC \u0111\u1ED5 b\u1ECF l\xE0m l\u1EA1i. L\u01B0\u01A1ng 250k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 1000ms/ly.", need: { online: true }, kind: "online" },
     { id: "quanLy", name: "\u0110inh Nh\xE2n", role: "Qu\u1EA3n l\xFD t\u1EADp s\u1EF1 (Qu\u1EA3n gia)", icon: "\u{1F98A}", hire: 75e4, wage: 2e5, sec: 5.5, err: 0.05, desc: "Nh\xE2n vi\xEAn r\xF3t tr\xE0, h\u01B0\u01A1ng, \u0111\u01B0\u1EDDng, \u0111\xE1, m\xFAc topping. B\u1EA1n ch\u1EC9 l\u1EA5y ly v\xE0 d\xE1n n\u1EAFp. 5% sai bill h\u1ECFng \u0111\u1ED5 b\u1ECF. \u0110\xF4i khi r\xF3t tr\xE0 kh\xF4ng \u0111\u1EA7y, ch\u1EE7 ti\u1EC7m ph\u1EA3i r\xF3t b\xF9. Gi\xFAp t\u0103ng gi\xE1 an to\xE0n (Qu\u1EA3n Gia). L\u01B0\u01A1ng 200k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 280ms.", excl: ["thuViec"], kind: "manager", safePrice: true },
-    { id: "genZ", name: "Nh\xE2n vi\xEAn Gen Z", role: "Nh\xE2n vi\xEAn Gen Z", icon: "\u{1F98A}", hire: 1e6, wage: 275e3, sec: 0.2, err: 0.12, desc: "Pha ch\u1EBF si\xEAu t\u1ED1c t\u1EEB A-Z. M\u1ED7i khi l\xE0m 100 ly s\u1EBD d\u1ED7i 10s, ch\u1EE7 ti\u1EC7m ph\u1EA3i d\u1ED7 d\xE0nh n\u1EBFu kh\xF4ng s\u1EBD ngh\u1EC9 vi\u1EC7c. M\u1ED7i ng\xE0y \u0111\xE1 bill 1 l\u1EA7n, n\u1EBFu b\u1EAFt \u0111\u01B0\u1EE3c s\u1EBD tr\u1EA3 l\u1EA1i ti\u1EC1n bill. L\u01B0\u01A1ng 275k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 200ms.", excl: ["thuViec"], kind: "auto", minQueue: 1 },
+    { id: "genZ", name: "Nh\xE2n vi\xEAn Gen Z", role: "Nh\xE2n vi\xEAn Gen Z", icon: "\u{1F98A}", hire: 1e6, wage: 275e3, sec: 0.2, err: 0.12, desc: "Pha ch\u1EBF si\xEAu t\u1ED1c t\u1EEB A-Z. M\u1ED7i khi l\xE0m 100 ly s\u1EBD d\u1ED7i 10s, ch\u1EE7 ti\u1EC7m ph\u1EA3i d\u1ED7 d\xE0nh n\u1EBFu kh\xF4ng s\u1EBD ngh\u1EC9 vi\u1EC7c. M\u1ED7i ng\xE0y \u0111\xE1 bill 1 l\u1EA7n, n\u1EBFu b\u1EAFt \u0111\u01B0\u1EE3c s\u1EBD tr\u1EA3 l\u1EA1i ti\u1EC1n bill. L\u01B0\u01A1ng 275k/ng\xE0y. T\u1ED1c \u0111\u1ED9: 200ms/thao t\xE1c; m\u1ED7i \u0111\u01A1n \u0111i qua c\xE1c b\u01B0\u1EDBc l\u1EA5y c\u1ED1c, r\xF3t tr\xE0, th\xEAm nguy\xEAn li\u1EC7u, \u0111\xF3ng n\u1EAFp v\xE0 giao ly.", excl: ["thuViec"], kind: "auto", minQueue: 1 },
     { id: "diCho", name: "Nh\xE2n vi\xEAn \u0111i ch\u1EE3", role: "Nh\xE2n vi\xEAn \u0111i ch\u1EE3", icon: "\u{1F9FA}", hire: 18e5, wage: 18e4, sec: 99, err: 0, desc: "Khi h\u1EBFt nguy\xEAn li\u1EC7u (tr\xE0 s\u1EEFa, topping, ly, \u0111\xE1\u2026), t\u1EF1 ch\u1EA1y \u0111i ch\u1EE3 mua v\u1EC1 b\xE1n ngay trong ca. N\u1EBFu \u0111i ch\u1EE3 nhi\u1EC1u l\u1EA7n trong ng\xE0y c\xF3 th\u1EC3 khai gian h\xF3a \u0111\u01A1n \u0111\xFAt t\xFAi ri\xEAng, ho\u1EB7c mua tr\xFAng \u0111\u1ED3 h\u1EBFt h\u1EA1n g\xE2y ng\u1ED9 \u0111\u1ED9c. L\u01B0\u01A1ng 180k/ng\xE0y.", need: { full: true }, kind: "buyer" },
     { id: "svDem", name: "Sinh vi\xEAn cu\u1ED1i th\xE1ng", role: "Sinh vi\xEAn cu\u1ED1i th\xE1ng", icon: "\u{1F98A}", hire: 8e5, wage: 3e5, sec: 3.6, err: 0.1, desc: "Ch\u1EC9 l\xE0m ca \u0111\xEAm 22h\u20136h: nh\u1EADn tr\u1ECDn \u0111\u01A1n v\xE0 pha h\u1EBFt c\xE1c ly \u0111ang ch\u1EDD. C\xF3 th\u1EC3 nh\u1EA7m size. Sau 2h s\xE1ng t\xFAng ti\u1EC1n mu\u1ED1n b\xE1n trang b\u1ECB c\u1EA7n ch\u1EE7 ti\u1EC7m ng\u0103n c\u1EA3n. L\u01B0\u01A1ng 300k/ch\u1EC9 l\xE0m ca \u0111\xEAm.", excl: ["thuViec"], kind: "night" },
     { id: "meKetTinh", name: "Nh\xE2n vi\xEAn Me k\u1EBFt tinh", role: "Marketing", icon: "\u{1F98A}", hire: 15e5, wage: 35e4, sec: 99, err: 0, desc: "T\u1EF1 \u0111\u1ED9ng quay & \u0111\u0103ng video TikTok viral li\xEAn t\u1EE5c cho qu\xE1n thay v\xEC ch\u1EE7 qu\xE1n ph\u1EA3i t\u1EF1 quay, thu h\xFAt followers v\xE0 buff m\u1EA1nh l\u01B0\u1EE3ng kh\xE1ch gh\xE9 qu\xE1n (+45%). Gi\u1EA3m 20% th\u1EDDi gian pha c\u1EE7a to\xE0n b\u1ED9 nh\xE2n vi\xEAn. T\u1EF1 \u0111\u1ED9ng ph\u1EA3n h\u1ED3i m\u1ECDi \u0111\xE1nh gi\xE1 & n\xE2ng sao. T\u1EF1 \u0111\u1ED9ng \u0111\xF3ng thu\u1EBF duy tr\xEC buff 72h li\xEAn t\u1EE5c. L\u01B0\u01A1ng 350k/ng\xE0y.", kind: "marketing", fxTraffic: 0.45 },
@@ -1986,6 +1986,7 @@
     sealCup: () => sealCup,
     selectCustomer: () => selectCustomer,
     serve: () => serve,
+    staffJobPreview: () => staffJobPreview,
     startPour: () => startPour,
     startShift: () => startShift,
     stopPour: () => stopPour,
@@ -3392,12 +3393,14 @@
   function pickCup(size) {
     if (!SH.on) return "Ch\u01B0a m\u1EDF c\u1EEDa";
     if (SH.board) return "\u0110ang c\xF3 ly tr\xEAn th\u1EDBt";
+    const customer = frontCustomer();
+    if (customer && SH.jobs.some((job) => job.cid === customer.id)) return "Nh\xE2n vi\xEAn \u0111ang l\xE0m \u0111\u01A1n n\xE0y. Ch\u1ECDn kh\xE1ch kh\xE1c \u0111\u1EC3 pha song song.";
     const blk = blocked("cup");
     if (blk) return blk;
     const cupId = size === "L" ? "lyL" : "lyM";
     if (stockQty(cupId) < 1) return `H\u1EBFt ly size ${size === "L" ? "L" : "M"} r\u1ED3i!`;
     take(cupId, 1);
-    SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: "cup", sealT: 0, pouring: false, spill: 0, auto: null };
+    SH.board = { size, cid: customer == null ? void 0 : customer.id, tea: null, fill: 0, flavor: null, tops: [], phase: "cup", sealT: 0, pouring: false, spill: 0, auto: null };
     const st = counterAssistant();
     if (st) {
       const c = frontCustomer();
@@ -3692,12 +3695,16 @@
         const front = frontCustomer();
         let cand = null;
         if (st.kind === "online") cand = free.find((c) => c.online);
-        else if (SH.queue.length >= (st.minQueue || 1)) cand = free.filter((c) => !c.online && !(SH.board && c === front)).sort((x, y) => x.p - y.p)[0];
+        else if (SH.queue.length >= (st.minQueue || 1)) cand = free.filter((c) => {
+          var _a, _b, _c;
+          return !c.online && !(SH.board && c.id === ((_c = (_b = SH.board.cid) != null ? _b : (_a = SH.board.auto) == null ? void 0 : _a.cid) != null ? _c : front == null ? void 0 : front.id));
+        }).sort((x, y) => x.p - y.p)[0];
         if (cand) {
           const need = needs(cand.order);
           if (!canTake(need)) continue;
-          const total = st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 5e-3));
-          SH.jobs.push({ by: key, cid: cand.id, t: total, total, stage: "\u0111ang pha tr\u1ECDn \u0111\u01A1n" });
+          const steps = key === "genZ" ? ["cup", "pour", ...cand.order.flavor ? ["flavor"] : [], "sugar", "ice", ...cand.order.tops.map((id) => "top:" + id), "seal", "serve"] : null;
+          const total = st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 5e-3)) * ((steps == null ? void 0 : steps.length) || 1);
+          SH.jobs.push({ by: key, cid: cand.id, t: total, total, steps });
           if (key === "genZ") emit("staff:job", { cid: cand.id, by: key });
           for (const [id, n] of need) take(id, n);
         }
@@ -3725,6 +3732,22 @@
   }
   var needs = (o) => [[o.size === "L" ? "lyL" : "lyM", 1], [o.tea, 1], ...o.flavor ? [[o.flavor, 1]] : [], ...o.tops.map((t) => [t, 1]), ["da", 1], ["duong", 1]];
   var canTake = (list) => list.every(([id, n]) => stockQty(id) >= n);
+  function staffJobPreview(job, customer) {
+    var _a;
+    if (!job || !customer) return null;
+    const o = customer.order;
+    const steps = job.steps || ["cup", "pour", ...o.flavor ? ["flavor"] : [], "sugar", "ice", ...o.tops.map((id) => "top:" + id), "seal", "serve"];
+    const total = Math.max(1e-3, job.total || ((_a = STAFF.find((st) => st.id === job.by)) == null ? void 0 : _a.sec) || 1);
+    const progress = clamp(1 - job.t / total, 0, 1);
+    const index = Math.min(steps.length - 1, Math.floor(progress * steps.length));
+    const step = steps[index], local = progress * steps.length - index;
+    const done = steps.slice(0, index);
+    const labels = { cup: "L\u1EA5y c\u1ED1c " + o.size, pour: "R\xF3t " + ITEMS[o.tea].name, flavor: o.flavor ? "Th\xEAm h\u01B0\u01A1ng " + ITEMS[o.flavor].name : "Th\xEAm h\u01B0\u01A1ng", sugar: "Th\xEAm \u0111\u01B0\u1EDDng", ice: "Th\xEAm \u0111\xE1", seal: "\u0110\xF3ng n\u1EAFp", serve: "Giao ly cho kh\xE1ch" };
+    const tops = done.filter((s) => s.startsWith("top:")).map((s) => s.slice(4));
+    if (step.startsWith("top:") && local >= 0.5) tops.push(step.slice(4));
+    const cup2 = { size: o.size, tea: index > 0 ? o.tea : null, fill: step === "pour" ? local * 0.95 : index > 1 ? 0.95 : 0, flavor: done.includes("flavor") || step === "flavor" && local >= 0.5 ? o.flavor : null, tops, iceAdded: done.includes("ice") || step === "ice" && local >= 0.5, sugarAdded: done.includes("sugar") || step === "sugar" && local >= 0.5, phase: step === "seal" ? "sealing" : step === "serve" ? "ready" : "cup", sealMax: total / steps.length };
+    return { cup: cup2, step, index, count: steps.length, progress, label: labels[step] || "Th\xEAm " + ITEMS[step.slice(4)].name };
+  }
   function finishJob(job, st, b) {
     const c = SH.queue.find((x) => x.id === job.cid);
     if (!c) return;
@@ -3770,7 +3793,7 @@
     }
     if (!bd.auto && !bd.autoDone) {
       const st2 = counterAssistant();
-      const c2 = frontCustomer();
+      const c2 = SH.queue.find((c3) => c3.id === bd.cid) || frontCustomer();
       if (st2 && c2) bd.auto = { cid: c2.id, t: 0.6, st: st2, topsLeft: st2.kind === "manager" ? [...c2.order.tops] : [] };
     }
     const a = bd.auto;
@@ -4290,7 +4313,8 @@
     const height = root.clientHeight - Math.max(0, parseFloat(getComputedStyle(root).paddingBottom) - 4);
     if (height === counterHeight) return;
     counterHeight = height;
-    root.style.setProperty("--counter-u", `${Math.max(1, (height - 32) / 100)}px`);
+    const unit = (height - 32) / 100;
+    root.style.setProperty("--counter-u", `${Math.max(1, unit * 13 >= 80 ? unit : (height - 32 - 80) / 87)}px`);
   }
   var brewFxGeneration = 0;
   function clearBrewFx() {
@@ -4403,7 +4427,6 @@
       el.style.setProperty("--p", s.p.toFixed(0));
       el.dataset.tip = s.txt;
     }
-    updateStaffJobs();
   }
   function updateStaffJobs() {
     const row2 = $("#qrow");
@@ -4425,12 +4448,58 @@
       status.style.setProperty("--job-progress", `${clamp((1 - job.t / total) * 100, 4, 100)}%`);
       status.setAttribute("aria-label", `Gen Z \u0111ang pha \u0111\u01A1n cho kh\xE1ch, c\xF2n ${Math.ceil(job.t * 10) / 10} gi\xE2y`);
     }
+    const selected = frontCustomer();
+    const selectedJob = SH.jobs.find((j) => j.cid === (selected == null ? void 0 : selected.id) && j.by === "genZ");
+    const label = $("#cbub .genz-order-status");
+    if (label && selectedJob) label.textContent = "\u2728 Gen Z \xB7 " + staffJobPreview(selectedJob, selected).label;
+    for (const inspector of $$(".staff-job-inspector")) {
+      if (inspector.dataset.finished) continue;
+      const cid2 = Number(inspector.dataset.cid), customer = SH.queue.find((c) => c.id === cid2);
+      const job = SH.jobs.find((j) => j.cid === cid2 && j.by === "genZ");
+      if (!job || !customer) {
+        $("[data-job-status]", inspector).textContent = "\u0110\u01A1n t\u1EF1 \u0111\u1ED9ng \u0111\xE3 d\u1EEBng";
+        continue;
+      }
+      renderStaffPreview(inspector, staffJobPreview(job, customer));
+    }
   }
+  function renderStaffPreview(inspector, preview) {
+    var _a;
+    const slot = $(".staff-order-cup", inspector), b = preview.cup;
+    const signature = `${preview.index}|${b.tea}|${b.flavor}|${b.tops.join(",")}|${b.iceAdded}|${b.sugarAdded}|${b.phase}`;
+    slot.dataset.step = preview.step;
+    slot.style.setProperty("--tea", ((_a = ITEMS[b.tea]) == null ? void 0 : _a.color) || "#f4c68a");
+    if (slot.dataset.signature !== signature) {
+      slot.dataset.signature = signature;
+      slot.innerHTML = cupHTML(b) + '<span class="staff-preview-stream"></span><span class="staff-preview-drop">\u2726</span>';
+    }
+    setCupFill($(".cup", slot), b.fill);
+    $("[data-job-status]", inspector).textContent = `${preview.index + 1}/${preview.count} \xB7 ${preview.label}`;
+    $("[data-job-progress]", inspector).style.width = `${preview.progress * 100}%`;
+  }
+  function openStaffJob(cid2) {
+    const customer = SH.queue.find((c) => c.id === cid2), job = SH.jobs.find((j) => j.cid === cid2 && j.by === "genZ");
+    if (!customer || !job) return;
+    const modal = openModal({ id: "staff-job-" + cid2, cls: "small", title: "Chu tr\xECnh pha c\u1EE7a Gen Z", html: `<div class="staff-job-inspector" data-cid="${cid2}"><h3 class="m-title">\u2728 Gen Z \u0111ang pha cho ${esc(customer.tag)}</h3><p class="m-text">${esc(customer.text)}</p><div class="staff-preview-board"><div class="staff-order-cup"></div><span class="staff-preview-customer">${customerArt(customer.key) || customer.avatar}</span></div><b class="staff-job-status" data-job-status></b><div class="bar staff-job-progress"><i data-job-progress></i></div><p class="m-text muted">\u0110\xE2y l\xE0 ly ri\xEAng c\u1EE7a nh\xE2n vi\xEAn. B\u1EA1n c\xF3 th\u1EC3 \u0111\xF3ng c\u1EEDa s\u1ED5 \u0111\u1EC3 ti\u1EBFp t\u1EE5c pha cho kh\xE1ch kh\xE1c.</p></div>` });
+    renderStaffPreview($(".staff-job-inspector", modal.body), staffJobPreview(job, customer));
+  }
+  on("served", (result) => {
+    for (const inspector of $$(".staff-job-inspector")) {
+      if (Number(inspector.dataset.cid) !== result.cust.id) continue;
+      inspector.dataset.finished = "1";
+      const slot = $(".staff-order-cup", inspector), order = result.cust.order;
+      slot.innerHTML = cupHTML({ ...order, fill: 1, phase: "ready", iceAdded: true, sugarAdded: true });
+      slot.dataset.step = "done";
+      $("[data-job-status]", inspector).textContent = `\u2705 \u0110\xE3 giao ly \xB7 ${result.stars} sao \xB7 +${fmtK(result.pay + result.tip)}`;
+      $("[data-job-progress]", inspector).style.width = "100%";
+    }
+  });
   function openUpgradeMenu() {
     const rows = EQUIP.map((eq) => {
       const level = equipLevel(eq.id), tier = eq.tiers[Math.max(0, Math.min(level, eq.tiers.length) - 1)];
       const next = eq.tiers[Math.min(level, eq.tiers.length - 1)];
-      return `<button class="upgrade-item" data-act="equipment" data-id="${eq.id}"><span class="upgrade-icon">${eq.icon}</span><span><b>${esc(eq.name)} \xB7 C${level}</b><small>${level < eq.tiers.length - 1 ? `Hi\u1EC7n t\u1EA1i: ${esc(tier.d)} \xB7 Ti\u1EBFp theo: ${esc(next.d)}` : esc(tier.d)}</small></span><span class="upgrade-arrow">\u203A</span></button>`;
+      const current = level ? tier.d : "Ch\u01B0a mua";
+      return `<button class="upgrade-item" data-act="equipment" data-id="${eq.id}"><span class="upgrade-icon">${eq.icon}</span><span><b>${esc(eq.name)} \xB7 C${level}</b><small>${level < eq.tiers.length ? `Hi\u1EC7n t\u1EA1i: ${esc(current)} \xB7 Ti\u1EBFp theo: ${esc(next.d)}` : esc(current)}</small></span><span class="upgrade-arrow">\u203A</span></button>`;
     }).join("");
     const modal = openModal({ id: "counter-upgrades", cls: "small counter-upgrade-modal", title: "\u{1F6E0}\uFE0F Trang b\u1ECB & n\xE2ng c\u1EA5p", html: `<div class="upgrade-list">${rows}</div>` });
     bindActions(modal.body, { equipment: (button) => sellActs.equipment(button) });
@@ -4474,9 +4543,10 @@
         if (err) toast(err, "err");
         return;
       }
-      const tier = eq.tiers[Math.min(equipLevel(eq.id), eq.tiers.length) - 1];
+      const level = equipLevel(eq.id);
+      const tier = eq.tiers[Math.max(0, Math.min(level, eq.tiers.length) - 1)];
       const extra = eq.id === "tuLanh" ? "\xC1p d\u1EE5ng cho l\xF4 nh\u1EADp m\u1EDBi; h\u1EA1n c\u1EE7a l\xF4 \u0111\xE3 nh\u1EADp gi\u1EEF nguy\xEAn." : eq.id === "tablet" ? "C\u1EA7n m\u1EDF \u1EE9ng d\u1EE5ng trong N\xE2ng c\u1EA5p \u203A Online v\xE0 \u0111\u1EA1t \u0111i\u1EC1u ki\u1EC7n nh\u1EADn \u0111\u01A1n." : eq.id === "giayPhep" ? "Khi \u0111o\xE0n ki\u1EC3m tra \u0111\u1EBFn, ch\u1EA1m Xu\u1EA5t tr\xECnh gi\u1EA5y ph\xE9p \u0111\u1EC3 x\xE1c nh\u1EADn." : eq.id === "attp" ? "V\u1EABn c\u1EA7n d\u1ECDn b\xE0n v\xE0 d\xF9ng nguy\xEAn li\u1EC7u c\xF2n h\u1EA1n; ch\u1EE9ng nh\u1EADn kh\xF4ng thay vi\u1EC7c gi\u1EEF v\u1EC7 sinh." : eq.id === "mayPhat" ? ((_c = (_b = SH.ev) == null ? void 0 : _b.mode) == null ? void 0 : _c.startsWith("gen")) ? "\u{1F50C} \u0110ang c\u1EA5p \u0111i\u1EC7n d\u1EF1 ph\xF2ng." : "\u0110i\u1EC7n l\u01B0\u1EDBi \u0111ang ho\u1EA1t \u0111\u1ED9ng. Khi m\u1EA5t \u0111i\u1EC7n, x\xE1c nh\u1EADn b\u1EADt m\xE1y ph\xE1t." : "Hi\u1EC7u qu\u1EA3 c\u1EA5p hi\u1EC7n t\u1EA1i \u0111\u01B0\u1EE3c \xE1p d\u1EE5ng trong ca b\xE1n h\xE0ng.";
-      openModal({ id: "equipment", cls: "small", title: eq.name, html: `<h3 class="m-title">${eq.icon} ${esc(eq.name)} \xB7 C${equipLevel(eq.id)}</h3><p class="m-text"><b>${esc(tier.n)}</b><br>${esc(tier.d)}</p><p class="m-text">${extra}</p>` });
+      openModal({ id: "equipment", cls: "small", title: eq.name, html: `<h3 class="m-title">${eq.icon} ${esc(eq.name)} \xB7 C${level}</h3><p class="m-text"><b>${level ? esc(tier.n) : "Ch\u01B0a mua"}</b><br>${level ? esc(tier.d) : "Khi mua c\u1EA5p \u0111\u1EA7u: " + esc(tier.d)}</p><p class="m-text">${level ? extra : "Mua thi\u1EBFt b\u1ECB trong Ph\xE1t tri\u1EC3n \u203A N\xE2ng c\u1EA5p khi chu\u1EA9n b\u1ECB ca b\xE1n h\xE0ng."}</p>` });
     },
     cup: (t) => {
       const e = pickCup(t.dataset.size);
@@ -4561,7 +4631,11 @@
       SH.view = "lobby";
       markDirty("view");
     },
-    sel: (t) => selectCustomer(+t.dataset.cid)
+    sel: (t) => {
+      const cid2 = +t.dataset.cid;
+      if (SH.jobs.some((j) => j.cid === cid2 && j.by === "genZ")) openStaffJob(cid2);
+      else selectCustomer(cid2);
+    }
   };
   var serveHold = false;
   function tween(ms, step, done) {
@@ -4849,6 +4923,22 @@
   });
   on("top", () => updateBoard(true));
   on("flavor", () => updateBoard(true));
+  on("staff:flavor", (id) => {
+    updateBoard(true);
+    if (canShowBrewFx()) dropFx($(`[data-f="${id}"]`) || $("#staffStrip .stf.work"), ITEMS[id].color);
+  });
+  on("staff:top", ({ id }) => {
+    const board = SH.board;
+    if (!board) return;
+    if (topShownBoard !== board) {
+      topShown = {};
+      topShownBoard = board;
+    }
+    const idx = board.tops.indexOf(id);
+    topShown[idx] = 0;
+    updateBoard(true);
+    dropFx($(`[data-t="${id}"]`) || $("#staffStrip .stf.work"), ITEMS[id].color, idx);
+  });
   on("staff:ingredient", (id) => {
     updateBoard(true);
     if (!canShowBrewFx()) return;
@@ -4993,6 +5083,8 @@
     }
     if (!root || !root.isConnected) return;
     fitCounter();
+    updateStaffJobs();
+    updateStaffJobs();
     cntT -= dt;
     const front = frontCustomer();
     const bar2 = $("#patBar > i");

@@ -155,7 +155,9 @@
     G.updateShift(.1); assert(SH.onlineQ.length===0 && SH.jobs.some(j=>j.by==='online'), 'accept online');
   });
   test('Gen Z giữ một bill, thu hồi đúng một lần', () => {
-    stocked(); S.staff.genZ={shifts:0}; G.updateShift(.05); G.updateShift(.25);
+    stocked(); S.staff.genZ={shifts:0}; G.updateShift(.05);
+    const job=SH.jobs.find(j=>j.by==='genZ'); assert(job && job.steps.length>=6, 'full work cycle');
+    G.updateShift(job.total+.01);
     const amount=SH.staffT.genZ.hiddenBill, cash=S.money;
     assert(amount>0 && G.comfortStaff('genZ') && S.money===cash+amount, 'refund');
     assert(!G.comfortStaff('genZ') && S.money===cash+amount, 'double refund');

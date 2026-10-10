@@ -47,7 +47,8 @@ function fitCounter() {
   const height = root.clientHeight - Math.max(0, parseFloat(getComputedStyle(root).paddingBottom) - 4);
   if (height === counterHeight) return;
   counterHeight = height;
-  root.style.setProperty('--counter-u', `${Math.max(1, (height - 32) / 100)}px`);
+  const unit = (height - 32) / 100;
+  root.style.setProperty('--counter-u', `${Math.max(1, unit * 13 >= 80 ? unit : (height - 32 - 80) / 87)}px`);
 }
 let brewFxGeneration = 0;
 function clearBrewFx() {
@@ -144,7 +145,6 @@ function updateStaffStrip() {
     el.style.setProperty('--p', s.p.toFixed(0));
     el.dataset.tip = s.txt;
   }
-  updateStaffJobs();
 }
 function updateStaffJobs() {
   const row = $('#qrow'); if (!row) return;
@@ -158,12 +158,51 @@ function updateStaffJobs() {
     status.style.setProperty('--job-progress', `${clamp((1 - job.t / total) * 100, 4, 100)}%`);
     status.setAttribute('aria-label', `Gen Z đang pha đơn cho khách, còn ${Math.ceil(job.t * 10) / 10} giây`);
   }
+  const selected = G.frontCustomer();
+  const selectedJob = SH.jobs.find(j => j.cid === selected?.id && j.by === 'genZ');
+  const label = $('#cbub .genz-order-status');
+  if (label && selectedJob) label.textContent = '✨ Gen Z · ' + G.staffJobPreview(selectedJob, selected).label;
+  for (const inspector of $$('.staff-job-inspector')) {
+    if (inspector.dataset.finished) continue;
+    const cid = Number(inspector.dataset.cid), customer = SH.queue.find(c => c.id === cid);
+    const job = SH.jobs.find(j => j.cid === cid && j.by === 'genZ');
+    if (!job || !customer) { $('[data-job-status]', inspector).textContent = 'Đơn tự động đã dừng'; continue; }
+    renderStaffPreview(inspector, G.staffJobPreview(job, customer));
+  }
 }
+function renderStaffPreview(inspector, preview) {
+  const slot = $('.staff-order-cup', inspector), b = preview.cup;
+  const signature = `${preview.index}|${b.tea}|${b.flavor}|${b.tops.join(',')}|${b.iceAdded}|${b.sugarAdded}|${b.phase}`;
+  slot.dataset.step = preview.step;
+  slot.style.setProperty('--tea', ITEMS[b.tea]?.color || '#f4c68a');
+  if (slot.dataset.signature !== signature) { slot.dataset.signature = signature; slot.innerHTML = cupHTML(b) + '<span class="staff-preview-stream"></span><span class="staff-preview-drop">✦</span>'; }
+  setCupFill($('.cup', slot), b.fill);
+  $('[data-job-status]', inspector).textContent = `${preview.index + 1}/${preview.count} · ${preview.label}`;
+  $('[data-job-progress]', inspector).style.width = `${preview.progress * 100}%`;
+}
+function openStaffJob(cid) {
+  const customer = SH.queue.find(c => c.id === cid), job = SH.jobs.find(j => j.cid === cid && j.by === 'genZ');
+  if (!customer || !job) return;
+  const modal = openModal({ id: 'staff-job-' + cid, cls: 'small', title: 'Chu trình pha của Gen Z', html: `<div class="staff-job-inspector" data-cid="${cid}"><h3 class="m-title">✨ Gen Z đang pha cho ${esc(customer.tag)}</h3><p class="m-text">${esc(customer.text)}</p><div class="staff-preview-board"><div class="staff-order-cup"></div><span class="staff-preview-customer">${customerArt(customer.key) || customer.avatar}</span></div><b class="staff-job-status" data-job-status></b><div class="bar staff-job-progress"><i data-job-progress></i></div><p class="m-text muted">Đây là ly riêng của nhân viên. Bạn có thể đóng cửa sổ để tiếp tục pha cho khách khác.</p></div>` });
+  renderStaffPreview($('.staff-job-inspector', modal.body), G.staffJobPreview(job, customer));
+}
+on('served', (result) => {
+  for (const inspector of $$('.staff-job-inspector')) {
+    if (Number(inspector.dataset.cid) !== result.cust.id) continue;
+    inspector.dataset.finished = '1';
+    const slot = $('.staff-order-cup', inspector), order = result.cust.order;
+    slot.innerHTML = cupHTML({ ...order, fill: 1, phase: 'ready', iceAdded: true, sugarAdded: true });
+    slot.dataset.step = 'done';
+    $('[data-job-status]', inspector).textContent = `✅ Đã giao ly · ${result.stars} sao · +${fmtK(result.pay + result.tip)}`;
+    $('[data-job-progress]', inspector).style.width = '100%';
+  }
+});
 function openUpgradeMenu() {
   const rows = EQUIP.map((eq) => {
     const level = E.equipLevel(eq.id), tier = eq.tiers[Math.max(0, Math.min(level, eq.tiers.length) - 1)];
     const next = eq.tiers[Math.min(level, eq.tiers.length - 1)];
-    return `<button class="upgrade-item" data-act="equipment" data-id="${eq.id}"><span class="upgrade-icon">${eq.icon}</span><span><b>${esc(eq.name)} · C${level}</b><small>${level < eq.tiers.length - 1 ? `Hiện tại: ${esc(tier.d)} · Tiếp theo: ${esc(next.d)}` : esc(tier.d)}</small></span><span class="upgrade-arrow">›</span></button>`;
+    const current = level ? tier.d : 'Chưa mua';
+    return `<button class="upgrade-item" data-act="equipment" data-id="${eq.id}"><span class="upgrade-icon">${eq.icon}</span><span><b>${esc(eq.name)} · C${level}</b><small>${level < eq.tiers.length ? `Hiện tại: ${esc(current)} · Tiếp theo: ${esc(next.d)}` : esc(current)}</small></span><span class="upgrade-arrow">›</span></button>`;
   }).join('');
   const modal = openModal({ id: 'counter-upgrades', cls: 'small counter-upgrade-modal', title: '🛠️ Trang bị & nâng cấp', html: `<div class="upgrade-list">${rows}</div>` });
   bindActions(modal.body, { equipment: (button) => sellActs.equipment(button) });
@@ -198,9 +237,10 @@ const sellActs = {
     const eq = EQUIP.find(eq => eq.id === t.dataset.id);
     if (!eq) return;
     if (eq.id === 'mayPhat' && SH.ev?.off > 0 && SH.ev.mode === 'full') { const err = requestGenerator(); if (err) toast(err, 'err'); return; }
-    const tier = eq.tiers[Math.min(E.equipLevel(eq.id), eq.tiers.length) - 1];
+    const level = E.equipLevel(eq.id);
+    const tier = eq.tiers[Math.max(0, Math.min(level, eq.tiers.length) - 1)];
     const extra = eq.id === 'tuLanh' ? 'Áp dụng cho lô nhập mới; hạn của lô đã nhập giữ nguyên.' : eq.id === 'tablet' ? 'Cần mở ứng dụng trong Nâng cấp › Online và đạt điều kiện nhận đơn.' : eq.id === 'giayPhep' ? 'Khi đoàn kiểm tra đến, chạm Xuất trình giấy phép để xác nhận.' : eq.id === 'attp' ? 'Vẫn cần dọn bàn và dùng nguyên liệu còn hạn; chứng nhận không thay việc giữ vệ sinh.' : eq.id === 'mayPhat' ? (SH.ev?.mode?.startsWith('gen') ? '🔌 Đang cấp điện dự phòng.' : 'Điện lưới đang hoạt động. Khi mất điện, xác nhận bật máy phát.') : 'Hiệu quả cấp hiện tại được áp dụng trong ca bán hàng.';
-    openModal({ id: 'equipment', cls: 'small', title: eq.name, html: `<h3 class="m-title">${eq.icon} ${esc(eq.name)} · C${E.equipLevel(eq.id)}</h3><p class="m-text"><b>${esc(tier.n)}</b><br>${esc(tier.d)}</p><p class="m-text">${extra}</p>` });
+    openModal({ id: 'equipment', cls: 'small', title: eq.name, html: `<h3 class="m-title">${eq.icon} ${esc(eq.name)} · C${level}</h3><p class="m-text"><b>${level ? esc(tier.n) : 'Chưa mua'}</b><br>${level ? esc(tier.d) : 'Khi mua cấp đầu: ' + esc(tier.d)}</p><p class="m-text">${level ? extra : 'Mua thiết bị trong Phát triển › Nâng cấp khi chuẩn bị ca bán hàng.'}</p>` });
   },
   cup: (t) => { const e = G.pickCup(t.dataset.size); if (e) { toast(e, 'err'); sfx('error'); } },
   disp: (t) => {
@@ -229,7 +269,7 @@ const sellActs = {
   reject: () => { const c = G.frontCustomer(); const e = G.rejectCustomer(); if (e) { toast(e, 'err'); return; } sfx('sad'); toast(`Đã từ chối đơn của ${c.tag}`, 'err', 1400); },
   phone: () => openOnlineList(),
   lobby: () => { SH.view = 'lobby'; markDirty('view'); },
-  sel: (t) => G.selectCustomer(+t.dataset.cid),
+  sel: (t) => { const cid = +t.dataset.cid; if (SH.jobs.some(j => j.cid === cid && j.by === 'genZ')) openStaffJob(cid); else G.selectCustomer(cid); },
 };
 let serveHold = false;
 /** Hoạt ảnh bằng requestAnimationFrame: step(t) với t từ 0 đến 1, xong thì gọi done. */
@@ -447,6 +487,19 @@ on('seal:start', () => { updateBoard(true); sealAnim(); });
 on('seal:done', () => { sfx('ding'); updateBoard(true); const cs = $('#cupslot'); if (cs) { fxSpark({ x: cs.getBoundingClientRect().left + cs.offsetWidth / 2, y: cs.getBoundingClientRect().top + cs.offsetHeight * 0.35 }, 6); cs.classList.remove('plop'); void cs.offsetWidth; cs.classList.add('plop'); } const s = $('#sealer'); s?.classList.add('ding'); setTimeout(() => s?.classList.remove('ding'), 600); });
 on('top', () => updateBoard(true));
 on('flavor', () => updateBoard(true));
+on('staff:flavor', (id) => {
+  updateBoard(true);
+  if (canShowBrewFx()) dropFx($(`[data-f="${id}"]`) || $('#staffStrip .stf.work'), ITEMS[id].color);
+});
+on('staff:top', ({ id }) => {
+  const board = SH.board;
+  if (!board) return;
+  if (topShownBoard !== board) { topShown = {}; topShownBoard = board; }
+  const idx = board.tops.indexOf(id);
+  topShown[idx] = 0;
+  updateBoard(true);
+  dropFx($(`[data-t="${id}"]`) || $('#staffStrip .stf.work'), ITEMS[id].color, idx);
+});
 on('staff:ingredient', (id) => {
   updateBoard(true);
   if (!canShowBrewFx()) return;
@@ -546,6 +599,8 @@ export function frameSell(dt, force) {
   if (SH.view === 'lobby') { lobbyFrame(); return; }
   if (!root || !root.isConnected) return;
   fitCounter();
+  updateStaffJobs();
+  updateStaffJobs();
   cntT -= dt;
   const front = G.frontCustomer();
   const bar = $('#patBar > i');

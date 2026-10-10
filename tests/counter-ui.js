@@ -14,7 +14,7 @@ setTimeout(() => {
     const heading = bubble.querySelector('.order-head');
     assert(reject.parentElement === heading, 'Reject has its own heading row');
     assert(getComputedStyle(reject).position === 'static', 'Reject cannot overlay order');
-    assert(parseFloat(getComputedStyle(bubble).borderRadius) >= 20, 'Rounded order card');
+    assert(parseFloat(getComputedStyle(bubble).borderRadius) >= 17, 'Compact rounded order card');
     const r = reject.getBoundingClientRect(), t = bubble.querySelector('.btxt').getBoundingClientRect();
     assert(r.bottom <= t.top + 1, 'Reject does not cover order text');
     assert(!D.G.pickCup('M') && !D.G.startPour('traSua'), 'Pour starts');

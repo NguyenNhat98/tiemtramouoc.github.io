@@ -198,11 +198,13 @@ export function pushReview(c, stars, text) {
 export function pickCup(size) {
   if (!SH.on) return 'Chưa mở cửa';
   if (SH.board) return 'Đang có ly trên thớt';
+  const customer = frontCustomer();
+  if (customer && SH.jobs.some(job => job.cid === customer.id)) return 'Nhân viên đang làm đơn này. Chọn khách khác để pha song song.';
   const blk = EV.blocked('cup'); if (blk) return blk;
   const cupId = size === 'L' ? 'lyL' : 'lyM';
   if (E.stockQty(cupId) < 1) return `Hết ly size ${size === 'L' ? 'L' : 'M'} rồi!`;
   E.take(cupId, 1);
-  SH.board = { size, tea: null, fill: 0, flavor: null, tops: [], phase: 'cup', sealT: 0, pouring: false, spill: 0, auto: null };
+  SH.board = { size, cid: customer?.id, tea: null, fill: 0, flavor: null, tops: [], phase: 'cup', sealT: 0, pouring: false, spill: 0, auto: null };
   const st = counterAssistant();
   if (st) {
     const c = frontCustomer();
@@ -440,12 +442,13 @@ function staffStep(dt) {
       const front = frontCustomer();
       let cand = null;
       if (st.kind === 'online') cand = free.find((c) => c.online);
-      else if (SH.queue.length >= (st.minQueue || 1)) cand = free.filter((c) => !c.online && !(SH.board && c === front)).sort((x, y) => x.p - y.p)[0];
+      else if (SH.queue.length >= (st.minQueue || 1)) cand = free.filter((c) => !c.online && !(SH.board && c.id === (SH.board.cid ?? SH.board.auto?.cid ?? front?.id))).sort((x, y) => x.p - y.p)[0];
       if (cand) {
         const need = needs(cand.order);
         if (!canTake(need)) continue;
-        const total = st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 0.005));
-        SH.jobs.push({ by: key, cid: cand.id, t: total, total, stage: 'đang pha trọn đơn' });
+        const steps = key === 'genZ' ? ['cup', 'pour', ...(cand.order.flavor ? ['flavor'] : []), 'sugar', 'ice', ...cand.order.tops.map(id => 'top:' + id), 'seal', 'serve'] : null;
+        const total = st.sec * speedMul / (1 + Math.min(0.1, (S.staff[key].shifts || 0) * 0.005)) * (steps?.length || 1);
+        SH.jobs.push({ by: key, cid: cand.id, t: total, total, steps });
         if (key === 'genZ') emit('staff:job', { cid: cand.id, by: key });
         for (const [id, n] of need) E.take(id, n);
       }
@@ -466,6 +469,22 @@ function staffStep(dt) {
 }
 const needs = (o) => [[o.size === 'L' ? 'lyL' : 'lyM', 1], [o.tea, 1], ...(o.flavor ? [[o.flavor, 1]] : []), ...o.tops.map((t) => [t, 1]), ['da', 1], ['duong', 1]];
 const canTake = (list) => list.every(([id, n]) => E.stockQty(id) >= n);
+/** Each automatic order has its own cup; inspecting it never uses the player's board. */
+export function staffJobPreview(job, customer) {
+  if (!job || !customer) return null;
+  const o = customer.order;
+  const steps = job.steps || ['cup', 'pour', ...(o.flavor ? ['flavor'] : []), 'sugar', 'ice', ...o.tops.map(id => 'top:' + id), 'seal', 'serve'];
+  const total = Math.max(.001, job.total || STAFF.find(st => st.id === job.by)?.sec || 1);
+  const progress = clamp(1 - job.t / total, 0, 1);
+  const index = Math.min(steps.length - 1, Math.floor(progress * steps.length));
+  const step = steps[index], local = progress * steps.length - index;
+  const done = steps.slice(0, index);
+  const labels = { cup: 'Lấy cốc ' + o.size, pour: 'Rót ' + ITEMS[o.tea].name, flavor: o.flavor ? 'Thêm hương ' + ITEMS[o.flavor].name : 'Thêm hương', sugar: 'Thêm đường', ice: 'Thêm đá', seal: 'Đóng nắp', serve: 'Giao ly cho khách' };
+  const tops = done.filter(s => s.startsWith('top:')).map(s => s.slice(4));
+  if (step.startsWith('top:') && local >= .5) tops.push(step.slice(4));
+  const cup = { size: o.size, tea: index > 0 ? o.tea : null, fill: step === 'pour' ? local * .95 : index > 1 ? .95 : 0, flavor: done.includes('flavor') || step === 'flavor' && local >= .5 ? o.flavor : null, tops, iceAdded: done.includes('ice') || step === 'ice' && local >= .5, sugarAdded: done.includes('sugar') || step === 'sugar' && local >= .5, phase: step === 'seal' ? 'sealing' : step === 'serve' ? 'ready' : 'cup', sealMax: total / steps.length };
+  return { cup, step, index, count: steps.length, progress, label: labels[step] || 'Thêm ' + ITEMS[step.slice(4)].name };
+}
 function finishJob(job, st, b) {
   const c = SH.queue.find((x) => x.id === job.cid);
   if (!c) return;
@@ -500,7 +519,7 @@ function advanceCounterStaff(bd, dt, bonus) {
   if (bd.phase !== 'cup') { bd.auto = null; return; }
   if (!bd.auto && !bd.autoDone) {
     const st = counterAssistant();
-    const c = frontCustomer();
+    const c = SH.queue.find(c => c.id === bd.cid) || frontCustomer();
     if (st && c) bd.auto = { cid: c.id, t: 0.6, st, topsLeft: st.kind === 'manager' ? [...c.order.tops] : [] };
   }
   const a = bd.auto;

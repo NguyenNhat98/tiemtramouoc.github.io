@@ -4,12 +4,12 @@
 .sell > .queue-row { height: calc(var(--counter-u) * 6); min-height: 0; margin: 0; padding: 2px 0; flex: none; }
 .sell .qav { width: calc(var(--counter-u) * 6 - 4px); height: calc(var(--counter-u) * 6 - 4px); }
 .sell .qav b { width: 80%; height: 80%; }
-.sell .cust-zone { height: calc(var(--counter-u) * 13); min-height: 0; max-height: none; flex: none; align-items: flex-end; }
+.sell .cust-zone { height: max(80px, calc(var(--counter-u) * 13)); min-height: 0; max-height: none; flex: none; align-items: flex-end; }
 .sell .cust-av { width: 56px; height: 100%; }
 .sell .cust-av .face { width: 56px; height: 100%; }
 .sell .bubble { height: 100%; background: rgba(255, 252, 246, .56); border: 1px solid rgba(255,255,255,.72); border-radius: 17px; padding: 3px 6px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 3px 10px rgba(86,55,31,.12), inset 0 1px rgba(255,255,255,.7); }
 .sell .bubble::before { display: none; }
-[data-theme="dem"] .sell .bubble { background: rgba(54,47,76,.84); }
+[data-theme="dem"] .sell .bubble { background: rgba(54,47,76,.65); }
 .sell .hint { height: calc(var(--counter-u) * 3); min-height: 0; line-height: calc(var(--counter-u) * 3); padding: 0 6px; margin: 0; font-size: 10px; }
 .sell .shelf { height: calc(var(--counter-u) * 18); flex: none; min-height: 0; padding: 2px 4px; border-bottom-width: 3px; }
 .sell .shelf-head { height: 22px; min-height: 0; }
@@ -77,6 +77,26 @@
 .upgrade-item b { font-size: 12px; }
 .upgrade-item small { margin-top: 2px; font-size: 10px; line-height: 1.25; color: var(--muted); }
 .upgrade-arrow { font-size: 22px; text-align: center; }
+.staff-preview-board { position: relative; height: 156px; display: flex; align-items: center; justify-content: center; gap: 32px; margin: 12px 0; border-radius: 18px; background: repeating-linear-gradient(90deg,#eeddbd 0 20px,#f5e6cb 20px 40px); overflow: hidden; }
+.staff-order-cup { position: relative; min-width: 74px; height: 130px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 12px; }
+.staff-preview-customer { display: grid; place-items: center; width: 58px; height: 70px; font-size: 42px; }
+.staff-preview-customer .customer-sprite { width: 58px; height: 70px; }
+.staff-job-status { display: block; margin-bottom: 8px; text-align: center; font-size: 13px; color: var(--green); }
+.staff-job-progress { height: 7px; }
+.staff-job-progress i { background: linear-gradient(90deg,#76ad70,#b9cf6e); }
+.staff-preview-stream { display: none; position: absolute; top: 6px; bottom: 48px; left: calc(50% - 3px); width: 6px; border-radius: 5px; background: linear-gradient(90deg,var(--tea),#fff9,var(--tea)); transform-origin: top; animation: staffFlow .2s ease-in-out infinite alternate; }
+.staff-order-cup[data-step="pour"] .staff-preview-stream { display: block; }
+.staff-preview-drop { display: none; position: absolute; top: 15px; left: calc(50% - 6px); color: #e58b48; font-size: 16px; animation: staffDrop .2s ease-in infinite; }
+.staff-order-cup[data-step^="top:"] .staff-preview-drop, .staff-order-cup[data-step="flavor"] .staff-preview-drop, .staff-order-cup[data-step="ice"] .staff-preview-drop, .staff-order-cup[data-step="sugar"] .staff-preview-drop { display: block; }
+.staff-order-cup[data-step="cup"] .cup { animation: staffCupIn .2s ease-out; }
+.staff-order-cup[data-step="seal"] .cup { animation: staffCupPress .2s ease-in-out; }
+.staff-order-cup[data-step="serve"] .cup { animation: staffCupServe .2s ease-in forwards; }
+@keyframes staffFlow { to { transform: scaleX(.7); } }
+@keyframes staffDrop { to { transform: translateY(65px) rotate(100deg); opacity: 0; } }
+@keyframes staffCupIn { from { transform: translateY(-32px) scale(.6); opacity: .3; } }
+@keyframes staffCupPress { 50% { transform: scale(1.06,.92); } }
+@keyframes staffCupServe { to { transform: translate(48px,-15px) scale(.6); opacity: .4; } }
+@media (prefers-reduced-motion: reduce) { .staff-order-cup .cup, .staff-preview-stream, .staff-preview-drop, .sell .genz-order-status { animation: none !important; } }
 @media (prefers-reduced-motion: reduce) { .c-sugar { animation: none; } }
 /* Short landscape screens use two columns so order text still has room. */
 @media (max-height: 480px) and (min-width: 480px) {
