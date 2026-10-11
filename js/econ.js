@@ -54,10 +54,9 @@ export const appsOpen = () => Object.values(S.apps).filter(Boolean).length;
 export const onlineEnabled = () => appsOpen() > 0 && S.rating >= ONLINE_GATE.rating && LOCATIONS[S.location].fx.online !== -1;
 export const secretCount = () => Object.keys(S.collection.secrets).length;
 
-export function petActive() {
-  const p = S.pet;
+export function petActive(p = S.pet) {
   if (!p) return false;
-  return (p.hunger + p.joy + p.clean + p.energy) / 4 >= 60;
+  return ['hunger','joy','clean','energy'].reduce((sum,k) => sum + (p[k] ?? 80), 0) / 4 >= 60;
 }
 
 /** Gộp toàn bộ hiệu ứng (cộng dồn) từ vùng, sự kiện, thời tiết, trang bị, nhân sự, pet, quảng cáo… */
@@ -114,7 +113,7 @@ export function bonus() {
   }
   b.bill += S.crush.perm;
   b.bill += Math.min(0.2, Object.keys(S.collection.owned).length * 0.003);
-  if (S.pet2 && petActive() && S.pet.kind !== 'capybara') add(PETS.capybara.fx);
+  if (S.pet2 && petActive(S.pet2) && S.pet?.kind !== 'capybara') add(PETS.capybara.fx);
   if (S.branches.truong) b.traffic += 0.15;
   if (S.branches.cnc) b.online += 0.1;
   const active = staffCount();
@@ -476,14 +475,15 @@ export function adoptPet(kind) {
   if ((kind === 'capybara' && (S.pet2 || (S.pet && S.pet.kind === kind))) || (S.pet && S.pet.kind === kind)) return 'Đã nhận nuôi bé này';
   if (S.money < p.adopt) return 'Không đủ tiền nhận nuôi';
   S.money -= p.adopt;
-  if (kind === 'capybara' && S.pet) S.pet2 = {kind};
-  else { if (S.pet && S.pet.kind === 'capybara') S.pet2 = {kind: 'capybara'}; S.pet = {kind, hunger: 80, joy: 80, clean: 80, energy: 80}; }
+  if (kind === 'capybara' && S.pet) S.pet2 = {kind, hunger: 80, joy: 80, clean: 80, energy: 80};
+  else { if (S.pet && S.pet.kind === 'capybara') S.pet2 = S.pet; S.pet = {kind, hunger: 80, joy: 80, clean: 80, energy: 80}; }
   commitMenuChange(); return null;
 }
-export function carePet(id) {
-  const c = PET_CARE.find(x => x.id === id), p = S.pet;
+export function carePet(id, kind = S.pet?.kind) {
+  const c = PET_CARE.find(x => x.id === id), p = [S.pet,S.pet2].find(p => p?.kind === kind);
   if (!p || !c) return 'Chưa có thú cưng hoặc thao tác không hợp lệ';
   if (S.money < c.cost) return 'Không đủ tiền';
+  for (const key of ['hunger','joy','clean','energy']) p[key] = p[key] ?? 80;
   S.money -= c.cost; p[c.stat] = clamp(p[c.stat] + c.gain * (S.petDecor.app ? 1.3 : 1), 0, 100);
   if (id === 'feed' && S.petDecor.bat) { p.hunger = clamp(p.hunger + 20, 0, 100); p.joy = clamp(p.joy + 10, 0, 100); }
   if (id === 'bath' && S.petDecor.voi) { p.clean = clamp(p.clean + 30, 0, 100); p.joy = clamp(p.joy + 10, 0, 100); }

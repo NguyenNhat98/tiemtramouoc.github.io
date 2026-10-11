@@ -724,13 +724,13 @@ export function nextDay() {
   for (const p of g.plots) if (p.seed) { if (g.watered) p.grown++; }
   g.watered = false;
   // thú cưng
-  if (S.pet) {
-    const decay = (k, v) => Math.max(0, S.pet[k] - v);
+  for (const pet of [S.pet, S.pet2].filter(Boolean)) {
+    const decay = (k, v) => Math.max(0, (pet[k] ?? 80) - v);
     const d = (id, f) => (S.petDecor[id] ? f : 1);
-    S.pet.hunger = decay('hunger', 25 * d('bat', 0.8));
-    S.pet.joy = decay('joy', 15 * d('xit', 0.75));
-    S.pet.clean = decay('clean', 12 * d('say', 0.75));
-    S.pet.energy = decay('energy', 20 * d('sofa', 0.75));
+    pet.hunger = decay('hunger', 25 * d('bat', 0.8));
+    pet.joy = decay('joy', 15 * d('xit', 0.75));
+    pet.clean = decay('clean', 12 * d('say', 0.75));
+    pet.energy = decay('energy', 20 * d('sofa', 0.75));
   }
   // KPI chu kỳ 7 ca
   if (S.kpi.shifts >= 7) { S.kpi.shifts = 0; emit('kpi:cycle'); }

@@ -1,6 +1,8 @@
 /**
  * Dữ liệu cấu hình & cân bằng toàn game (viết mới, đối chiếu với KICH-BAN.md).
  */
+import { ingredientArt } from './ingredient-art.js';
+import { petArt } from './pet-art.js';
 export const DEBUG = true;
 export const VERSION = '1.0.0';
 export const SAVE_KEY = 'tiemTraMoUoc3';
@@ -60,6 +62,7 @@ export const ITEMS = {
   da: { name: 'Đá viên', kind: 'supply', icon: '🧊', color: '#cfe8f5', cost: 1000, life: 2, unlock: 0 },
   duong: { name: 'Nước đường', kind: 'supply', icon: '🍯', color: '#e8c25a', cost: 500, life: 7, unlock: 0 },
 };
+for (const id of Object.keys(ITEMS)) ITEMS[id].icon = ingredientArt(id) || ITEMS[id].icon;
 export const IDS = Object.keys(ITEMS);
 export const byKind = (k) => IDS.filter((i) => ITEMS[i].kind === k);
 export const TEAS = byKind('tea');
@@ -213,6 +216,7 @@ export const PETS = {
   capybara: { name: 'Cáp Bi Điềm Đạm', icon: '🦫', adopt: 0, secret: 7, desc: 'Thú cưng độc bản quý hiếm — nuôi chung cùng Chó/Mèo.',
     buffs: ['🏆 Quán chính: Tăng +7% doanh thu và +10% tiền Tip trên mỗi bill bán trực tiếp.', '🏢 Chuỗi chi nhánh: Tăng +10% doanh thu chi nhánh & giảm 30% rủi ro/lỗ của chuỗi.', '🏷️ Bán nguyên liệu thừa: Tăng +10% giá bán nguyên liệu, khách vẫn không còn lo hỏng.', '✨ Vận may Ly trà: Tăng +2% tỉ lệ bộc phát ×2 ~ ×5 giá trị ly mỗi khi khách thưởng thức tại quán.'], fx: { bill: 0.07, tip: 0.1, branch: 0.1 } },
 };
+for (const kind of Object.keys(PETS)) PETS[kind].icon = petArt(kind);
 export const PET_CARE = [
   { id: 'feed', icon: '🍖', name: 'Cho ăn', cost: 20000, stat: 'hunger', gain: 35 },
   { id: 'play', icon: '🎾', name: 'Chơi cùng', cost: 0, stat: 'joy', gain: 30 },

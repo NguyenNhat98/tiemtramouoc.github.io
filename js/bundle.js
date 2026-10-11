@@ -5,6 +5,53 @@
       __defProp(target, name, { get: all[name], enumerable: true });
   };
 
+  // js/ingredient-art.js
+  var leaf = '<path d="M31 17Q29 4 43 5Q44 16 31 17" fill="#73a949"/><path d="M30 18l4-11" fill="none"/>';
+  var bowl = (color, garnish = "") => `<ellipse cx="32" cy="49" rx="24" ry="7" fill="#d7bb93" stroke="none"/><path d="M8 32h48l-6 17q-18 9-36 0z" fill="#f9e7c6"/><path d="M11 32q0-8 11-10q-2-8 8-9q3-7 8 0q13 2 10 10q9 2 6 9z" fill="${color}"/><path d="M18 30q9-6 23-1M26 20q6-3 13 0" fill="none" stroke="#fff" opacity=".7"/>${garnish}`;
+  var art = {
+    vai: ["V\u1EA3i", `<circle cx="22" cy="34" r="17" fill="#e96578"/><path d="M10 25l5 3m3-9 3 4m-8 12 4 3m8-8 4 3m-11 10 5-2m6-1 4 2" stroke="#a94250"/><circle cx="43" cy="38" r="17" fill="#fff5df"/><ellipse cx="44" cy="38" rx="7" ry="10" fill="#754331"/>${leaf}`],
+    oi: ["\u1ED4i", `<path d="M30 16C5 7-1 42 16 54q18 8 29-7q12-26-15-31" fill="#9dc967"/>${leaf}<ellipse cx="42" cy="40" rx="17" ry="20" fill="#87b554"/><ellipse cx="42" cy="40" rx="13" ry="16" fill="#ffb0a4"/><path d="M39 34l1 2m6-3v2m-9 8 2-1m7 2 1 2m-5 3v2" stroke="#bf8050" stroke-width="3"/>`],
+    mangCau: ["M\xE3ng c\u1EA7u", `<path d="M30 14Q7 9 7 35q3 24 27 22q25-6 22-28q-6-20-26-15" fill="#98b960"/>${leaf}<path d="M14 25l4-4 4 5 4-5 5 5 5-4 5 4 4-4m-30 14 5-5 5 5 5-5 5 5 5-5 5 5m-29 10 5-5 5 5 5-5 5 5 5-5" fill="none" stroke="#627d3f"/>`],
+    me: ["Me", '<path d="M19 8q-8 7-4 16q-8 9 0 17q-2 16 12 16q14-3 12-14q10-8 2-17q3-14-11-16z" fill="#ab7446"/><path d="M17 23q12 7 22 1m-23 17q10 6 22 1" fill="none"/><path d="M45 10q9 8 2 18q9 12-1 23" fill="none" stroke="#dec097" stroke-width="6"/>'],
+    duaGang: ["D\u01B0a gang", '<ellipse cx="27" cy="31" rx="24" ry="20" fill="#edd78d"/><path d="M14 15q-9 18 0 32m13-35q-10 21 0 38m12-35q-2 14 4 22" fill="none" stroke="#85aa57" stroke-width="4"/><path d="M26 36l32-13q8 30-25 34z" fill="#a2bc6c"/><path d="M29 38l25-9q3 20-19 24z" fill="#fff0bc"/><path d="M36 42l2 1m6-4 2 1m-5 7 2 1" stroke="#d69b53"/>'],
+    duong: ["N\u01B0\u1EDBc \u0111\u01B0\u1EDDng", '<path d="M23 11h18v9l8 6v29H15V26l8-6z" fill="#fff1d3"/><path d="M18 34h28v18H18z" fill="#e7b650" stroke="none"/><path d="M24 3h17v9H24z" fill="#aa8860"/><path d="M40 5h13v5H40" fill="#aa8860"/><path d="M21 29v15" stroke="#fff" stroke-width="3"/><path d="M54 15q-7 9 0 12q7-3 0-12" fill="#e9b947"/>'],
+    fMatcha: ["Foam matcha", bowl("#a8c77b", '<path d="M40 23q-2-13 10-12q3 10-10 12" fill="#608d38"/>')],
+    fCheese: ["Foam cheese", bowl("#ffe7a5", '<path d="M39 31l15-3v10H39z" fill="#eabb4a"/><circle cx="44" cy="35" r="1.5" fill="#bd8d31"/>')],
+    fMuoi: ["Foam mu\u1ED1i", bowl("#fffaf0", '<path d="M43 13l2 2m5 3 2 2m-9 1 2 2" stroke="#a6b5bd" stroke-width="3"/>')],
+    fUbe: ["Foam ube", bowl("#c5a0df", '<ellipse cx="47" cy="35" rx="9" ry="6" fill="#9d6db5"/><ellipse cx="47" cy="35" rx="5" ry="4" fill="#d4bce6"/>')],
+    tcSoi: ["Tr\xE2n ch\xE2u s\u1EE3i", '<ellipse cx="32" cy="45" rx="27" ry="12" fill="#efdbbd"/><path d="M12 35q8-17 14-3t13-4t12 7M10 42q8-17 14-3t13-4t15 7M17 47q8-13 15-2t17-4" fill="none" stroke="#ad7446" stroke-width="6"/>'],
+    cuNang: ["Th\u1EA1ch c\u1EE7 n\u0103ng", '<path d="M7 25l16-7 14 8v16l-16 8-14-9z" fill="#e9f0df"/><path d="M30 36l16-7 13 8v15l-16 8-13-9z" fill="#dbe9d4"/><path d="M7 25l14 8 16-7m-16 7v17m9-14 13 8 16-7m-16 7v16" fill="none"/><path d="M35 8l10 3-3 7-10-3z" fill="#fff9e4"/>'],
+    pmTuoi: ["Ph\xF4 mai t\u01B0\u01A1i", bowl("#fff5d7")],
+    thachPm: ["Th\u1EA1ch ph\xF4 mai", '<path d="M6 23l19-8 19 10v23l-20 10L6 47z" fill="#fff0c9"/><path d="M6 23l18 11 20-9m-20 9v24" fill="none"/><path d="M17 30l13-4 7 5v13l-12 6-8-6z" fill="#f3cd68"/><path d="M43 12l13 5v17l-12 5-7-4V17z" fill="#ffeab0"/>']
+  };
+  function ingredientArt(id) {
+    const entry = art[id];
+    return entry ? `<svg class="ingredient-icon" data-item-icon="${id}" viewBox="0 0 64 64" role="img" aria-label="${entry[0]}" xmlns="http://www.w3.org/2000/svg"><title>${entry[0]}</title><g stroke="#634730" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${entry[1]}</g></svg>` : "";
+  }
+
+  // js/pet-art.js
+  var PET_MOODS = { hungry: "\u0110\xF3i b\u1EE5ng", dirty: "C\u1EA7n t\u1EAFm", sleepy: "Bu\u1ED3n ng\u1EE7", sad: "Bu\u1ED3n", happy: "Vui v\u1EBB", excited: "H\xE0o h\u1EE9ng", calm: "Th\u01B0 th\xE1i" };
+  function petMood(p) {
+    var _a, _b, _c, _d, _e, _f;
+    if (((_a = p.hunger) != null ? _a : 80) < 30) return "hungry";
+    if (((_b = p.clean) != null ? _b : 80) < 30) return "dirty";
+    if (((_c = p.energy) != null ? _c : 80) < 30) return "sleepy";
+    if (((_d = p.joy) != null ? _d : 80) < 35) return "sad";
+    return ((_e = p.joy) != null ? _e : 80) >= 90 ? "excited" : ((_f = p.joy) != null ? _f : 80) >= 60 ? "happy" : "calm";
+  }
+  function petArt(kind, mood = "happy") {
+    const cat = kind === "meo", capy = kind === "capybara";
+    const color = cat ? "#bc976f" : capy ? "#b88d66" : "#e3a151";
+    const tail = capy ? "" : `<path class="pet-tail" d="${cat ? "M69 54q27-34 25-4q-2 14-17 12" : "M72 53q26-22 20 1q-4 16-16 6"}" fill="none" stroke="${color}" stroke-width="9"/>`;
+    const ears = capy ? '<circle cx="32" cy="24" r="8"/><circle cx="67" cy="24" r="8"/>' : `<path d="M24 31L20 6l24 18M58 24L80 6l-4 27"/><path d="M27 24l-3-12 13 12m28 0 11-12-3 13" fill="#edb2a3" stroke="none"/>`;
+    const sad = ["sad", "hungry", "dirty"].includes(mood), sleep = mood === "sleepy";
+    const eyes = sleep ? '<path d="M31 37q5 5 10 0m18 0q5 5 10 0" fill="none"/>' : '<ellipse class="pet-eye" cx="36" cy="37" rx="3.5" ry="4.5" fill="#352820"/><ellipse class="pet-eye" cx="64" cy="37" rx="3.5" ry="4.5" fill="#352820"/><circle cx="37" cy="35" r="1" fill="white" stroke="none"/><circle cx="65" cy="35" r="1" fill="white" stroke="none"/>';
+    const mouth = sad ? '<path d="M43 53q7-8 14 0" fill="none"/>' : '<path d="M43 48q7 13 14 0" fill="#e58b88"/>';
+    const marks = cat ? '<path d="M41 22l4 9m5-10v10m9-9-4 9M25 38l7 3m43-3-7 3M36 66l8 2m12-2 9-2" stroke="#765742" stroke-width="3"/>' : "";
+    const fx = mood === "dirty" ? '<g class="pet-dirt" fill="#765744" stroke="none"><circle cx="25" cy="43" r="3"/><circle cx="68" cy="58" r="4"/><circle cx="38" cy="63" r="3"/></g><path class="pet-stink" d="M8 27q-8-7 0-14m80 17q8-7 0-14" fill="none" stroke="#839357"/>' : mood === "sleepy" ? '<text x="79" y="17" font-size="17" fill="#777cad" stroke="none">z</text>' : mood === "sad" ? '<path d="M29 44q-7 11 0 11q7 0 0-11" fill="#93cfea" stroke="none"/>' : mood === "hungry" ? '<ellipse cx="50" cy="79" rx="22" ry="3" fill="#ded8c7"/>' : ["happy", "excited"].includes(mood) ? '<path class="pet-heart" d="M87 15q-9-10-12-2q-2 7 12 14q14-7 12-14q-3-8-12 2" fill="#ee8aa1" stroke="none"/>' : "";
+    return `<svg class="pet-art" viewBox="0 0 104 84" aria-hidden="true" focusable="false"><ellipse cx="51" cy="78" rx="34" ry="4" fill="#8b6b4628"/><g class="pet-body" stroke="#664b37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${tail}<ellipse cx="51" cy="60" rx="27" ry="18" fill="${color}"/><ellipse cx="51" cy="61" rx="14" ry="12" fill="#fff0d8" stroke="none"/><path d="M31 65v10q7 5 11 0V65m20 0v10q7 5 11 0V65" fill="${color}"/><g class="pet-head" fill="${color}">${ears}<path d="M24 28q26-20 52 0q11 27-26 32q-37-5-26-32"/><ellipse cx="50" cy="47" rx="20" ry="11" fill="#fff0dc" stroke="none"/>${marks}${eyes}<path d="M46 44q4-4 8 0l-4 4z" fill="#423126"/>${mouth}${cat ? '<path d="M28 47H15m14 5-12 3m54-8h13m-13 5 12 3" fill="none"/>' : ""}<ellipse cx="28" cy="45" rx="5" ry="3" fill="#ecaa9a" stroke="none"/><ellipse cx="72" cy="45" rx="5" ry="3" fill="#ecaa9a" stroke="none"/></g>${fx}</g></svg>`;
+  }
+
   // js/config.js
   var DEBUG = true;
   var VERSION = "1.0.0";
@@ -58,6 +105,7 @@
     da: { name: "\u0110\xE1 vi\xEAn", kind: "supply", icon: "\u{1F9CA}", color: "#cfe8f5", cost: 1e3, life: 2, unlock: 0 },
     duong: { name: "N\u01B0\u1EDBc \u0111\u01B0\u1EDDng", kind: "supply", icon: "\u{1F36F}", color: "#e8c25a", cost: 500, life: 7, unlock: 0 }
   };
+  for (const id of Object.keys(ITEMS)) ITEMS[id].icon = ingredientArt(id) || ITEMS[id].icon;
   var IDS = Object.keys(ITEMS);
   var byKind = (k) => IDS.filter((i) => ITEMS[i].kind === k);
   var TEAS = byKind("tea");
@@ -447,6 +495,7 @@
       fx: { bill: 0.07, tip: 0.1, branch: 0.1 }
     }
   };
+  for (const kind of Object.keys(PETS)) PETS[kind].icon = petArt(kind);
   var PET_CARE = [
     { id: "feed", icon: "\u{1F356}", name: "Cho \u0103n", cost: 2e4, stat: "hunger", gain: 35 },
     { id: "play", icon: "\u{1F3BE}", name: "Ch\u01A1i c\xF9ng", cost: 0, stat: "joy", gain: 30 },
@@ -1410,13 +1459,15 @@
   var appsOpen = () => Object.values(S.apps).filter(Boolean).length;
   var onlineEnabled = () => appsOpen() > 0 && S.rating >= ONLINE_GATE.rating && LOCATIONS[S.location].fx.online !== -1;
   var secretCount = () => Object.keys(S.collection.secrets).length;
-  function petActive() {
-    const p = S.pet;
+  function petActive(p = S.pet) {
     if (!p) return false;
-    return (p.hunger + p.joy + p.clean + p.energy) / 4 >= 60;
+    return ["hunger", "joy", "clean", "energy"].reduce((sum2, k) => {
+      var _a;
+      return sum2 + ((_a = p[k]) != null ? _a : 80);
+    }, 0) / 4 >= 60;
   }
   function bonus() {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const b = {
       traffic: 0,
       tip: 0,
@@ -1515,7 +1566,7 @@
     }
     b.bill += S.crush.perm;
     b.bill += Math.min(0.2, Object.keys(S.collection.owned).length * 3e-3);
-    if (S.pet2 && petActive() && S.pet.kind !== "capybara") add(PETS.capybara.fx);
+    if (S.pet2 && petActive(S.pet2) && ((_d = S.pet) == null ? void 0 : _d.kind) !== "capybara") add(PETS.capybara.fx);
     if (S.branches.truong) b.traffic += 0.15;
     if (S.branches.cnc) b.online += 0.1;
     const active = staffCount();
@@ -1898,18 +1949,20 @@
     if (kind === "capybara" && (S.pet2 || S.pet && S.pet.kind === kind) || S.pet && S.pet.kind === kind) return "\u0110\xE3 nh\u1EADn nu\xF4i b\xE9 n\xE0y";
     if (S.money < p.adopt) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n nh\u1EADn nu\xF4i";
     S.money -= p.adopt;
-    if (kind === "capybara" && S.pet) S.pet2 = { kind };
+    if (kind === "capybara" && S.pet) S.pet2 = { kind, hunger: 80, joy: 80, clean: 80, energy: 80 };
     else {
-      if (S.pet && S.pet.kind === "capybara") S.pet2 = { kind: "capybara" };
+      if (S.pet && S.pet.kind === "capybara") S.pet2 = S.pet;
       S.pet = { kind, hunger: 80, joy: 80, clean: 80, energy: 80 };
     }
     commitMenuChange();
     return null;
   }
-  function carePet(id) {
-    const c = PET_CARE.find((x) => x.id === id), p = S.pet;
+  function carePet(id, kind = ((_a) => (_a = S.pet) == null ? void 0 : _a.kind)()) {
+    var _a2;
+    const c = PET_CARE.find((x) => x.id === id), p = [S.pet, S.pet2].find((p2) => (p2 == null ? void 0 : p2.kind) === kind);
     if (!p || !c) return "Ch\u01B0a c\xF3 th\xFA c\u01B0ng ho\u1EB7c thao t\xE1c kh\xF4ng h\u1EE3p l\u1EC7";
     if (S.money < c.cost) return "Kh\xF4ng \u0111\u1EE7 ti\u1EC1n";
+    for (const key of ["hunger", "joy", "clean", "energy"]) p[key] = (_a2 = p[key]) != null ? _a2 : 80;
     S.money -= c.cost;
     p[c.stat] = clamp(p[c.stat] + c.gain * (S.petDecor.app ? 1.3 : 1), 0, 100);
     if (id === "feed" && S.petDecor.bat) {
@@ -2071,6 +2124,8 @@
     return img(`tea-${TEAS2.includes(id) ? id : "traSua"}`);
   }
   function toppingArt(id) {
+    const custom = ingredientArt(id);
+    if (custom) return custom;
     const k = TOP_ALIAS[id] || id;
     return img(`top-${TOPS2.includes(k) ? k : "tcDen"}`);
   }
@@ -4095,13 +4150,16 @@
       if (g.watered) p.grown++;
     }
     g.watered = false;
-    if (S.pet) {
-      const decay = (k, v) => Math.max(0, S.pet[k] - v);
+    for (const pet of [S.pet, S.pet2].filter(Boolean)) {
+      const decay = (k, v) => {
+        var _a;
+        return Math.max(0, ((_a = pet[k]) != null ? _a : 80) - v);
+      };
       const d = (id, f) => S.petDecor[id] ? f : 1;
-      S.pet.hunger = decay("hunger", 25 * d("bat", 0.8));
-      S.pet.joy = decay("joy", 15 * d("xit", 0.75));
-      S.pet.clean = decay("clean", 12 * d("say", 0.75));
-      S.pet.energy = decay("energy", 20 * d("sofa", 0.75));
+      pet.hunger = decay("hunger", 25 * d("bat", 0.8));
+      pet.joy = decay("joy", 15 * d("xit", 0.75));
+      pet.clean = decay("clean", 12 * d("say", 0.75));
+      pet.energy = decay("energy", 20 * d("sofa", 0.75));
     }
     if (S.kpi.shifts >= 7) {
       S.kpi.shifts = 0;
@@ -4121,6 +4179,66 @@
   function genPost() {
     const t = pick(FEED_POSTS), a = pick(FEED_AUTHORS);
     return { ...t, author: a, day: S.day, views: randInt(20, 180) + "K", likes: randInt(2, 20) + "K" };
+  }
+
+  // js/counter-pets.js
+  var reaction = null;
+  on("served", (r) => {
+    reaction = { mood: r.stars >= 4 ? "excited" : "sad", until: performance.now() + 2400 };
+  });
+  on("ding", () => {
+    reaction = { mood: "excited", until: performance.now() + 1600 };
+  });
+  on("left", () => {
+    reaction = { mood: "sad", until: performance.now() + 1600 };
+  });
+  var ownedPets = () => [S.pet, S.pet2].filter((p) => p && PETS[p.kind]);
+  function refreshCounterPets() {
+    const root2 = $("#sell");
+    if (!root2) return;
+    const pets = ownedPets();
+    let layer2 = $(".counter-pets", root2);
+    root2.classList.toggle("has-counter-pets", pets.length > 0);
+    const width = `${pets.length * 44 + 4}px`;
+    if (root2.style.getPropertyValue("--pets-width") !== width) root2.style.setProperty("--pets-width", width);
+    if (!pets.length) {
+      layer2 == null ? void 0 : layer2.remove();
+      return;
+    }
+    if (!layer2) {
+      layer2 = h('<div class="counter-pets" aria-label="Th\xFA c\u01B0ng c\u1EE7a ti\u1EC7m"></div>');
+      root2.appendChild(layer2);
+      bindActions(layer2, { pet: (t) => openPetCare(t.dataset.kind) });
+    }
+    const states = pets.map((p) => {
+      const mood = petMood(p);
+      return { p, mood: !["hungry", "dirty", "sleepy"].includes(mood) && (reaction == null ? void 0 : reaction.until) > performance.now() ? reaction.mood : mood };
+    });
+    const signature = states.map(({ p, mood }) => p.kind + ":" + mood).join("|");
+    if (layer2.dataset.signature === signature) return;
+    layer2.dataset.signature = signature;
+    layer2.innerHTML = states.map(({ p, mood }) => `<button class="counter-pet" data-act="pet" data-kind="${p.kind}" data-mood="${mood}" aria-label="${esc(PETS[p.kind].name)}: ${PET_MOODS[mood]}. Ch\u1EA1m \u0111\u1EC3 ch\u0103m s\xF3c" title="${esc(PETS[p.kind].name)} \xB7 ${PET_MOODS[mood]}">${petArt(p.kind, mood)}<small>${PET_MOODS[mood]}</small></button>`).join("");
+  }
+  function openPetCare(kind) {
+    const pet = ownedPets().find((p) => p.kind === kind);
+    if (!pet) return;
+    const modal = openModal({ id: "counter-pet-care", cls: "small", title: "Ch\u0103m s\xF3c th\xFA c\u01B0ng" });
+    const paint2 = () => {
+      const mood = petMood(pet);
+      modal.body.innerHTML = `<h3 class="m-title">${esc(PETS[kind].name)}</h3><div class="pet-care-portrait" data-mood="${mood}">${petArt(kind, mood)}</div><p class="center">${PET_MOODS[mood]}</p><div class="counter-pet-stats">${[["hunger", "No"], ["joy", "Vui"], ["clean", "S\u1EA1ch"], ["energy", "Kh\u1ECFe"]].map(([key, label]) => {
+        var _a;
+        return `<span>${label}: <b>${Math.round((_a = pet[key]) != null ? _a : 80)}/100</b></span>`;
+      }).join("")}</div><div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}">${c.icon} ${c.name}<small>${c.cost ? fmtK(c.cost) : "Mi\u1EC5n ph\xED"}</small></button>`).join("")}</div>`;
+    };
+    paint2();
+    bindActions(modal.body, { care: (t) => {
+      const error = carePet(t.dataset.id, kind);
+      if (error) return toast(error, "err");
+      reaction = null;
+      sfx("pop");
+      paint2();
+      refreshCounterPets();
+    } });
   }
 
   // js/scenes.js
@@ -4314,7 +4432,7 @@
     if (height === counterHeight) return;
     counterHeight = height;
     const unit = (height - 32) / 100;
-    root.style.setProperty("--counter-u", `${Math.max(1, unit * 13 >= 80 ? unit : (height - 32 - 80) / 87)}px`);
+    root.style.setProperty("--counter-u", `${Math.max(1, unit * 12 >= 72 ? unit : (height - 32 - 72) / 88)}px`);
   }
   var brewFxGeneration = 0;
   function clearBrewFx() {
@@ -5084,7 +5202,7 @@
     if (!root || !root.isConnected) return;
     fitCounter();
     updateStaffJobs();
-    updateStaffJobs();
+    refreshCounterPets();
     cntT -= dt;
     const front = frontCustomer();
     const bar2 = $("#patBar > i");
@@ -5790,7 +5908,7 @@
         });
         if (!n) return toast("Ch\u01B0a c\xF3 \xF4 n\xE0o ch\xEDn", "err");
         sfx("success");
-        toast("Thu ho\u1EA1ch: " + Object.entries(items).map(([k, q]) => `${ITEMS[k].icon}+${q}`).join(" "), "ok");
+        toast("Thu ho\u1EA1ch: " + Object.entries(items).map(([k, q]) => `${ITEMS[k].name} +${q}`).join(" \xB7 "), "ok");
         markDirty("panel");
         requestSave();
       },
@@ -5858,20 +5976,23 @@
       const selected = S.subtab.pet || ((_a = S.pet) == null ? void 0 : _a.kind) || "shiba";
       const nav = `<div class="petrow pet-tabs">${["shiba", "meo", "capybara"].map(petCard).join("")}</div>`;
       if (S.pet && (selected === S.pet.kind || selected === "capybara" && S.pet2)) {
-        const p2 = S.pet, info = PETS[p2.kind];
-        const act = petActive();
-        return `${nav}<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? "\u2705 Buff \u0111ang k\xEDch ho\u1EA1t (m\u1ECDi ch\u1EC9 s\u1ED1 \u2265 60 trung b\xECnh)" : "\u26A0\uFE0F C\u1EA7n ch\u0103m s\xF3c \u0111\u1EC3 k\xEDch ho\u1EA1t buff (trung b\xECnh \u2265 60)"}</p>
-        <div class="pstats">${[["hunger", "\u{1F356} No"], ["joy", "\u{1F497} Vui v\u1EBB"], ["clean", "\u{1F6C1} S\u1EA1ch s\u1EBD"], ["energy", "\u{1F634} Kh\u1ECFe"]].map(([k2, l]) => `<div class="ps"><span>${l}</span>${bar(p2[k2])}<b>${Math.round(p2[k2])}</b></div>`).join("")}</div>
-        <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ""}</button>`).join("")}</div>
+        const p2 = selected === S.pet.kind ? S.pet : S.pet2, info = PETS[p2.kind];
+        const act = petActive(p2);
+        return `${nav}<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? "\u2705 Buff \u0111ang k\xEDch ho\u1EA1t (trung b\xECnh c\xE1c ch\u1EC9 s\u1ED1 \u2265 60)" : "\u26A0\uFE0F C\u1EA7n ch\u0103m s\xF3c \u0111\u1EC3 k\xEDch ho\u1EA1t buff (trung b\xECnh \u2265 60)"}</p>
+        <div class="pstats">${[["hunger", "\u{1F356} No"], ["joy", "\u{1F497} Vui v\u1EBB"], ["clean", "\u{1F6C1} S\u1EA1ch s\u1EBD"], ["energy", "\u{1F634} Kh\u1ECFe"]].map(([k2, l]) => {
+          var _a2, _b;
+          return `<div class="ps"><span>${l}</span>${bar((_a2 = p2[k2]) != null ? _a2 : 80)}<b>${Math.round((_b = p2[k2]) != null ? _b : 80)}</b></div>`;
+        }).join("")}</div>
+        <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}" data-kind="${p2.kind}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ""}</button>`).join("")}</div>
         <div class="buffs">${info.buffs.map((b) => `<p>${b}</p>`).join("")}</div>
         <p class="muted">Decor \u0111\xE3 mua: ${Object.keys(S.petDecor).length}/${PET_DECOR.length} \xB7 mua th\xEAm \u1EDF N\xE2ng c\u1EA5p \u203A Decor Th\xFA C\u01B0ng.</p><div class="petrow">${["shiba", "meo"].filter((k2) => k2 !== p2.kind).map((k2) => `<button class="btn soft" data-act="adopt" data-k="${k2}">\u0110\u1ED5i sang ${PETS[k2].icon} ${PETS[k2].name} \xB7 ${fmtK(PETS[k2].adopt)}</button>`).join("")}</div></div>
-        ${S.pet2 ? `<div class="petcard owned"><div class="pet-big">\u{1F9AB}</div><h4>${PETS.capybara.name} <span class="chip green">Nu\xF4i chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join("")}</div>` : ""}
+        ${S.pet2 && p2 !== S.pet2 ? `<div class="petcard owned"><div class="pet-big">${PETS.capybara.icon}</div><h4>${PETS.capybara.name} <span class="chip green">Nu\xF4i chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join("")}</div>` : ""}
         ${!S.pet2 && secretCount() >= 7 ? '<button class="btn pri block" data-act="capy">\u{1F9AB} Nh\u1EADn nu\xF4i C\xE1p Bi (mi\u1EC5n ph\xED)</button>' : ""}`;
       }
       const k = selected;
       const p = PETS[k];
       const sc = secretCount();
-      const body = k === "capybara" ? `<div class="petcard cap"><div class="pet-big">\u{1F9AB}</div><h4>\u{1F9AB} C\xC1P BI \u0110I\u1EC0M \u0110\u1EA0M (CAPYBARA)</h4><p>Th\xFA c\u01B0ng \u0111\u1ED9c b\u1EA3n qu\xFD hi\u1EBFm d\xE0nh ri\xEAng cho Nh\xE0 S\xE1ng T\u1EA1o Ti\u1EC7m Tr\xE0 S\u1EEFa Tinh Hoa! <b>K\u1EBFt h\u1EE3p tr\u1ECDn v\u1EB9n c\u1EA3 s\u1EE9c m\u1EA1nh c\u1EE7a Ch\xF3 v\xE0 M\xE8o</b>, \u0111\u1EB7c bi\u1EC7t c\xF3 th\u1EC3 nu\xF4i chung song song c\xF9ng 1 Ch\xF3 ho\u1EB7c 1 M\xE8o!</p>
+      const body = k === "capybara" ? `<div class="petcard cap"><div class="pet-big">${PETS.capybara.icon}</div><h4>\u{1F9AB} C\xC1P BI \u0110I\u1EC0M \u0110\u1EA0M (CAPYBARA)</h4><p>Th\xFA c\u01B0ng \u0111\u1ED9c b\u1EA3n qu\xFD hi\u1EBFm d\xE0nh ri\xEAng cho Nh\xE0 S\xE1ng T\u1EA1o Ti\u1EC7m Tr\xE0 S\u1EEFa Tinh Hoa! <b>K\u1EBFt h\u1EE3p tr\u1ECDn v\u1EB9n c\u1EA3 s\u1EE9c m\u1EA1nh c\u1EE7a Ch\xF3 v\xE0 M\xE8o</b>, \u0111\u1EB7c bi\u1EC7t c\xF3 th\u1EC3 nu\xF4i chung song song c\xF9ng 1 Ch\xF3 ho\u1EB7c 1 M\xE8o!</p>
         <div class="buffs"><b>4 \u0110\u1EB6C QUY\u1EC0N T\u1ED0I TH\u01AF\u1EE2NG C\u1EE6A C\xC1P BI:</b>${p.buffs.map((b) => `<p>${b}</p>`).join("")}</div>
         <div class="cond"><b>\u2B50 \u0110i\u1EC1u ki\u1EC7n m\u1EDF kh\xF3a: ${p.secret} C\xF4ng th\u1EE9c \u0111\u1ED9c b\u1EA3n</b><div class="bar"><i style="width:${sc / p.secret * 100}%"></i></div><small>B\u1EA1n \u0111\xE3 s\xE1ng t\u1EA1o ${sc}/${p.secret} c\xF4ng th\u1EE9c \u0111\u1ED9c b\u1EA3n trong S\u1ED5 Tay S\u01B0u T\u1EA7m. C\u1EA7n th\xEAm ${Math.max(0, p.secret - sc)} c\xF4ng th\u1EE9c n\u1EEFa \u0111\u1EC3 m\u1EDF kh\xF3a C\xE1p Bi!</small></div>
         <button class="btn ${sc >= p.secret ? "pri" : "soft"} block" data-act="${sc >= p.secret ? "capy" : "goto"}" data-to="suutam">${sc >= p.secret ? "\u{1F9AB} Nh\u1EADn nu\xF4i C\xE1p Bi" : "\u{1F4D6} \u0110\u1EBFn M\u1EE5c S\u01B0u T\u1EA7m S\xE1ng T\u1EA1o C\xF4ng Th\u1EE9c (" + sc + "/" + p.secret + ")"}</button></div>` : `<div class="petcard"><div class="pet-big">${p.icon}</div><h4>\u{1F3E1} C\u0102N PH\xD2NG TH\xDA C\u01AFNG M\u01A0 \u01AF\u1EDAC</h4><p>B\u1EA1n \u0111\u01B0\u1EE3c ch\u1ECDn <b>1 trong 2 b\xE9 c\u01B0ng</b> \u0111\u1EC3 \u0111\u1ED3ng h\xE0nh c\xF9ng ti\u1EC7m c\u1EE7a m\xECnh. H\xE3y ch\u1ECDn ng\u01B0\u1EDDi b\u1EA1n ph\xF9 h\u1EE3p nh\u1EA5t v\u1EDBi chi\u1EBFn l\u01B0\u1EE3c kinh doanh c\u1EE7a b\u1EA1n! <small>Sau khi ch\u1ECDn, b\u1EA1n c\xF3 th\u1EC3 \u0111\u1ED5i l\u1EA1i b\xE9 kia v\xE0 c\xE1c ch\u1EC9 s\u1ED1 ch\u0103m s\xF3c tr\u1EDF v\u1EC1 80!</small></p>
@@ -5905,7 +6026,7 @@
       },
       care: (t) => {
         const c = PET_CARE.find((x) => x.id === t.dataset.id);
-        const error = carePet(t.dataset.id);
+        const error = carePet(t.dataset.id, t.dataset.kind);
         if (error) return toast(error, "err");
         sfx("pop");
         fxText("+" + c.name, t, "g");

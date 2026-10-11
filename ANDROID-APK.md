@@ -1,5 +1,17 @@
 # Đóng gói Tiệm Trà Mơ Ước cho Android
 
+## Build APK trực tiếp trên Windows
+
+Project có kịch bản `build-apk.bat` và `apk/build-apk.ps1` để tạo ứng dụng Android bằng Capacitor. Chạy từ thư mục game:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\apk\build-apk.ps1 -ApkDir .. -NoReveal
+```
+
+File cài nhận được là `TiemTraMoUoc-debug.apk` ở thư mục cha của game. APK debug đã ký và cài trực tiếp được, yêu cầu Android 7.0 trở lên. Project Android và các công cụ build nằm riêng với tài nguyên web. Lần đầu cần tải Node.js, JDK 21, Android SDK và Gradle; các lần sau dùng lại bộ công cụ/cache có sẵn.
+
+`-OutDir` chọn thư mục project Android; nên dùng đường dẫn không dấu trên Windows. `-ApkDir` chọn nơi nhận APK và hỗ trợ đường dẫn tiếng Việt. `-Portable` bỏ ghi ANDROID_HOME vào cấu hình người dùng (cần cung cấp sẵn công cụ và các biến môi trường trong phiên build). `-NoReveal` bỏ mở Explorer khi hoàn tất. `-Release` tạo bản release với khóa ký riêng theo hướng dẫn của script.
+
 ## ZIP đầu vào
 
 Nén **nội dung** thư mục game để `index.html` nằm ngay ở gốc ZIP.

@@ -62,7 +62,7 @@ const vuon = {
       let n = 0, items = {};
       S.garden.plots.forEach((p, i) => { const s = p.seed && seedDef(p.seed); if (s && p.grown >= s.days) { const k = s.gives; const q = harvest(i); n++; items[k] = (items[k] || 0) + q; } });
       if (!n) return toast('Chưa có ô nào chín', 'err');
-      sfx('success'); toast('Thu hoạch: ' + Object.entries(items).map(([k, q]) => `${ITEMS[k].icon}+${q}`).join(' '), 'ok'); markDirty('panel'); requestSave();
+      sfx('success'); toast('Thu hoạch: ' + Object.entries(items).map(([k, q]) => `${ITEMS[k].name} +${q}`).join(' · '), 'ok'); markDirty('panel'); requestSave();
     },
     water: () => {
       const g = S.garden;
@@ -100,20 +100,20 @@ const thucung = {
     const selected = S.subtab.pet || S.pet?.kind || 'shiba';
     const nav = `<div class="petrow pet-tabs">${['shiba', 'meo', 'capybara'].map(petCard).join('')}</div>`;
     if (S.pet && (selected === S.pet.kind || (selected === 'capybara' && S.pet2))) {
-      const p = S.pet, info = PETS[p.kind];
-      const act = E.petActive();
-      return `${nav}<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? '✅ Buff đang kích hoạt (mọi chỉ số ≥ 60 trung bình)' : '⚠️ Cần chăm sóc để kích hoạt buff (trung bình ≥ 60)'}</p>
-        <div class="pstats">${[['hunger', '🍖 No'], ['joy', '💗 Vui vẻ'], ['clean', '🛁 Sạch sẽ'], ['energy', '😴 Khỏe']].map(([k, l]) => `<div class="ps"><span>${l}</span>${bar(p[k])}<b>${Math.round(p[k])}</b></div>`).join('')}</div>
-        <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ''}</button>`).join('')}</div>
+      const p = selected === S.pet.kind ? S.pet : S.pet2, info = PETS[p.kind];
+      const act = E.petActive(p);
+      return `${nav}<div class="petcard owned"><div class="pet-big">${info.icon}</div><h4>${info.name}</h4><p class="muted">${act ? '✅ Buff đang kích hoạt (trung bình các chỉ số ≥ 60)' : '⚠️ Cần chăm sóc để kích hoạt buff (trung bình ≥ 60)'}</p>
+        <div class="pstats">${[['hunger', '🍖 No'], ['joy', '💗 Vui vẻ'], ['clean', '🛁 Sạch sẽ'], ['energy', '😴 Khỏe']].map(([k, l]) => `<div class="ps"><span>${l}</span>${bar(p[k] ?? 80)}<b>${Math.round(p[k] ?? 80)}</b></div>`).join('')}</div>
+        <div class="pcare">${PET_CARE.map((c) => `<button class="btn soft" data-act="care" data-id="${c.id}" data-kind="${p.kind}">${c.icon}<br/>${c.name}${c.cost ? `<small>${fmtK(c.cost)}</small>` : ''}</button>`).join('')}</div>
         <div class="buffs">${info.buffs.map((b) => `<p>${b}</p>`).join('')}</div>
         <p class="muted">Decor đã mua: ${Object.keys(S.petDecor).length}/${PET_DECOR.length} · mua thêm ở Nâng cấp › Decor Thú Cưng.</p><div class="petrow">${['shiba', 'meo'].filter(k => k !== p.kind).map(k => `<button class="btn soft" data-act="adopt" data-k="${k}">Đổi sang ${PETS[k].icon} ${PETS[k].name} · ${fmtK(PETS[k].adopt)}</button>`).join('')}</div></div>
-        ${S.pet2 ? `<div class="petcard owned"><div class="pet-big">🦫</div><h4>${PETS.capybara.name} <span class="chip green">Nuôi chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join('')}</div>` : ''}
+        ${S.pet2 && p !== S.pet2 ? `<div class="petcard owned"><div class="pet-big">${PETS.capybara.icon}</div><h4>${PETS.capybara.name} <span class="chip green">Nuôi chung</span></h4>${PETS.capybara.buffs.map((b) => `<p>${b}</p>`).join('')}</div>` : ''}
         ${!S.pet2 && E.secretCount() >= 7 ? '<button class="btn pri block" data-act="capy">🦫 Nhận nuôi Cáp Bi (miễn phí)</button>' : ''}`;
     }
     const k = selected;
     const p = PETS[k];
     const sc = E.secretCount();
-    const body = k === 'capybara' ? `<div class="petcard cap"><div class="pet-big">🦫</div><h4>🦫 CÁP BI ĐIỀM ĐẠM (CAPYBARA)</h4><p>Thú cưng độc bản quý hiếm dành riêng cho Nhà Sáng Tạo Tiệm Trà Sữa Tinh Hoa! <b>Kết hợp trọn vẹn cả sức mạnh của Chó và Mèo</b>, đặc biệt có thể nuôi chung song song cùng 1 Chó hoặc 1 Mèo!</p>
+    const body = k === 'capybara' ? `<div class="petcard cap"><div class="pet-big">${PETS.capybara.icon}</div><h4>🦫 CÁP BI ĐIỀM ĐẠM (CAPYBARA)</h4><p>Thú cưng độc bản quý hiếm dành riêng cho Nhà Sáng Tạo Tiệm Trà Sữa Tinh Hoa! <b>Kết hợp trọn vẹn cả sức mạnh của Chó và Mèo</b>, đặc biệt có thể nuôi chung song song cùng 1 Chó hoặc 1 Mèo!</p>
         <div class="buffs"><b>4 ĐẶC QUYỀN TỐI THƯỢNG CỦA CÁP BI:</b>${p.buffs.map((b) => `<p>${b}</p>`).join('')}</div>
         <div class="cond"><b>⭐ Điều kiện mở khóa: ${p.secret} Công thức độc bản</b><div class="bar"><i style="width:${sc / p.secret * 100}%"></i></div><small>Bạn đã sáng tạo ${sc}/${p.secret} công thức độc bản trong Sổ Tay Sưu Tầm. Cần thêm ${Math.max(0, p.secret - sc)} công thức nữa để mở khóa Cáp Bi!</small></div>
         <button class="btn ${sc >= p.secret ? 'pri' : 'soft'} block" data-act="${sc >= p.secret ? 'capy' : 'goto'}" data-to="suutam">${sc >= p.secret ? '🦫 Nhận nuôi Cáp Bi' : '📖 Đến Mục Sưu Tầm Sáng Tạo Công Thức (' + sc + '/' + p.secret + ')'}</button></div>`
@@ -134,7 +134,7 @@ const thucung = {
     capy: () => { const error = E.adoptPet('capybara'); if (error) return toast(error, 'err'); sfx('level'); toast('🦫 Cáp Bi đã về quán!', 'gold'); },
     care: (t) => {
       const c = PET_CARE.find((x) => x.id === t.dataset.id);
-      const error = E.carePet(t.dataset.id); if (error) return toast(error, 'err');
+      const error = E.carePet(t.dataset.id, t.dataset.kind); if (error) return toast(error, 'err');
       sfx('pop'); fxText('+' + c.name, t, 'g');
     },
   },

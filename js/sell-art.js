@@ -1,4 +1,5 @@
 /** Hình vẽ cho quầy bán hàng: sprite đã tách riêng từng hình + ly trà sữa vẽ bằng SVG. */
+import { ingredientArt } from './ingredient-art.js';
 const DIR = 'assets/sell/sprites/';
 const img = (name, cls = '') => `<img class="sale-art ${cls}" src="${DIR}${name}.png" alt="" draggable="false" decoding="async">`;
 
@@ -19,6 +20,8 @@ export function customerArt(key) {
 }
 export function teaArt(id) { return img(`tea-${TEAS.includes(id) ? id : 'traSua'}`); }
 export function toppingArt(id) {
+  const custom = ingredientArt(id);
+  if (custom) return custom;
   const k = TOP_ALIAS[id] || id;
   return img(`top-${TOPS.includes(k) ? k : 'tcDen'}`);
 }

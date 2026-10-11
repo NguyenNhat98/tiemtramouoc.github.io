@@ -1,3 +1,7 @@
+param(
+  [string[]]$Checks = @('ingredient-pets-ui', 'menu-contracts', 'menu-ui', 'tutorial-ui', 'counter-ui', 'guide-ui', 'doc-fixes-ui'),
+  [string]$WindowSizeOverride = ''
+)
 $ErrorActionPreference = 'Stop'
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $chrome = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
@@ -10,7 +14,7 @@ $baseUri = ([Uri]($projectRoot + '\')).AbsoluteUri
 $page = [IO.File]::ReadAllText((Join-Path $projectRoot 'index.html'))
 $page = $page.Replace('<head>', '<head><base href="' + $baseUri + '">')
 try {
-  foreach ($test in @('menu-contracts', 'menu-ui', 'tutorial-ui', 'counter-ui', 'guide-ui', 'doc-fixes-ui')) {
+  foreach ($test in $Checks) {
     $script = '<script>setTimeout(()=>{const s=document.createElement("script");s.src="tests/' + $test + '.js";document.body.appendChild(s);},300);</script>'
     $harness = Join-Path $runDir ($test + '.html')
     [IO.File]::WriteAllText($harness, $page.Replace('</body>', $script + '</body>'), $utf)
@@ -19,13 +23,18 @@ try {
     $stdout = Join-Path $runDir ($test + '-dom.txt')
     $stderr = Join-Path $runDir ($test + '-log.txt')
     $windowSize = if ($test -eq 'tutorial-ui') { '500,740' } else { '700,900' }
+    if ($WindowSizeOverride) { $windowSize = $WindowSizeOverride }
     $arguments = "--headless=new --disable-gpu --no-sandbox --allow-file-access-from-files --enable-logging=stderr --user-data-dir=`"$profile`" --window-size=$windowSize --virtual-time-budget=12000 --dump-dom `"$url`""
     $process = Start-Process $chrome -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
     if ($process.ExitCode -ne 0) { throw "Chrome failed for $test" }
     $html = [IO.File]::ReadAllText($stdout)
     $log = [IO.File]::ReadAllText($stderr)
     if ($log -match 'Uncaught|SyntaxError|ReferenceError|ERR_FILE_NOT_FOUND|\[loop\] (update|render|frame)') { throw "Runtime or asset error in $test. $log" }
-    if ($test -eq 'menu-contracts') {
+    if ($test -eq 'ingredient-pets-ui') {
+      $match = [regex]::Match($html, 'data-ingredient-pets-passed="(\d+)"')
+      if (!$match.Success -or [int]$match.Groups[1].Value -lt 30) { $failure = [regex]::Match($html, 'data-ingredient-pets-error="([^"]+)"'); throw "Ingredient/pet checks failed: $($failure.Groups[1].Value)" }
+      Write-Output "Ingredient/pet checks: $($match.Groups[1].Value) passed"
+    } elseif ($test -eq 'menu-contracts') {
       $match = [regex]::Match($html, 'data-contract-results="([^"]+)"')
       if (!$match.Success) { throw 'Contract tests did not finish.' }
       $results = [Net.WebUtility]::HtmlDecode($match.Groups[1].Value) | ConvertFrom-Json

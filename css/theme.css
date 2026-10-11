@@ -455,3 +455,11 @@ body { background: color-mix(in srgb, var(--bg) 85%, #7a5a3a); }
 /* Submenu labels stay on one horizontally scrollable row. */
 .panel-in .tabs.scroll { flex-wrap: nowrap; overflow-x: auto; min-width: 0; max-width: 100%; -webkit-overflow-scrolling: touch; }
 .panel-in .tabs.scroll .tab { flex: 0 0 auto; white-space: nowrap; }
+
+/* Compact header, preserving the device's top safe area. */
+.hud { gap: 6px; padding: calc(4px + var(--safe-t)) 10px 4px; }
+.hud .hud-l .hbtn { width: 36px; height: 36px; }
+.hud .hud-r { gap: 2px; }
+.hud .hud-r-btns { gap: 3px; }
+.hud .hud-r-btns .hbtn.sm { width: 24px; height: 24px; border-radius: 7px; }
+.hud .hud-r-btns .hbtn.sm .ic { width: 13px; height: 13px; }

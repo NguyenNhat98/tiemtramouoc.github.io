@@ -1,4 +1,5 @@
 import { staffArt } from './sell-art.js';
+import { refreshCounterPets } from './counter-pets.js';
 /**
  * Màn hình bán hàng: khách + bong bóng thoại, quầy trà, thớt pha ly, khay topping, máy đóng nắp,
  * sảnh bàn ghế. Mọi bước đều có hiệu ứng (lấy ly, rót trà, bỏ topping, đóng nắp, giao ly).
@@ -48,7 +49,7 @@ function fitCounter() {
   if (height === counterHeight) return;
   counterHeight = height;
   const unit = (height - 32) / 100;
-  root.style.setProperty('--counter-u', `${Math.max(1, unit * 13 >= 80 ? unit : (height - 32 - 80) / 87)}px`);
+  root.style.setProperty('--counter-u', `${Math.max(1, unit * 12 >= 72 ? unit : (height - 32 - 72) / 88)}px`);
 }
 let brewFxGeneration = 0;
 function clearBrewFx() {
@@ -600,7 +601,7 @@ export function frameSell(dt, force) {
   if (!root || !root.isConnected) return;
   fitCounter();
   updateStaffJobs();
-  updateStaffJobs();
+  refreshCounterPets();
   cntT -= dt;
   const front = G.frontCustomer();
   const bar = $('#patBar > i');

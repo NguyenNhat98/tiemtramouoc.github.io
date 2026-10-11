@@ -4,12 +4,19 @@
 .sell > .queue-row { height: calc(var(--counter-u) * 6); min-height: 0; margin: 0; padding: 2px 0; flex: none; }
 .sell .qav { width: calc(var(--counter-u) * 6 - 4px); height: calc(var(--counter-u) * 6 - 4px); }
 .sell .qav b { width: 80%; height: 80%; }
-.sell .cust-zone { height: max(80px, calc(var(--counter-u) * 13)); min-height: 0; max-height: none; flex: none; align-items: flex-end; }
+.sell .cust-zone { height: max(72px, calc(var(--counter-u) * 12)); min-height: 0; max-height: none; flex: none; align-items: flex-end; }
 .sell .cust-av { width: 56px; height: 100%; }
 .sell .cust-av .face { width: 56px; height: 100%; }
-.sell .bubble { height: 100%; background: rgba(255, 252, 246, .56); border: 1px solid rgba(255,255,255,.72); border-radius: 17px; padding: 3px 6px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 3px 10px rgba(86,55,31,.12), inset 0 1px rgba(255,255,255,.7); }
+.sell .bubble { height: 100%; background: rgba(255, 252, 246, .34); border: 1px solid rgba(255,255,255,.45); border-radius: 17px; padding: 2px 5px; gap: 1px; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); box-shadow: 0 2px 6px rgba(86,55,31,.08); }
+.sell .bubble .b-row { gap: 5px; }
+.sell .bubble .cup { width: 24px !important; height: 32px !important; margin-top: 0; }
+.sell .bubble .btxt { line-height: 1.22; text-shadow: 0 1px 2px rgba(255,252,246,.85); }
+.sell .bubble .pat { height: 10px; gap: 4px; }
+.sell .bubble .pat span { font-size: 8.5px; letter-spacing: .2px; }
+.sell .bubble .pat .bar { height: 6px; }
 .sell .bubble::before { display: none; }
-[data-theme="dem"] .sell .bubble { background: rgba(54,47,76,.65); }
+[data-theme="dem"] .sell .bubble { background: rgba(54,47,76,.45); }
+[data-theme="dem"] .sell .bubble .btxt { text-shadow: 0 1px 2px rgba(25,20,39,.9); }
 .sell .hint { height: calc(var(--counter-u) * 3); min-height: 0; line-height: calc(var(--counter-u) * 3); padding: 0 6px; margin: 0; font-size: 10px; }
 .sell .shelf { height: calc(var(--counter-u) * 18); flex: none; min-height: 0; padding: 2px 4px; border-bottom-width: 3px; }
 .sell .shelf-head { height: 22px; min-height: 0; }

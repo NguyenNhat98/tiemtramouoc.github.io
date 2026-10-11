@@ -9,7 +9,10 @@ param(
   [switch]$Install,              # cai APK len dien thoai dang cam USB
   [switch]$Clean,                # xoa project Android cu va tao lai (giu khoa ky)
   [int]$VersionCode = 0,         # tang moi lan phat hanh ban moi, vd 2, 3...
-  [string]$VersionName = ''      # vd 1.1
+  [string]$VersionName = '',     # vd 1.1
+  [string]$ApkDir = '',          # noi nhan file APK; mac dinh OutDir
+  [switch]$Portable,             # khong ghi ANDROID_HOME vao cau hinh nguoi dung
+  [switch]$NoReveal              # khong mo Explorer sau khi build
 )
 
 $ErrorActionPreference = 'Stop'
@@ -56,6 +59,12 @@ function Install-WithWinget([string]$Id) {
 
 # Gradle/Android SDK tren Windows hay loi voi duong dan co dau tieng Viet
 function Test-AsciiPath([string]$Path) { $Path -match '^[\x20-\x7E]+$' }
+function Remove-BuildPath([string]$Path, [string]$Root) {
+  $target = [IO.Path]::GetFullPath($Path).TrimEnd('\')
+  $allowed = [IO.Path]::GetFullPath($Root).TrimEnd('\')
+  if (-not $target.StartsWith($allowed + '\', [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe cleanup target: $target" }
+  if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }
+}
 
 function ConvertTo-JsonString([string]$S) {
   $sb = New-Object System.Text.StringBuilder
@@ -143,16 +152,22 @@ function Initialize-AndroidSdk {
     New-Item -ItemType Directory -Force $sdk | Out-Null
     $sm = Get-ChildItem "$sdk\cmdline-tools\*\bin\sdkmanager.bat" -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($sm) { $sm = $sm.FullName } else { $sm = Install-CmdlineTools $sdk }
-    Info 'Chap nhan giay phep Android SDK...'
-    $old = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
-    (@('y') * 60) | & $sm "--sdk_root=$sdk" --licenses | Out-Null
-    $ErrorActionPreference = $old
     Info "Dang tai platform-tools, platforms;$SdkPlatform, build-tools;$SdkBuildTools (vai tram MB)..."
-    Exec $sm @("--sdk_root=$sdk", 'platform-tools', "platforms;$SdkPlatform", "build-tools;$SdkBuildTools")
+    $androidCli = Join-Path (Split-Path -Parent $sm) 'android.exe'
+    if (Test-Path -LiteralPath $androidCli) {
+      # New Android CLI uses slash-separated package names (sdkmanager.bat can split semicolons).
+      Exec $androidCli @("--sdk=$sdk", '--no-metrics', 'sdk', 'install', 'platform-tools', "platforms/$SdkPlatform", "build-tools/$SdkBuildTools")
+    } else {
+      Info 'Chap nhan giay phep Android SDK...'
+      $old = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+      (@('y') * 60) | & $sm "--sdk_root=$sdk" --licenses | Out-Null
+      $ErrorActionPreference = $old
+      Exec $sm @("--sdk_root=$sdk", 'platform-tools', "platforms;$SdkPlatform", "build-tools;$SdkBuildTools")
+    }
   }
   $env:ANDROID_HOME = $sdk
   $env:ANDROID_SDK_ROOT = $sdk
-  if ([Environment]::GetEnvironmentVariable('ANDROID_HOME', 'User') -ne $sdk) {
+  if (-not $Portable -and [Environment]::GetEnvironmentVariable('ANDROID_HOME', 'User') -ne $sdk) {
     [Environment]::SetEnvironmentVariable('ANDROID_HOME', $sdk, 'User')
   }
   Info "ANDROID_HOME = $sdk"
@@ -168,16 +183,18 @@ function Install-CmdlineTools([string]$Sdk) {
   } catch { Warn 'Khong doc duoc danh sach phien ban, dung ban mac dinh.' }
   $url = "https://dl.google.com/android/repository/commandlinetools-win-${ver}_latest.zip"
   $tmp = Join-Path $env:TEMP "tiemtra-cmdline-$ver"
-  if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
+  Remove-BuildPath $tmp $env:TEMP
   New-Item -ItemType Directory $tmp | Out-Null
   Info "Dang tai Android command-line tools ($url)..."
   Invoke-WebRequest $url -OutFile "$tmp\tools.zip" -UseBasicParsing
   Expand-Archive "$tmp\tools.zip" -DestinationPath $tmp -Force
   $dest = "$Sdk\cmdline-tools\latest"
-  if (Test-Path $dest) { Remove-Item $dest -Recurse -Force }
+  Remove-BuildPath $dest $Sdk
   New-Item -ItemType Directory -Force "$Sdk\cmdline-tools" | Out-Null
-  Move-Item "$tmp\cmdline-tools" $dest
-  Remove-Item $tmp -Recurse -Force
+  $toolsSource = [IO.Path]::GetFullPath("$tmp\cmdline-tools")
+  if (-not $toolsSource.StartsWith([IO.Path]::GetFullPath($tmp) + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe tools source' }
+  Move-Item -LiteralPath $toolsSource -Destination $dest
+  Remove-BuildPath $tmp $env:TEMP
   "$dest\bin\sdkmanager.bat"
 }
 
@@ -192,7 +209,7 @@ function Build-Bundle {
 function Copy-Web {
   Step 'Copy game vao www/'
   $www = Join-Path $OutDir 'www'
-  if (Test-Path $www) { Remove-Item $www -Recurse -Force }
+  Remove-BuildPath $www $OutDir
   New-Item -ItemType Directory -Force "$www\js" | Out-Null
   foreach ($f in @('index.html', 'css', 'assets', 'manifest.json', 'icon.svg')) {
     $src = Join-Path $GameDir $f
@@ -371,7 +388,7 @@ try {
     Step 'Xoa project cu (giu khoa ky)'
     foreach ($d in @('android', 'www', 'node_modules', 'package.json', 'package-lock.json')) {
       $x = Join-Path $OutDir $d
-      if (Test-Path $x) { Remove-Item $x -Recurse -Force }
+      Remove-BuildPath $x $OutDir
     }
   }
   New-Item -ItemType Directory -Force $OutDir | Out-Null
@@ -402,14 +419,16 @@ try {
 
   $apk = Join-Path $OutDir "android\app\build\outputs\apk\$kind\app-$kind.apk"
   if (-not (Test-Path $apk)) { throw "Khong thay file APK: $apk" }
-  $dest = Join-Path $OutDir "TiemTraMoUoc-$kind.apk"
+  $apkOutputDir = if ($ApkDir) { [IO.Path]::GetFullPath($ApkDir) } else { $OutDir }
+  if (-not (Test-Path -LiteralPath $apkOutputDir)) { New-Item -ItemType Directory -Path $apkOutputDir | Out-Null }
+  $dest = Join-Path $apkOutputDir "TiemTraMoUoc-$kind.apk"
   Copy-Item $apk $dest -Force
   if ($Install) { Install-Apk $sdk $dest }
 
   Write-Host ''
   Write-Host "XONG! APK: $dest" -ForegroundColor Green
   if ($Release) { Warn "Nho sao luu $OutDir\tiemtra.jks va keystore.properties." }
-  Start-Process explorer.exe "/select,`"$dest`""
+  if (-not $NoReveal) { Start-Process explorer.exe "/select,`"$dest`"" }
   exit 0
 } catch {
   Write-Host ''
